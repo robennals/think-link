@@ -1,0 +1,23 @@
+<h1>Add new snippet</h1>
+
+<% form_for(@snippet) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :url %><br />
+    <%= f.text_field :url %>
+  </p>
+  <p>
+    <%= f.label :point_id %><br />
+    <%= f.collection_select(:point_id,@points,:id,:txt) %>
+  </p>
+  <p>
+    <%= f.label :txt %><br />
+    <%= f.text_area :txt %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', snippets_path %>

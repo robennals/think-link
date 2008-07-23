@@ -1,0 +1,20 @@
+<div align="right" style="width: 600px">
+<%= '<b>'+flash[:info]+'</b><hr />' if flash[:info] %>
+<h3 align="center">New user registration</h3>
+<%= error_messages_for 'user' %>
+<% form_tag(:action => 'register') do %>
+  E-mail:
+  <%= text_field 'user', 'email' %>
+  <br /><br />
+
+  Password:
+  <%= password_field 'user', 'password' %>
+  <br /><br />
+
+  Password again:
+  <%= password_field 'user', 'password_confirmation' %>
+  <br /><br />
+
+  <%= submit_tag "Register me" %>
+<% end %>
+</div>

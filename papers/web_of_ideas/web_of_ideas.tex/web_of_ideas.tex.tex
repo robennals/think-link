@@ -1,0 +1,368 @@
+%% Based on a TeXnicCenter-Template by Gyorgy SZEIDL.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%------------------------------------------------------------
+%
+\documentclass{article}%
+%Options -- Point size:  10pt (default), 11pt, 12pt
+%        -- Paper size:  letterpaper (default), a4paper, a5paper, b5paper
+%                        legalpaper, executivepaper
+%        -- Orientation  (portrait is the default)
+%                        landscape
+%        -- Print size:  oneside (default), twoside
+%        -- Quality      final(default), draft
+%        -- Title page   notitlepage, titlepage(default)
+%        -- Columns      onecolumn(default), twocolumn
+%        -- Equation numbering (equation numbers on the right is the default)
+%                        leqno
+%        -- Displayed equations (centered is the default)
+%                        fleqn (equations start at the same distance from the right side)
+%        -- Open bibliography style (closed is the default)
+%                        openbib
+% For instance the command
+%           \documentclass[a4paper,12pt,leqno]{article}
+% ensures that the paper size is a4, the fonts are typeset at the size 12p
+% and the equation numbers are on the left side
+%
+\usepackage{amsmath}%
+\usepackage{amsfonts}%
+\usepackage{amssymb}%
+\usepackage{graphicx}
+%-------------------------------------------
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+
+\begin{document}
+
+\title{This is the Title of a Standard \LaTeX\ Article}
+\author{J. A. Smith\thanks{This is for making an acknowledgement.}
+\\The University of Miskolc, Hungary}
+\date{February 24, 2002}
+\maketitle
+
+\begin{abstract}
+This is a sample document which shows the most important features of the Standard
+\LaTeX\ Journal Article class.
+\end{abstract}
+
+\section{Introduction}
+
+\noindent The front matter has various entries such as\\
+\hspace*{\fill}\verb" \title", \verb"\author", \verb"\date", and
+\verb"\thanks"\hspace*{\fill}\\
+You should replace their arguments with your own.
+
+This text is the body of your article. You may delete everything between the commands\\
+\hspace*{\fill} \verb"\begin{document}" \ldots \verb"\end{documant}"
+\hspace*{\fill}\\in this file to start with a blank document.
+
+
+\section{The Most Important Features}
+
+\noindent Sectioning commands. The first one is the\\
+\hspace*{\fill} \verb"\section{The Most Important Features}" \hspace*{\fill}\\
+command. Below you shall find examples for further sectioning commands:
+
+\subsection{Subsection}
+Subsection text.
+
+\subsubsection{Subsubsection}
+Subsubsection text.
+
+\paragraph{Paragraph}
+Paragraph text.
+
+\subparagraph{Subparagraph}Subparagraph text.\vspace{2mm}
+
+Select a part of the text then click on the button Emphasize (H!), or Bold (Fs), or
+Italic (Kt), or Slanted (Kt) to typeset \emph{Emphasize}, \textbf{Bold},
+\textit{Italics}, \textsl{Slanted} texts.
+
+You can also typeset \textrm{Roman}, \textsf{Sans Serif}, \textsc{Small Caps}, and
+\texttt{Typewriter} texts.
+
+You can also apply the special, mathematics only commands $\mathbb{BLACKBOARD}$
+$\mathbb{BOLD}$, $\mathcal{CALLIGRAPHIC}$, and $\mathfrak{fraktur}$. Note that
+blackboard bold and calligraphic are correct only when applied to uppercase letters A
+through Z.
+
+You can apply the size tags -- Format menu, Font size submenu -- {\tiny tiny},
+{\scriptsize scriptsize}, {\footnotesize footnotesize}, {\small small}, {\normalsize
+normalsize}, {\large large}, {\Large Large}, {\LARGE LARGE}, {\huge huge} and {\Huge
+Huge}.
+
+You can use the \verb"\begin{quote} etc. \end{quote}" environment for typesetting
+short quotations. Select the text then click on Insert, Quotations, Short Quotations:
+
+\begin{quote}
+The buck stops here. \emph{Harry Truman}
+
+Ask not what your country can do for you; ask what you can do for your
+country. \emph{John F Kennedy}
+
+I am not a crook. \emph{Richard Nixon}
+
+I did not have sexual relations with that woman, Miss Lewinsky. \emph{Bill Clinton}
+\end{quote}
+
+The Quotation environment is used for quotations of more than one paragraph. Following
+is the beginning of \emph{The Jungle Books} by Rudyard Kipling. (You should select
+the text first then click on Insert, Quotations, Quotation):
+
+\begin{quotation}
+It was seven o'clock of a very warm evening in the Seeonee Hills when Father Wolf woke
+up from his day's rest, scratched himself, yawned  and spread out his paws one after
+the other to get rid of sleepy feeling in their tips. Mother Wolf lay with her big gray
+nose dropped across her four tumbling, squealing cubs, and the moon shone into the
+mouth of the cave where they all lived. ``\emph{Augrh}'' said Father Wolf, ``it is time
+to hunt again.'' And he was going to spring down hill when a little shadow with a bushy
+tail crossed the threshold and whined: ``Good luck go with you, O Chief of the Wolves;
+and good luck and strong white teeth go with the noble children, that they may never
+forget the hungry in this world.''
+
+It was the jackal---Tabaqui the Dish-licker---and the wolves of India despise Tabaqui
+because he runs about making mischief, and telling tales, and eating rags and pieces of
+leather from the village rubbish-heaps. But they are afraid of him too, because
+Tabaqui, more than any one else in the jungle, is apt to go mad, and then he forgets
+that he was afraid of anyone, and runs through the forest biting everything in his way.
+\end{quotation}
+
+Use the Verbatim environment if you want \LaTeX\ to preserve spacing, perhaps when
+including a fragment from a program such as:
+\begin{verbatim}
+#include <iostream>         // < > is used for standard libraries.
+void main(void)             // ''main'' method always called first.
+{
+ cout << ''This is a message.'';
+                            // Send to output stream.
+}
+\end{verbatim}
+(After selecting the text click on Insert, Code Environments, Code.)
+
+
+\subsection{Mathematics and Text}
+
+It holds \cite{KarelRektorys} the following
+\begin{theorem}
+(The Currant minimax principle.) Let $T$ be completely continuous selfadjoint operator
+in a Hilbert space $H$. Let $n$ be an arbitrary integer and let $u_1,\ldots,u_{n-1}$ be
+an arbitrary system of $n-1$ linearly independent elements of $H$. Denote
+\begin{equation}
+\max_{\substack{v\in H, v\neq
+0\\(v,u_1)=0,\ldots,(v,u_n)=0}}\frac{(Tv,v)}{(v,v)}=m(u_1,\ldots, u_{n-1})
+\label{eqn10}
+\end{equation}
+Then the $n$-th eigenvalue of $T$ is equal to the minimum of these maxima, when
+minimizing over all linearly independent systems $u_1,\ldots u_{n-1}$ in $H$,
+\begin{equation}
+\mu_n = \min_{\substack{u_1,\ldots, u_{n-1}\in H}} m(u_1,\ldots, u_{n-1}) \label{eqn20}
+\end{equation}
+\end{theorem}
+The above equations are automatically numbered as equation (\ref{eqn10}) and
+(\ref{eqn20}).
+
+\subsection{List Environments}
+
+You can create numbered, bulleted, and description lists using the tag popup
+at the bottom left of the screen.
+
+\begin{enumerate}
+\item List item 1
+
+\item List item 2
+
+\begin{enumerate}
+\item A list item under a list item.
+
+The typeset style for this level is different than the screen style. \ The
+screen shows a lower case alphabetic character followed by a period while the
+typeset style uses a lower case alphabetic character surrounded by parentheses.
+
+\item Just another list item under a list item.
+
+\begin{enumerate}
+\item Third level list item under a list item.
+
+\begin{enumerate}
+\item Fourth and final level of list items allowed.
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\begin{itemize}
+\item Bullet item 1
+
+\item Bullet item 2
+
+\begin{itemize}
+\item Second level bullet item.
+
+\begin{itemize}
+\item Third level bullet item.
+
+\begin{itemize}
+\item Fourth (and final) level bullet item.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\begin{description}
+\item[Description List] Each description list item has a term followed by the
+description of that term. Double click the term box to enter the term, or to
+change it.
+
+\item[Bunyip] Mythical beast of Australian Aboriginal legends.
+\end{description}
+
+\subsection{Theorem-like Environments}
+
+The following theorem-like environments (in alphabetical order) are available
+in this style.
+
+\begin{acknowledgement}
+This is an acknowledgement
+\end{acknowledgement}
+
+\begin{algorithm}
+This is an algorithm
+\end{algorithm}
+
+\begin{axiom}
+This is an axiom
+\end{axiom}
+
+\begin{case}
+This is a case
+\end{case}
+
+\begin{claim}
+This is a claim
+\end{claim}
+
+\begin{conclusion}
+This is a conclusion
+\end{conclusion}
+
+\begin{condition}
+This is a condition
+\end{condition}
+
+\begin{conjecture}
+This is a conjecture
+\end{conjecture}
+
+\begin{corollary}
+This is a corollary
+\end{corollary}
+
+\begin{criterion}
+This is a criterion
+\end{criterion}
+
+\begin{definition}
+This is a definition
+\end{definition}
+
+\begin{example}
+This is an example
+\end{example}
+
+\begin{exercise}
+This is an exercise
+\end{exercise}
+
+\begin{lemma}
+This is a lemma
+\end{lemma}
+
+\begin{proof}
+This is the proof of the lemma.
+\end{proof}
+
+\begin{notation}
+This is notation
+\end{notation}
+
+\begin{problem}
+This is a problem
+\end{problem}
+
+\begin{proposition}
+This is a proposition
+\end{proposition}
+
+\begin{remark}
+This is a remark
+\end{remark}
+
+\begin{solution}
+This is a solution
+\end{solution}
+
+\begin{summary}
+This is a summary
+\end{summary}
+
+\begin{theorem}
+This is a theorem
+\end{theorem}
+
+\begin{proof}
+[Proof of the Main Theorem]This is the proof.
+\end{proof}
+\medskip
+
+This text is a sample for a short bibliography. You can cite a book by making use of
+the command \verb"\cite{KarelRektorys}": \cite{KarelRektorys}. Papers can be cited
+similarly: \cite{Bertoti97}. If you want multiple citations to appear in a single set
+of square brackets you must type all of the citation keys inside a single citation,
+separating each with a comma. Here is an example: \cite{Bertoti97, Szeidl2001,
+Carlson67}.
+
+\begin{thebibliography}{9}                                                                                                %
+\bibitem {KarelRektorys}Rektorys, K., \textit{Variational methods in Mathematics,
+Science and Engineering}, D. Reidel Publishing Company,
+Dordrecht-Hollanf/Boston-U.S.A., 2th edition, 1975
+
+\bibitem {Bertoti97} \textsc{Bert\'{o}ti, E.}:\ \textit{On mixed variational formulation
+of linear elasticity using nonsymmetric stresses and displacements}, International
+Journal for Numerical Methods in Engineering., \textbf{42}, (1997), 561-578.
+
+\bibitem {Szeidl2001} \textsc{Szeidl, G.}:\ \textit{Boundary integral equations for
+plane problems in terms of stress functions of order one}, Journal of Computational and
+Applied Mechanics, \textbf{2}(2), (2001), 237-261.
+
+\bibitem {Carlson67}  \textsc{Carlson D. E.}:\ \textit{On G\"{u}nther's stress functions
+for couple stresses}, Quart. Appl. Math., \textbf{25}, (1967), 139-146.
+\end{thebibliography}
+
+
+\appendix
+
+\section{The First Appendix}
+
+The appendix fragment is used only once. Subsequent appendices can be created
+using the Section Section/Body Tag.
+\end{document}

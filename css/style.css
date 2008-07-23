@@ -1,0 +1,257 @@
+#tl_margin {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	border-right: 1px #003366 solid;
+	margin-left: 0px;
+	padding-top: 10px;
+	background-color: #EEEEEE;
+	width: 200px;
+	z-index: 99;
+}
+
+.tl_margin_item {
+	position: absolute;
+	z-index: 100;
+	background-color: #CCCCCC;
+	color: #003366;
+	width: 190px;
+	padding-left:10px;
+	font-family: verdana, sans-serif;
+	font-size: 10pt;
+	text-align: left;
+}
+
+.tl_margin_item_bookmarked {
+	position: absolute;
+	border: 1px #C0C0C0 solid;
+	z-index: 100;
+	background-color: #EEEEAD;
+	color: #003366;
+	width: 188px;
+	padding-left:10px;
+	font-family: verdana, sans-serif;
+	font-size: 10pt;
+	text-align: left;
+}
+
+.tl_margin_item_info {
+	position: absolute;
+	z-index: 101;
+	background-color: #FFFFBE;
+	border: 2px #C0C0C0 solid;
+	color: #003366;
+	width: 180px;
+	padding-left:10px;
+	padding-right:10px;
+	font-family: verdana, sans-serif;
+	font-size: 10pt;
+	text-align: left;
+}
+
+.tl_dialog {
+	background-color: #CCDDDD;
+	border: 2px solid #242E35;
+	color: #242E35;
+	padding: 1px;
+	overflow: auto;
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+.tl_dialog td {
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+.tl_dialog_title {
+	background-color: #4A7B6F;
+	color: #EEEEE7;
+	text-align: left;
+	font-size: 12pt;
+	font-family: verdana, sans-serif;
+	border-bottom: 2px solid #242E35;
+	padding: 2px;	
+	margin-bottom: 5px;
+	cursor: move;
+}
+
+.tl_dialog_title td {
+	font-size: 12pt;
+	font-family: verdana, sans-serif;
+}
+
+
+.tl_dialog a:link {
+	color: #7F5E17;
+	text-decoration: none;
+}
+
+.tl_dialog a:visited {
+	color: #7F5E17;
+	text-decoration: none;
+}
+
+.tl_dialog a:hover {
+	color: #7F5E17;
+	text-decoration: underline;
+}
+
+#tl_document {
+	position: absolute;
+	top: 0px;
+	/*left: 215px;*/
+}
+
+#tl_snippet_dialog {
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	height: 300px;
+	width: 525px;
+	z-index: 2147483647;
+}
+
+#tl_snippet_activate {
+	position: fixed;
+	top: 0px;
+	left: 0px; 
+	z-index: 105;
+}
+
+
+#tl_point_dialog {
+	position: absolute;
+	top: 150px;
+	left: 150px;
+	height: 300px;
+	width: 500px;
+	z-index: 2147483647;
+}
+
+#tl_point_browser {
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	height: 300px;
+	width: 600px;
+	z-index: 2147483647;
+}
+
+#tl_search_results {
+	/*position: absolute;
+	left: 0px;
+	top: 0px;
+	color: #000000;
+	border-left: 1px #000 solid;
+	border-right: 1px #000 solid;
+	background-color: #FFFFFF;*/
+	font-size: 8pt;
+	text-align: left; 
+	z-index: auto;
+	width: 200px;
+	max-height: 300px;
+	overflow: auto;
+	max-width:400px;
+}
+
+#tl_search_results_child {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	color: #000000;
+	font-size: 8pt;
+	background-color: #FFFFFF;
+	border-left: 1px #000 solid;
+	border-right: 1px #000 solid;
+	text-align: left; 
+	z-index: 2147483647;
+	width: 200px;
+	max-height: 300px;
+	overflow: auto;
+}
+
+.help_box {
+	width: 300px;
+	position:absolute;
+	color: #003264;
+	font-size: 8pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+	background-color: #FFFFBE;
+	border: 3px #C0C0C0 solid;
+	z-index: 2147483647;
+	padding: 5px;
+}
+
+.results_box {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	color: #000000;
+	font-size: 10pt;
+	background-color: #FFFFFF;
+	border: 1px #000 solid;
+	text-align: left; 
+	z-index: auto;
+	width: 200px;
+	max-height: 300px;
+	overflow: auto;
+
+}
+
+.suggest_item {
+	background-color: #FFFFFF;
+	border-left: 1px #AAA solid;
+	border-right: 1px #AAA solid;
+	border-top: 1px #AAA solid;
+	border-bottom: 1px #AAA solid;
+	color: #000000;
+	padding: 2px;
+	overflow: hidden;
+}
+
+.suggest_item_over {
+	background-color: #3366CC;
+	border-left: 1px #AAA solid;
+	border-right: 1px #AAA solid;
+	border-top: 1px #AAA solid;
+	border-bottom: 1px #AAA solid;
+	color: #F5F5F5;
+	/*padding: 2px;*/
+	cursor: hand;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.tl_browser_item {
+	max-height: 50px;
+	overflow: hidden;
+}
+
+
+#tl_doc_info {
+	position: fixed;
+	width:200px;
+	font-size:8pt;
+	left: 0px;
+	top: 30px; 
+	z-index: 105;
+	background-color: #EEEEEE;
+}
+
+
+.hidden {
+	visibility:hidden;
+	display:none;
+}
+
+.highlight {
+	background: #FFFF00;
+}
+
+img {
+	cursor: auto;
+}

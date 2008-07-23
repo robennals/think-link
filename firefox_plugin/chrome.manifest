@@ -1,0 +1,5 @@
+content thinklink chrome/content/
+skin thinklink classic/1.0 chrome/skin/
+
+overlay chrome://browser/content/browser.xul chrome://thinklink/content/main.xul
+overlay chrome://browser/content/preferences/preferences.xul chrome://thinklink/content/prefs.xul

@@ -1,0 +1,10 @@
+<div class="snippet">
+<% if !options[:nopoint] %>
+<div class="snippet_point"><%= link_to snippet.point.txt, point_path(snippet.point) %></div>
+<% end %>
+<div class="snippet_text"><%= trim_string(snippet.txt) %></div>
+<%= "<a class='snippet_url' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
+<% if !options[:noauthor] %>
+<div class="snippet_author"><%= link_to snippet.user.email, user_path(snippet.user) %> </div>
+<% end %>
+</div>

@@ -1,0 +1,40 @@
+
+<% if params['page'] 
+		page = params['page'].to_i
+   else
+    page = page.to_i
+   end
+%>
+
+
+<div class="point">
+<h2>Snippets</h2>
+<div class="snippets">	
+	<% @point.snippets.slice(page*10,10).each do |snippet| %>
+	<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true} %>
+	<% end %>
+</div>
+<h2>Related Points</h2>
+
+<% @point.point_links_a.each do |pl| %>
+	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
+			<%= link_to pl.point_b.txt, point_path(pl.point_b) -%></div>
+<% end  %>
+
+<% @point.point_links_b.each do |pl| %>
+	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
+			<%= link_to pl.point_a.txt, point_path(pl.point_a) -%></div>
+<% end  %>
+
+
+
+<h2>Annotated By</h2>
+<ul>
+<% @point.users.each do |c| %>
+	<li><%= link_to c.email, user_path(c) -%></li>
+<% end  %>
+</ul>
+
+</div>
+
+<%= link_to 'Back', points_path %>

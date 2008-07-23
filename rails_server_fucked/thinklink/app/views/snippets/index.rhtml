@@ -1,0 +1,28 @@
+
+
+<% if params['page'] 
+		page = params['page'].to_i
+   else
+    page = page.to_i
+   end
+%>
+
+<div class="snippets">
+<h2>Recent Snippets : page <%= page %> </h2>
+	<% if page != 0 %>
+	<span class="more"><%= link_to 'prev', {:action => :list, :page => page-1} %></span>
+	<% end %>
+	<span class="more"><%= link_to 'next', {:action => :list, :page => page+1} %></span>
+
+	<% @snippets.slice(page*10,10).each do |snippet| %>
+	<%=	render_partial 'snippets/snippet', snippet %>
+	<% end %>
+
+	<% if page != 0 %>
+	<span class="more"><%= link_to 'prev', {:action => :list, :page => page-1} %></span>
+	<% end %>
+	<span class="more"><%= link_to 'next', {:action => :list, :page => page+1} %></span
+
+</div>
+
+<p><%= link_to "Add new Snippet", {:action => 'new' }%></p>

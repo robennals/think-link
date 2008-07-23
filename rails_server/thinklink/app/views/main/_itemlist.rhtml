@@ -1,0 +1,38 @@
+
+<% if params['page'] 
+		page = params['page'].to_i
+   else
+    page = page.to_i
+   end
+   
+   pagecount = (itemlist.length / 10) + 1
+%>
+
+
+<div class="points">
+<% if pagecount != 1 %>
+<h2>Page <%= page+1 %> of <%= pagecount %></h2>
+<% end %>
+	<% if page != 0 && pagecount != 1 %>
+	<span class="more"><%= link_to 'prev', {:page => page-1} %></span>
+	<% elsif pagecount != 1 %>
+	<span class="fakemore">prev</span>
+	<% end %>
+	<% if page+1 < pagecount %>
+	<span class="more"><%= link_to 'next', {:page => page+1} %></span>
+	<% end %>
+
+	<% itemlist.slice(page*10,10).each do |item| %>
+			<%=	render_partial renderer, item, :options => options %>
+	<% end %>
+
+	<% if page != 0 && pagecount != 1 %>
+	<span class="more"><%= link_to 'prev', {:page => page-1} %></span>
+	<% elsif pagecount != 1 %>
+	<span class="fakemore">prev</span>
+	<% end %>
+	<% if page+1 < pagecount %>
+	<span class="more"><%= link_to 'next', {:page => page+1} %></span>
+	<% end %>
+
+</div>

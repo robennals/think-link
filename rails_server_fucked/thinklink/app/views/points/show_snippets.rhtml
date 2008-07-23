@@ -1,0 +1,7 @@
+<h1><%= @point.name %></h1>
+<ul>
+<% @point.snippets.each do |c| %>
+	<li><%= link_to c.text, :controller => "snippet", :action => "show", :id => c.id -%></li>
+<% end  %>
+</ul>
+<%= link_to 'Back', {:action => 'list'} %>

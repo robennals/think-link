@@ -1,0 +1,11 @@
+<% if @points.blank? %>
+	<p>There are not any points currently in the system</p>
+<% else %>
+	<p>These are the points in our system</p>
+	<ul id="points">
+	<% @points.each do |c| %>
+		<li><%= link_to c.txt, {:controller => 'points', :action => 'show', :id => c.id} -%></li>
+	<% end %>
+	</ul>
+<% end %>
+<p><%= link_to "Add new Point", {:action => 'new' }%></p>

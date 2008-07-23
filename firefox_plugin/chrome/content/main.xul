@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<overlay id="thinklink-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" 
+	      src="chrome://thinklink/content/thinklink.js" />
+
+  <toolbox id="navigator-toolbox">
+
+	<toolbar id="nav-bar">
+			<toolbarbutton id="thinklink-button" position="2" 
+	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_show(this)"/>
+
+	</toolbar>
+	</toolbox>
+
+<!--
+	<menubar id="main-menubar">
+		<menu label="Think" accesskey="i" insertafter="tools-menu"> 
+					<menupopup>
+				<menuitem label="Edit Extractor for Page..." accesskey="E" tooltiptext="Show and interpret the structure of the page" oncommand="mashmaker_toolbar.openExtractEdit()"/>
+				<menuitem label="Edit Arg Extractor for URL..." accesskey="A" tooltiptext="Tell Mash Maker how to understand urls like this" oncommand="mashmaker_toolbar.editArgHandler()"/>
+				<menuitem label="Browse Properties..." accesskey="P" tooltiptext="Browse and edit the Mash Maker property names" oncommand="mashmaker_toolbar.browseProperties()"/>
+                <menuitem label="Test Mode" type="checkbox" id="MashMaker-testmode" oncommand="mashmaker_toolbar.toggleTestMode()"/>
+
+				<menuseparator/>
+				<menuitem label="Show Mashup URL" tooltiptext="Get a URL for this Mashup that you can email or put on a web page" oncommand="mashmaker_toolbar.showMashUrl()"/>
+				<menuitem label="Bookmark This Mashup..." insertbefore="subscribeToPageMenuitem" oncommand="mashmaker_toolbar.bookmarkMashup()"/>
+				</menupopup>
+		</menu>
+	</menubar>
+-->
+</overlay>

@@ -1,0 +1,15 @@
+<h1><%= @user.email %></h1>
+<h2>Points</h2>
+<ul>
+<% @user.points.each do |c| %>
+	<li><%= link_to c.txt, point_path(c) -%></li>
+<% end  %>
+</ul>
+
+<h2>Snippets</h2>
+<ul>
+<% @user.snippets.each do |c| %>
+	<li><%= link_to c.txt, snippet_path(c) -%></li>
+<% end  %>
+</ul>
+<%= link_to 'Back', points_path %>

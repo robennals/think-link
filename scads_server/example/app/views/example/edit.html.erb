@@ -1,0 +1,16 @@
+<%= link_to "<<< back", :action => 'index'%>
+<h1>Thing Data</h1>
+<% form_tag :action => 'update', :id => (params[:action] == "new" ? "" : @thing) do %>
+	<%= text_field_tag :thing_name, @thing[:name] %>
+	<%= submit_tag :save %>
+<% end %>
+
+<h2>SubThings</h2>
+<% form_remote_tag :url => {:action => 'add_subthing', :thing_id => @thing }, :update => 'subthings' do %>
+	<%= text_field_tag :subthing_name %>
+	<%= submit_tag :add %>
+<% end %>
+
+<div id='subthings'>
+	<%= render :partial => 'subthings' %>
+</div>

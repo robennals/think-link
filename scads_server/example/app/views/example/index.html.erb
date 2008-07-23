@@ -1,0 +1,13 @@
+<h1>Example Things</h1>
+<ul>
+	<% @things.each do |thing| %>
+	<li><%=link_to thing[:name], :action => 'edit', :id => thing %></li>
+		<ul>
+			<% thing.sub_things.each do |st| %>
+				<li><%= st[:name]%></li>
+			<% end %>
+		</ul>
+	<% end %>
+</ul>
+
+<%= link_to "Create new thing!", :action => 'new'%>

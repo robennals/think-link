@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://mashmaker/skin/mashui.css" type="text/css"?>
+
+
+<overlay id="thinklink-prefs"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+			   xmlns:html="http://www.w3.org/1999/xhtml"
+
+  <prefwindow id="BrowserPreferences">
+
+    <prefpane id="MashMaker-Prefs" label="Think Link" 
+              onpaneload="populateSchedulesList()" 
+              image="chrome://thinklink/skin/lightbulb.png">
+
+      <!-- Intermediary between GUI and preferences system -->
+      <preferences>
+      	<preference id="ThinkLink-pref-username" name="extensions.thinklink.username" type="string"/>
+      	<preference id="ThinkLink-pref-password" name="extensions.thinklink.password" type="string"/>
+      </preferences>
+	
+      <groupbox>
+      	<caption label="Account"/>
+          <grid>
+      		<columns><column/><column flex="1"/></columns>
+      		<rows>
+      		<row align="center">
+		        <label value="User Name:"/>
+    		    <textbox id="thinklink-username" preference="ThinkLink-pref-username" class="padded" flex="1" type="string"/>
+    		  </row>
+	        <row align="center">
+        		<label value="Password:"/>
+        		<textbox id="thinklink-password" preference="ThinkLink-pref-password" class="padded" flex="1" type="password"/>
+					</row>
+					</rows>
+			</grid>
+
+      </groupbox>
+        <separator/>
+        
+          <hbox align="center">
+              <label value="Don't have an account yet?"/>
+              <button label="Sign Up for a Think Link Account" oncommand="window.open('http://mashmaker.intel-research.net/thinklink/signup.html')"/>
+          </hbox>
+    </prefpane>
+  </prefwindow>
+</overlay>

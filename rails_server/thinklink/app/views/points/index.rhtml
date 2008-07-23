@@ -1,0 +1,4 @@
+
+<%= render_partial 'main/itemlist', @points, :options => {:noauthor => true}, :renderer => 'pointref' %>
+
+<p><%= link_to "Add new Point", {:action => 'new' }%></p>

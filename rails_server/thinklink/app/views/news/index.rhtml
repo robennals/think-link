@@ -1,0 +1,32 @@
+
+<% if @user %>
+
+<div class="points">
+<h2> My Recent Points</h2>
+	<div class="point_list">
+	<% @user.points.slice(0,10).each do |point| %>
+	<div class="point_ref"><%= link_to point.txt, point_path(point) %></div>	
+	<% end %> 
+	</div>
+	<span class="more"><%= link_to 'see all', {:controller => 'points', :action => 'mine'} %></span>
+
+</div>
+
+<div class="snippets">
+<h2>My Recent Snippets</h2>
+	<% @user.snippets.slice(0,4).each do |snippet| %>
+	<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor => true} %>
+	<% end %> 
+	<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'mine'} %></span>
+</div>
+<% end %>
+
+<div class="snippets"</h2>
+<h2>Snippets from Friends</h2>
+	<% Snippet.all(:order => "created_at desc").slice(0,4).each do |snippet| %>
+	<%=	render_partial 'snippets/snippet', snippet, :options => {} %>
+	<% end %> 
+	<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'list'} %></span>
+</div>
+
+<p><%= link_to "Add new Point", {:action => 'new' }%></p>
