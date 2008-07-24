@@ -29,6 +29,10 @@ class PointsController < ApplicationController
 		@title = @point.txt
 		emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
 	end
+	def showmini
+		@point = Point.find(params[:id])
+		render :layout => 'mini'		
+	end
 	def snippets
 		@point = Point.find(params[:id])
 		@snippets = @point.snippets
