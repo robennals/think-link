@@ -6,23 +6,23 @@
 	charset=iso-8859-1" />
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title><%= @title %> - Think Link</title>
-	<%= stylesheet_link_tag "style" %>
+	<%= stylesheet_link_tag "stylemini" %>
 	<!-- <%= javascript_include_tag :all, :cache => true %> -->
 	<% if @user.email.eql?("trush@eecs.berkeley.edu") %>
-		<script type="text/javscript" src="/javascripts/tl_bethconfig.js"></script>
+		<script type="text/javascript" src="/javascripts/tl_bethconfig.js"></script>
 	<% else %>
-		<script type="text/javscript" src="/javascripts/tl_robconfig.js"></script>
+		<script type="text/javascript" src="/javascripts/tl_robconfig.js"></script>
 	<% end %>
 
 	<script type="text/javascript" src="/javascripts/jquery-1.2.3.js"></script>
 	<script type="text/javascript" src="/javascripts/tl_suggest.js"></script>
-	<script type="text/javscript" src="/javascripts/tl_helpers.js"></script>
-	<script type="text/javscript" src="/javascripts/tl_ruby_helpers.js"></script>
+	<script type="text/javascript" src="/javascripts/tl_helpers.js"></script>
+	<script type="text/javascript" src="/javascripts/tl_ruby_helpers.js"></script>
 
 	
 </head>
 <body id="body">
-	<div id="topbar">
+	<!-- <div id="topbar">
 		<span id="logo">
 		<a href="/">Think Link</a>
 		</span>
@@ -42,11 +42,11 @@
 		<% end %>
 			</span>
 		</span>
-	</div>
+	</div> -->
 		<div id="container">
 
 	<div id="header">
-	<h1><%= @title %></h1>
+	<h1><%= @point.txt %></h1>
 	</div>
 	<div id="content">
 	<%= yield -%>
