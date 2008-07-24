@@ -7,25 +7,19 @@
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title><%= @title %> - Think Link</title>
 	<%= stylesheet_link_tag "style" %>
-	<%= javascript_include_tag :all, :cache => true %>
+	<!-- <%= javascript_include_tag :all, :cache => true %> -->
+	<% if @user.email.eql?("trush@eecs.berkeley.edu") %>
+		<script type="text/javscript" src="/javascripts/tl_bethconfig.js"></script>
+	<% else %>
+		<script type="text/javscript" src="/javascripts/tl_robconfig.js"></script>
+	<% end %>
+
 	<script type="text/javascript" src="/javascripts/jquery-1.2.3.js"></script>
 	<script type="text/javascript" src="/javascripts/tl_suggest.js"></script>
 	<script type="text/javscript" src="/javascripts/tl_helpers.js"></script>
+	<script type="text/javscript" src="/javascripts/tl_ruby_helpers.js"></script>
+
 	
-	<script language="javascript">
-		function bookmark(snippet_id){
-			doAJAX("tl_bookmark","new_bookmark.php?snippet="+snippet_id,function(result){
-				tl_log("bookmarked: "+snippet_id+","+result);
-			});
-		}
-		function trash(snippet_id) {
-			doAJAX("tl_delete","new_deletion.php?snippet="+snippet_id,function(result){
-				tl_log("deleted: "+snippet_id+","+result);
-				var parent = document.getElementById("snippet"+snippet_id).parentNode;
-				parent.removeChild(document.getElementById("snippet"+snippet_id));
-			});
-		}
-	</script>
 </head>
 <body id="body">
 	<div id="topbar">

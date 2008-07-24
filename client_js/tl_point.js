@@ -411,7 +411,7 @@ function tl_point_browser() {
 
 		var titleBar = $("<div/>").appendTo($("#"+this.divID))
 			.attr("id","tl_pb_title")
-			.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
+			//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
 			.addClass("tl_dialog_title");
 
 		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
