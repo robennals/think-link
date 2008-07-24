@@ -1,5 +1,6 @@
-class NewsController < ApplicationController
+require 'ruby-debug'
 
+class NewsController < ApplicationController
 	layout 'standard'
 
 	# TODO don't show points you have already seen
@@ -8,11 +9,5 @@ class NewsController < ApplicationController
 	def index
 		@title = "Recent Activity"
 		emit(Snippet.all(:limit => 10))
-	end
-	
-	
-	
-	private
-	
-	
+	end	
 end
