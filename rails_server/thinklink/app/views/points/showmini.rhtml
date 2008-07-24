@@ -24,7 +24,7 @@
 <h2>Snippets</h2>
 <div class="snippets">	
 	<% @point.snippets.slice(page*10,10).each do |snippet| %>
-		<% if !snippet.isdeleted(@user) && !isdeletedall %>
+		<% if !snippet.isdeleted(@user) && !snippet.isdeletedall %>
 			<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true, :bookmark => true, :trash=>true} %>
 		<% end %>
 	<% end %>
