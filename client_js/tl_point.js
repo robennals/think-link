@@ -389,6 +389,84 @@ function tl_point_browser() {
 		})
 		
 	}
+	
+	this.viewFrame = function(pointID) {
+		this.pointID = pointID;
+		var that = this;
+
+		// remove any existing point browser content... this should be changed eventually to allow multiple browsers?
+		$("#"+this.divID).empty();
+
+		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
+		var height =  $("#"+this.divID).height();
+		var width = $("#"+this.divID).width();
+		var position = findPos(document.getElementById(this.divID));
+		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
+			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
+			// stay in same spot	
+		}
+		else { // position in Y direction 
+			$("#"+this.divID).css("top",mouseY);
+		}
+
+		var titleBar = $("<div/>").appendTo($("#"+this.divID))
+			.attr("id","tl_pb_title")
+			.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
+			.addClass("tl_dialog_title");
+
+		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
+		var titleBox = $("<nobr>").text("Statement Browser").appendTo(titleBar);
+/*
+
+		var defaultText ="";
+		if (that.resultsObj['point_info'][0].agree=="1") { defaultText="I agree"; }
+		else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
+
+		var explainSpan = $("<span/>").css("padding-left","10px");
+
+		var thumbup = $("<img/>")
+			.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(titleBox).css("padding-left","4px")
+			.click(this.ratePointHandler).attr("id",1)
+			.hover(function(){ 
+				$(this).addClass("highlight");
+				$(explainSpan).text("I agree");
+			}, function(){ 
+				$(this).removeClass("highlight");
+				$(explainSpan).text(defaultText); 
+			});
+
+		var thumbdown = $("<img/>")
+			.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(titleBox)
+			.click(this.ratePointHandler).attr("id",0)
+			.hover(function(){ 
+				$(this).addClass("highlight");
+				$(explainSpan).text("I disagree");
+			}, function(){ 
+				$(this).removeClass("highlight");
+				$(explainSpan).text(defaultText); 
+			});
+
+		explainSpan.appendTo(titleBox);	
+*/
+		var help = $("<img/>")
+			.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
+			.click(that.showHelpBox)
+			.appendTo(buttonBox);	
+		var close = $("<img/>")
+			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
+			.click(function(){
+				that.hideMe();
+			});
+			
+		// add actual content
+		var pointframe = document.createElement("iframe");
+		pointframe.src = "http://mashmaker.intel-research.net:3001/points/showmini/"+pointID;
+		pointframe.style.width="100%";
+		pointframe.style.height="100%";
+		$("#"+this.divID).append($(pointframe));
+
+		this.showMe();	
+	}
 
 	this.viewPoint = function(element) {
 		var that = this;
@@ -772,7 +850,7 @@ function tl_search_results(parent) {
 			//.width($(document.thinklink_snippet.searchText).width())
 			.appendTo(this.parent);
 		
-		//$(document.thinklink_snippet.searchText).keydown(that.keyPressHandler);	
+		//$(document.thinklink_snippet.searchText).keydown(function(e) { that.keyPressHandler(e,that); });	
 		// for each point, add onto list and register click event to open point browser
 		this.resultsObj = result;
 		$("#"+this.divID).empty();
@@ -861,9 +939,9 @@ function tl_search_results(parent) {
 
 	}
 	
-	this.keyPressHandler = function(evt)
+	this.keyPressHandler = function(evt,classptr)
 	{
-
+		tl_log(classptr.divID);
 	  // don't do anything if the div is hidden
 	  var div = document.getElementById("tl_search_results");
 	  if (div.style.visibility == "hidden")

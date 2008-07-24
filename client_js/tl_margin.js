@@ -325,7 +325,8 @@ function tl_margin()
 				//$(margin_item).remove(buttonBox);
 			})
 			.click(function(){ // open point browse
-				myBrowser.getPointData(snippet.pointID,snippet.id); // access global var
+				//myBrowser.getPointData(snippet.pointID,snippet.id); // access global var
+				myBrowser.viewFrame(snippet.pointID);
 			})
 			.appendTo($("#" + this.divID));
 		
