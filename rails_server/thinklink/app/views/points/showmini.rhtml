@@ -8,10 +8,25 @@
 
 
 <div class="point">
+	<span id="new_related"></span>
+	<script language="javascript">
+		var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
+		var textbox = suggest.init();
+		suggest.setButtonClickEvent(function(){ alert("text box says "+ textbox.value); });
+		suggest.setResultCallback(function(item){ 
+	    	var row = document.createElement("span");  
+	    	row.id = item.id;
+	    	row.appendChild(document.createTextNode(item.txt));
+	    	return row;
+	 	});
+	</script>	
+	
 <h2>Snippets</h2>
 <div class="snippets">	
 	<% @point.snippets.slice(page*10,10).each do |snippet| %>
-	<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true} %>
+		<% if !snippet.isdeleted(@user) && !isdeletedall %>
+			<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true, :bookmark => true, :trash=>true} %>
+		<% end %>
 	<% end %>
 </div>
 <h2>Related Points</h2>
