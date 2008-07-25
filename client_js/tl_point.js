@@ -187,6 +187,14 @@ function tl_point_browser() {
 			
 			// now display the point
 			document.getElementById(that.divID).style.display = "block";
+			var me = document.getElementById(that.divID);
+			me.style.overflow = "hidden";
+			me.style.position = "fixed";
+			me.style.top = "0px";
+			me.style.width = (window.width * (2/3)) + "px";
+			me.style.height = (window.height * (2/3)) + "px";
+
+			
 			that.viewPoint(mainTable);
 			
 			// get available used space and fill it with snippets
@@ -397,57 +405,33 @@ function tl_point_browser() {
 		// remove any existing point browser content... this should be changed eventually to allow multiple browsers?
 		$("#"+this.divID).empty();
 
+		var me = document.getElementById(this.divID);
+		me.style.overflow = "hidden";
+		me.style.position = "fixed";
+		me.style.top = "0px";
+		me.style.left = "200px";
+		me.style.width = (window.innerWidth * (2/3)) + "px";
+		me.style.height = (window.innerHeight * (2/3)) + "px";
+
 		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
 		var height =  $("#"+this.divID).height();
 		var width = $("#"+this.divID).width();
 		var position = findPos(document.getElementById(this.divID));
-		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
-			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
-			// stay in same spot	
-		}
-		else { // position in Y direction 
-			$("#"+this.divID).css("top",mouseY);
-		}
+//		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
+//			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
+//			// stay in same spot	
+//		}
+//		else { // position in Y direction 
+//			$("#"+this.divID).css("top",mouseY);
+//		}
 
 		var titleBar = $("<div/>").appendTo($("#"+this.divID))
 			.attr("id","tl_pb_title")
-			//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
 			.addClass("tl_dialog_title");
 
 		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
 		var titleBox = $("<nobr>").text("Statement Browser").appendTo(titleBar);
-/*
 
-		var defaultText ="";
-		if (that.resultsObj['point_info'][0].agree=="1") { defaultText="I agree"; }
-		else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
-
-		var explainSpan = $("<span/>").css("padding-left","10px");
-
-		var thumbup = $("<img/>")
-			.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(titleBox).css("padding-left","4px")
-			.click(this.ratePointHandler).attr("id",1)
-			.hover(function(){ 
-				$(this).addClass("highlight");
-				$(explainSpan).text("I agree");
-			}, function(){ 
-				$(this).removeClass("highlight");
-				$(explainSpan).text(defaultText); 
-			});
-
-		var thumbdown = $("<img/>")
-			.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(titleBox)
-			.click(this.ratePointHandler).attr("id",0)
-			.hover(function(){ 
-				$(this).addClass("highlight");
-				$(explainSpan).text("I disagree");
-			}, function(){ 
-				$(this).removeClass("highlight");
-				$(explainSpan).text(defaultText); 
-			});
-
-		explainSpan.appendTo(titleBox);	
-*/
 		var help = $("<img/>")
 			.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
 			.click(that.showHelpBox)
@@ -460,7 +444,7 @@ function tl_point_browser() {
 			
 		// add actual content
 		var pointframe = document.createElement("iframe");
-		pointframe.src = "http://mashmaker.intel-research.net:3001/points/showmini/"+pointID;
+		pointframe.src = thinklink_pointbase+pointID;
 		pointframe.style.width="100%";
 		pointframe.style.height="100%";
 		$("#"+this.divID).append($(pointframe));
@@ -475,17 +459,25 @@ function tl_point_browser() {
 		$("#"+this.divID).empty();
 		
 		
-		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
-		var height =  $("#"+this.divID).height();
-		var width = $("#"+this.divID).width();
-		var position = findPos(document.getElementById(this.divID));
-		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
-			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
-			// stay in same spot	
-		}
-		else { // position in Y direction 
-			$("#"+this.divID).css("top",mouseY);
-		}
+//		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
+//		var height =  $("#"+this.divID).height();
+//		var width = $("#"+this.divID).width();
+//		var position = findPos(document.getElementById(this.divID));
+//		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
+//			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
+//			// stay in same spot	
+//		}
+//		else { // position in Y direction 
+//			$("#"+this.divID).css("top",mouseY);
+//		}
+		
+		var me = document.getElementById(this.divID);
+			me.style.overflow = "hidden";
+			me.style.position = "fixed";
+			me.style.top = "0px";
+			me.style.width = (window.width * (2/3)) + "px";
+			me.style.height = (window.height * (2/3)) + "px";
+
 		
 		var titleBar = $("<div/>").appendTo($("#"+this.divID))
 			.attr("id","tl_pb_title")
