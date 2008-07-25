@@ -45,12 +45,12 @@
 
 <% @point.point_links_a.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-			<%= link_to pl.point_b.txt, :controller=>'points', :action =>'showmini', :id=> pl.point_b -%></div>
+			<%= link_to pl.point_b.txt, point_path(pl.point_b), :target=>"_blank" -%></div>
 <% end  %>
 
 <% @point.point_links_b.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-			<%= link_to pl.point_a.txt, :controller=>'points', :action =>'showmini', :id=> pl.point_b -%></div>
+			<%= link_to pl.point_a.txt, point_path(pl.point_a), :target=>"_blank" -%></div>
 <% end  %>
 
 

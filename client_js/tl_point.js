@@ -417,39 +417,71 @@ function tl_point_browser() {
 		var height =  $("#"+this.divID).height();
 		var width = $("#"+this.divID).width();
 		var position = findPos(document.getElementById(this.divID));
-//		if ( (mouseX > position[0] && mouseX < (position[0]+width)) &&
-//			(mouseY > position[1] && mouseY < (position[1]+height)) ) {
-//			// stay in same spot	
-//		}
-//		else { // position in Y direction 
-//			$("#"+this.divID).css("top",mouseY);
-//		}
+		
+		var scriptID = "tl_point_ajax";
+		var thinklink_callback;
+		doAJAX("tl_get_point_info",this.pointsURL+"?id="+this.pointID,function(result){
+			that.resultsObj = result;
+			that.pointText = that.resultsObj['point_info'][0].txt;
 
-		var titleBar = $("<div/>").appendTo($("#"+this.divID))
-			.attr("id","tl_pb_title")
-			.addClass("tl_dialog_title");
+			var titleBar = $("<div/>").appendTo($("#"+that.divID))
+				.attr("id","tl_pb_title")
+				//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
+				.addClass("tl_dialog_title");
 
-		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-		var titleBox = $("<nobr>").text("Statement Browser").appendTo(titleBar);
+			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
+			var titleBox = $("<nobr>").text(that.pointText).appendTo(titleBar);
 
-		var help = $("<img/>")
-			.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
-			.click(that.showHelpBox)
-			.appendTo(buttonBox);	
-		var close = $("<img/>")
-			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
-			.click(function(){
-				that.hideMe();
-			});
+
+			var defaultText ="";
+			if (that.resultsObj['point_info'][0].agree=="1") { defaultText="I agree"; }
+			else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
+
+			var explainSpan = $("<span/>").css("padding-left","10px").text(defaultText);
+
+			var thumbup = $("<img/>")
+				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(titleBox).css("padding-left","4px")
+				.click(that.ratePointHandler).attr("id",1)
+				.hover(function(){ 
+					$(this).addClass("highlight");
+					$(explainSpan).text("I agree");
+				}, function(){ 
+					$(this).removeClass("highlight");
+					$(explainSpan).text(defaultText); 
+				});
+
+			var thumbdown = $("<img/>")
+				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(titleBox)
+				.click(that.ratePointHandler).attr("id",0)
+				.hover(function(){ 
+					$(this).addClass("highlight");
+					$(explainSpan).text("I disagree");
+				}, function(){ 
+					$(this).removeClass("highlight");
+					$(explainSpan).text(defaultText); 
+				});
+
+			explainSpan.appendTo(titleBox);	
+
+			var help = $("<img/>")
+				.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
+				.click(that.showHelpBox)
+				.appendTo(buttonBox);	
+			var close = $("<img/>")
+				.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
+				.click(function(){
+					that.hideMe();
+				});
 			
-		// add actual content
-		var pointframe = document.createElement("iframe");
-		pointframe.src = thinklink_pointbase+pointID;
-		pointframe.style.width="100%";
-		pointframe.style.height="100%";
-		$("#"+this.divID).append($(pointframe));
+			// add actual content
+			var pointframe = document.createElement("iframe");
+			pointframe.src = thinklink_pointbase+pointID;
+			pointframe.style.width="99%";
+			pointframe.style.height="95%";
+			$("#"+that.divID).append($(pointframe));
 
-		this.showMe();	
+			that.showMe();	
+		});
 	}
 
 	this.viewPoint = function(element) {
@@ -672,7 +704,7 @@ function tl_point_browser() {
 		tl_log(fieldString);
 		doAJAX(scriptID,myBrowser.newAgreeURL+fieldString,function(result){
 			tl_log("point agreement: " + result);
-			myBrowser.getPointData(myBrowser.pointID);
+			myBrowser.viewFrame(myBrowser.pointID);
 		});
 	}
 	

@@ -16,8 +16,8 @@
 		
 	<% end %>
 </div>
-<%= "<a class='snippet_url' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
+<%= "<a class='snippet_url'  target='_blank' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
 <% if !options[:noauthor] %>
-<div class="snippet_author"><%= link_to snippet.user.email, user_path(snippet.user) %> </div>
+<div class="snippet_author"><%= link_to snippet.user.email, user_path(snippet.user), :target=>"_blank" %> </div>
 <% end %>
 </div>
