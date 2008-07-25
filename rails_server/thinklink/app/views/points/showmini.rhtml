@@ -8,11 +8,23 @@
 
 
 <div class="point">
+	<select name="relation" id="new_related_relation">
+		<option value=\"related\">is related to</option>
+		<option>asserts</option>
+		<option>supports</option>
+		<option>opposes</option>
+	</select>
 	<span id="new_related"></span>
 	<script language="javascript">
 		var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
 		var textbox = suggest.init();
-		suggest.setButtonClickEvent(function(){ alert("text box says "+ textbox.value); });
+		suggest.setButtonClickEvent(function(){ 
+			var relation = document.getElementById("new_related_relation").value;
+			var fieldString = "?destid="+ encodeURIComponent(<%= @point.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
+			doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
+				tl_log("new point link: "+ result);
+			});
+		});
 		suggest.setResultCallback(function(item){ 
 	    	var row = document.createElement("span");  
 	    	row.id = item.id;
@@ -33,12 +45,12 @@
 
 <% @point.point_links_a.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-			<%= link_to pl.point_b.txt, point_path(pl.point_b) -%></div>
+			<%= link_to pl.point_b.txt, :controller=>'points', :action =>'showmini', :id=> pl.point_b -%></div>
 <% end  %>
 
 <% @point.point_links_b.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-			<%= link_to pl.point_a.txt, point_path(pl.point_a) -%></div>
+			<%= link_to pl.point_a.txt, :controller=>'points', :action =>'showmini', :id=> pl.point_b -%></div>
 <% end  %>
 
 
