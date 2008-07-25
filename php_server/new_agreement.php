@@ -13,7 +13,7 @@ $agree = postarg("agree");
 // check user and password
 $user = getUser($email,$pass);
 
-sql_query("INSERT INTO point_agreements (point,user,agree) VALUES ($pointid,$user,$agree) ON DUPLICATE KEY UPDATE agree=$agree;");
+sql_query("INSERT INTO point_agreements (point_id,user_id,agree) VALUES ($pointid,$user,$agree) ON DUPLICATE KEY UPDATE agree=$agree;");
 json_out(true);
 ?>
 
