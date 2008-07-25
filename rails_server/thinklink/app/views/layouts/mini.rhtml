@@ -22,36 +22,9 @@
 	
 </head>
 <body id="body">
-	<!-- <div id="topbar">
-		<span id="logo">
-		<a href="/">Think Link</a>
-		</span>
-		<span id="topright">
-			<span id="search">
-				<form action="/points/search" method="get">
-					<input type="text" name="query">
-					<input type="submit" value="search">
-				</form>
-			</span>
-			<span id="login">
-		<% if @user %>
-			<span id="username"><%= @user.email %></span> | 
-			<%= link_to 'Sign out', :controller => 'main', :action => 'signout' %>
-		<% else %>
-		<%= link_to 'Sign in', :controller => 'main', :action => 'login' %>
-		<% end %>
-			</span>
-		</span>
-	</div> -->
-		<div id="container">
-
-	<div id="header">
-	<h1><%= @point.txt %></h1>
-	</div>
+	<div id="container">
 	<div id="content">
 	<%= yield -%>
-	</div>
-	<div id="sidebar"></div>
 	</div>
 </body>
 </html>
