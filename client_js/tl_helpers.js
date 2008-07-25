@@ -18,33 +18,49 @@ function doAJAX(scriptID,url,callback) {
 }
 
 function mark_snippet(snippet) {
+	if(snippet[snippet.length-1] == " "){
+		snippet = snippet.substring(0,snippet.length-1);
+	}
 	var text = document.body.textContent.replace(/\s+/g," ");
 	var offset = text.indexOf(snippet);
 	if(offset == -1) return null;
 
 	var snipspans = [];
 	
-	addspans(document.body,offset,snippet.length,snippet,snipspans,false);
+	addspans(document.body,offset,snippet.length,snippet,snipspans,false,false);
 	return snipspans;
 }
 
-function addspans(node,start,length,snipText,snipspans,sawSpace) {
+function addspans(node,start,length,snipText,snipspans,sawSpace,ispre) {
 	var nodeText = node.textContent.replace(/\s+/g," ");
 	
 	if (start+length < nodeText.length) {
 		start = nodeText.indexOf(snipText);
 	}
 	
+	if (node.nodeName == "PRE"){
+		ispre = true;
+	}
 	if (node.nodeName == "#text") {
+		if(ispre){
+			var white = identify_whitespace(node.textContent);
+			nodeText = white.txt;
+			start = nodeText.indexOf(snipText);			
+		}
 		// before snippet
 		if (start != 0) {
-			var beforeNode = document.createTextNode(nodeText.substring(0,start));
+			var beforeTxt = nodeText.substring(0,start);
+			if(ispre){ beforeTxt = expand_whitespace(beforeTxt,0,white.white); }
+			var beforeNode = document.createTextNode(beforeTxt);
 			node.parentNode.insertBefore(beforeNode,node);
 		}
 		// during snippet
 		var newSpan = document.createElement("span");
 		newSpan.className = "highlight";
-		var middleNode = document.createTextNode(nodeText.substring(start,start+length));
+		
+		var middleTxt = nodeText.substring(start,start+length);
+		if(ispre) {middleTxt = expand_whitespace(middleTxt,start,white.white);	}	
+		var middleNode = document.createTextNode(middleTxt);
 		node.parentNode.insertBefore(newSpan,node);
 		newSpan.appendChild(middleNode);
 		snipspans.push(newSpan);
@@ -52,7 +68,9 @@ function addspans(node,start,length,snipText,snipspans,sawSpace) {
 		
 		// after snippet
 		if (start+length < nodeText.length) {
-			var afterNode = document.createTextNode(nodeText.substring(start+length));
+			var afterTxt = nodeText.substring(start+length);
+			if(ispre) {afterTxt = expand_whitespace(afterTxt,start+length,white.white);}
+			var afterNode = document.createTextNode(afterTxt);
 			node.parentNode.insertBefore(afterNode,node);
 		}
 		node.parentNode.removeChild(node);
@@ -72,7 +90,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace) {
 			if (childText[0] && childText[0].match(/^\s$/) && sawSpace) {start++;}
 			if (start < childText.length) {
 				var newLength = Math.min(childText.length,length);
-				addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false);
+				addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false,ispre);
 				length -= childText.length - start;
 				snipText = snipText.substring(newLength);
 			}
@@ -83,6 +101,46 @@ function addspans(node,start,length,snipText,snipspans,sawSpace) {
 			done += childText.length;
 		}
 	}
+}
+
+function identify_whitespace(rawtxt){
+	var whitespace = [];
+	var simptxt = "";
+	var whitechars = [" \t\n\r\f"];
+	var wasspace = false;
+	var j = 0;
+	for(var i = 0; i < rawtxt.length; i++){
+		var c = rawtxt[i];
+		if(c == " " || c=="\t" || c=="\n" || c=="\f"){
+			if(whitespace[j] === undefined){
+				whitespace[j] = "";
+			}
+			whitespace[j] += c;
+			wasspace = true;
+		}else{
+			if(wasspace){
+				simptxt+=" ";
+				j++;
+				wasspace = false;
+			}
+			wasspace = false;
+			simptxt+=c;
+			j++;
+		} 
+	}	
+	return {txt:simptxt,white:whitespace};
+}
+
+function expand_whitespace(text,off,spaces){
+	var bigtext = "";
+	for(var i = 0; i < text.length; i++){
+		if(spaces[i+off] !== undefined){			
+			bigtext += spaces[i+off];
+		}else{
+			bigtext += text[i];
+		}
+	}
+	return bigtext;
 }
 
 function removeSpans(spanList) {

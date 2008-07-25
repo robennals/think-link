@@ -115,16 +115,16 @@ function postarg($arg){
 function getUser($email,$pass) {
 	$user = sql_to_array("SELECT id FROM users WHERE email='$email' AND password='$pass'");
 	if (empty($user)) { 
-		error("bad login"); 
+		error("// bad login"); 
 	}
 	return $user[0]['id'];
 }
 
 function getDomain($url){
-	if(preg_match("/(\w*)\.(com|org|net|(\w*\.\w*))(\/|$)/",$url,$matches)){
+	if(preg_match("/(\w*)\.(com|org|net|info|(\w*\.\w*))(\/|$)/",$url,$matches)){
 		return $matches[1] . "." . $matches[2];
 	}else{
-		echo "no domain match";
+		echo "// no domain match";
 		return null;
 	}
 }
