@@ -1,3 +1,42 @@
+div.tabMain {	
+	border-top: 1px solid #000000;
+	/*border-bottom-width: 0px;*/
+}
+
+div.tabArea {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+a.tab {
+  background-color: #d0d0d0;
+  border: 1px solid #000000;
+  border-bottom-width: 0px;
+  padding: 2px 1em 2px 1em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.tab, a.tab:visited {
+  color: #808080;
+}
+
+a.tab:hover {
+  background-color: #d0d0d0;
+  color: #606060;
+}
+
+a.tab.activeTab, a.tab.activeTab:hover, a.tab.activeTab:visited {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.related_points .relationtitle {
+	margin-left: 5px;
+	font-style: italic;
+	border-bottom: 1px #000 solid;
+}
+
 .suggest_item {
 	background-color:#FFFFFF;
 	border:1px solid #AAAAAA;
@@ -24,6 +63,8 @@ body {
    font-color: #000;
    background-color: #fff;
    width: 100%;
+   margin:0px;
+   padding-top:5px;
 }
 input { 
    margin-bottom: 5px;
@@ -33,7 +74,7 @@ p {
 }
 div#container {
 /*   width: 760px; */
-   margin: 0;
+   margin: 0px;
 }
 div#header {
 /*   text-align: center; */
@@ -41,7 +82,7 @@ div#header {
 }
 div#content {
    float: left;
-   max-width: 550px; 
+   max-width: 400px; 
  
 }
 div#content h3 {
@@ -65,6 +106,7 @@ ul#points li {
 }
 .snippet {
 	padding: 10px;
+	max-width: 500px;
 }
 .snippet_point a, .point_ref a {
 	font-weight: bold;
@@ -97,9 +139,9 @@ ul#points li {
 	margin: 20px;
 }
 */
-.snippets {
+/*.snippets {
 	float: right;
-}
+}*/
 
 .point_ref {
 	padding-left: 10px;

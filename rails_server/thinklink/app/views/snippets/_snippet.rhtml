@@ -8,9 +8,9 @@
 	<% end %>
 	<% if options[:bookmark] %>
 		<% if snippet.isbookmarked(@user) %>
-			<img src="/images/star.png"/>
+			<img src="/images/star.png"  id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
 		<% else %>
-			<img src="/images/star_empty.png" id="bookstar<%= snippet.id %>" onClick="this.src='/images/star.png'; bookmark(<%= snippet.id %>); " />
+			<img src="/images/star_empty.png" id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
 		<% end %>
 		(<%= snippet.numbookmarks %>) 
 		

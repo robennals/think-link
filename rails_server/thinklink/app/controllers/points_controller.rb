@@ -31,6 +31,11 @@ class PointsController < ApplicationController
 	end
 	def showmini
 		@point = Point.find(params[:id])
+		@supportsLinks = PointLink.find(:all, :conditions => "(point_b_id = #{@point.id} AND howlinked='supports') OR (point_a_id = #{@point.id} AND howlinked='supports')")
+		@sameLinks = PointLink.find(:all, :conditions => "(point_b_id = #{@point.id} AND howlinked='same') OR (point_a_id = #{@point.id} AND howlinked='same')")
+		@opposesLinks = PointLink.find(:all, :conditions => "(point_b_id = #{@point.id} AND howlinked='opposes') OR (point_a_id = #{@point.id} AND howlinked='opposes')")
+		@oppositeLinks = PointLink.find(:all, :conditions => "(point_b_id = #{@point.id} AND howlinked='opposite') OR (point_a_id = #{@point.id} AND howlinked='opposite')")
+		#debugger
 		render :layout => 'mini'		
 	end
 	def snippets

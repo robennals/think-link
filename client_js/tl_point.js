@@ -426,6 +426,8 @@ function tl_point_browser() {
 
 			var titleBar = $("<div/>").appendTo($("#"+that.divID))
 				.attr("id","tl_pb_title")
+				.css("margin-bottom","0px")
+				.css("cursor","auto")
 				//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
 				.addClass("tl_dialog_title");
 
@@ -474,11 +476,15 @@ function tl_point_browser() {
 				});
 			
 			// add actual content
+			var frameholder = document.createElement("div");
 			var pointframe = document.createElement("iframe");
 			pointframe.src = thinklink_pointbase+pointID;
-			pointframe.style.width="99%";
-			pointframe.style.height="95%";
-			$("#"+that.divID).append($(pointframe));
+			pointframe.style.width="100%";
+			pointframe.style.height="100%";
+			frameholder.appendChild(pointframe);
+			frameholder.style.width="100%";
+			frameholder.style.height="100%";
+			$("#"+that.divID).append($(frameholder));
 
 			that.showMe();	
 		});
