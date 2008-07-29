@@ -1,0 +1,11 @@
+<% if @topics.blank? %>
+	<p>There are not any topics currently in the system</p>
+<% else %>
+	<p>These are the topics in our system</p>
+	<ul id="points">
+	<% @topics.each do |c| %>
+		<li><%= link_to c.txt, {:action => 'show', :id => c.id} -%></li>
+	<% end %>
+	</ul>
+<% end %>
+<p><%= link_to "Add new Topic", {:action => 'new' }%></p>

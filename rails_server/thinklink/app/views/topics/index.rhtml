@@ -1,0 +1,4 @@
+
+<%= render_partial 'main/itemlist', @topics, :options => {:noauthor => true}, :renderer => 'topicref' %>
+
+<p><%= link_to "Add new Topic", {:action => 'new' }%></p>

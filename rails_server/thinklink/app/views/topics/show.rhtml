@@ -1,0 +1,20 @@
+
+<% if params['page'] 
+		page = params['page'].to_i
+   else
+    page = page.to_i
+   end
+%>
+
+
+<div class="point">
+<h2>Topic Points</h2>
+<div class="snippets">	
+	<% @topic.points.slice(page*10,10).each do |point| %>
+	<%= link_to point.txt, point_path(point) -%>
+	<% end %>
+</div>
+
+</div>
+
+<%= link_to 'Back', topics_path %>

@@ -14,6 +14,38 @@ class Point < ActiveRecord::Base
 	def point_links_b
 		return PointLink.find :all, :conditions => "point_b_id = #{self.id}"
 	end
+	
+	def supporting_links(user)
+	  links = PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='supports') OR (point_a_id = #{self.id} AND howlinked='supports')")
+	  links.delete_if {|l|
+	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
+	  }
+	  return links
+	end
+	
+	def same_links(user)
+		links= PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='same') OR (point_a_id = #{self.id} AND howlinked='same')")
+		links.delete_if {|l|
+	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
+	  }
+	  return links
+	end
+	
+	def opposing_links(user)
+		links= PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='opposes') OR (point_a_id = #{self.id} AND howlinked='opposes')")
+		links.delete_if {|l|
+	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
+	  }
+	  return links
+	end
+	
+	def opposite_links(user)
+		links= PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='opposite') OR (point_a_id = #{self.id} AND howlinked='opposite')")
+		links.delete_if {|l|
+	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
+	  }
+	  return links
+	end
 
   def isdeleted(user)
 	  if user.nil? 

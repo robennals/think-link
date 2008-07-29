@@ -1,0 +1,12 @@
+<h1>Add new topic</h1>
+
+<% form_for @topic do |f| -%>
+<%=	f.error_messages %>
+ <p>
+    <%= f.label :txt %><br />
+    <%= f.text_field :txt %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
