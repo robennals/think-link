@@ -55,6 +55,11 @@ ul#points li {
 .point_ref {
 	padding-top: 6px;
 }
+.relationtitle {
+	margin-left: 5px;
+	font-style: italic;
+	border-bottom: 1px #000 solid;
+}
 .snippet_url {
 	text-decoration: none;
 	color: #000077;

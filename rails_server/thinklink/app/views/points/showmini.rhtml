@@ -18,7 +18,7 @@
 	<div class="snippets tabMain" id="snippets<%= @point.id %>">	
 		<% @point.snippets.slice(page*10,10).each do |snippet| %>
 			<% if !snippet.isdeleted(@user) && !snippet.isdeletedall %>
-				<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true, :bookmark => true, :trash=>true} %>
+				<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor=>true,:nopoint => true, :bookmark => true, :trash=>true} %>
 			<% end %>
 		<% end %>
 	</div>
@@ -53,76 +53,12 @@
 		    	return row;
 		 	});
 		</script>
-
-		<% if !@supportsLinks.nil? && !@supportsLinks.empty? %>
-			<span class="relationtitle">supporting points</span>
-			<% @supportsLinks.each do |pl| %>
-				<% if !@point.eql?(pl.point_b) %>
-					<% other = pl.point_b %>
-				<% else %>
-					<% other = pl.point_a %>
-				<% end %>
-				<% if !other.isdeleted(@user) && !other.isdeletedall %>
-					<div class='point_ref' id="point<%= other.id %>">
-						<%= link_to other.txt, point_path(other), :target=>"_blank" -%>
-						<img src="/images/bin_closed.png" onClick="trashPoint(<%= other.id %>);" />
-					</div>
-				<% end %>
-			<% end %>
-			<br />
-		<% end %>
-		<% if !@sameLinks.nil? && !@sameLinks.empty? %>
-			<span class="relationtitle">same points</span>
-			<% @sameLinks.each do |pl| %>
-				<% if !@point.eql?(pl.point_b) %>
-					<% other = pl.point_b %>
-				<% else %>
-					<% other = pl.point_a %>
-				<% end %>
-				<% if !other.isdeleted(@user) && !other.isdeletedall %>
-					<div class='point_ref' id="point<%= other.id %>">
-						<%= link_to other.txt, point_path(other), :target=>"_blank" -%>
-						<img src="/images/bin_closed.png" onClick="trashPoint(<%= other.id %>);" />
-					</div>
-				<% end %>
-			<% end %>
-			<br />
-		<% end %>
-		<% if !@apposesLinks.nil? && !@apposesLinks.empty? %>
-			<span class="relationtitle">opposing points</span>
-			<% @apposesLinks.each do |pl| %>
-				<% if !@point.eql?(pl.point_b) %>
-					<% other = pl.point_b %>
-				<% else %>
-					<% other = pl.point_a %>
-				<% end %>
-				<% if !other.isdeleted(@user) && !other.isdeletedall %>
-					<div class='point_ref' id="point<%= other.id %>">
-						<%= link_to other.txt, point_path(other), :target=>"_blank" -%>
-						<img src="/images/bin_closed.png" onClick="trashPoint(<%= other.id %>);" />
-					</div>
-				<% end %>
-			<% end %>
-			<br />
-		<% end %>
-		<% if !@oppositeLinks.nil? && !@oppositeLinks.empty? %>
-			<span class="relationtitle">opposite points</span>
-			<% @oppositeLinks.each do |pl| %>
-				<% if !@point.eql?(pl.point_b) %>
-					<% other = pl.point_b %>
-				<% else %>
-					<% other = pl.point_a %>
-				<% end %>
-				<% if !other.isdeleted(@user) && !other.isdeletedall %>
-					<div class='point_ref' id="point<%= other.id %>">
-						<%= link_to other.txt, point_path(other), :target=>"_blank" -%>
-						<img src="/images/bin_closed.png" onClick="trashPoint(<%= other.id %>);" />
-					</div>
-				<% end %>
-			<% end %>
-		<br />
-		<% end %>
-	
+		
+		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'supporting points'} %>
+		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'same points'} %>
+		<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposing points'} %>
+		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposite points'} %>
+		
 		<!-- 
 		<% @point.point_links_a.each do |pl| %>
 			<div class='point_ref'>
@@ -162,17 +98,16 @@
 		    	return row;
 		 	});
 		</script>
-		<ul>
+		
 		<% @point.topics.each do |c| %>
-			<li><%=  c.txt %></li>
+			<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target=>"_blank" -%> </div>
 		<% end  %>
-		</ul>
 	</div>
 
 	<div class="hidden" id="annotated<%= @point.id %>">
 		<ul>
 		<% @point.users.each do |c| %>
-			<li><%= link_to c.email, user_path(c) -%></li>
+			<li><%= link_to c.email, user_path(c), :target=>"_blank" -%></li>
 		<% end  %>
 		</ul>
 	</div>

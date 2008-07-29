@@ -16,6 +16,11 @@
 </div>
 <h2>Related Points</h2>
 
+<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting points'} %>
+<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same points'} %>
+<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :title=>'opposing points'} %>
+<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'opposite points'} %>
+<!-- 
 <% @point.point_links_a.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
 			<%= link_to pl.point_b.txt, point_path(pl.point_b) -%></div>
@@ -25,7 +30,7 @@
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
 			<%= link_to pl.point_a.txt, point_path(pl.point_a) -%></div>
 <% end  %>
-
+-->
 
 
 <h2>Annotated By</h2>
