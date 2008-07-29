@@ -7,6 +7,6 @@ MainFile=web_of_ideas.tex
 UseBibTeX=0
 UseMakeIndex=0
 ActiveProfile=LaTeX => PDF
-ProjectLanguage=de
-ProjectDialect=DE
+ProjectLanguage=
+ProjectDialect=
 

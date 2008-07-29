@@ -2,7 +2,7 @@
 function tl_normurl(){	
 	this.essentialArg = function(str){
 		var str = str.toLowerCase();
-		if(str.match("id") || str.match("article") || str.match("post") || str.match("story")){
+		if(str.match("id") || str.match("article") || str.match("post") || str.match("story") || str.match("m")){
 			return true;
 		}else{
 			return false;
@@ -39,9 +39,11 @@ function tl_normurl(){
     
     var argstrs = formstr.match(/[^=\&]+=[^=\&]*/g);
     var formargs = {};
-    for(var i = 0; i < argstrs.length; i++){
-        var parts = argstrs[i].match(/(.*)=(.*)/);
-        formargs[parts[1]] = parts[2];
+    if(argstrs){
+	    for(var i = 0; i < argstrs.length; i++){
+	        var parts = argstrs[i].match(/(.*)=(.*)/);
+	        formargs[parts[1]] = parts[2];
+	    }
     }
         
     return {base:baseurl,args:formargs};

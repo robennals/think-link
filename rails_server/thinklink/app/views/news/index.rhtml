@@ -1,6 +1,7 @@
 
 <% if @user %>
 
+<!--
 <div class="points">
 <h2> My Recent Points</h2>
 	<div class="point_list">
@@ -11,7 +12,7 @@
 	<span class="more"><%= link_to 'see all', {:controller => 'points', :action => 'mine'} %></span>
 
 </div>
-
+-->
 <div class="snippets">
 <h2>My Recent Snippets</h2>
 	<% @user.snippets.slice(0,4).each do |snippet| %>
