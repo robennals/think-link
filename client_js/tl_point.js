@@ -481,6 +481,7 @@ function tl_point_browser() {
 			pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
 			pointframe.style.width="100%";
 			pointframe.style.height="100%";
+			pointframe.style.overflow = "scroll";
 			frameholder.appendChild(pointframe);
 			frameholder.style.width="100%";
 			frameholder.style.height="100%";

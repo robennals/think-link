@@ -15,8 +15,12 @@
 		<a class="tab" id="atab_link" onClick="showTab('atab_link',['ptab_link','stab_link','ttab_link']); toggleDiv('annotated<%= @point.id %>','',['points<%= @point.id %>','snippets<%= @point.id %>','topics<%= @point.id %>']); return false;">annotated by</a>
 	</div>
 	<!-- <h2>Snippets</h2> -->
-	<div class="snippets tabMain" id="snippets<%= @point.id %>">	
+	<div class="snippets tabMain" id="snippets<%= @point.id %>">
+		<% if !@currentSnip.nil? %>
+			<%=	render_partial 'snippets/snippet', @currentSnip, :options => {:noauthor=>true,:nopoint => true, :bookmark => true, :trash=>true} %>
+		<% end %>
 		<% @point.snippets.slice(page*10,10).each do |snippet| %>
+			<% next if snippet.eql?(@currentSnip) %>
 			<% if !snippet.isdeleted(@user) && !snippet.isdeletedall %>
 				<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor=>true,:nopoint => true, :bookmark => true, :trash=>true} %>
 			<% end %>
@@ -112,5 +116,5 @@
 		</ul>
 	</div>
 
-
+<br/>
 <!-- <%= link_to 'Back', points_path %> -->
