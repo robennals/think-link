@@ -10,5 +10,13 @@ class User < ActiveRecord::Base
 	validates_uniqueness_of :email
 	validates_confirmation_of :password
 	validates_presence_of :email
+	
+	def displayname
+	  if (!self.name.empty?)
+	    return self.name
+	  else
+	    return self.email
+	  end
+	end
 		
 end

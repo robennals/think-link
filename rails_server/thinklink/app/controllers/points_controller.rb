@@ -31,6 +31,7 @@ class PointsController < ApplicationController
 	end
 	def showmini
 		@point = Point.find(params[:id])
+		@currentSnip = Snippet.find(params[:snippet])
     #debugger
 		render :layout => 'mini'		
 	end

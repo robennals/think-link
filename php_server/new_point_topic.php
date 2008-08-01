@@ -23,7 +23,7 @@ if (empty($source)) {
 }
 else $sourceid=$source[0]['id']; // use existing
 
-$query = "INSERT INTO point_topics (topic_id,point_id) VALUES ($sourceid,$point);";
+$query = "INSERT INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
 sql_query($query);
 
 json_out(true);

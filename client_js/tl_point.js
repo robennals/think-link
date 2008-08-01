@@ -398,7 +398,7 @@ function tl_point_browser() {
 		
 	}
 	
-	this.viewFrame = function(pointID) {
+	this.viewFrame = function(pointID,snipID) {
 		this.pointID = pointID;
 		var that = this;
 
@@ -478,7 +478,7 @@ function tl_point_browser() {
 			// add actual content
 			var frameholder = document.createElement("div");
 			var pointframe = document.createElement("iframe");
-			pointframe.src = thinklink_pointbase+pointID;
+			pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
 			pointframe.style.width="100%";
 			pointframe.style.height="100%";
 			frameholder.appendChild(pointframe);

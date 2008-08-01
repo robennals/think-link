@@ -1,5 +1,5 @@
 <% if options[:trash] %>	
-	<div id="<%= pointref.id %>" class="point_ref">
+	<div id="point<%= pointref.id %>" class="point_ref">
 		<%= link_to pointref.txt, point_path(pointref), :target=>"_blank" -%>
 		<img src="/images/bin_closed.png" onClick="trashPoint(<%= pointref.id %>);" />
 	</div>

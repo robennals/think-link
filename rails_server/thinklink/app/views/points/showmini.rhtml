@@ -107,7 +107,7 @@
 	<div class="hidden" id="annotated<%= @point.id %>">
 		<ul>
 		<% @point.users.each do |c| %>
-			<li><%= link_to c.email, user_path(c), :target=>"_blank" -%></li>
+			<li><%= link_to c.displayname, user_path(c), :target=>"_blank" -%></li>
 		<% end  %>
 		</ul>
 	</div>

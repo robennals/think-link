@@ -32,11 +32,17 @@
 <% end  %>
 -->
 
-
+<h2>Topics</h2>
+<div>
+	<% @point.topics.each do |c| %>
+		<div class="topic_ref"><%= link_to c.txt, topic_path(c) -%> </div>
+	<% end  %>
+	<br/>
+</div>
 <h2>Annotated By</h2>
 <ul>
 <% @point.users.each do |c| %>
-	<li><%= link_to c.email, user_path(c) -%></li>
+	<li><%= link_to c.displayname, user_path(c) -%></li>
 <% end  %>
 </ul>
 

@@ -1,9 +1,8 @@
-<% if options[:newpage] %>
-	<% target="_blank" %>
-<% else %>
-	<% target="_self" %>
-<% end %>
+
+
+
 <% linkedto = options[:linkedto] %>
+
 
 <% if !pointlinks.nil? && !pointlinks.empty? %>
 	<span class="relationtitle"><%= options[:title] %></span>
@@ -13,7 +12,12 @@
 		<% else %>
 			<% other = pl.point_a %>
 		<% end %>
-		<%=	render_partial 'points/pointref', other, :options => {:trash=>true} %>
+		<% if options[:newpage] %>
+			<%=	render_partial 'points/pointref', other, :options => {:trash=>true} %>
+		<% else %>
+			<%=	render_partial 'points/pointref', other, :options =>{} %>
+		<% end %>
+		
 	<% end %>
 	<br />
 <% end %>

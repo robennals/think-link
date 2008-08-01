@@ -10,98 +10,80 @@ $pass = $HTTP_COOKIE_VARS["password"];
 $user = getUser($email,$pass);
 
 $text = getarg("text");
-// $keywords = explode(" ",$text);
 
-$suggestions = sql_to_array(<<<END
-	SELECT id,txt FROM points WHERE 
-		MATCH (txt) 
-		AGAINST ("$text")
-	LIMIT 20
-END
-);
+function getPointlist ($user) {
+	$pointlist = array();
 
-// get recent points created by user
-$recent = getRecentPoints($user);
-// get points one hop away from those recent points
-$oneHops = array();
-foreach ($recent as $point) {
-	$oneHopArray = oneHop($point['id']);
-	foreach ($oneHopArray as $one) { $oneHops[] = $one['id']; }
-}
-$oneHops = array_unique($oneHops);
-// get points two hops awawy from recent points
-$twoHops = twoHop($oneHops);
-// combine one hops and two hop, removing duplicates
-$both = array_merge($oneHops,array_diff($twoHops,$oneHops));
-$recentSuggestions = output($both,$recent);
-// get intersection of recent points and textual suggestions
-// move intersecting points to beginning of suggetion list
-$intersection = array();
-foreach ($recentSuggestions as $point) {
-	$index = findid($suggestions,$point['id']);
-	if ($index>=0) { 
-		$intersection[] = $suggestions[$index];
-		array_splice($suggestions,$index,1);
+	// recent point links created
+	$p_plinks = sql_query("(SELECT DISTINCT point_b_id AS p FROM point_links WHERE user_id=$user ORDER BY id DESC LIMIT 10)
+							UNION
+							(SELECT DISTINCT point_a_id AS p FROM point_links WHERE user_id=$user ORDER BY id DESC LIMIT 10)");
+	while ($row = mysql_fetch_row($p_plinks)) {
+		$pointlist[] = $row[0];
 	}
-}
-$weightedSuggestions = array_merge($intersection,$suggestions);
-/*
-echo "<pre>";
-print_r($suggestions);
-echo "</pre>";
-*/
-function getRecentPoints($user) {
-	$query = "SELECT DISTINCT point_id AS id,points.txt FROM snippets,points WHERE snippets.user_id=$user AND points.id=point_id ORDER BY snippets.created_at DESC LIMIT 20";
-	return sql_to_array($query);
-}
 
-function oneHop($pointid) {
-	$query = "(
-	SELECT point_a_id AS id 
-	FROM  point_links 
-	WHERE point_b_id =$pointid
-	)
-	UNION (
-	SELECT point_b_id AS id 
-	FROM  point_links 
-	WHERE point_a_id =$pointid
-	) LIMIT 20";
-	
-	return sql_to_array($query);
-}
-
-function twoHop($pointids) {
-	$twohops = array();
-	foreach ($pointids as $pointid) {
-		$result = oneHop($pointid);
-		foreach ($result as $one) { $twohops[] = $one['id']; }
+	// recent points from snippets
+	$p_snippet = sql_query("SELECT DISTINCT point_id AS p
+							FROM snippets
+							WHERE snippets.user_id =$user
+							ORDER BY snippets.created_at DESC LIMIT 20");
+	while ($row = mysql_fetch_row($p_snippet)) {
+		$pointlist[] = $row[0];
 	}
-	return array_unique($twohops);
+
+
+	// recent points linked to topics
+	$p_ptopics = sql_query("SELECT DISTINCT point_id AS p
+							FROM point_topics
+							WHERE user_id =$user
+							ORDER BY id DESC LIMIT 20");
+	while ($row = mysql_fetch_row($p_ptopics)) {
+		$pointlist[] = $row[0];
+	}
+
+
+	$pointlist = array_unique($pointlist);
+	$points = implode(",",$pointlist);
+
+	// other points from topics recently linked to the above points
+	$p_tpoints = sql_query("SELECT DISTINCT point_id as p
+							FROM ( SELECT DISTINCT topic_id FROM  point_topics WHERE point_id IN ($points)
+								) as sub, point_topics
+							WHERE sub.topic_id = point_topics.topic_id LIMIT 20");
+	while ($row = mysql_fetch_row($p_tpoints)) {
+		$pointlist[] = $row[0];
+	}
+
+	return array_unique($pointlist);
 }
 
-function output($pointids,$recent) {
-	$final = array();
-	foreach ($pointids as $pointid) {
-		$text = findText($pointid,$recent);
-		$temp = array('id'=>$pointid, 'txt'=>$text);
-		$final[] = $temp;
-	}
-	return $final;
+function compare($a,$b) {
+	if ($a['id']===$b['id']) return 0;
+	else if ($a['id'] > $b['id']) return 1;
+	else return -1;
 }
 
-function findText($pointid,$recent) {
-	foreach($recent as $text) {
-		if ($text['id']==$pointid) { return $text['txt']; }
-	}
-	return "";
+
+$pointlist = getPointlist($user);
+$points = implode(",",$pointlist);
+
+// get full text of points on list
+$pointSuggestions = sql_to_array("SELECT id,txt FROM points WHERE id IN ($points)");
+
+// get suggestions from textual search
+$textSuggestions = array();
+$textpoints = array();
+$textSuggestionsResult = sql_query("SELECT id, txt FROM points WHERE MATCH(txt) AGAINST ('$text') LIMIT 20");
+while ($row = mysql_fetch_assoc($textSuggestionsResult)) {
+	$textSuggestions[] = $row;
+	$textpoints[] = $row['id'];
 }
 
-function findid($points,$id) {
-	foreach ($points as $index=>$point) {
-		if ($point['id']==$id) { return $index; }
-	}
-	return -1;
-}
+// compare text's point list to generated point list
+$same = array_uintersect($pointSuggestions,$textSuggestions,"compare");
+$reducedTextSugs = array_udiff($textSuggestions,$same,"compare");
+$reducedPointSugs = array_udiff($pointSuggestions,$same,"compare");
+$weightedSuggestions = array_merge($same,$reducedPointSugs,$reducedTextSugs);
 
 
 json_out($weightedSuggestions);

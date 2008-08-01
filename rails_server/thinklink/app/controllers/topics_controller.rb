@@ -25,6 +25,7 @@ class TopicsController < ApplicationController
 	
 	def show
 		@topic = Topic.find(params[:id])
+  	#debugger
 		@title = @topic.txt
 		emit(@topic,{:only => [:txt], :include => :points})
 	end
@@ -39,10 +40,35 @@ class TopicsController < ApplicationController
 	  @topic = Topic.new
 	end
 	
+	def newparent
+	  parent = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'")
+  	# create parent topic if it doesn't exist already
+	  if parent.nil?
+	    parent = Topic.new(params[:topic])
+	    if !parent.save
+	      emit(parent.errors)
+	    end
+	  end
+	  link = TopicLink.new(:child_id=>"#{params[:id]}", :parent_id=>"#{parent.id}", :user_id=>"#{@user.id}")
+	  emit(link.save, :format=>"json")
+	end
+	
+	def newchild
+	  child = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'")
+  	# create parent topic if it doesn't exist already
+	  if child.nil?
+	    child = Topic.new(params[:topic])
+	    if !child.save
+	      emit(child.errors)
+	    end
+	  end
+	  link = TopicLink.new(:parent_id=>"#{params[:id]}", :child_id=>"#{child.id}", :user_id=>"#{@user.id}")
+	  emit(link.save, :format=>"json")
+	end
+	
 	def create
 		@topic = Topic.new(params[:topic])
 		@topic.user_id = @user.id
-  	  #debugger
     respond_to do |format|
       if @topic.save
         flash[:notice] = 'Topic was successfully created.'

@@ -25,7 +25,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		this.button.setAttribute("type","button");
 		this.button.setAttribute("value","submit"); 
 		this.parent.appendChild(this.button);
-		this.resultsDiv = document.createElement("span");
+		this.resultsDiv = document.createElement("div");
 		this.resultsDiv.className = "hidden";
 		this.parent.appendChild(this.resultsDiv);
 		
@@ -95,6 +95,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		this.resultsList = result;
 		if (this.attached) {
 			var resultsPosition = findPos(this.textBox); // location of search text box
+			this.resultsDiv.style.position = "absolute";
 			this.resultsDiv.style.left = resultsPosition[0] + "px";
 			this.resultsDiv.style.top = (resultsPosition[1] + parseInt(this.textBox.offsetHeight)) + "px";
 			this.resultsDiv.style.width = this.textBox.offsetWidth +"px"; 

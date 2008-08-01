@@ -326,7 +326,7 @@ function tl_margin()
 			})
 			.click(function(){ // open point browse
 				//myBrowser.getPointData(snippet.pointID,snippet.id); // access global var
-				myBrowser.viewFrame(snippet.pointID);
+				myBrowser.viewFrame(snippet.pointID, snippet.id);
 			})
 			.appendTo($("#" + this.divID));
 		
