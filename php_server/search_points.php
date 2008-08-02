@@ -11,6 +11,12 @@ $user = getUser($email,$pass);
 
 $text = getarg("text");
 
+
+// HACK: revert to the old method as the new method doesn't seem to be working
+json_out(sql_to_array("SELECT id,txt FROM points WHERE MATCH(txt) AGAINST ('$text') LIMIT 20"));
+exit;
+
+
 function getPointlist ($user) {
 	$pointlist = array();
 
