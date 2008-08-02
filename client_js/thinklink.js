@@ -26,4 +26,10 @@ if (document.getElementById("tl_margin") == null) {
 	var tl_browserInfo = new getBrowserInfo();
 	var tl_dragElement = new Object();
 
+	if(document.onmousedown){
+		document.onmousedown = null;
+	}
+	if(document.onmouseup){
+		document.onmouseup = null;
+	}
 }

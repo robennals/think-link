@@ -145,6 +145,12 @@ var thinklink_winlistener = {
 		}
 		this.injectStyle(thinklink_styleUrl,doc);
 		doc.thinklink_injected = true;
+		if(doc.onmousedown){
+			doc.onmousedown = null;
+		}
+		if(doc.onmouseup){
+			doc.onmouseup = null;
+		}
 	},
 
 	getDoc: function(){
