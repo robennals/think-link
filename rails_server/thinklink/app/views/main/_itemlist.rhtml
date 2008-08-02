@@ -27,12 +27,12 @@
 	<% end %>
 
 	<% if page != 0 && pagecount != 1 %>
-	<span class="more"><%= link_to 'prev', {:page => page-1} %></span>
+	<span class="more"><%= link_to 'prev', params.merge ({:page => page-1}) %></span>
 	<% elsif pagecount != 1 %>
 	<span class="fakemore">prev</span>
 	<% end %>
 	<% if page+1 < pagecount %>
-	<span class="more"><%= link_to 'next', {:page => page+1} %></span>
+	<span class="more"><%= link_to 'next', params.merge ({:page => page+1}) %></span>
 	<% end %>
 
 </div>
