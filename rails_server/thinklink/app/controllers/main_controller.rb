@@ -1,6 +1,8 @@
 class MainController < ApplicationController
 	include MainHelper
 
+	layout 'standard'
+
 	def feed
 		@points = Point.find(:all)
 		emit(@points)
@@ -32,5 +34,11 @@ class MainController < ApplicationController
 		@email = cookies[:email]
 		@password = cookies[:password]
 	end
-
+	
+	def search 
+		@title = "Things matching '#{params[:query]}'";
+		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
+		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
+	end
+	
 end

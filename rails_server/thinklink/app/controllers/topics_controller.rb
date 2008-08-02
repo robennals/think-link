@@ -25,16 +25,30 @@ class TopicsController < ApplicationController
 	
 	def show
 		@topic = Topic.find(params[:id])
-  	#debugger
 		@title = @topic.txt
 		emit(@topic,{:only => [:txt], :include => :points})
 	end
 	
 	def points
 	  @topic = Topic.find(params[:id])
+	  @title = "Points for #{@topic.txt}"
 		@points = @topic.points
+		render  :template => 'points/index'
 		emit(@points)
 	end
+	
+	def children 
+		@topic = Topic.find(params[:id]);
+		@topics = @topic.children
+		render :action => 'index'
+	end
+
+	def parents 
+		@topic = Topic.find(params[:id]);
+		@topics = @topic.parents
+		render :action => 'index'
+	end
+
 	
 	def new
 	  @topic = Topic.new

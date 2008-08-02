@@ -76,7 +76,7 @@ ul#points li {
 	margin-left: 10px;
 	text-decoration: none;
 }
-.snippets, .points {
+.snippets, .points, .topics, .listitems {
 	border: 1px solid #666666;
 	padding: 10px;
 	margin: 20px;

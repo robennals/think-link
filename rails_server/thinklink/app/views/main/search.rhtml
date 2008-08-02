@@ -1,0 +1,21 @@
+
+<div class="topics">
+<h2>Topics</h2>
+	<div class="topic_list">
+	<% @topics.slice(0,10).each do |topic| %>
+	<div class="point_ref"><%= link_to topic.txt, topic_path(topic) %></div>	
+	<% end %> 
+	</div>
+	<span class="more"><%= link_to 'see all', {:controller => 'topics', :action => 'search', :query => params['query']} %></span>
+</div>
+
+<div class="points">
+<h2>Points</h2>
+	<div class="point_list">
+	<% @points.slice(0,10).each do |point| %>
+	<div class="point_ref"><%= link_to point.txt, point_path(point) %></div>	
+	<% end %> 
+	</div>
+	<span class="more"><%= link_to 'see all', {:controller => 'points', :action => 'search', :query => params['query']} %></span>
+</div>
+
