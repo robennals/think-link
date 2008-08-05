@@ -40,6 +40,8 @@ if($url != null){
 }
 
 sql_query("INSERT INTO snippet_links (snippet_id,howlinked,user_id,point_id) VALUES ('$id2','$rel',$user,'$id');");
+sql_query("INSERT IGNORE INTO bookmarks (user_id,snippet_id) VALUES ($user,$id2);");
+
 echo "\n";
 json_out(true);
 

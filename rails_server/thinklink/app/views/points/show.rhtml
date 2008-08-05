@@ -10,16 +10,18 @@
 <div class="point">
 <h2>Snippets</h2>
 <div class="snippets">	
-	<% @point.snippets.slice(page*10,10).each do |snippet| %>
+	<% @point.snippets.each do |snippet| %>
 	<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true} %>
 	<% end %>
 </div>
 <h2>Related Points</h2>
 
-<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting points'} %>
-<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same points'} %>
-<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :title=>'opposing points'} %>
-<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'opposite points'} %>
+<%=	render_partial 'points/pointnewlink', @point %>
+
+<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting', :rel=>'supports'} %>
+<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same', :rel=>'same'} %>
+<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :title=>'opposing', :rel=>'opposes'} %>
+<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'opposite', :rel=>'opposite'} %>
 <!-- 
 <% @point.point_links_a.each do |pl| %>
 	<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
@@ -33,12 +35,13 @@
 -->
 
 <h2>Topics</h2>
-<div>
+<%=	render_partial 'points/pointnewtopic', @point %>
+<div id="topiclist<%= @point.id %>">
 	<% @point.topics.each do |c| %>
 		<div class="topic_ref"><%= link_to c.txt, topic_path(c) -%> </div>
 	<% end  %>
-	<br/>
 </div>
+	<br/>
 <h2>Annotated By</h2>
 <ul>
 <% @point.users.each do |c| %>

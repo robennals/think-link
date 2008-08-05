@@ -42,6 +42,7 @@ class PointsController < ApplicationController
 		@snippets = @point.snippets
 		emit(@snippets,{:methods => :avgrating})
 	end
+	
 	def new
 		@point = Point.new
 	end

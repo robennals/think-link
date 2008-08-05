@@ -2,10 +2,11 @@
 
 
 <% linkedto = options[:linkedto] %>
-
+<% relation = options[:rel]%>
 
 <% if !pointlinks.nil? && !pointlinks.empty? %>
-	<span class="relationtitle"><%= options[:title] %></span>
+	<span class="relationtitle"><%= options[:title] %> points</span>
+	<span id="<%= relation %>_pointlinks<%= linkedto.id %>">
 	<% pointlinks.each do |pl| %>
 		<% if !linkedto.eql?(pl.point_b) %>
 			<% other = pl.point_b %>
@@ -19,5 +20,6 @@
 		<% end %>
 		
 	<% end %>
+	</span>
 	<br />
 <% end %>

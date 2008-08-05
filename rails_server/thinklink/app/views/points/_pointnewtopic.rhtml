@@ -1,0 +1,29 @@
+
+	<div style="padding:10px;">
+		this point is related to the topic: 
+		<span id="new_topic"></span>
+	</div>
+	<script language="javascript">
+		var suggestTopic = new tl_suggest(document.getElementById('new_topic'), true,"search_topics.php","text");
+		var textboxTopic = suggestTopic.init();
+		suggestTopic.setDefaultText("<Enter search terms>");
+		suggestTopic.setButtonText("relate to topic");
+		suggestTopic.setButtonClickEvent(function(){ 
+			var fieldString = "?point="+ encodeURIComponent(<%= pointnewtopic.id %>)+"&text="+encodeURIComponent(textboxTopic.value);
+			doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
+				tl_log("new point link: "+ result);
+				var newitem = document.createElement("div");
+				newitem.className = "topic_ref";
+				var link = document.createElement("a"); link.setAttribute("href","/topics/"+result); link.setAttribute("target","_blank");
+				link.appendChild(document.createTextNode(textboxTopic.value));
+				newitem.appendChild(link);
+				document.getElementById("topiclist<%= pointnewtopic.id %>").appendChild(newitem);
+			});
+		});
+		suggestTopic.setResultCallback(function(item){ 
+	    	var row = document.createElement("span");  
+	    	row.id = item.id;
+	    	row.appendChild(document.createTextNode(item.txt));
+	    	return row;
+	 	});
+	</script>

@@ -1,3 +1,5 @@
+require 'ruby-debug'
+
 class Point < ActiveRecord::Base
 	has_many :snippets
 	belongs_to :creator, :class_name => :user
@@ -15,12 +17,37 @@ class Point < ActiveRecord::Base
 		return PointLink.find :all, :conditions => "point_b_id = #{self.id}"
 	end
 	
+	def snippets
+		snipfinal = Array.new
+		snips = Snippet.find(:all, :conditions => "point_id= #{self.id}" )
+		snipfinal.concat(snips)
+		samepoints = PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='same') OR (point_a_id = #{self.id} AND howlinked='same')")
+    samepoints.each { |pl| 
+      if !self.eql?(pl.point_b)
+            other = pl.point_b
+          else
+            other = pl.point_a
+          end
+      snipfinal.concat(Snippet.find(:all, :conditions => "point_id= #{other.id}" )) 
+    }
+    return snipfinal.uniq
+	end
+	
 	def supporting_links(user)
 	  links = PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='supports') OR (point_a_id = #{self.id} AND howlinked='supports')")
 	  links.delete_if {|l|
 	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
 	  }
-	  return links
+	  samelinks = self.same_links(user)
+	  samelinks.each {|pl|
+	    if !self.eql?(pl.point_b)
+        other = pl.point_b
+      else
+        other = pl.point_a
+      end 
+	    links.concat(PointLink.find(:all, :conditions => "(point_b_id = #{other.id} AND howlinked='supports') OR (point_a_id = #{other.id} AND howlinked='supports')"))
+	  }
+	  return links.uniq
 	end
 	
 	def same_links(user)
@@ -36,7 +63,16 @@ class Point < ActiveRecord::Base
 		links.delete_if {|l|
 	    l.point_a.isdeleted(user) || l.point_b.isdeleted(user) || l.point_a.isdeletedall || l.point_b.isdeletedall
 	  }
-	  return links
+	  samelinks = self.same_links(user)
+	  samelinks.each {|pl| 
+	    if !self.eql?(pl.point_b)
+        other = pl.point_b
+      else
+        other = pl.point_a
+      end
+	    links.concat(PointLink.find(:all, :conditions => "(point_b_id = #{other.id} AND howlinked='opposes') OR (point_a_id = #{other.id} AND howlinked='opposes')"))
+	  }
+	  return links.uniq
 	end
 	
 	def opposite_links(user)

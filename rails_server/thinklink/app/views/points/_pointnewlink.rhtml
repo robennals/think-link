@@ -1,0 +1,49 @@
+<div style="padding:10px;">
+	this point: 
+	<select name="relation" id="new_related_relation">
+		<option>supports</option>
+		<option value="same">is exact same as</option>
+		<option>opposes</option>
+		<option value="opposite">is exact opposite of</option>
+	</select>
+	<span id="new_related"></span>
+</div>
+<script language="javascript">
+	var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
+	var textbox = suggest.init();
+	suggest.setDefaultText("<Enter search terms>");
+	suggest.setButtonText("link to point");
+	suggest.setButtonClickEvent(function(){ 
+		var relation = document.getElementById("new_related_relation").value;
+		var fieldString = "?destid="+ encodeURIComponent(<%= pointnewlink.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
+		doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
+			tl_log("new point link: "+ result);
+			// add this new point to the list in the UI
+			var spantitle = document.getElementById(relation+"_pointlinks<%= pointnewlink.id %>");
+			
+			var newitem = document.createElement("div");
+			/*newitem.id = "point"+result;*/ newitem.className = "point_ref";
+			var trashImg = document.createElement("img"); 
+			//trashImg.setAttribute("src","/images/bin_closed.png"); trashImg.setAttribute("onClick","trashPoint("+newitem.id+");");
+			var link = document.createElement("a");
+			link.setAttribute("href","/points/"+result); link.setAttribute("target","_blank"); 
+			link.appendChild(document.createTextNode(textbox.value));
+			newitem.appendChild(link); //newitem.appendChild(trashImg);
+
+			if (spantitle == null) {// no existing list, create one first
+				spantitle = document.createElement("span"); spantitle.id=relation+"_pointlinks<%= pointnewlink.id %>";
+				spanrel = document.createElement("span"); spanrel.className="relationtitle"; spanrel.appendChild(document.createTextNode(relation + " points"));
+				document.getElementById("points<%= pointnewlink.id %>").appendChild(spanrel);
+				document.getElementById("points<%= pointnewlink.id %>").appendChild(spantitle);
+				
+			}
+			spantitle.appendChild(newitem);
+		});
+	});
+	suggest.setResultCallback(function(item){ 
+    	var row = document.createElement("span");  
+    	row.id = item.id;
+    	row.appendChild(document.createTextNode(item.txt));
+    	return row;
+ 	});
+</script>

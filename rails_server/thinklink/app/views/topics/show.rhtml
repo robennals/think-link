@@ -5,6 +5,10 @@
 
 <%= render_partial 'main/previewlist', @topic.points, :options => {}, :renderer => 'points/pointref', :action => 'points' %>
 
+<h2>Add topic point</h2>
+<%= render_partial 'topics/topicnewpoint', @topic %>
+<br />
+
 <h2>Parent Topics</h2>
 	<div id="new_parent">
 	</div>
@@ -26,6 +30,9 @@
 	 	});
 	</script>
 	<%= render_partial 'main/previewlist', @topic.parents, :options => {}, :renderer => 'topics/topicref', :action => 'parents' %>
+	<br />
+	
+	
 <h2>Sub Topics</h2>
 	<div id="new_child">
 	</div>

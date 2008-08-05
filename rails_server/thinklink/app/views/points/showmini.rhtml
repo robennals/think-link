@@ -28,40 +28,14 @@
 	</div>
 	<div class="hidden" id="points<%= @point.id %>">
 		<!-- <h2>Related Points</h2> -->
-		<div style="padding:10px;">
-			this point: 
-			<select name="relation" id="new_related_relation">
-				<option>supports</option>
-				<option value="same">is exact same as</option>
-				<option>opposes</option>
-				<option value="opposite">is exact opposite of</option>
-			</select>
-			<span id="new_related"></span>
-		</div>
-		<script language="javascript">
-			var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
-			var textbox = suggest.init();
-			suggest.setDefaultText("<Enter search terms>");
-			suggest.setButtonText("link to point");
-			suggest.setButtonClickEvent(function(){ 
-				var relation = document.getElementById("new_related_relation").value;
-				var fieldString = "?destid="+ encodeURIComponent(<%= @point.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
-				doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
-					tl_log("new point link: "+ result);
-				});
-			});
-			suggest.setResultCallback(function(item){ 
-		    	var row = document.createElement("span");  
-		    	row.id = item.id;
-		    	row.appendChild(document.createTextNode(item.txt));
-		    	return row;
-		 	});
-		</script>
-		
-		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'supporting points'} %>
-		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'same points'} %>
-		<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposing points'} %>
-		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposite points'} %>
+
+		<%=	render_partial 'points/pointnewlink', @point %>
+	
+	
+		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'supporting', :rel=>'supports'} %>
+		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'same', :rel=>'same'} %>
+		<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposing', :rel=>'opposes'} %>
+		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :newpage=>true, :title=>'opposite', :rel=>'opposite'} %>
 		
 		<!-- 
 		<% @point.point_links_a.each do |pl| %>
@@ -80,32 +54,15 @@
 		-->
 	</div>
 	<div class="hidden" id="topics<%= @point.id %>">
-		<div style="padding:10px;">
-			this point is related to the topic: 
-			<span id="new_topic"></span>
-		</div>
-		<script language="javascript">
-			var suggestTopic = new tl_suggest(document.getElementById('new_topic'), true,"search_topics.php","text");
-			var textboxTopic = suggestTopic.init();
-			suggestTopic.setDefaultText("<Enter search terms>");
-			suggestTopic.setButtonText("relate to topic");
-			suggestTopic.setButtonClickEvent(function(){ 
-				var fieldString = "?point="+ encodeURIComponent(<%= @point.id %>)+"&text="+encodeURIComponent(textboxTopic.value);
-				doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
-					tl_log("new point link: "+ result);
-				});
-			});
-			suggestTopic.setResultCallback(function(item){ 
-		    	var row = document.createElement("span");  
-		    	row.id = item.id;
-		    	row.appendChild(document.createTextNode(item.txt));
-		    	return row;
-		 	});
-		</script>
 		
+		<%=	render_partial 'points/pointnewtopic', @point %>
+		
+		
+		<span id="topiclist<%= @point.id %>">
 		<% @point.topics.each do |c| %>
 			<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target=>"_blank" -%> </div>
 		<% end  %>
+		</span>
 	</div>
 
 	<div class="hidden" id="annotated<%= @point.id %>">

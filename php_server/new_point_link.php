@@ -52,6 +52,7 @@ if ($destid > $sourceid) { $query = "INSERT INTO point_links (point_a_id,point_b
 else { $query = "INSERT INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$destid','$sourceid','$rel',$user);";	}
 //$query = "INSERT INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$sourceid','$destid','$rel',$user);";
 sql_query($query);
+
 //echo $query . "<br>";
 
 if (strcmp($rel,"same")==0 || strcmp($rel,"opposite")) {
@@ -84,6 +85,6 @@ if (!empty($oppPoints)) {
 
 
 
-json_out(true);
+json_out($sourceid); // return id of point just linked to
 ?>
 

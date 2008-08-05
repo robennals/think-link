@@ -36,13 +36,28 @@ function tl_margin()
 		//$("body").wrapInner('<div id="tl_document"></div>'); // wrap existing document in a <div> for future use
 		$("<div></div>").attr("id",this.divID).appendTo($("body")); // add margin element to DOM
 		
+		var topfixed = document.createElement("div");
+		topfixed.id = "tl_snippet_activate";
+		$("#" + this.divID).append($(topfixed));
+		
 		// add listener to popup annotation box if have selection
-		$('<input type="button" value="select snippet" />').attr("id","tl_snippet_activate").appendTo($("#" + this.divID));
+		//$('<input type="button" value="select snippet" />').attr("id","tl_snippet_activate").appendTo($("#" + this.divID));
+		$('<input type="button" value="select snippet" />').appendTo($(topfixed));
 		$("#tl_snippet_activate").click(function(){
 			var hilite = getText();			
 			mySnip.new(hilite.toString().replace(/\s+/g," "));
 		});
 		
+		// add link to main web UI
+		var homelink = document.createElement("a");
+		homelink.setAttribute("target","_blank");
+		homelink.setAttribute("href",thinklink_mainhome);
+		var home = document.createElement("img");
+		home.setAttribute("src",thinklink_imagebase+"house.png");
+		home.setAttribute("border","0");
+		home.style.paddingLeft = "10px";
+		homelink.appendChild(home);
+		topfixed.appendChild(homelink);
 		
 		this.setHeight(); 		// match margin height to document height
 		$("#" + this.divID).hide();	// hide the margin 
