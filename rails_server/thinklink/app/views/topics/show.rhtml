@@ -1,60 +1,86 @@
 
 
 <div class="point">
-<h2>Topic Points</h2>
-
-<%= render_partial 'main/previewlist', @topic.points, :options => {}, :renderer => 'points/pointref', :action => 'points' %>
-
-<h2>Add topic point</h2>
-<%= render_partial 'topics/topicnewpoint', @topic %>
-<br />
-
-<h2>Parent Topics</h2>
-	<div id="new_parent">
+	<div style="margin-bottom: 10px;">
+		<%= link_to 'Back to topics', topics_path %>
+		<% if @topic.ismine(@user) %>
+			| <a href="<%= url_for(:action=>'edit') %>">Edit <img src="/images/pencil.png" /></a>
+		<% end %>
 	</div>
-	<script language="javascript">
-		var suggest = new tl_suggest(document.getElementById('new_parent'), true,"search_topics.php","text");
-		var textbox = suggest.init();
-		suggest.setDefaultText("<Enter search terms>");
-		suggest.setButtonText("set as parent topic");
-		suggest.setButtonClickEvent(function(){ 
-			$.get("/topics/newparent/<%= @topic.id %>.json",{topic:textbox.value}, function(result){
-				tl_log("new parent topic: "+result);
-			});
-		});
-		suggest.setResultCallback(function(item){ 
-	    	var row = document.createElement("span");  
-	    	row.id = item.id;
-	    	row.appendChild(document.createTextNode(item.txt));
-	    	return row;
-	 	});
-	</script>
-	<%= render_partial 'main/previewlist', @topic.parents, :options => {}, :renderer => 'topics/topicref', :action => 'parents' %>
+
+<div style="float:left; width:400px;">
+	<h2>Points</h2>
+	<div class="points">
+		add point: <%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist' %>
+		<%= render_partial 'main/previewlist', @topic.points, :options => {:noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :action => 'points' %>
+	</div>
+	
+
+	
 	<br />
-	
-	
-<h2>Sub Topics</h2>
-	<div id="new_child">
-	</div>
-	<script language="javascript">
-		var suggest2 = new tl_suggest(document.getElementById('new_child'), true,"search_topics.php","text");
-		var textbox2 = suggest2.init();
-		suggest2.setDefaultText("<Enter search terms>");
-		suggest2.setButtonText("set as  subtopic");
-		suggest2.setButtonClickEvent(function(){ 
-			$.get("/topics/newchild/<%= @topic.id %>.json",{topic:textbox2.value}, function(result){
-				tl_log("new child topic: "+result);
-			});
-		});
-		suggest2.setResultCallback(function(item){ 
-	    	var row = document.createElement("span");  
-	    	row.id = item.id;
-	    	row.appendChild(document.createTextNode(item.txt));
-	    	return row;
-	 	});
-	</script>
-	<%= render_partial 'main/previewlist', @topic.children, :options => {}, :renderer => 'topics/topicref', :action => 'children' %>
-
 </div>
 
-<%= link_to 'Back', topics_path %>
+<div style="margin-left:400px; width:400px;">
+	<h2>Parent Topics</h2>
+	<div class="topics">
+		<div id="new_parent">
+		</div>
+		<script language="javascript">
+			var suggest = new tl_suggest(document.getElementById('new_parent'), true,"search_topics.php","text");
+			var textbox = suggest.init();
+			suggest.setDefaultText("<Enter search terms>");
+			suggest.setButtonText("set as parent topic");
+			suggest.setButtonClickEvent(function(){ 
+				$.get("/topics/newparent/<%= @topic.id %>.json",{topic:textbox.value}, function(result){
+					tl_log("new parent topic: "+result);
+					var listelem = document.getElementById("parentslist");
+					var newitem = document.createElement("div");
+					newitem.className = "topic_ref";
+					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
+					link.appendChild(document.createTextNode(textbox.value));
+					newitem.appendChild(link);
+					listelem.insertBefore(newitem,listelem.childNodes[0]);
+				});
+			});
+			suggest.setResultCallback(function(item){ 
+		    	var row = document.createElement("span");  
+		    	row.id = item.id;
+		    	row.appendChild(document.createTextNode(item.txt));
+		    	return row;
+		 	});
+		</script>
+		<%= render_partial 'main/previewlist', @topic.parents, :options => {:noclass=>true, :divid=>'parentslist'}, :renderer => 'topics/topicref', :action => 'parents' %>
+	</div>
+	
+	<h2>Sub Topics</h2>
+	<div class="topics">
+		<div id="new_child">
+		</div>
+		<script language="javascript">
+			var suggest2 = new tl_suggest(document.getElementById('new_child'), true,"search_topics.php","text");
+			var textbox2 = suggest2.init();
+			suggest2.setDefaultText("<Enter search terms>");
+			suggest2.setButtonText("set as  subtopic");
+			suggest2.setButtonClickEvent(function(){ 
+				$.get("/topics/newchild/<%= @topic.id %>.json",{topic:textbox2.value}, function(result){
+					tl_log("new child topic: "+result);
+					var listelem = document.getElementById("childrenlist");
+					var newitem = document.createElement("div");
+					newitem.className = "topic_ref";
+					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
+					link.appendChild(document.createTextNode(textbox2.value));
+					newitem.appendChild(link);
+					listelem.insertBefore(newitem,listelem.childNodes[0]);
+				});
+			});
+			suggest2.setResultCallback(function(item){ 
+		    	var row = document.createElement("span");  
+		    	row.id = item.id;
+		    	row.appendChild(document.createTextNode(item.txt));
+		    	return row;
+		 	});
+		</script>
+		<%= render_partial 'main/previewlist', @topic.children, :options => {:noclass=>true, :divid=>'childrenlist'}, :renderer => 'topics/topicref', :action => 'children' %>
+	</div>	
+</div>
+</div>

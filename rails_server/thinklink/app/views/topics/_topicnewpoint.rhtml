@@ -4,11 +4,18 @@
 	var tp_suggest = new tl_suggest(document.getElementById('new_tp'), true,"search_points.php","text");
 	var tp_textbox = tp_suggest.init();
 	tp_suggest.setDefaultText("<Enter search terms>");
-	tp_suggest.setButtonText("connect to <%= topicnewpoint.txt %>");
+	tp_suggest.setButtonText("connect to topic");
 	tp_suggest.setButtonClickEvent(function(){ 
 		var tp_fieldString = "?text="+ encodeURIComponent('<%= topicnewpoint.txt %>')+"&ptext="+encodeURIComponent(tp_textbox.value);
 		doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+tp_fieldString,function(result){
 			tl_log("new point topic: "+ result);
+			var listelem = document.getElementById("<%=divid %>");
+			var newitem = document.createElement("div");
+			newitem.className = "point_ref";
+			var link = document.createElement("a"); link.setAttribute("href","/points/"+result); link.setAttribute("target","_blank");
+			link.appendChild(document.createTextNode(tp_textbox.value));
+			newitem.appendChild(link);
+			listelem.insertBefore(newitem,listelem.childNodes[0]);
 		});
 	});
 	tp_suggest.setResultCallback(function(item){ 

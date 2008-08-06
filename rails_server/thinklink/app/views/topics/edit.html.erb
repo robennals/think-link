@@ -1,0 +1,11 @@
+<h1>Edit topic text</h1>
+
+<% form_for :topic, :url=>"/topics/update" do |f| -%>
+<%=	f.error_messages %>
+ <p>
+	<%= f.hidden_field "id"  %>
+    <%= f.text_field "txt"  %>
+
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>

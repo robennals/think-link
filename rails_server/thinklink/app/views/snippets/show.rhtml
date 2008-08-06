@@ -1,9 +1,23 @@
-<h1><%= @snippet.txt %></h1>
-<strong>Point :</strong> <%= link_to @snippet.point.txt, point_path(@snippet.point) %><br />
-<strong>Created By:</string> <%= link_to @snippet.user.email, user_path(@snippet.user) %><br />
-<strong>Created Date:</strong> <%= @snippet.created_at %><br />
+<h1>"<%= @snippet.txt %>"</h1>
+<div style="margin-bottom: 10px;">
+<%= link_to 'Back to snippets', snippets_path %> | 
+<%= link_to 'Edit', {:action => 'edit', :id => @snippet.id} %>
+</div>
+
+<h2>Summary</h2> 
+<div class="listitems">
+	<strong>Point :</strong> <%= link_to @snippet.point.txt, point_path(@snippet.point) %><br />
+	<strong>Created By:</string> <%= link_to @snippet.user.email, user_path(@snippet.user) %><br />
+	<!-- <strong>Created Date:</strong> <%= @snippet.created_at %><br /> -->
 <strong>URL:</string> <%= "<a href='#{@snippet.url}'>#{@snippet.url}</a>" %>  
-</p>
-<hr />
-<%= link_to 'Back', snippets_path %>
-<b><%= link_to 'Edit', {:action => 'edit', :id => @snippet.id} %>
+</div>
+
+<% if !@snippet.topics.empty? %>
+	<h2>Topics</h2>
+	<div class="topics">
+		<% @snippet.topics.each do |c| %>
+			<div class="topic_ref"><%= link_to c.txt, topic_path(c) -%> </div>
+		<% end  %>
+	</div>
+<% end %>
+

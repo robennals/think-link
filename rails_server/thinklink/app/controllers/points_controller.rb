@@ -48,6 +48,7 @@ class PointsController < ApplicationController
 	end
 	def create
 		@point = Point.new(params[:point])
+		@point.user_id = @user.id
     respond_to do |format|
       if @point.save
         flash[:notice] = 'Source was successfully created.'
@@ -59,9 +60,19 @@ class PointsController < ApplicationController
       end
     end
   end
+  
 	def edit
+	  @point = Point.find(params[:id])  
 	end
+	
 	def update
+	  p = Point.find(params[:point][:id])
+	  p.txt = params[:point][:txt]
+	  if p.save
+	    redirect_to(p)
+	  else
+	    format.xml  { render :xml => p.errors, :status => :unprocessable_entity }
+	  end
 	end
 	def delete
 	end

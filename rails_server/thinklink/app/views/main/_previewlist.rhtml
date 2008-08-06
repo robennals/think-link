@@ -6,11 +6,23 @@
 
 
 <% if(previewlist && previewlist.length > 0) %>
-<div class="listitems">
+<% if options[:noclass] %>
+	<% if !options[:divid].nil? %>
+		<div id="<%= options[:divid] %>">
+	<% else %>
+		<div>
+	<% end %>
+<% else %>
+	<div class="listitems">
+<% end %>
 	<% previewlist.slice(0,max).each do |item| %>
 			<%=	render_partial renderer, item, :options => options %>
 	<% end %>
-
-	<span class="more"><%= link_to 'see all', params.merge ({:action => action}) %></span>
-</div>
+	<br />
+		<span class="more"><%= link_to 'see all >>', params.merge ({:action => action}) %></span>
+	</div>
+<% else %>
+	<% if !options[:divid].nil? %>
+		<div id="<%= options[:divid] %>"></div>
+	<% end %>
 <% end %>

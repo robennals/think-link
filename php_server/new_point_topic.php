@@ -28,7 +28,7 @@ else $sourceid=$source[0]['id']; // use existing
 if (empty($point)) {
 	$psource = sql_to_array("SELECT id FROM points WHERE txt='$ptext'");
 	if (empty($psource)) { 
-		sql_query("INSERT INTO points (txt) VALUES ('$ptext');"); // create new
+		sql_query("INSERT INTO points (txt,user_id) VALUES ('$ptext',$user);"); // create new
 		$point = mysql_insert_id();
 	}
 	else $point=$psource[0]['id']; // use existing

@@ -37,14 +37,16 @@ class TopicsController < ApplicationController
 		emit(@points)
 	end
 	
-	def children 
+	def children
 		@topic = Topic.find(params[:id]);
+  	@title = "Subtopics for #{@topic.txt}"
 		@topics = @topic.children
 		render :action => 'index'
 	end
 
-	def parents 
-		@topic = Topic.find(params[:id]);
+	def parents  
+	  @topic = Topic.find(params[:id]);
+	  @title = "Parent topics for #{@topic.txt}"
 		@topics = @topic.parents
 		render :action => 'index'
 	end
@@ -64,7 +66,8 @@ class TopicsController < ApplicationController
 	    end
 	  end
 	  link = TopicLink.new(:child_id=>"#{params[:id]}", :parent_id=>"#{parent.id}", :user_id=>"#{@user.id}")
-	  emit(link.save, :format=>"json")
+	  link.save
+	  emit(parent.id, :format=>"json")
 	end
 	
 	def newchild
@@ -77,7 +80,8 @@ class TopicsController < ApplicationController
 	    end
 	  end
 	  link = TopicLink.new(:parent_id=>"#{params[:id]}", :child_id=>"#{child.id}", :user_id=>"#{@user.id}")
-	  emit(link.save, :format=>"json")
+	  link.save
+	  emit(child.id, :format=>"json")
 	end
 	
 	def create
@@ -94,5 +98,19 @@ class TopicsController < ApplicationController
       end
     end
   end
+  
+  def edit
+	  @topic = Topic.find(params[:id])  
+	end
+	
+	def update
+	  p = Topic.find(params[:topic][:id])
+	  p.txt = params[:topic][:txt]
+	  if p.save
+	    redirect_to(p)
+	  else
+	    format.xml  { render :xml => p.errors, :status => :unprocessable_entity }
+	  end
+	end
 
 end

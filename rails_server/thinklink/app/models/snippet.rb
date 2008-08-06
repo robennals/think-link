@@ -36,4 +36,7 @@ class Snippet < ActiveRecord::Base
     return count > 2
 	end 
 	
+	def topics
+	  return self.point.topics
+	end
 end

@@ -17,10 +17,18 @@ class Topic < ActiveRecord::Base
   def children
     p = Array.new
     TopicLink.find(:all, :conditions=>"parent_id=#{self.id}").each { |l|
-      p.push(l.parent)
+      p.push(l.child)
     }
     return p
   end
+  
+  def ismine(user)
+	  u = User.find(:first, :conditions=>"id=#{self.user_id}")
+	  if (u.nil?) 
+	    return false
+	  end
+	  return user.eql?(u)
+	end
   
 end
 

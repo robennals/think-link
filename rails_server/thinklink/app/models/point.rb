@@ -96,5 +96,13 @@ class Point < ActiveRecord::Base
     return count > 2
 	end
 	
+	def ismine(user)
+	  u = User.find(:first, :conditions=>"id=#{self.user_id}")
+	  if (u.nil?) 
+	    return false
+	  end
+	  return user.eql?(u)
+	end
+	
 	validates_presence_of :txt
 end

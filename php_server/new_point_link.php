@@ -19,7 +19,7 @@ $user = getUser($email,$pass);
 // get source text id
 $source = sql_to_array("SELECT id FROM points WHERE txt='$text'");
 if (empty($source)) { 
-	sql_query("INSERT INTO points (txt) VALUES ('$text');"); // create new
+	sql_query("INSERT INTO points (txt,user_id) VALUES ('$text',$user);"); // create new
 	$sourceid = mysql_insert_id();
 }
 else $sourceid=$source[0]['id']; // use existing
