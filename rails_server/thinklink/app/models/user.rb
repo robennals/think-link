@@ -18,5 +18,14 @@ class User < ActiveRecord::Base
 	    return self.email
 	  end
 	end
+	
+	def recenttopics
+		pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC")
+		topics = Array.new
+		pt.each do |p|
+		  topics.push(p.topic)
+		end
+		return topics.uniq
+	end
 		
 end

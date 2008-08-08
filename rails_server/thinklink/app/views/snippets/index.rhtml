@@ -7,26 +7,35 @@
    end
 %>
 
+<% sniparray = @snippets.slice(page*10,10) %>
+<% shownext = !@snippets.slice((page+1)*10,10).nil? && !@snippets.slice((page+1)*10,10).empty? %>
+
 <div class="snippets">
 <h2>Page <%= page+1 %> </h2>
 	<% if page != 0 %>
-	<span class="more"><%= link_to 'prev', {:action => :list, :page => page-1} %></span>
+	<span class="more"><%= link_to 'prev', {:action => params[:action], :page => page-1} %></span>
 	<% else %>
 	<span class="fakemore">prev</span>
 	<% end %>
-	<span class="more"><%= link_to 'next', {:action => :list, :page => page+1} %></span>
+	<% if shownext %>
+	<span class="more"><%= link_to 'next', {:action => params[:action], :page => page+1} %></span>
+	<% end %>
 
-	<% @snippets.slice(page*10,10).each do |snippet| %>
-	<%=	render_partial 'snippets/snippet', snippet, :options => @options  %>
+	<% if !sniparray.nil? %>
+		<% sniparray.each do |snippet| %>
+		<%=	render_partial 'snippets/snippet', snippet, :options => @options  %>
+		<% end %>
 	<% end %>
 
 	<% if page != 0 %>
-	<span class="more"><%= link_to 'prev', {:action => :list, :page => page-1} %></span>
+	<span class="more"><%= link_to 'prev', {:action => params[:action], :page => page-1} %></span>
 	<% else %>
 	<span class="fakemore">prev</span>
 	<% end %>
-	<span class="more"><%= link_to 'next', {:action => :list, :page => page+1} %></span>
+	<% if shownext %>
+	<span class="more"><%= link_to 'next', {:action => params[:action], :page => page+1} %></span>
+	<% end %>
 
 </div>
 
-<p><%= link_to "Add new Snippet", {:action => 'new' }%></p>
+<!-- <p><%= link_to "Add new Snippet", {:action => 'new' }%></p> -->
