@@ -43,10 +43,16 @@ ul#points li {
    display: inline;
    padding-left: 5px;
 }
+
+a img {
+	text-decoration: none;
+	border: none;
+}
+
 .snippet {
 	padding: 10px;
 }
-.snippet_point a, .point_ref a {
+.snippet_point a, .point_ref a, .topic_ref a {
 	font-weight: bold;
 	font-size: 10pt;
 	text-decoration: none;
@@ -81,11 +87,17 @@ ul#points li {
 	padding: 10px;
 	margin: 20px;
 }
-.point_ref {
+.point_ref, .topic_ref {
 	padding-left: 10px;
 }
 .point_list {
 	padding-bottom: 10px;
+}
+
+.topic_list_small a {
+	font-size: 8pt;
+	font-style: italic;
+	color: #666666;
 }
 
 #blatopright {

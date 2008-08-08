@@ -9,12 +9,14 @@ if(!$email){
 	$pass = postarg("password");
 }
 
-$point = postarg("point"); // point id
+$points = postarg("point"); // point ids
 $ptext = postarg("ptext"); // point text, optional
 $text = postarg("text"); // topic text
 
 // check user and password
 $user = getUser($email,$pass);
+
+$pointArray = explode(",", $points);
 
 // get topic text id
 $source = sql_to_array("SELECT id FROM topics WHERE txt='$text'");
@@ -33,10 +35,12 @@ if (empty($point)) {
 	}
 	else $point=$psource[0]['id']; // use existing
 }
-
-$query = "INSERT INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
-sql_query($query);
+foreach ($pointArray as $point) {
+	$query = "INSERT INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
+	sql_query($query);
+}
 
 json_out($sourceid); // return id of topic just linked to
+
 ?>
 

@@ -1,3 +1,25 @@
+function checkAll(field)
+{
+for (i = 0; i < field.length; i++)
+	field[i].checked = true ;
+}
+
+function uncheckAll(field)
+{
+for (i = 0; i < field.length; i++)
+	field[i].checked = false ;
+}
+
+function getChecked(field)
+{
+	var result = [];
+	for (i = 0; i < field.length; i++) {
+		if (field[i].checked) { result.push(field[i].value); }
+	}
+	return result;
+}
+
+
 function toggleBookmark(snippet_id) {
 	var imgElem = document.getElementById("bookstar"+snippet_id);
 	
