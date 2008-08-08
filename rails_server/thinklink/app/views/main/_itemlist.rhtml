@@ -6,7 +6,7 @@
    end
    
    
-   pagecount = (itemlist.length / 10) + 1
+   pagecount = (itemlist.length / 20) + 1
 %>
 
 
@@ -23,7 +23,7 @@
 	<span class="more"><%= link_to 'next', {:page => page+1} %></span>
 	<% end %>
 
-	<% itemlist.slice(page*10,10).each do |item| %>
+	<% itemlist.slice(page*20,20).each do |item| %>
 			<%=	render_partial renderer, item, :options => options %>
 	<% end %>
 

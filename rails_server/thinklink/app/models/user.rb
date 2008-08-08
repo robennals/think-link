@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 #	has_many :points
 	has_many :snippets, :order => "created_at DESC"
-	has_many :points, :through => :snippets, :uniq => true, :order => "created_at DESC"
+#	has_many :points, :through => :snippets, :uniq => true, :order => "created_at DESC"
 	has_many :bookmarks
 	has_many :deletions
 	has_many :point_deletions
@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
 	  else
 	    return self.email
 	  end
+	end
+	
+	def points
+		return Point.find_by_sql("SELECT * FROM snippets,points WHERE snippets.point_id = points.id AND snippets.user_id = #{self.id} GROUP BY points.id ORDER BY snippets.created_at DESC");		
 	end
 	
 	def recenttopics

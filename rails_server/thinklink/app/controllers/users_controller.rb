@@ -2,10 +2,11 @@ class UsersController < ApplicationController
 	layout 'standard'
 	def show
 		@showuser = User.find(params[:id])
+		@title = @showuser.displayname
 	end
 	def points
 		@showuser = User.find(params[:id])
-		@title = "Recent points read by #{@showuser.email}"
+		@title = "Recent points read by #{@showuser.email}"		
 		render_points @showuser.points
 	end
 	def snippets

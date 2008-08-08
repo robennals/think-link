@@ -7,6 +7,7 @@ var thinklink_base_rob =
 var thinklink_base = 
 "http://mashmaker.intel-research.net/beth/scripts/";
 
+var thinklink_open = false;
 
 var thinklink_scriptUrls;
 
@@ -66,9 +67,21 @@ function thinklink_show(button){
 	}
 	button.checked = !button.checked;
 	doc.thinklink_checked = button.checked;
+	thinklink_open = button.checked;
+}
+
+function thinklink_updateMarginVisibility(){
+	var doc = thinklink_winlistener.getDoc();
+	if(!doc.scriptloaded) return;
+	if(thinklink_open){
+				doc.location.href = "javascript:myMargin.showMargin()";
+	}else{
+				doc.location.href = "javascript:myMargin.hideMargin()";
+	}
 }
 
 function thinklink_setIcon(image,doc){
+	var doc = thinklink_winlistener.getDoc();
 	document.getElementById("thinklink-button").setAttribute("image",image);
 	doc.thinklink_icon = image;
 }
@@ -90,21 +103,30 @@ var thinklink_winlistener = {
 		try{
 	
 			var states = Components.interfaces.nsIWebProgressListener;
-	
+
+			var doc = this.getDoc();	
 			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-				var doc = this.getDoc();
-				document.getElementById("thinklink-button").checked = false;
+//				document.getElementById("thinklink-button").checked = false;
 				if(!doc.thinklink_iconon){
 					thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
 				}
 	      doc.addEventListener("thinklink-showicon", function(e){
 	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb.png",doc);
 	      		doc.thinklink_iconon = true;
+		      	doc.scriptloaded = true;
 	      },false);
+ 	      doc.addEventListener("thinklink-hideicon", function(e){
+	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
+	      		doc.thinklink_iconon = false;
+		      	doc.scriptloaded = true;
+	      },false);
+
 	 			this.injectScripts();
 			}else if((flags & states.STATE_START) && (flags & states.STATE_IS_WINDOW)){
 				thinklink_setIcon("chrome://thinklink/skin/lightbulb_wait.png",doc);
 			}
+			
+			thinklink_updateMarginVisibility();
 	 
 	 	}catch(e){
 	 		thinklink_error("onStateChange",e);
@@ -127,15 +149,28 @@ var thinklink_winlistener = {
 	  if(!doc.thinklink_injected){
 	      doc.addEventListener("thinklink-showicon", function(e){
 	      	doc.thinklink_icon = "chrome://thinklink/skin/lightbulb.png";
+	      	doc.scriptloaded = true;
       		doc.thinklink_iconon = true;
 	      	if(doc == content.document){
 	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb.png",doc);
 	      	}
 	      },false);
+ 	      doc.addEventListener("thinklink-hideicon", function(e){
+	      	doc.thinklink_icon = "chrome://thinklink/skin/lightbulb_off.png";
+	      	doc.scriptloaded = true;
+      		doc.thinklink_iconon = false;
+	      	if(doc == content.document){
+	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
+	      	}
+	      },false);
+
 
 	  	this.injectScripts();
 	  }
-  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
+//  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
+
+			thinklink_updateMarginVisibility();
+
 	},
 	onProgressChange: function(){return 0;},
 	onStatusChange: function(){return 0;},
@@ -144,17 +179,23 @@ var thinklink_winlistener = {
 	
 	injectScripts: function(){		
 		var doc = this.getDoc();
+
 		for(var i in thinklink_scriptUrls){
 			var scripturl = thinklink_scriptUrls[i];
 			this.injectScript(scripturl,doc);
 		}
 		this.injectStyle(thinklink_styleUrl,doc);
 		doc.thinklink_injected = true;
-		if(doc.onmousedown){
-			doc.onmousedown = null;
-		}
-		if(doc.onmouseup){
-			doc.onmouseup = null;
+	
+		try{			
+			if(doc.onmousedown){
+				doc.onmousedown = null;
+			}
+			if(doc.onmouseup){
+				doc.onmouseup = null;
+			}
+		}catch(e){
+//			thinklink_error("Error clearing mouse events",e);
 		}
 	},
 
