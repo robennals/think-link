@@ -143,6 +143,13 @@ function tl_margin()
     document.body.dispatchEvent(evt);
 	};
 
+	this.hideToolbarIcon = function(){
+	  var evt = document.createEvent("Events");
+    evt.initEvent("thinklink-hideicon", true, false);
+    document.body.dispatchEvent(evt);
+	};
+
+
 	this.refresh = function() {
 		var that = this;
 		var scriptID = "tl_margin_ajax";
@@ -159,6 +166,8 @@ function tl_margin()
 			doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
 				if(result.length > 0){
 						that.showToolbarIcon();
+  				}else{
+  					that.hideToolbarIcon();
   				}
 				
 				// for each result item, make a new tl_snippet and add it to the margin's array
