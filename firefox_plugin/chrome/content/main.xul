@@ -4,14 +4,18 @@
   <script type="application/x-javascript" 
 	      src="chrome://thinklink/content/thinklink.js" />
 
-  <toolbox id="navigator-toolbox">
+	<toolbarpalette id="BrowserToolbarPalette">
+			<toolbarbutton class="toolbarbutton-1" label="Show Think Link Margin" id="thinklink-button" position="2" 
+	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_show(this)" tooltiptext="Open Think Link Margin"/>
 
-	<toolbar id="nav-bar">
-			<toolbarbutton id="thinklink-button" position="2" 
-	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_show(this)"/>
+			<toolbarbutton class="toolbarbutton-1" label="New Think Link Snippet" id="thinklink-snipbutton" position="2" 
+	image="chrome://thinklink/skin/comment.png" oncommand="thinklink_new_snippet()" tooltiptext="New Think Link Snippet"/>
+	</toolbarpalette>
 
-	</toolbar>
-	</toolbox>
+	<popup id="contentAreaContextMenu" insertafter="context-searchselect">
+		<menuseparator/>
+		<menuitem label="New Snippet" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet()"/>
+	</popup>
 
 <!--
 	<menubar id="main-menubar">

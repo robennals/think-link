@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://mashmaker/skin/mashui.css" type="text/css"?>
-
 
 <overlay id="thinklink-prefs"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -8,7 +6,7 @@
 
   <prefwindow id="BrowserPreferences">
 
-    <prefpane id="MashMaker-Prefs" label="Think Link" 
+    <prefpane id="ThinkLink-Prefs" label="Think Link" 
               onpaneload="populateSchedulesList()" 
               image="chrome://thinklink/skin/lightbulb.png">
 

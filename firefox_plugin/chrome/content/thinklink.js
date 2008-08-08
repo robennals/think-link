@@ -52,6 +52,11 @@ function thinklink_msg(msg){
 	cs.logStringMessage(thinklink_name + ": " + msg);
 }
 
+function thinklink_new_snippet(){
+	var doc = thinklink_winlistener.getDoc();
+	doc.location.href = "javascript:thinklink_newSnippet()";
+}
+
 function thinklink_show(button){
 	var doc = thinklink_winlistener.getDoc();
 	if(button.checked){

@@ -1,3 +1,8 @@
+function thinklink_newSnippet(){
+	var hilite = getText();			
+	mySnip.new(hilite.toString().replace(/\s+/g," "));
+}
+
 function tl_margin()
 {
 	// set user information
