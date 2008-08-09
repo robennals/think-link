@@ -7,7 +7,10 @@ class UsersController < ApplicationController
 	def points
 		@showuser = User.find(params[:id])
 		@title = "Recent points read by #{@showuser.email}"		
-		render_points @showuser.points
+		#render_points @showuser.points
+		@points = @showuser.points
+		render  :template => 'points/index'
+		
 	end
 	def snippets
 		@showuser = User.find(params[:id])

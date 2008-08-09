@@ -16,8 +16,6 @@ $text = postarg("text"); // topic text
 // check user and password
 $user = getUser($email,$pass);
 
-$pointArray = explode(",", $points);
-
 // get topic text id
 $source = sql_to_array("SELECT id FROM topics WHERE txt='$text'");
 if (empty($source)) { 
@@ -27,14 +25,17 @@ if (empty($source)) {
 else $sourceid=$source[0]['id']; // use existing
 
 // get point  id if only text was given
-if (empty($point)) {
+if (empty($points)) {
 	$psource = sql_to_array("SELECT id FROM points WHERE txt='$ptext'");
 	if (empty($psource)) { 
 		sql_query("INSERT INTO points (txt,user_id) VALUES ('$ptext',$user);"); // create new
-		$point = mysql_insert_id();
+		$points = mysql_insert_id();
 	}
-	else $point=$psource[0]['id']; // use existing
+	else $points=$psource[0]['id']; // use existing
 }
+
+$pointArray = explode(",", $points);
+
 foreach ($pointArray as $point) {
 	$query = "INSERT INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
 	sql_query($query);
