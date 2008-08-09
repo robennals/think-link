@@ -71,6 +71,8 @@ function thinklink_show(button){
 }
 
 function thinklink_updateMarginVisibility(){
+	return; // decided against this approach
+	
 	var doc = thinklink_winlistener.getDoc();
 	if(!doc.scriptloaded) return;
 	if(thinklink_open){
@@ -106,7 +108,7 @@ var thinklink_winlistener = {
 
 			var doc = this.getDoc();	
 			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-//				document.getElementById("thinklink-button").checked = false;
+				document.getElementById("thinklink-button").checked = false;
 				if(!doc.thinklink_iconon){
 					thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
 				}
@@ -167,7 +169,7 @@ var thinklink_winlistener = {
 
 	  	this.injectScripts();
 	  }
-//  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
+  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
 
 			thinklink_updateMarginVisibility();
 
