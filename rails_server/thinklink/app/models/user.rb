@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 #	has_many :points
 	has_many :snippets, :order => "created_at DESC"
 #	has_many :points, :through => :snippets, :uniq => true, :order => "created_at DESC"
-	has_many :bookmarks
+	has_many :bookmarks, :order =>"id DESC"
 	has_many :deletions
 	has_many :point_deletions
 	has_many :topics, :order => "created_at DESC"
@@ -30,6 +30,14 @@ class User < ActiveRecord::Base
 		  topics.push(p.topic)
 		end
 		return topics.uniq
+	end
+	
+	def snippets
+	  snips = Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC")
+	  self.bookmarks.each do |b|
+	    snips.push(Snippet.find(b.snippet_id))
+    end
+    return snips.uniq
 	end
 		
 end
