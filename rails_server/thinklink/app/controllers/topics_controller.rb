@@ -57,15 +57,16 @@ class TopicsController < ApplicationController
 	end
 	
 	def newparent
+		debugger
 	  parent = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'")
   	# create parent topic if it doesn't exist already
 	  if parent.nil?
-	    parent = Topic.new(params[:topic])
+	    parent = Topic.new(:txt => params[:topic], :user_id => @user)
 	    if !parent.save
 	      emit(parent.errors)
 	    end
 	  end
-	  link = TopicLink.new(:child_id=>"#{params[:id]}", :parent_id=>"#{parent.id}", :user_id=>"#{@user.id}")
+	  link = TopicLink.new(:child_id=>params[:id], :parent_id=>parent.id, :user_id=>@user)
 	  link.save
 	  emit(parent.id, :format=>"json")
 	end
