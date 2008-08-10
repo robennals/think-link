@@ -47,10 +47,11 @@ function tl_margin()
 		
 		// add listener to popup annotation box if have selection
 		//$('<input type="button" value="select snippet" />').attr("id","tl_snippet_activate").appendTo($("#" + this.divID));
-		$('<input type="button" value="select snippet" />').appendTo($(topfixed));
-		$("#tl_snippet_activate").click(function(){
-			var hilite = getText();			
-			mySnip.new(hilite.toString().replace(/\s+/g," "));
+		$('<input type="button" value="select snippet" />').appendTo($(topfixed)).click(function(){
+			var hilite = getText();		
+			if(hilite){	
+				mySnip.new(hilite.toString().replace(/\s+/g," "));
+			}
 		});
 		
 		// add link to main web UI
