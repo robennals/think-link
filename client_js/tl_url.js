@@ -2,7 +2,12 @@
 function tl_normurl(){	
 	this.essentialArg = function(str){
 		var str = str.toLowerCase();
-		if(str.match("id") || str.match("article") || str.match("post") || str.match("story") || str.match("m")){
+		if(str.match("id") || 
+			 str.match("article") || 
+			 str.match("post") || 
+			 str.match("story") || 
+			 str.match("title") ||
+			 str.match("m")){
 			return true;
 		}else{
 			return false;
@@ -67,8 +72,11 @@ function tl_normurl(){
 			if(this.permstr(link.className) ||
 				this.permstr(link.textContent) ||
 				link.getAttribute("rel") == "bookmark" ||
-				this.permstr(link.getAttribute("title"))){					
-					permalinks.push(link);
+				this.permstr(link.getAttribute("title"))){		
+					var url = link.getAttribute("href");
+					if(!url.match("oldid") && !link.textContent.match("version")){
+						permalinks.push(link);
+					}
 			}
 		}
 		return permalinks;
