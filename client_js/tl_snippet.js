@@ -128,6 +128,17 @@ function tl_snippet_dialog(margin) {
 		topicSuggest.unselectCallback = function(){
 			that.topicID = null;
 		}
+		topicSuggest.getSuggestUrl = function(){
+			var text = topicSuggest.getValue();
+			if(!text) text = "";
+			var title 
+			if(text){
+				title = "Topics matching '"+text+"'";
+			}else{
+				title = "Recent topics you added points to";
+			}
+			return {url: "search_topics.php?text="+encodeURIComponent(text),title: title};
+		}
 
 		topicSuggest.setResultCallback(function(item){ 
 			var row = document.createElement("div");  row.id = item.id;
@@ -143,7 +154,7 @@ function tl_snippet_dialog(margin) {
 		this.searchSuggest = searchSuggest;
 		var textboxPtr = searchSuggest.init();
 		searchSuggest.hideButton();
-		searchSuggest.setWidth("500px");
+		searchSuggest.setWidth("490px");
 		searchSuggest.setSelectCallback( function(elem) {
 			document.thinklink_snippet.pointText.value = $(elem).text();
 			document.thinklink_snippet.pointID.value = elem.id;
