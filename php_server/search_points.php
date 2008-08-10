@@ -10,10 +10,51 @@ $pass = $HTTP_COOKIE_VARS["password"];
 $user = getUser($email,$pass);
 
 $text = getarg("text");
-
+$topic = getarg("topic");
 
 // HACK: revert to the old method as the new method doesn't seem to be working
-json_out(sql_to_array("SELECT id,txt FROM points WHERE MATCH(txt) AGAINST ('$text') LIMIT 20"));
+//json_out(sql_to_array("SELECT id,txt FROM points WHERE MATCH(txt) AGAINST ('$text') LIMIT 40"));
+
+if($text && $topic){
+$suggestions = sql_to_array(<<<END
+	SELECT points.id AS id,txt FROM points,point_topics 
+		WHERE points.id = point_topics.point_id 
+		AND point_topics.topic_id = '$topic'
+		AND MATCH (txt) AGAINST ("$text")
+	LIMIT 40
+END
+);
+}else if($text){	
+$suggestions = sql_to_array(<<<END
+	SELECT id,txt FROM points WHERE 
+		MATCH (txt) 
+		AGAINST ("$text")
+	LIMIT 40
+END
+);
+}else if($topic){
+	$suggestions = sql_to_array(<<<END
+	SELECT points.id AS id, points.txt AS txt FROM snippets,points,point_topics 
+		WHERE snippets.point_id = points.id 
+		AND	points.id = point_topics.point_id
+		AND point_topics.topic_id = '$topic'
+		AND snippets.user_id = '$user'
+		GROUP BY points.id ORDER BY snippets.created_at DESC
+	LIMIT 40
+END
+);	
+}else{
+	$suggestions = sql_to_array(<<<END
+	SELECT * FROM snippets,points 
+		WHERE snippets.point_id = points.id 
+		AND snippets.user_id = '$user'
+		GROUP BY points.id ORDER BY snippets.created_at DESC
+	LIMIT 40
+END
+);
+}
+
+json_out($suggestions);
 exit;
 
 

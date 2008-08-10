@@ -50,7 +50,8 @@
 }
 
 .tl_dialog {
-	background-color: #CCDDDD;
+/*	background-color: #CCDDDD; */
+	background-color: #eeeeee;
 	border: 2px solid #242E35;
 	color: #242E35;
 	padding: 1px;
@@ -67,8 +68,10 @@
 }
 
 .tl_dialog_title {
-	background-color: #4A7B6F;
-	color: #EEEEE7;
+/*	background-color: #4A7B6F; 
+	color: #EEEEE7; */
+	background-color: #5867a2;
+	color: #c2d7ef;
 	text-align: left;
 	font-size: 12pt;
 	font-family: verdana, sans-serif;
@@ -83,6 +86,9 @@
 	font-family: verdana, sans-serif;
 }
 
+.tl_dialog_body {
+	margin: 4px;
+}
 
 .tl_dialog a:link {
 	color: #7F5E17;
@@ -106,10 +112,10 @@
 }
 
 #tl_snippet_dialog {
-	position: absolute;
+	position: fixed;
 	top: 100px;
 	left: 100px;
-	height: 300px;
+/*	height: 300px; */
 	width: 525px;
 	z-index: 2147483647;
 }
@@ -123,7 +129,7 @@
 
 
 #tl_point_dialog {
-	position: absolute;
+	position: fixed;
 	top: 150px;
 	left: 150px;
 	height: 300px;
@@ -132,7 +138,7 @@
 }
 
 #tl_point_browser {
-	position: absolute;
+	position: fixed;
 	top: 200px;
 	left: 200px;
 	min-height: 400px;
@@ -209,18 +215,22 @@
 	border-top: 1px #AAA solid;
 	border-bottom: 1px #AAA solid;
 	color: #000000;
-	padding: 2px;
+	padding: 2px; 
 	overflow: hidden;
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
 }
 
 .suggest_item_over {
+  font-size: 9pt;
+	font-family: verdana, sans-serif;
 	background-color: #3366CC;
 	border-left: 1px #AAA solid;
 	border-right: 1px #AAA solid;
 	border-top: 1px #AAA solid;
 	border-bottom: 1px #AAA solid;
 	color: #F5F5F5;
-	/*padding: 2px;*/
+	padding: 2px;
 	cursor: hand;
 	cursor: pointer;
 	overflow: hidden;
@@ -254,4 +264,36 @@
 
 img {
 	cursor: auto;
+}
+
+a img {
+	border: none;
+}
+
+.snippet_text {
+	font-size: 8pt;
+	font-style: normal;
+	color: #666666;
+	margin-left: 10px;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+	background-color: white;
+	padding: 8px;
+	margin-right: 8px;
+}
+
+.tl_dialog_subtitle {
+	padding-top: 8px;
+	padding-bottom: 2px;
+}
+
+.tl_dialog_subtitle_first {
+	padding-bottom: 2px;
+}
+
+.tl_suggest_title {
+	color: white;
+	background-color: #5867A2;
+	padding: 2px;
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
 }

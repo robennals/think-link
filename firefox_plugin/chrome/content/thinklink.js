@@ -11,6 +11,8 @@ var thinklink_open = false;
 
 var thinklink_scriptUrls;
 
+var thinklink_styleUrl;
+
 function thinklink_setScriptUrls(username){
 	if(username == "rob@ennals.org"){
 	 	thinklink_base = thinklink_base_rob;
@@ -30,15 +32,17 @@ function thinklink_setScriptUrls(username){
 		
 	if(username == "rob@ennals.org"){
 		thinklink_scriptUrls.push(thinklink_base+"tl_robconfig.js");	
+		thinklink_styleUrl = "http://mashmaker.intel-research.net/rob/css/style.css";
 	}else{
 		thinklink_scriptUrls.push(thinklink_base+"tl_bethconfig.js");
+		thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
 	}
 	
 	thinklink_scriptUrls.push(thinklink_base+"thinklink.js");
 }
 
 // var thinklink_scriptUrl = "http://berkeley.intel-research.net/rennals/thinklink.js";
-var thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
+// var thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
 
 var thinklink_name = "ThinkLink";
 
@@ -125,7 +129,16 @@ var thinklink_winlistener = {
 
 	 			this.injectScripts();
 			}else if((flags & states.STATE_START) && (flags & states.STATE_IS_WINDOW)){
+				if(doc && doc.thinklink_injected) return;
 				thinklink_setIcon("chrome://thinklink/skin/lightbulb_wait.png",doc);
+//			}else{  // This doesn't seem to work
+//				try{
+//					if(content.document && content.document.body){
+//						this.injectScripts();
+//					}
+//				}catch(e){
+//					thinklink_error("Early-adding thinklink script",e);
+//				}
 			}
 			
 			thinklink_updateMarginVisibility();
