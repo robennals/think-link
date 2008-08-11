@@ -37,24 +37,17 @@
 		<%=	render_partial 'points/pointnewtopic', @point %>
 	</div>
 
-	<div class="points">
+	<div class="points" >
 		<h2>Related Points</h2>
+		
+		<div id="points<%= @point.id%>">
 
 		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting', :rel=>'supports'} %>
 		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same', :rel=>'same'} %>
 		<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :title=>'opposing', :rel=>'opposes'} %>
 		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'opposite', :rel=>'opposite'} %>
-		<!-- 
-		<% @point.point_links_a.each do |pl| %>
-			<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-					<%= link_to pl.point_b.txt, point_path(pl.point_b), :target => "_top" -%></div>
-		<% end  %>
-
-		<% @point.point_links_b.each do |pl| %>
-			<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-					<%= link_to pl.point_a.txt, point_path(pl.point_a), :target => "_top" -%></div>
-		<% end  %>
-		-->
+		
+		</div>
 		
 		<%=	render_partial 'points/pointnewlink', @point %>
 	</div>
