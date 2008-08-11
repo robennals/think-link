@@ -5,33 +5,38 @@ class TopicsController < ApplicationController
 	layout 'standard'
 	
 	def index
-		@title = "Topics"
+		@minititle = "Topics"
 		@topics = Topic.find(:all)
 		@options = {}
 		emit(@topics)
 	end
 	
 	def mine
-		@title = "My Topics"
+		@minititle = "My Topics"
 		@topics = @user.topics
 		render :action => :index
 	end
 	
 	def search 
-		@title = "Topics matching '#{params[:query]}'";
+		@minititle = "Topics matching '#{params[:query]}'";
 		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
 		render :action => :index  
 	end
 	
 	def show
 		@topic = Topic.find(params[:id])
-		@title = @topic.txt
+		@title = "Topic: "+@topic.txt
+		if @topic.ismine(@user)
+			@editlink = true
+		end
+		@mypoints = @user.points_for_topic(@topic)
+		@notmine = @user.points_notmine_for_topic(@topic)
 		emit(@topic,{:only => [:txt], :include => :points})
 	end
 	
 	def points
 	  @topic = Topic.find(params[:id])
-	  @title = "Points for #{@topic.txt}"
+	  @minititle = "Points for #{@topic.txt}"
 		@points = @topic.points
 		render  :template => 'points/index'
 		emit(@points)
@@ -57,7 +62,6 @@ class TopicsController < ApplicationController
 	end
 	
 	def newparent
-		debugger
 	  parent = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'")
   	# create parent topic if it doesn't exist already
 	  if parent.nil?

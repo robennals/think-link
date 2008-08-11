@@ -13,16 +13,20 @@
 		<div>
 	<% end %>
 <% else %>
-	<div class="listitems">
 <% end %>
 	<% previewlist.slice(0,max).each do |item| %>
 			<%=	render_partial renderer, item, :options => options %>
 	<% end %>
 	<br />
+	<% if (previewlist && previewlist.length > max) %>
 		<span class="more"><%= link_to 'see all >>', params.merge ({:action => action}) %></span>
-	</div>
+	<% end %>
+	<% if options[:noclass] %>
+		</div>
+	<% end %>
 <% else %>
 	<% if !options[:divid].nil? %>
 		<div id="<%= options[:divid] %>"></div>
 	<% end %>
 <% end %>
+

@@ -8,31 +8,37 @@
 
 
 <div class="point">
-	<div style="margin-bottom: 10px;">
-		<%= link_to 'Back to points', points_path %>
-		<% if @point.ismine(@user) %>
-			| <a href="<%= url_for(:action=>'edit') %>">Edit <img src="/images/pencil.png" /></a>
-		<% end %>
-	</div>
-<div style="float:left; width:400px;">
-	<h2>Snippets</h2>
+
+<table class="maintable">
+<tr>
+<td>
+
+<div>
 	<div class="snippets">	
+	<h2>Snippets</h2>
 		<% @point.snippets.each do |snippet| %>
 		<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true} %>
 		<% end %>
 	</div>
-	<h2>Annotated By</h2>
-	<ul>
-	<% @point.users.each do |c| %>
-		<li><%= link_to c.displayname, user_path(c) -%></li>
-	<% end  %>
-	</ul>
-	
+		
 </div>
-<div style="margin-left:400px; width:500px;">
-	<h2>Related Points</h2>
+
+</td><td>
+
+<div>
+
+	<div class="topics">
+		<h2>Topics</h2>
+		<div id="topiclist<%= @point.id %>" class="topiclist">
+			<% @point.topics.each do |c| %>
+				<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target => "_top" -%> </div>
+			<% end  %>
+		</div>
+		<%=	render_partial 'points/pointnewtopic', @point %>
+	</div>
+
 	<div class="points">
-		<%=	render_partial 'points/pointnewlink', @point %>
+		<h2>Related Points</h2>
 
 		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting', :rel=>'supports'} %>
 		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same', :rel=>'same'} %>
@@ -41,27 +47,25 @@
 		<!-- 
 		<% @point.point_links_a.each do |pl| %>
 			<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-					<%= link_to pl.point_b.txt, point_path(pl.point_b) -%></div>
+					<%= link_to pl.point_b.txt, point_path(pl.point_b), :target => "_top" -%></div>
 		<% end  %>
 
 		<% @point.point_links_b.each do |pl| %>
 			<div class='pointlink'><div class="pointlink_how"><%= pl.howlinked %></div>
-					<%= link_to pl.point_a.txt, point_path(pl.point_a) -%></div>
+					<%= link_to pl.point_a.txt, point_path(pl.point_a), :target => "_top" -%></div>
 		<% end  %>
 		-->
+		
+		<%=	render_partial 'points/pointnewlink', @point %>
 	</div>
 
-	<h2>Topics</h2>
-	<div class="topics">
-		<%=	render_partial 'points/pointnewtopic', @point %>
-		<div id="topiclist<%= @point.id %>">
-			<% @point.topics.each do |c| %>
-				<div class="topic_ref"><%= link_to c.txt, topic_path(c) -%> </div>
-			<% end  %>
-		</div>
-	</div>
+
 </div>
 	<br/>
+
+</td>
+</tr>
+</table>
 
 
 </div>

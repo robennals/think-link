@@ -10,30 +10,26 @@
 %>
 
 
-<div class="points">
-<% if pagecount != 1 %>
-<h2>Page <%= page+1 %> of <%= pagecount %></h2>
-<% end %>
 	<% if page != 0 && pagecount != 1 %>
-	<span class="more"><%= link_to 'prev', {:page => page-1} %></span>
+	<span class="prevnext"><%= link_to 'prev', params.merge ({:page => page-1}) %></span>
 	<% elsif pagecount != 1 %>
 	<span class="fakemore">prev</span>
 	<% end %>
 	<% if page+1 < pagecount %>
-	<span class="more"><%= link_to 'next', {:page => page+1} %></span>
+	<span class="prevnext"><%= link_to 'next', params.merge ({:page => page+1}) %></span>
 	<% end %>
+	<span class="prevnext">page <%= page+1 %> of <%= pagecount %></span>
 
 	<% itemlist.slice(page*20,20).each do |item| %>
 			<%=	render_partial renderer, item, :options => options %>
 	<% end %>
 
 	<% if page != 0 && pagecount != 1 %>
-	<span class="more"><%= link_to 'prev', params.merge ({:page => page-1}) %></span>
+	<span class="prevnext"><%= link_to 'prev', params.merge ({:page => page-1}) %></span>
 	<% elsif pagecount != 1 %>
 	<span class="fakemore">prev</span>
 	<% end %>
 	<% if page+1 < pagecount %>
-	<span class="more"><%= link_to 'next', params.merge ({:page => page+1}) %></span>
+	<span class="prevnext"><%= link_to 'next', params.merge ({:page => page+1}) %></span>
 	<% end %>
 
-</div>

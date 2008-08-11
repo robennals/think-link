@@ -5,11 +5,11 @@
 		<% if options[:checkbox] %>
 			<input type="checkbox" name="checkpoint" value="<%= pointref.id %>"/>
 		<% end %>
-		<%= link_to pointref.txt, point_path(pointref), :target=>"_blank" -%>
+		<%= link_to pointref.txt, point_path(pointref), :target=>"_top" -%>
 		<% if options[:checkbox] %>
 			<span class="topic_list_small" id="topic_list_small<%= pointref.id %>">
 				<% topics.each do |t| %>
-					<%= link_to t.txt, topic_path(t) %>
+					<%= link_to t.txt, topic_path(t), :target => "_top" %>
 					<% if !t.eql?(topics[topics.length-1]) %>
 					, 
 					<% end %>
@@ -23,11 +23,11 @@
 		<% if options[:checkbox] %>
 			<input type="checkbox" name="checkpoint" value="<%= pointref.id %>"/>
 			<% end %>
-		<%= link_to pointref.txt, point_path(pointref) -%>
+		<%= link_to pointref.txt, point_path(pointref), :target => "_top" -%>
 		<% if options[:checkbox] %>
 			<span class="topic_list_small" id="topic_list_small<%= pointref.id %>">
 				<% topics.each do |t| %>
-					<%= link_to t.txt, topic_path(t) %>
+					<%= link_to t.txt, topic_path(t), :target => "_top" %>
 					<% if !t.eql?(topics[topics.length-1]) %>
 					, 
 					<% end %>

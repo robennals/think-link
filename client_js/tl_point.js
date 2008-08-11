@@ -442,7 +442,7 @@ function tl_point_browser() {
 			var explainSpan = $("<span/>").css("padding-left","10px").text(defaultText);
 
 			var thumbup = $("<img/>")
-				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(titleBox).css("padding-left","4px")
+				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(buttonBox).css("padding-left","4px")
 				.click(that.ratePointHandler).attr("id",1)
 				.hover(function(){ 
 					$(this).addClass("highlight");
@@ -453,7 +453,7 @@ function tl_point_browser() {
 				});
 
 			var thumbdown = $("<img/>")
-				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(titleBox)
+				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(buttonBox)
 				.click(that.ratePointHandler).attr("id",0)
 				.hover(function(){ 
 					$(this).addClass("highlight");
@@ -481,7 +481,7 @@ function tl_point_browser() {
 			pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
 			pointframe.style.width="100%";
 			pointframe.style.height="100%";
-			pointframe.style.overflow = "scroll";
+			pointframe.style.overflow = "auto";
 			frameholder.appendChild(pointframe);
 			frameholder.style.width="100%";
 			frameholder.style.height="100%";
@@ -533,7 +533,7 @@ function tl_point_browser() {
 		var explainSpan = $("<span/>").css("padding-left","10px");
 		
 		var thumbup = $("<img/>")
-			.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(titleBox).css("padding-left","4px")
+			.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(buttonBox).css("padding-left","4px")
 			.click(this.ratePointHandler).attr("id",1)
 			.hover(function(){ 
 				$(this).addClass("highlight");
@@ -544,7 +544,7 @@ function tl_point_browser() {
 			});
 
 		var thumbdown = $("<img/>")
-			.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(titleBox)
+			.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(buttonBox)
 			.click(this.ratePointHandler).attr("id",0)
 			.hover(function(){ 
 				$(this).addClass("highlight");
@@ -585,66 +585,7 @@ function tl_point_browser() {
 		$("#"+this.divID).append($(element));
 		
 		
-		this.showMe();
-		
-//			
-//		// make title area
-//		var titleTable = document.createElement("table"); titleTable.setAttribute("width","100%"); titleTable.setAttribute("id","tl_pb_title"); 
-//		var titleRow = document.createElement("tr");
-//		titleTable.appendChild(titleRow);
-//		var titleData = document.createElement("td"); titleData.appendChild(document.createTextNode(this.pointText));
-//		titleRow.appendChild(titleData);
-//		
-//		// add thumbs up/down stuff to title area
-//		var defaultText ="";
-//		if (that.resultsObj['point_info'][0].agree=="1") { defaultText="I agree"; }
-//		else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
-//		var thumbData = document.createElement("td"); thumbData.setAttribute("width","150"); thumbData.setAttribute("align","right");
-//		var thumbDiv = $("<div></div>").css("font-size","10pt").css("text-align","right").attr("id",this.pointID);
-//		var explainSpan = $("<span></span>").css("padding",10);
-//		$(explainSpan).text(defaultText);
-//		$(thumbDiv).append($(explainSpan));
-//		$("<img />").attr("src","http://mashmaker.intel-research.net/beth/images/thumb_up.png").attr("id","1")
-//			.hover(function(){ 
-//				$(this).addClass("highlight");
-//				$(explainSpan).text("I agree");
-//				}, function(){ 
-//				$(this).removeClass("highlight");
-//				$(explainSpan).text(defaultText); 
-//			})
-//			.click(that.ratePointHandler)
-//			.appendTo($(thumbDiv));
-//		$("<img />").attr("src","http://mashmaker.intel-research.net/beth/images/thumb_down.png").attr("id","0")
-//			.hover(function(){ 
-//				$(this).addClass("highlight");
-//				$(explainSpan).text("I disagree");
-//				}, function(){ 
-//				$(this).removeClass("highlight");
-//				$(explainSpan).text(defaultText); 
-//			})
-//			.click(that.ratePointHandler)
-//			.appendTo($(thumbDiv));
-//		$(thumbData).append(thumbDiv);
-//		titleRow.appendChild(thumbData);
-//		
-//		// add close buttong and help button
-//		var closeData = document.createElement("td");
-//		$('<input type="button" value="close" />')
-//			.click(function(){
-//				that.hideMe(); 
-//				var search = document.getElementById("tl_search_results_child");
-//				if (search != null) { document.body.removeChild(search); }
-//			})
-//			.appendTo($(closeData));
-//		titleRow.appendChild(closeData);
-//		
-//		var helpData = document.createElement("td"); helpData.setAttribute("width","50"); helpData.setAttribute("align","right");
-//		$("<img />").attr("src","http://mashmaker.intel-research.net/beth/images/help.png")
-//			.click(that.showHelpBox)
-//			.appendTo($(helpData));
-//		titleRow.appendChild(helpData);
-		
-
+		this.showMe();		
 	}
 	
 	

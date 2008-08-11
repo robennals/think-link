@@ -1,11 +1,18 @@
-<% if @points.blank? %>
-	<p>There are not any points currently in the system</p>
+
+<% #TODO: do this properly
+   postfix = rand(10000);
+   spanid = "new_topic"+postfix.to_s;
+%>
+
+
+<form name="mypointslist">
+<% if options[:preview] %>
+<%= render_partial 'main/previewlist', points, :options => {:checkbox=>true}, :renderer => 'points/pointref', :action => action %>
 <% else %>
-	<p>These are the points in our system</p>
-	<ul id="points">
-	<% @points.each do |c| %>
-		<li><%= link_to c.txt, {:controller => 'points', :action => 'show', :id => c.id} -%></li>
-	<% end %>
-	</ul>
+<%= render_partial 'main/itemlist', points, :options => {:checkbox=>true}, :renderer => 'points/pointref' %>
 <% end %>
-<p><%= link_to "Add new Point", {:action => 'new' }%></p>
+</form>
+
+<% if !options[:notools] %>
+	<%= render_partial 'points/pointtools', nil %>
+<% end %>

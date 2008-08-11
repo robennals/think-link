@@ -9,7 +9,7 @@ class PointsController < ApplicationController
 	end
 	
 	def search 
-		@title = "Points matching '#{params[:query]}'";
+		@minititle = "Points matching '#{params[:query]}'";
 		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
 		render :action => :index  
 	end
@@ -20,21 +20,29 @@ class PointsController < ApplicationController
 		emit(@points)
 	end
 	def mine
-		@title = "My Points"
+		@minititle = "My Points"
 		@points = @user.points
 		render :action => :index
 	end
 	def show
 		@point = Point.find(params[:id])
-		@title = @point.txt
+		@title = "Point: "+@point.txt
+		if @point.ismine(@user)
+			@editlink = true
+		end
+
 		emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
 	end
 	def showmini
 		@point = Point.find(params[:id])
+		render :layout => 'mini', :action => 'show'
+	end
+	def showmini_old
+	
+		@point = Point.find(params[:id])
 		if !params[:snippet].nil?
 		  @currentSnip = Snippet.find(params[:snippet])
 		end
-    #debugger
 		render :layout => 'mini'		
 	end
 	def snippets

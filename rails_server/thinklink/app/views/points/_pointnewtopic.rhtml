@@ -1,13 +1,13 @@
 
-	<div style="padding:10px;">
-		this point is related to the topic: 
-		<span id="new_topic"></span>
-	</div>
+	<div style="padding:4px">
+		<nobr id="new_topic"></nobr>
+	</div> 
 	<script language="javascript">
 		var suggestTopic = new tl_suggest(document.getElementById('new_topic'), true,"search_topics.php","text");
 		var textboxTopic = suggestTopic.init();
 		suggestTopic.setDefaultText("<Enter search terms>");
-		suggestTopic.setButtonText("relate to topic");
+		suggestTopic.setButtonText("add");
+		suggestTopic.setWidth("160px");
 		suggestTopic.setButtonClickEvent(function(){ 
 			var fieldString = "?point="+ encodeURIComponent(<%= pointnewtopic.id %>)+"&text="+encodeURIComponent(textboxTopic.value);
 			doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
@@ -20,6 +20,17 @@
 				document.getElementById("topiclist<%= pointnewtopic.id %>").appendChild(newitem);
 			});
 		});
+		suggestTopic.getSuggestUrl = function(){
+			var text = suggestTopic.getValue();
+			if(!text) text = "";
+			var title 
+			if(text){
+				title = "Topics matching '"+text+"'";
+			}else{
+				title = "Recent topics";
+			}
+			return {url: "search_topics.php?text="+encodeURIComponent(text),title: title};
+		}
 		suggestTopic.setResultCallback(function(item){ 
 	    	var row = document.createElement("span");  
 	    	row.id = item.id;

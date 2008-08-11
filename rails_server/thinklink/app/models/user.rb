@@ -20,9 +20,63 @@ class User < ActiveRecord::Base
 	end
 	
 	def points
-		return Point.find_by_sql("SELECT * FROM snippets,points WHERE snippets.point_id = points.id AND snippets.user_id = #{self.id} GROUP BY points.id ORDER BY snippets.created_at DESC");		
+		return Point.find_by_sql("SELECT * FROM snippets,points WHERE snippets.point_id = points.id AND snippets.user_id = #{self.id} GROUP BY points.id ORDER BY snippets.id DESC");		
 	end
+
+	def mypoints
+	return Point.find_by_sql("
+		SELECT points.id, points.txt, points.user_id FROM snippets,points,bookmarks
+			WHERE snippets.point_id = points.id 
+			AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
+			AND bookmarks.user_id = #{self.id}
+			GROUP BY points.id 
+			ORDER BY snippets.id DESC		
+		");
+	end
+
+	def notmypoints
+	return Point.find_by_sql("
+		SELECT points.id, points.txt, points.user_id FROM points 
+		WHERE points.id NOT IN (
+			SELECT points.id FROM snippets,points,bookmarks
+				WHERE snippets.point_id = points.id 
+				AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
+				AND bookmarks.user_id = #{self.id}
+			)
+		AND points.txt != ''
+		ORDER BY points.id DESC
+		");
+	end
+
 	
+	def points_for_topic(topic)
+	return Point.find_by_sql("
+		SELECT points.id, points.txt, points.user_id FROM snippets,points,bookmarks,point_topics
+			WHERE snippets.point_id = points.id 
+			AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
+			AND point_topics.point_id = points.id
+			AND point_topics.topic_id = #{topic.id}
+			AND bookmarks.user_id = #{self.id}
+			GROUP BY points.id 
+			ORDER BY snippets.id DESC		
+		");
+	end
+		
+	def points_notmine_for_topic(topic)
+	return Point.find_by_sql("
+		SELECT points.id, points.txt, points.user_id FROM points,point_topics 
+		WHERE points.id = point_topics.point_id
+		AND point_topics.topic_id = #{topic.id}
+		AND points.id NOT IN (
+			SELECT points.id FROM snippets,points,bookmarks,point_topics
+				WHERE snippets.point_id = points.id 
+				AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
+				AND point_topics.point_id = points.id
+				AND point_topics.topic_id = #{topic.id}
+				AND bookmarks.user_id = #{self.id} 
+		)");
+	end	
+		
 	def recenttopics
 		pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC")
 		topics = Array.new

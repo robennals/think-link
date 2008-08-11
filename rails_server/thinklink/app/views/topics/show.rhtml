@@ -1,35 +1,44 @@
 
 
 <div class="point">
-	<div style="margin-bottom: 10px;">
-		<%= link_to 'Back to topics', topics_path %>
-		<% if @topic.ismine(@user) %>
-			| <a href="<%= url_for(:action=>'edit') %>">Edit <img src="/images/pencil.png" /></a>
-		<% end %>
-	</div>
-
-<div style="float:left; width:400px;">
-	<h2>Points</h2>
-	<div class="points">
-		add point: <%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist' %>
-		<%= render_partial 'main/previewlist', @topic.points, :options => {:noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :action => 'points' %>
-	</div>
 	
+
+<table class="maintable">
+<tr>
+<td>
+<div>
+	<div class="points">
+		<h2>Points</h2>
+		<% if ! @mypoints.empty? %>
+		<span class="relationtitle">Mine</span>
+		<%= render_partial 'points/points', @mypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :action => 'points' %>
+		<span class="relationtitle">Others</span>
+		<% end %>
+
+		<%= render_partial 'points/points', @notmine, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :action => 'points' %>
+		<%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist' %>
+
+		<%= render_partial 'points/pointtools', nil %>
+
+	</div>
 
 	
 	<br />
 </div>
-
-<div style="margin-left:400px; width:400px;">
-	<h2>Parent Topics</h2>
+</td>
+<td>
+<div>
 	<div class="topics">
-		<div id="new_parent">
+		<h2>Parent Topics</h2>
+		<%= render_partial 'main/previewlist', @topic.parents, :options => {:noclass=>true, :divid=>'parentslist'}, :renderer => 'topics/topicref', :action => 'parents' %>
+		<div id="new_parent"  style="padding:4px">
 		</div>
 		<script language="javascript">
 			var suggest = new tl_suggest(document.getElementById('new_parent'), true,"search_topics.php","text");
 			var textbox = suggest.init();
 			suggest.setDefaultText("<Enter search terms>");
-			suggest.setButtonText("set as parent topic");
+			suggest.setButtonText("add");
+			suggest.setWidth("160px");
 			suggest.setButtonClickEvent(function(){ 
 				$.get("/topics/newparent/<%= @topic.id %>.json",{topic:textbox.value}, function(result){
 					tl_log("new parent topic: "+result);
@@ -49,18 +58,19 @@
 		    	return row;
 		 	});
 		</script>
-		<%= render_partial 'main/previewlist', @topic.parents, :options => {:noclass=>true, :divid=>'parentslist'}, :renderer => 'topics/topicref', :action => 'parents' %>
 	</div>
 	
-	<h2>Sub Topics</h2>
 	<div class="topics">
-		<div id="new_child">
-		</div>
+		<h2>Sub Topics</h2>
+		<%= render_partial 'main/previewlist', @topic.children, :options => {:noclass=>true, :divid=>'childrenlist'}, :renderer => 'topics/topicref', :action => 'children' %>
+
+		<div id="new_child" style="padding:4px">
 		<script language="javascript">
 			var suggest2 = new tl_suggest(document.getElementById('new_child'), true,"search_topics.php","text");
 			var textbox2 = suggest2.init();
 			suggest2.setDefaultText("<Enter search terms>");
-			suggest2.setButtonText("set as  subtopic");
+			suggest2.setButtonText("add");
+			suggest2.setWidth("160px");
 			suggest2.setButtonClickEvent(function(){ 
 				$.get("/topics/newchild/<%= @topic.id %>.json",{topic:textbox2.value}, function(result){
 					tl_log("new child topic: "+result);
@@ -80,7 +90,9 @@
 		    	return row;
 		 	});
 		</script>
-		<%= render_partial 'main/previewlist', @topic.children, :options => {:noclass=>true, :divid=>'childrenlist'}, :renderer => 'topics/topicref', :action => 'children' %>
-	</div>	
+	</div>
+	</td>
+	</tr>
+	</table>	
 </div>
 </div>

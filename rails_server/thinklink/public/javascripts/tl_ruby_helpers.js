@@ -1,7 +1,25 @@
+function getChecks(field){
+	if(field.checkpoint){
+		return field.checkpoint;
+	}else{
+		var checks = [];
+		for(var i = 0; i < field.length; i++){
+			if(field[i].checkpoint && field[i].checkpoint.length){
+				for(var j = 0; j < field[i].checkpoint.length; j++){
+					checks.push(field[i].checkpoint[j]);
+				}
+			}else if(field[i].checkpoint){
+				checks.push(field[i].checkpoint)
+			}
+		}
+		return checks;
+	}
+}
+
 function checkAll(field)
 {
-for (i = 0; i < field.length; i++)
-	field[i].checked = true ;
+	for (i = 0; i < field.length; i++)
+			field[i].checked = true ;
 }
 
 function uncheckAll(field)

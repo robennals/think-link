@@ -1,6 +1,6 @@
 <div class="snippet" id="snippet<%= snippet.id %>">
 <% if !options[:nopoint] %>
-<div class="snippet_point"><%= link_to snippet.point.txt, point_path(snippet.point) %></div>
+<div class="snippet_point"><%= link_to snippet.point.txt, point_path(snippet.point), :target => "_top" %></div>
 <% end %>
 <div class="snippet_text"><%= trim_string(snippet.txt) %>
 	<% if options[:trash] %>
@@ -16,8 +16,8 @@
 		
 	<% end %>
 </div>
-<%= "<a class='snippet_url'  target='_blank' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
+<%= "<a class='snippet_url'  target='_top' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
 <% if !options[:noauthor] %>
-<div class="snippet_author"><%= link_to snippet.user.email, user_path(snippet.user), :target=>"_blank" %> </div>
+<div class="snippet_author"><%= link_to snippet.user.email, user_path(snippet.user), :target=>"_top" %> </div>
 <% end %>
 </div>

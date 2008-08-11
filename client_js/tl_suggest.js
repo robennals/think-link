@@ -40,7 +40,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		this.button = document.createElement("input");
 		this.button.setAttribute("type","button");
 		this.button.setAttribute("value","submit"); 
-		this.parent.appendChild(this.button);
+		this.mainDiv.appendChild(this.button);
 		this.resultsDiv = document.createElement("span");
 		this.resultsDiv.className = "hidden";
 		this.resultsDiv.style.position = "fixed";
@@ -139,7 +139,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 	
 	this.close = function(){
 		this.resultsDiv.parentNode.removeChild(this.resultsDiv);
-		document.body.removeEventListener("mousedown",this.hideResults,false);
+	 	document.body.removeEventListener("mousedown",this.hideResults,false);
 	}
 	
 	this.showResults = function(result,title) {

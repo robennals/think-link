@@ -29,6 +29,6 @@ class Topic < ActiveRecord::Base
 	  end
 	  return user.eql?(u)
 	end
-  
+	  
 end
 

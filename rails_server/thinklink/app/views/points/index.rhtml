@@ -1,39 +1,6 @@
-<div>
-	Select: 
-	<a href="#" onClick="checkAll(document.mypointslist.checkpoint); return false;">All</a>, 
-	<a href="#" onClick="uncheckAll(document.mypointslist.checkpoint); return false;">None</a>
-	Set topic:
-		<span id="new_topic"></span>
+
+<div class="points">
+		<h2><%= @minititle %></h2>
+		<%= render_partial 'points/points', @points, :options => {:noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :action => 'points' %>
+
 </div>
-<script language="javascript">
-	var suggestTopic = new tl_suggest(document.getElementById('new_topic'), true,"search_topics.php","text");
-	var textboxTopic = suggestTopic.init();
-	suggestTopic.setDefaultText("<Enter search terms>");
-	suggestTopic.setButtonText("set");
-	suggestTopic.setButtonClickEvent(function(){ 
-		var pointArray = getChecked(document.mypointslist.checkpoint);
-		var pointlist = pointArray.join(',');
-		var fieldString = "?point="+ encodeURIComponent(pointlist)+"&text="+encodeURIComponent(textboxTopic.value);
-		doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
-			tl_log("new point link: "+ result);
-			for (var i=0; i<pointArray.length; i++) {
-				var listarea = document.getElementById("topic_list_small"+pointArray[i]);
-				var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
-				link.appendChild(document.createTextNode(textboxTopic.value));
-				listarea.appendChild(link);
-			}
-		});
-	});
-	suggestTopic.setResultCallback(function(item){ 
-    	var row = document.createElement("span");  
-    	row.id = item.id;
-    	row.appendChild(document.createTextNode(item.txt));
-    	return row;
- 	});
-</script>
-
-
-<form name="mypointslist">
-<%= render_partial 'main/itemlist', @points, :options => {:checkbox=>true}, :renderer => 'points/pointref' %>
-</form>
-<!-- <p><%= link_to "Add new Point", {:controller=>'points',:action => 'new' }%></p> -->

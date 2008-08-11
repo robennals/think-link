@@ -1,4 +1,4 @@
-<div style="padding:10px;">
+<div style="padding:4px; font-size: small">
 	this point: 
 	<select name="relation" id="new_related_relation">
 		<option>supports</option>
@@ -12,7 +12,8 @@
 	var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
 	var textbox = suggest.init();
 	suggest.setDefaultText("<Enter search terms>");
-	suggest.setButtonText("link to point");
+	suggest.setButtonText("add");
+	suggest.setWidth("160px");
 	suggest.setButtonClickEvent(function(){ 
 		var relation = document.getElementById("new_related_relation").value;
 		var fieldString = "?destid="+ encodeURIComponent(<%= pointnewlink.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
