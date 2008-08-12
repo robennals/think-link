@@ -10,7 +10,7 @@ class PointsController < ApplicationController
 	
 	def search 
 		@minititle = "Points matching '#{params[:query]}'";
-		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
+		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
 		render :action => :index  
 	end
 	def index
@@ -24,6 +24,12 @@ class PointsController < ApplicationController
 		@points = @user.points
 		render :action => :index
 	end
+	def notmine
+		@minititle = "Others' Points"
+		@points = @user.notmypoints
+		render :action => :index
+	end
+	
 	def show
 		@point = Point.find(params[:id])
 		@title = "Point: "+@point.txt

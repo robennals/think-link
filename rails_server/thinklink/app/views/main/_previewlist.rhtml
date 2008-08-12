@@ -4,7 +4,9 @@
    end
 %>
 
-
+<% if controller.nil? %>
+	<% controller = params[:controller] %>
+<% end %>
 <% if(previewlist && previewlist.length > 0) %>
 <% if options[:noclass] %>
 	<% if !options[:divid].nil? %>
@@ -19,7 +21,7 @@
 	<% end %>
 	<br />
 	<% if (previewlist && previewlist.length > max) %>
-		<span class="more"><%= link_to 'see all >>', params.merge ({:action => action}) %></span>
+		<span class="more"><%= link_to 'see all', params.merge ({:controller=>controller,:action => action}) %></span>
 	<% end %>
 	<% if options[:noclass] %>
 		</div>

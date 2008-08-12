@@ -37,8 +37,8 @@ class MainController < ApplicationController
 	
 	def search 
 		@title = "Things matching '#{params[:query]}'";
-		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
-		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
+		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
+		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
 	end
 	
 end

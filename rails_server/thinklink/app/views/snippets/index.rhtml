@@ -1,4 +1,8 @@
-
+<% if @options[:noauthor].nil? %>
+	<% noauthor = false %>
+<% else %>
+	<% noauthor = @options[:noauthor] %>
+<% end %>
 <div class="snippets">
-<%= render_partial 'main/itemlist', @snippets, :options => {:noauthor => true}, :renderer => 'snippet' %>
+<%= render_partial 'main/itemlist', @snippets, :options => {:noauthor => noauthor}, :renderer => 'snippet' %>
 </div>

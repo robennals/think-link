@@ -98,10 +98,11 @@ class User < ActiveRecord::Base
 	end
 	
 	def snippets
-	  snips = Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC")
+	  snips = Array.new
 	  self.bookmarks.each do |b|
 	    snips.push(Snippet.find(b.snippet_id))
     end
+	  snips = snips.concat(Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC"))
     return snips.uniq
 	end
 		

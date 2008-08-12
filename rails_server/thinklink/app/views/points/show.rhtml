@@ -31,7 +31,18 @@
 		<h2>Topics</h2>
 		<div id="topiclist<%= @point.id %>" class="topiclist">
 			<% @point.topics.each do |c| %>
-				<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target => "_top" -%> </div>
+				<% parents = c.parents %>
+				<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target => "_top" -%> 
+					<% if (!parents.empty?) %>
+						<em>parent topics:</em>
+						<div style="padding-left:10px">
+						<% parents.each do |par| %>
+							<%= link_to par.txt, topic_path(par), :target => "_top" -%>
+							<br />
+						<% end %>
+						</div>
+					<% end %>
+				</div>
 			<% end  %>
 		</div>
 		<%=	render_partial 'points/pointnewtopic', @point %>

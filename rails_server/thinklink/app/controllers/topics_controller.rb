@@ -19,7 +19,7 @@ class TopicsController < ApplicationController
 	
 	def search 
 		@minititle = "Topics matching '#{params[:query]}'";
-		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}')"
+		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
 		render :action => :index  
 	end
 	

@@ -1,9 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :sources
-  map.resources :snippets, :collection => {:mine => :get, :list => :get}
+  map.resources :snippets, :collection => {:mine => :get, :list => :get, :friends => :get}
   map.resources :ratings
   map.resources :users, :member => {:snippets => :get, :points => :get, :topics => :get}
-  map.resources :points, :collection => {:list => :get, :search => :get, :mine => :get}, :member => {:snippets => :get, :show => :get}
+  map.resources :points, :collection => {:list => :get, :search => :get, :mine => :get, :notmine => :get}, :member => {:snippets => :get, :show => :get}
   map.resources :topics, :collection => {:list => :get, :search => :get, :mine => :get}, :member => {:show => :get, :points => :get, :parents => :get, :children => :get}
 
   # The priority is based upon order of creation: first created -> highest priority.

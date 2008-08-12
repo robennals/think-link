@@ -21,6 +21,7 @@
 		var fieldString = "?destid="+ encodeURIComponent(<%= pointnewlink.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
 		doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
 			tl_log("new point link: "+ result);
+			if (result==false) { alert("A point cannot link to itself"); return;}
 			// add this new point to the list in the UI
 			var spantitle = document.getElementById(relation+"_pointlinks<%= pointnewlink.id %>");
 			

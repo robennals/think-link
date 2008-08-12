@@ -23,11 +23,11 @@ if($row != NULL){
 	exit;
 }
 
-if(!$topicid && $topictxt){
+if(!$topicid && $topictxt && strcmp($topictxt,"null")!=0 ){
 	$row = sql_to_row("SELECT id FROM topics WHERE txt = '$topictxt';");
 	if($row != NULL){
 		$topicid = mysql_insert_id();
-	}else{
+	}else {
 		sql_query("INSERT INTO topics (txt,user_id) VALUES ('$topictxt','$user');");
 		$topicid = mysql_insert_id();
 	}
@@ -41,4 +41,5 @@ if($topicid){
 }
 
 json_out($pointid);
+
 ?>

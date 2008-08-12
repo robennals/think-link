@@ -20,6 +20,13 @@ class SnippetsController < ApplicationController
 		@options = {:noauthor => true}
 		render :action => :index
 	end
+	def friends
+	  @title = "Friends' Snippets"	
+		@snippets = Snippet.all(:order => "created_at desc", :conditions=>"user_id<>#{@user.id}")
+		@options = {}
+		render :action => :index
+	end
+	
 	def show
 		@snippet = Snippet.find(params[:id])
 	end

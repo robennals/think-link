@@ -26,6 +26,9 @@ else $sourceid=$source[0]['id']; // use existing
 
 $outid = $sourceid;
 
+// make sure aren't linking to self
+if ($destid==$sourceid) { json_out(false); return; }
+
 if($rel == "supportedby"){
 	$rel = "supports";
 	$temp = $destid;
