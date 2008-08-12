@@ -42,10 +42,12 @@
 		
 		<div id="points<%= @point.id%>">
 
-		<%=	render_partial 'points/pointlinks', @point.supporting_links(@user), :options => {:linkedto=>@point, :title=>'supporting', :rel=>'supports'} %>
-		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'same', :rel=>'same'} %>
-		<%=	render_partial 'points/pointlinks', @point.opposing_links(@user), :options => {:linkedto=>@point, :title=>'opposing', :rel=>'opposes'} %>
-		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'opposite', :rel=>'opposite'} %>
+		<%=	render_partial 'points/pointrels', @point.supports_points, :options => {:linkedto=>@point, :title=>'this point supports', :rel=>'supportedby', :reverse=>true} %>
+		<%=	render_partial 'points/pointrels', @point.opposes_points, :options => {:linkedto=>@point, :title=>'this point opposes', :rel=>'opposedby', :reverse=>true} %>
+		<%=	render_partial 'points/pointrels', @point.supporting_points, :options => {:linkedto=>@point, :title=>'supported by', :rel=>'supports'} %>
+		<%=	render_partial 'points/pointrels', @point.opposing_points, :options => {:linkedto=>@point, :title=>'opposed by', :rel=>'opposes'} %>
+		<%=	render_partial 'points/pointlinks', @point.opposite_links(@user), :options => {:linkedto=>@point, :title=>'exact opposite', :rel=>'opposite'} %>
+		<%=	render_partial 'points/pointlinks', @point.same_links(@user), :options => {:linkedto=>@point, :title=>'identical', :rel=>'same'} %>
 		
 		</div>
 		

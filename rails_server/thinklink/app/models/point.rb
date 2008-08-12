@@ -32,7 +32,102 @@ class Point < ActiveRecord::Base
     }
     return snipfinal.uniq
 	end
+
+	def sql_eqpoints(id)
+		return "
+			(#{id} = #{self.id} 
+			OR #{id} IN (
+				SELECT point_a_id FROM point_links 
+				WHERE point_b_id = #{self.id} 
+				AND howlinked = 'same'
+			) OR #{id} IN (
+				SELECT point_b_id FROM point_links 
+				WHERE point_a_id = #{self.id} 
+				AND howlinked = 'same'
+			))
+			";
+	end
+
+	def sql_oppoints(id)
+		return "
+			(#{id} IN (
+				SELECT point_a_id FROM point_links 
+				WHERE point_b_id = #{self.id} 
+				AND howlinked = 'opposite'
+			)
+			OR #{id} IN (
+				SELECT point_b_id FROM point_links 
+				WHERE point_a_id = #{self.id} 
+				AND howlinked = 'opposite'
+			))
+
+			";
+	end
 	
+	def supporting_points
+		return Point.find_by_sql("
+			SELECT * FROM points 
+			WHERE id IN (
+				SELECT point_a_id FROM point_links
+				WHERE #{sql_eqpoints('point_b_id')}
+				AND howlinked = 'supports'
+			)
+			OR id IN (
+				SELECT point_a_id FROM point_links
+				WHERE #{sql_oppoints('point_b_id')}
+				AND howlinked = 'opposes'
+			) 			 
+		");
+	end
+
+	def supports_points
+		return Point.find_by_sql("
+			SELECT * FROM points 
+			WHERE id IN (
+				SELECT point_b_id FROM point_links
+				WHERE #{sql_eqpoints('point_a_id')}
+				AND howlinked = 'supports'
+			)
+			OR id IN (
+				SELECT point_b_id FROM point_links
+				WHERE #{sql_oppoints('point_a_id')}
+				AND howlinked = 'opposes'
+			) 			 
+		")
+	end	
+	
+	def opposing_points
+		return Point.find_by_sql("
+			SELECT * FROM points 
+			WHERE id IN (
+				SELECT point_a_id FROM point_links
+				WHERE #{sql_eqpoints('point_b_id')}
+				AND howlinked = 'opposes'
+			)
+			OR id IN (
+				SELECT point_a_id FROM point_links
+				WHERE #{sql_oppoints('point_b_id')}
+				AND howlinked = 'supports'
+			) 			 
+		");
+	end
+
+	def opposes_points
+		return Point.find_by_sql("
+			SELECT * FROM points 
+			WHERE id IN (
+				SELECT point_b_id FROM point_links
+				WHERE #{sql_eqpoints('point_a_id')}
+				AND howlinked = 'opposes'
+			)
+			OR id IN (
+				SELECT point_b_id FROM point_links
+				WHERE #{sql_oppoints('point_a_id')}
+				AND howlinked = 'supports'
+			) 			 
+		");
+	end	
+
 	def supporting_links(user)
 	  links = PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='supports') OR (point_a_id = #{self.id} AND howlinked='supports')")
 	  links.delete_if {|l|
@@ -83,6 +178,18 @@ class Point < ActiveRecord::Base
 	  return links
 	end
 
+	def related_links_forward(user,rel,opposite)
+		links = PointLink.find_by_sql("
+			SELECT * from pointlink WHERE 
+			pointlink.id IN (
+				SELECT a.id FROM point_links a, point_links b WHERE
+					(a.point_a = #{self.id} OR (b.point_a = #{self.id} AND b.howlinked = '
+				
+			)
+		")
+		return links;
+	end
+
   def isdeleted(user)
 	  if user.nil? 
 	    return false
@@ -105,4 +212,7 @@ class Point < ActiveRecord::Base
 	end
 	
 	validates_presence_of :txt
+	
+
+	
 end

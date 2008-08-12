@@ -120,6 +120,18 @@ function getUser($email,$pass) {
 	return $user[0]['id'];
 }
 
+function login(){
+	global $HTTP_COOKIE_VARS;
+	$email = $HTTP_COOKIE_VARS["username"]; 
+	$pass = $HTTP_COOKIE_VARS["password"];
+	if(!$email){
+		$email = postarg("username");
+		$pass = postarg("password");
+	}
+	$user = getUser($email,$pass);
+	return $user;
+}
+
 function getDomain($url){
 	if(preg_match("/(\w*)\.(com|org|net|info|(\w*\.\w*))(\/|$)/",$url,$matches)){
 		return $matches[1] . "." . $matches[2];
@@ -135,6 +147,38 @@ function getHost($url){
 	}else{
 		return null;
 	}
+}
+
+function pointFromText($text){
+	$point = sql_to_array("SELECT id FROM points WHERE txt='$text'");
+	if (empty($point)) { 
+		sql_query("INSERT INTO points (txt,user_id) VALUES ('$text',$user);"); // create new
+		return mysql_insert_id();
+	}else{
+		return $point[0]['id'];
+	}
+}
+
+function invertPointLink($rel){
+	if($rel == 'supports'){
+		return 'opposes';
+	}else if($rel == 'opposes'){
+		return 'supports';
+	}
+}
+
+function resolvePoint($id,$rel){
+	$link = sql_to_array("
+		SELECT * FROM point_links 
+		WHERE point_a_id = '$id' AND howlinked = 'opposite' OR howlinked = 'same'
+		");
+	if(!empty($link)){
+		$id = $link[0].point_b_id;
+		if($link[1].howlinked == 'opposite'){
+			$rel = invertPointLink($rel);
+		}
+	}
+	return array($id,$rel);
 }
 
 function getSource($url){

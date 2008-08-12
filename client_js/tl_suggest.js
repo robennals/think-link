@@ -278,12 +278,15 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		var count = -1;
 		var divs = this.resultsDiv.getElementsByTagName("div"); // get <div>s within suggest div
 		if (divs) {
-			for (var i = 0; i < divs.length; i++) {
-		   		count++;
-		     	if (divs[i].className == "suggest_item_over") {
-					num = count; // stop counting up when have the highlighted item
-			  	}
-		 	}
+				for (var i = 0; i < divs.length; i++) {
+					var div = divs[i];
+					if(div.className == "suggest_item" || div.className == "suggest_item_over"){
+			   		count++;
+			     	if (divs[i].className == "suggest_item_over") {
+						num = count; // stop counting up when have the highlighted item
+				  	}
+			 	}
+			}
 		}	
 		return num;
 	}
@@ -295,12 +298,15 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		var divs = this.resultsDiv.getElementsByTagName("div");
 		if (divs) {
 			for (var i = 0; i < divs.length; i++) {
-		   		if (++count == itemNum) {
-		     		divs[i].className = "suggest_item_over";
-		        	thisItem = divs[i];
-		      	} else {
-		        	divs[i].className = "suggest_item";
-		      	}
+					var div = divs[i];
+					if(div.className == "suggest_item" || div.className == "suggest_item_over"){
+			   		if (++count == itemNum) {
+			     		divs[i].className = "suggest_item_over";
+			        	thisItem = divs[i];
+			     	} else {
+			        	divs[i].className = "suggest_item";
+			     	}
+			     }
 		 	}
 		}
 		return thisItem;

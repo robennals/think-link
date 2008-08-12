@@ -2,8 +2,10 @@
 	this point: 
 	<select name="relation" id="new_related_relation">
 		<option>supports</option>
+		<option value="supportedby">is supported by</option>
 		<option value="same">is exact same as</option>
 		<option>opposes</option>
+		<option value="opposedby">is opposed by by</option>
 		<option value="opposite">is exact opposite of</option>
 	</select>
 	<span id="new_related"></span>
@@ -11,7 +13,7 @@
 <script language="javascript">
 	var suggest = new tl_suggest(document.getElementById('new_related'), true,"search_points.php","text");
 	var textbox = suggest.init();
-	suggest.setDefaultText("<Enter search terms>");
+	suggest.setDefaultText("<Enter point>");
 	suggest.setButtonText("add");
 	suggest.setWidth("160px");
 	suggest.setButtonClickEvent(function(){ 

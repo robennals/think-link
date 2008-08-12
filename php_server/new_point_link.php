@@ -1,13 +1,13 @@
 <?php
 
 require_once 'common.php';
-
 $email = $HTTP_COOKIE_VARS["username"]; 
 $pass = $HTTP_COOKIE_VARS["password"];
 if(!$email){
 	$email = postarg("username");
 	$pass = postarg("password");
 }
+$user = getUser($email,$pass);
 
 $destid = postarg("destid"); // destination point id
 $rel = postarg("rel");
@@ -23,6 +23,22 @@ if (empty($source)) {
 	$sourceid = mysql_insert_id();
 }
 else $sourceid=$source[0]['id']; // use existing
+
+$outid = $sourceid;
+
+if($rel == "supportedby"){
+	$rel = "supports";
+	$temp = $destid;
+	$destid = $sourceid;
+	$sourceid = $temp;
+}
+
+if($rel == "opposedby"){
+	$rel = "opposes";
+	$temp = $destid;
+	$destid = $sourceid;
+	$sourceid = $temp;
+}
 
 function getRelPoints($id,$rel) {
 	$list = array();
@@ -44,18 +60,14 @@ function makeLinks($src,$destArray,$r,$u) {
 			$query = "INSERT IGNORE INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$p','$src','$r',$u);";		
 		}
 		sql_query($query);
-		//echo $query . "<br>";
 	}
 } 
 
-if ($destid > $sourceid) { $query = "INSERT INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$sourceid','$destid','$rel',$user);";	}
-else { $query = "INSERT INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$destid','$sourceid','$rel',$user);";	}
-//$query = "INSERT INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$sourceid','$destid','$rel',$user);";
+$query = "INSERT INTO point_links (point_b_id,point_a_id,howlinked,user_id) VALUES ('$sourceid','$destid','$rel',$user);";
 sql_query($query);
 
-//echo $query . "<br>";
 
-if (strcmp($rel,"same")==0 || strcmp($rel,"opposite")) {
+if ($rel == "same") {
 	$samePoints = getRelPoints($sourceid,"same"); // link me to same-links as source id
 	$oppPoints = getRelPoints($sourceid,"opposite"); // link me to opp-links as source id
 	$samePoints2 = getRelPoints($destid,"same"); // give source id my same-links
@@ -66,25 +78,19 @@ if (strcmp($rel,"same")==0 || strcmp($rel,"opposite")) {
 	makeLinks($sourceid,$samePoints2,"same",$user);
 	makeLinks($sourceid,$oppPoints2,"opposite",$user);
 }
-/*
-if (!empty($samePoints)) {
-	foreach($samePoints as $p) {
-		if ($p == $sourceid) continue;
-		$query = "INSERT IGNORE INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$sourceid','$p','same',$user);";		
-		sql_query($query);
-	}
+
+if ($rel == "opposite") {
+	$samePoints = getRelPoints($sourceid,"same"); // link me to same-links as source id
+	$oppPoints = getRelPoints($sourceid,"opposite"); // link me to opp-links as source id
+	$samePoints2 = getRelPoints($destid,"same"); // give source id my same-links
+	$oppPoints2 = getRelPoints($destid,"opposite");  // give source id my opp-links
+
+	makeLinks($destid,$samePoints,"opposite",$user);
+	makeLinks($destid,$oppPoints,"same",$user);
+	makeLinks($sourceid,$samePoints2,"opposite",$user);
+	makeLinks($sourceid,$oppPoints2,"same",$user);
 }
-if (!empty($oppPoints)) {
-	foreach($oppPoints as $p) {
-		if ($p == $sourceid) continue;
-		$query = "INSERT IGNORE INTO point_links (point_a_id,point_b_id,howlinked,user_id) VALUES ('$sourceid','$p','opposite',$user);";		
-		sql_query($query);
-	}
-}
-*/
 
-
-
-json_out($sourceid); // return id of point just linked to
+json_out($outid); // return id of point just linked to
 ?>
 
