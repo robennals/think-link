@@ -1,2 +1,10 @@
 *.bak
 *.log
+intel_docs
+*.xpi
+temp
+Edit.000
+*_weird
+*.jar
+*.zip
+*.tcp

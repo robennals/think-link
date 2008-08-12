@@ -21,6 +21,15 @@ class Topic < ActiveRecord::Base
     }
     return p
   end
+
+	def identical 
+		return Topic.find_by_sql("SELECT * FROM topics 
+			WHERE topics.id IN
+				(SELECT topic_a_id FROM topic_equivs WHERE topic_b_id = #{self.id})
+			OR topics.id IN
+				(SELECT topic_b_id FROM topic_equivs WHERE topic_a_id = #{self.id})				
+			");
+	end
   
   def ismine(user)
 	  u = User.find(:first, :conditions=>"id=#{self.user_id}")

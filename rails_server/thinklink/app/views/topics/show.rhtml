@@ -36,7 +36,7 @@
 		<script language="javascript">
 			var suggest = new tl_suggest(document.getElementById('new_parent'), true,"search_topics.php","text");
 			var textbox = suggest.init();
-			suggest.setDefaultText("<Enter search terms>");
+			suggest.setDefaultText("<Enter parent topic>");
 			suggest.setButtonText("add");
 			suggest.setWidth("160px");
 			suggest.setButtonClickEvent(function(){ 
@@ -65,10 +65,11 @@
 		<%= render_partial 'main/previewlist', @topic.children, :options => {:noclass=>true, :divid=>'childrenlist'}, :renderer => 'topics/topicref', :action => 'children' %>
 
 		<div id="new_child" style="padding:4px">
+		</div>
 		<script language="javascript">
 			var suggest2 = new tl_suggest(document.getElementById('new_child'), true,"search_topics.php","text");
 			var textbox2 = suggest2.init();
-			suggest2.setDefaultText("<Enter search terms>");
+			suggest2.setDefaultText("<Enter sub topic>");
 			suggest2.setButtonText("add");
 			suggest2.setWidth("160px");
 			suggest2.setButtonClickEvent(function(){ 
@@ -91,6 +92,40 @@
 		 	});
 		</script>
 	</div>
+	
+	<div class="topics">
+		<h2>Identical Topics</h2>
+		<%= render_partial 'main/previewlist', @topic.identical, :options => {:noclass=>true, :divid=>'identicallist'}, :renderer => 'topics/topicref', :action => 'identical' %>
+
+		<div id="new_identical" style="padding:4px">
+		</div>
+		<script language="javascript">
+			var suggest3 = new tl_suggest(document.getElementById('new_identical'), true,"search_topics.php","text");
+			var textbox3 = suggest3.init();
+			suggest3.setDefaultText("<Enter identical topic>");
+			suggest3.setButtonText("add");
+			suggest3.setWidth("160px");
+			suggest3.setButtonClickEvent(function(){ 
+				$.get("/topics/newidentical/<%= @topic.id %>.json",{topic:textbox3.value}, function(result){
+					tl_log("new equivalent topic: "+result);
+					var listelem = document.getElementById("identicallist");
+					var newitem = document.createElement("div");
+					newitem.className = "topic_ref";
+					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
+					link.appendChild(document.createTextNode(textbox3.value));
+					newitem.appendChild(link);
+					listelem.insertBefore(newitem,listelem.childNodes[0]);
+				});
+			});
+			suggest3.setResultCallback(function(item){ 
+		    	var row = document.createElement("span");  
+		    	row.id = item.id;
+		    	row.appendChild(document.createTextNode(item.txt));
+		    	return row;
+		 	});
+		</script>
+	</div>
+
 	</td>
 	</tr>
 	</table>	

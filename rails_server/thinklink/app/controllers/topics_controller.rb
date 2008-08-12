@@ -79,7 +79,7 @@ class TopicsController < ApplicationController
 	  child = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'")
   	# create parent topic if it doesn't exist already
 	  if child.nil?
-	    child = Topic.new(params[:topic])
+	    child = Topic.new(:txt => params[:topic], :user_id => @user)
 	    if !child.save
 	      emit(child.errors)
 	    end
@@ -87,6 +87,21 @@ class TopicsController < ApplicationController
 	  link = TopicLink.new(:parent_id=>"#{params[:id]}", :child_id=>"#{child.id}", :user_id=>"#{@user.id}")
 	  link.save
 	  emit(child.id, :format=>"json")
+	end
+	
+	def newidentical  
+		identical = Topic.find(:first,:conditions=>"txt='#{params[:topic]}'");
+		# create identical topic if it doesn't exist already - not clear we want this
+	  if identical.nil?
+	    identical = Topic.new(:txt => params[:topic], :user_id => @user)
+	    if !identical.save
+	      emit(identical.errors)
+	    end
+	  end
+	  link = TopicEquiv.new(:topic_a_id=>"#{params[:id]}", :topic_b_id=>"#{identical.id}", :user_id=>"#{@user.id}")
+	  link.save
+	  emit(identical.id, :format=>"json")
+	
 	end
 	
 	def create

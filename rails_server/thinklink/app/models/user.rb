@@ -51,11 +51,14 @@ class User < ActiveRecord::Base
 	
 	def points_for_topic(topic)
 	return Point.find_by_sql("
-		SELECT points.id, points.txt, points.user_id FROM snippets,points,bookmarks,point_topics
+		SELECT points.id, points.txt, points.user_id FROM snippets,points,bookmarks,point_topics,topic_equivs
 			WHERE snippets.point_id = points.id 
 			AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
 			AND point_topics.point_id = points.id
-			AND point_topics.topic_id = #{topic.id}
+			AND (point_topics.topic_id = #{topic.id} 
+				OR (point_topics.topic_id = topic_equivs.topic_a_id AND topic_equivs.topic_b_id = #{topic.id})
+				OR (point_topics.topic_id = topic_equivs.topic_b_id AND topic_equivs.topic_a_id = #{topic.id})
+				)
 			AND bookmarks.user_id = #{self.id}
 			GROUP BY points.id 
 			ORDER BY snippets.id DESC		
@@ -64,17 +67,25 @@ class User < ActiveRecord::Base
 		
 	def points_notmine_for_topic(topic)
 	return Point.find_by_sql("
-		SELECT points.id, points.txt, points.user_id FROM points,point_topics 
+		SELECT points.id, points.txt, points.user_id FROM points,point_topics,topic_equivs 
 		WHERE points.id = point_topics.point_id
-		AND point_topics.topic_id = #{topic.id}
+		AND (point_topics.topic_id = #{topic.id} 
+				OR (point_topics.topic_id = topic_equivs.topic_a_id AND topic_equivs.topic_b_id = #{topic.id})
+				OR (point_topics.topic_id = topic_equivs.topic_b_id AND topic_equivs.topic_a_id = #{topic.id})
+				)
 		AND points.id NOT IN (
-			SELECT points.id FROM snippets,points,bookmarks,point_topics
+			SELECT points.id FROM snippets,points,bookmarks,point_topics,topic_equivs
 				WHERE snippets.point_id = points.id 
 				AND (bookmarks.snippet_id = snippets.id OR snippets.user_id = #{self.id})
 				AND point_topics.point_id = points.id
-				AND point_topics.topic_id = #{topic.id}
-				AND bookmarks.user_id = #{self.id} 
-		)");
+				AND (point_topics.topic_id = #{topic.id} 
+					OR (point_topics.topic_id = topic_equivs.topic_a_id AND topic_equivs.topic_b_id = #{topic.id})
+					OR (point_topics.topic_id = topic_equivs.topic_b_id AND topic_equivs.topic_a_id = #{topic.id})
+				)
+		AND bookmarks.user_id = #{self.id} 
+		GROUP BY points.id
+		)
+		GROUP BY points.id");
 	end	
 		
 	def recenttopics
