@@ -9,9 +9,10 @@
 		suggestTopic.setButtonText("add");
 		suggestTopic.setWidth("160px");
 		suggestTopic.setButtonClickEvent(function(){ 
-			var fieldString = "?point="+ encodeURIComponent(<%= pointnewtopic.id %>)+"&text="+encodeURIComponent(textboxTopic.value);
+			var fieldString = "?point="+ encodeURIComponent(<%= pointnewtopic.id %>)+"&text="+encodeURIComponent(textboxTopic.value)+"&returnPoint=0";
 			doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
 				tl_log("new point link: "+ result);
+				if (result===false) { alert("Point already linked to topic"); return; }
 				var newitem = document.createElement("div");
 				newitem.className = "topic_ref";
 				var link = document.createElement("a"); link.setAttribute("href","/topics/"+result); link.setAttribute("target","_blank");

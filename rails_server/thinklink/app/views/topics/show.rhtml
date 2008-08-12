@@ -16,7 +16,7 @@
 		<% end %>
 
 		<%= render_partial 'points/points', @notmine, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :action => 'points' %>
-		<%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist' %>
+		<%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist2' %>
 
 		<%= render_partial 'points/pointtools', nil %>
 

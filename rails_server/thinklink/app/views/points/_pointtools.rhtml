@@ -20,9 +20,10 @@
 	suggestTopic.setButtonClickEvent(function(){ 
 		var pointArray = getChecked(getChecks(document.mypointslist));
 		var pointlist = pointArray.join(',');
-		var fieldString = "?point="+ encodeURIComponent(pointlist)+"&text="+encodeURIComponent(textboxTopic.value);
+		var fieldString = "?point="+ encodeURIComponent(pointlist)+"&text="+encodeURIComponent(textboxTopic.value)+"&returnPoint=0";
 		doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
 			tl_log("new point link: "+ result);
+			if (result===false) { alert("Point(s) already linked to topic"); return; }
 			for (var i=0; i<pointArray.length; i++) {
 				var listarea = document.getElementById("topic_list_small"+pointArray[i]);
 				var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);

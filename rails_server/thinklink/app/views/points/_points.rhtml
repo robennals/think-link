@@ -6,10 +6,16 @@
 
 
 <form name="mypointslist">
+<% if !options[:divid].nil? %>
+	<div id="<%= options[:divid] %>">
+<% end %>
 <% if options[:preview] %>
 <%= render_partial 'main/previewlist', points, :options => {:checkbox=>true}, :renderer => 'points/pointref', :action => action %>
 <% else %>
 <%= render_partial 'main/itemlist', points, :options => {:checkbox=>true}, :renderer => 'points/pointref' %>
+<% end %>
+<% if !options[:divid].nil? %>
+	</div>
 <% end %>
 </form>
 

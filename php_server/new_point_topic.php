@@ -12,13 +12,17 @@ if(!$email){
 $points = postarg("point"); // point ids
 $ptext = postarg("ptext"); // point text, optional
 $text = postarg("text"); // topic text
+$returnPoint = postarg("returnPoint"); // whether want topic id or point id returned
 
 // check user and password
 $user = getUser($email,$pass);
 
+
+
 // get topic text id
 $source = sql_to_array("SELECT id FROM topics WHERE txt='$text'");
 if (empty($source)) { 
+	$returnPoint = true; // had to make a new topic, so therefore point should exist
 	sql_query("INSERT INTO topics (txt,user_id) VALUES ('$text',$user);"); // create new
 	$sourceid = mysql_insert_id();
 }
@@ -37,11 +41,11 @@ if (empty($points)) {
 $pointArray = explode(",", $points);
 
 foreach ($pointArray as $point) {
-	$query = "INSERT INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
-	sql_query($query);
+	$query = "INSERT IGNORE INTO point_topics (topic_id,point_id,user_id) VALUES ($sourceid,$point,$user);";
+	$result = sql_query($query);
+	if (mysql_affected_rows() < 1) {json_out(false); return; }
 }
-
-json_out($sourceid); // return id of topic just linked to
-
+if ($returnPoint==1)  { json_out($pointArray[0]); }// return id of point just linked to
+else { json_out($sourceid); }// return id of topic just linked to
 ?>
 
