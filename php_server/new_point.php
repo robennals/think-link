@@ -37,7 +37,7 @@ sql_query("INSERT INTO points (txt,user_id) VALUES ('$text',$user);");
 $pointid = mysql_insert_id();
 
 if($topicid){
-	sql_query("INSERT INTO point_topics (point_id,topic_id) VALUES ('$pointid','$topicid')");
+	sql_query("INSERT INTO point_topics (point_id,topic_id,user_id) VALUES ('$pointid','$topicid','$user')");
 }
 
 json_out($pointid);
