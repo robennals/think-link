@@ -76,7 +76,15 @@ a img {
 
 .maintable{
 	padding-top: 5px;
+	/*min-width: 800px;*/
 }
+.maintable td {
+	/*min-width: 400px;*/
+	text-align: left;
+	width: 50%;
+	
+}
+
 .maintable tr td {
 	vertical-align: top;
 }
@@ -269,6 +277,9 @@ h1 {
 	font-family: verdana, sans-serif;
 }
 
+.tl_suggest_maindiv {
+	width: 400px;
+}
 
 .hidden {
 	visibility:hidden;

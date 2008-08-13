@@ -29,6 +29,7 @@ function tl_margin()
 	this.getdocInfoURL = "get_document.php";
 	// where to set snippet bookmarking and removals
 	this.bookmarkURL = "new_bookmark.php";
+	this.unbookmarkURL = "new_unbookmark.php";
 	this.deleteURL = "new_deletion.php";
 	
 	this.init = function() {
@@ -371,15 +372,27 @@ function tl_margin()
 			});
 
 			},true);
-		var saveButton = document.createElement("img"); 
+		var saveButton = document.createElement("img");
 		saveButton.addEventListener('click', function(e){ 
 			e.cancelBubble=true;
-			doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
-				tl_log("bookmarked: "+ snippet.id+ ", "+result);
-				saveButton.setAttribute("src",thinklink_imagebase+"star.png");
-				margin_item.addClass("tl_margin_item_bookmarked").removeClass("tl_margin_item");
-			});
+			if (bookmarked==null) {
+				doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
+					tl_log("bookmarked: "+ snippet.id+ ", "+result);
+					saveButton.setAttribute("src",thinklink_imagebase+"star.png");
+					margin_item.addClass("tl_margin_item_bookmarked").removeClass("tl_margin_item");
+					bookmarked=snippet.id;
+				});
+			}
+			else {
+				doAJAX("tl_bookmark",that.unbookmarkURL+"?snippet="+snippet.id,function(result){
+					tl_log("unbookmarked: "+ snippet.id+ ", "+result);
+					saveButton.setAttribute("src",thinklink_imagebase+"star_empty.png");
+					margin_item.addClass("tl_margin_item").removeClass("tl_margin_item_bookmarked");
+					bookmarked=null;
+				});	
+			}
 			},true);
+			
 			
 		// show fancy shmancy stuff if the snippet has been bookmarked
 		if (bookmarked == null) { 
