@@ -28,7 +28,7 @@
 			<span id="login">
 		<% if @user %>
 			<span id="username"><%= @user.email %></span> | 
-			<%= link_to 'Sign out', :controller => 'main', :action => 'signout' %>
+			<!-- <%= link_to 'Sign out', :controller => 'main', :action => 'signout' %> -->
 		<% else %>
 		<%= link_to 'Sign in', :controller => 'main', :action => 'login' %>
 		<% end %>

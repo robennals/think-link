@@ -103,6 +103,9 @@ class User < ActiveRecord::Base
 	    snips.push(Snippet.find(b.snippet_id))
     end
 	  snips = snips.concat(Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC"))
+	  snips.delete_if { |s|
+	    s.isdeleted(self) || s.isdeletedall
+	  }
     return snips.uniq
 	end
 		

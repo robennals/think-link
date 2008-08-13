@@ -34,13 +34,12 @@
 				<% parents = c.parents %>
 				<div class="topic_ref"><%= link_to c.txt, topic_path(c), :target => "_top" -%> 
 					<% if (!parents.empty?) %>
-						<em>parent topics:</em>
-						<div style="padding-left:10px">
-						<% parents.each do |par| %>
-							<%= link_to par.txt, topic_path(par), :target => "_top" -%>
-							<br />
-						<% end %>
-						</div>
+						<!-- <div style="padding-left:10px"> -->
+							<em>- parents:</em>
+							<% parents.each do |par| %>
+								<%= link_to par.txt, topic_path(par), :target => "_top" -%> 
+							<% end %>
+						<!-- </div> -->
 					<% end %>
 				</div>
 			<% end  %>
