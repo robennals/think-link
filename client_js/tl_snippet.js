@@ -39,13 +39,19 @@ function tl_snippet_dialog(margin) {
 	this.newPointURL = "new_point.php";
 	
 	this.init = function() {
-		$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
+		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
 		//$("#"+this.divID).draggable();
-		$("#"+this.divID).hide();		// hide the dialog
+		//$("#"+this.divID).hide();		// hide the dialog
+		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
+		elem.style.zIndex="-1";
+		document.body.appendChild(elem);
+		tl_hideDiv(this.divID);
+		elem.style.zIndex="2147483647";
 	}
 	
 	this.showMe = function(){
-		$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
+		//$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
+		tl_showDiv(this.divID);
 	}
 
 	this.hideMe = function(){
@@ -220,10 +226,11 @@ function tl_snippet_dialog(margin) {
 		if (this.permaLink != null) { // use the determined perma link if available
 			tl_log("permalink is : "+this.permaLink);
 			url = this.margin.normTool.makeAbsoluteUrl(this.margin.url,this.permaLink);
-			url= this.margin.normTool.normalizeUrl(url); 
+			url= this.margin.normTool.normalizeUrl(url);
 		} 
+		var url_real = this.margin.url;
 		
-		doAJAX(scriptID,this.postURL+"?point="+pointID+"&rel="+encodeURIComponent(relation)+"&url="+encodeURIComponent(url)+"&title="+title+"&sniptxt="+encodeURIComponent(sniptext),function(result){
+		doAJAX(scriptID,this.postURL+"?point="+pointID+"&rel="+encodeURIComponent(relation)+"&urlreal="+encodeURIComponent(url_real)+"&url="+encodeURIComponent(url)+"&title="+title+"&sniptxt="+encodeURIComponent(sniptext),function(result){
 			tl_log("snippet sent for point "+ pointID+ " : "+result);
 			//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
 			tl_log("about to refresh margin");
@@ -238,15 +245,18 @@ function tl_snippet_dialog(margin) {
 	}
 	
 	this.createPoint = function(text,topic,topicID) {
-		var that = this;
-		var scriptID = "tl_newpoint_ajax";
-		var thinklink_callback;
-		if(!topicID) topicID = "";
-		doAJAX(scriptID,this.newPointURL+"?text="+encodeURIComponent(text)+"&topicid="+topicID+"&topic="+encodeURIComponent(topic),function(result){
-			tl_log("created point: "+result);
-			//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
-			that.createSnippet(that.sourceText.toString(),document.thinklink_snippet.relation.value,result); // global var
-		});
+		if (text == "<Enter a statement this snippet makes. e.g. 'Apples taste good'>") { this.hideMe();} // hack
+		else {
+			var that = this;
+			var scriptID = "tl_newpoint_ajax";
+			var thinklink_callback;
+			if(!topicID) topicID = "";
+			doAJAX(scriptID,this.newPointURL+"?text="+encodeURIComponent(text)+"&topicid="+topicID+"&topic="+encodeURIComponent(topic),function(result){
+				tl_log("created point: "+result);
+				//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
+				that.createSnippet(that.sourceText.toString(),document.thinklink_snippet.relation.value,result); // global var
+			});
+		}
 	}
 	
 }

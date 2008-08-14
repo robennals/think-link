@@ -26,7 +26,7 @@ $urlList = implode(",",$urls);
 $query = "SELECT * FROM
 	(SELECT snippets.id as id, snippets.txt as snipText, points.txt as pointText, points.id as pointID, snippets.created_at as date, snippets.user_id AS creator, howlinked 
 	FROM snippets, points 
-	WHERE url IN ($urlList) AND points.id= snippets.point_id 
+	WHERE (url IN ($urlList) OR url_real IN ($urlList)) AND points.id= snippets.point_id 
 	AND snippets.id NOT IN (
 		SELECT snippet_id AS id 
 		FROM deletions
@@ -48,7 +48,6 @@ if($id) {
 if($limit){
         $query .= " LIMIT $limit";
 }
-
 
 json_out(sql_to_array($query));
 ?>

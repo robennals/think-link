@@ -26,8 +26,13 @@ function tl_point_browser() {
 	this.newPointLinkURL = "new_point_link.php";
 	
 	this.init = function() {
-		$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
-		$("#"+this.divID).hide();		// hide the dialog
+		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
+		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
+		elem.style.zIndex="-1";
+		document.body.appendChild(elem);
+		tl_hideDiv(this.divID);
+		elem.style.zIndex="2147483647";
+		//$("#"+this.divID).hide();		// hide the dialog
 			
 	}
 	
@@ -590,7 +595,8 @@ function tl_point_browser() {
 	
 	
 	this.showMe = function(){
-		$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
+		tl_showDiv(this.divID);
+		//$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
 	}
 
 	this.hideMe = function(){

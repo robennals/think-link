@@ -5,6 +5,18 @@ function tl_log(msg){
 	}
 }
 
+function tl_hideDiv(divid) {
+	var elem = document.getElementById(divid);
+	elem.style.visibility = "hidden";
+	elem.style.display = "none";	
+}
+
+function tl_showDiv(divid) {
+	var elem = document.getElementById(divid);
+	elem.style.visibility = "visible";
+	elem.style.display = "block";
+}
+
 function doAJAX(scriptID,url,callback) {
 	//if (typeof thinklink_callback !== "undefined") { tl_log("callback: "+thinklink_callback); }
 	var url = thinklink_urlbase + url;
