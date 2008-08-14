@@ -7,6 +7,8 @@
 	tp_suggest.setButtonText("add");
 	tp_suggest.setWidth("300px");
 	tp_suggest.setButtonClickEvent(function(){ 
+		if (tp_textbox.value==tp_suggest.defaultText) { alert("You need to enter a point."); return; }
+	
 		var tp_fieldString = "?text="+ encodeURIComponent('<%= topicnewpoint.txt %>')+"&ptext="+encodeURIComponent(tp_textbox.value)+"&returnPoint=1";
 		doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+tp_fieldString,function(result){
 			tl_log("new point topic: "+ result);

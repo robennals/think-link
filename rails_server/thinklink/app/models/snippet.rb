@@ -8,7 +8,7 @@ class Snippet < ActiveRecord::Base
 	has_many :bookmarks
 	
 	def url
-	  snipurl = Snippet.find(self.id, :select=>'url')[:url]
+	  snipurl = Snippet.find(self.id, :select=>'url_real')[:url_real]
 	  matcharray = snipurl.match('pdf-[1-9]+.html') # see if matches html-generated pdf document
 	  if (!matcharray.nil?)
 	    return snipurl.chomp(matcharray[0]).concat('pdf.html') # if so, link back to main pdf frameset

@@ -18,6 +18,7 @@
 	suggestTopic.setButtonText("add topic");
 	suggestTopic.mainDiv.style.display = "inline";
 	suggestTopic.setButtonClickEvent(function(){ 
+		if (textboxTopic.value==suggestTopic.defaultText) { alert("You need to enter a topic."); return; }
 		var pointArray = getChecked(getChecks(document.mypointslist));
 		var pointlist = pointArray.join(',');
 		var fieldString = "?point="+ encodeURIComponent(pointlist)+"&text="+encodeURIComponent(textboxTopic.value)+"&returnPoint=0";

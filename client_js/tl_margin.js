@@ -33,6 +33,7 @@ function tl_margin()
 	this.deleteURL = "new_deletion.php";
 	
 	this.init = function() {
+		this.urlList.push(this.url);
 		this.urlList.push(this.normTool.normalizeUrl(this.url));
 		var permaLinks = this.normTool.findPermalinks();
 		for (var link=0; link<permaLinks.length; link++) {
@@ -40,7 +41,9 @@ function tl_margin()
 		}
 
 		//$("body").wrapInner('<div id="tl_document"></div>'); // wrap existing document in a <div> for future use
-		$("<div></div>").attr("id",this.divID).appendTo($("body")); // add margin element to DOM
+		//$("<div></div>").attr("id",this.divID).appendTo($("body")); // add margin element to DOM
+		var elem = document.createElement("div"); elem.id = this.divID; 
+		document.body.appendChild(elem);
 		
 		var topfixed = document.createElement("div");
 		topfixed.id = "tl_snippet_activate";
@@ -67,7 +70,8 @@ function tl_margin()
 		topfixed.appendChild(homelink);
 		
 		this.setHeight(); 		// match margin height to document height
-		$("#" + this.divID).hide();	// hide the margin 
+		//$("#" + this.divID).hide();	// hide the margin 
+		tl_hideDiv(this.divID);
 	}
 	
 	this.showSetTitleAndAuthor = function(url) {
@@ -317,6 +321,7 @@ function tl_margin()
 	}
 
 	this.showMargin = function(){
+		tl_showDiv(this.divID);
 		$("#" + this.divID).animate({ width: 'fast', opacity: 'show' }, 'slow');
 		$("body").css("padding-left",215); // scoot the main document to the right
 

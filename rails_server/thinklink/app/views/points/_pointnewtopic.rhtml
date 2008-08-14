@@ -9,6 +9,7 @@
 		suggestTopic.setButtonText("add");
 		suggestTopic.setWidth("160px");
 		suggestTopic.setButtonClickEvent(function(){ 
+			if (textboxTopic.value==suggestTopic.defaultText) { alert("You need to enter a topic."); return; }
 			var fieldString = "?point="+ encodeURIComponent(<%= pointnewtopic.id %>)+"&text="+encodeURIComponent(textboxTopic.value)+"&returnPoint=0";
 			doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+fieldString,function(result){
 				tl_log("new point link: "+ result);

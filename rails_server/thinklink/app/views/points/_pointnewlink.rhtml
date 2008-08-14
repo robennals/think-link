@@ -17,6 +17,7 @@
 	suggest.setButtonText("add");
 	suggest.setWidth("160px");
 	suggest.setButtonClickEvent(function(){ 
+		if (textbox.value==suggest.defaultText) { alert("You need to enter a point."); return; }
 		var relation = document.getElementById("new_related_relation").value;
 		var fieldString = "?destid="+ encodeURIComponent(<%= pointnewlink.id %>)+"&rel="+encodeURIComponent(relation)+"&text="+encodeURIComponent(textbox.value);
 		doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
