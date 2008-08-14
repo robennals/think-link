@@ -79,6 +79,8 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		this.selectCallback = cb;
 	}
 	
+	this.absoluteMode = false;
+	
 	this.setButtonClickEvent = function(func) {
 		this.button.addEventListener('click',func,false);
 	}
@@ -157,7 +159,11 @@ function tl_suggest(parentElem,attached, url, textarg) {
 		this.resultsList = result;
 		if (this.attached) {
 			var resultsPosition = findPos(this.textBox); // location of search text box
-			this.resultsDiv.style.position = "fixed";
+			if(this.absoluteMode){
+				this.resultsDiv.style.position = "absolute";
+			}else{
+				this.resultsDiv.style.position = "fixed";
+			}
 			this.resultsDiv.style.zIndex = "2147483647";
 			this.resultsDiv.style.left = resultsPosition[0] + "px";
 			this.resultsDiv.style.top = (resultsPosition[1] + parseInt(this.textBox.offsetHeight)) + "px";
