@@ -92,3 +92,26 @@ function showTab(view,hides) {
 	}
 	
 }
+
+function ajaxPost(url, handler) {
+    var req = false;
+    if (window.XMLHttpRequest) {
+        req = new XMLHttpRequest();
+    }else if (window.ActiveXObject) {     // IE
+        req = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    req.open("POST", url, true);
+    req.onreadystatechange = function() {
+      if (req.readyState == 4 && req.status == 200) {
+           handler(req.responseText);
+      }
+    };
+    req.send("");
+}
+
+function ajaxReplace(url, id){
+		ajaxPost(url,function(response){
+			var node = document.getElementById(id);
+			node.innerHTML = response;
+		});
+}

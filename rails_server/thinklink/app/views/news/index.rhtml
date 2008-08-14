@@ -1,7 +1,37 @@
 
-<% if @user %>
 
-<div style="float:left; width:400px;">
+<table class="maintable">
+<tr>
+<td>
+
+<div>
+	<div class="topics">
+	<h2>Recent Topics</h2>
+		<div class="topic_list">
+		<%= render_partial 'topics/topics', @user.recenttopics.slice(0,10) %>
+		</div>
+		<span class="more"><%= link_to 'see all', {:controller => 'topics', :action => 'mine'} %></span>
+
+	</div>
+
+	<div class="points">
+		<h2>Recent Points</h2>
+		<% if ! @mypoints.empty? %>
+		<span class="relationtitle">Mine</span>
+		<%= render_partial 'points/points', @mypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :controller=>'points', :action => 'mine' %>
+		<span class="relationtitle">Others</span>
+		<% end %>
+
+		<%= render_partial 'points/points', @notmypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :controller=>'points',:action => 'notmine' %>
+	</div>
+	
+	<%= render_partial 'points/minisearch',nil %>
+
+</div>
+
+</td><td>
+
+<div>
 	<div class="snippets">
 	<h2>My Recent Snippets</h2>
 		<% @user.snippets.slice(0,4).each do |snippet| %>
@@ -9,7 +39,6 @@
 		<% end %> 
 		<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'mine'} %></span>
 	</div>
-	<% end %>
 
 	<div class="snippets"</h2>
 	<h2>Snippets from Friends</h2>
@@ -20,32 +49,9 @@
 	</div>
 </div>
 
-<div style="margin-left:400px; width:500px;">
-	<div class="topics">
-	<h2>Recent Topics</h2>
-		<div class="topic_list">
-		<% @user.recenttopics.slice(0,10).each do |t| %>
-		<div class="point_ref"><%= link_to t.txt, topic_path(t) %></div>	
-		<% end %> 
-		</div>
-		<span class="more"><%= link_to 'see all', {:controller => 'topics', :action => 'mine'} %></span>
 
-	</div>
-
-	<div class="points">
-		<h2>Points</h2>
-		<% if ! @mypoints.empty? %>
-		<span class="relationtitle">Mine</span>
-		<%= render_partial 'points/points', @mypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :controller=>'points', :action => 'mine' %>
-		<span class="relationtitle">Others</span>
-		<% end %>
-
-		<%= render_partial 'points/points', @notmypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :controller=>'points',:action => 'notmine' %>
-
-		<%= render_partial 'points/pointtools', nil %>
-
-	</div>
-</div>
+</td></tr>
+</table>
 
 
 <!-- <p><%= link_to "Add new Point", {:action => 'new' }%></p> -->

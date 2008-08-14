@@ -27,12 +27,6 @@
 				hasParent = true
 				addTopPoints parent				
 			end		
-			
-			point.opposite_points.each do |parent| 
-				hasParent = true
-				addTopPoints parent				
-			end		
-
 
 			if !hasParent 
 				$topPoints.push(point)
@@ -41,23 +35,17 @@
 		$curPoints.pop
 	end
 
-	points = points.slice(0,20);
-
-	if options[:notop]
-		$topPoints = points
-	else
-		points.each do |point|
-			addTopPoints(point)	
-		end
+	pointtree.each do |point|
+		addTopPoints(point)	
 	end
+	
 %>
 
 
 <% linkedto = options[:linkedto] %>
 <% relation = options[:rel]%>
 
-<div id='points-<%=rnd%>'>
-</div>
+<div id='points-<%=rnd%>' />
 
 
 <script language="javascript">
@@ -79,11 +67,9 @@ function makePoint(parent,id,text){
 }
 
 
-</script>
-
-<div class="point_container">
 <% $topPoints.each do |point| %>
-		<%= render_partial 'points/point', point, :expandPoints => {} %>
+		makePoint(document.getElementById("points-<%=rnd%>"),<%= point.id %>,"<%= point.txt %>");
 <% end %>
-</div>
+
+</script>
 

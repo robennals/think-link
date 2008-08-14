@@ -13,6 +13,11 @@ class PointsController < ApplicationController
 		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
 		render :action => :index  
 	end
+	def searchajax
+		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
+		render :partial => "points", :object => @points, :locals => {:options => {:notop => true}}
+	end
+
 	def index
 		@title = "Points"
 		@points = Point.find(:all)
@@ -39,6 +44,12 @@ class PointsController < ApplicationController
 
 		emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
 	end
+	
+	def expand
+		@point = Point.find(params[:id])
+		render :partial => "point", :locals => {:expandPoints => {@point.id => true}}, :object => @point
+	end
+	
 	def showmini
 		@point = Point.find(params[:id])
 		render :layout => 'mini', :action => 'show'

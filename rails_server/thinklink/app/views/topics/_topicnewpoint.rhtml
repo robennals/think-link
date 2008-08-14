@@ -3,27 +3,22 @@
 <script language="javascript">
 	var tp_suggest = new tl_suggest(document.getElementById('new_tp'), true,"search_points.php","text");
 	var tp_textbox = tp_suggest.init();
-	tp_suggest.setDefaultText("<Enter point to add to this topic>");
-	tp_suggest.setButtonText("add");
-	tp_suggest.setWidth("300px");
+	tp_suggest.setDefaultText("<Create a new point in this topic>");
+	tp_suggest.setButtonText("new point");
+	tp_suggest.setWidth("270px");
 	tp_suggest.setButtonClickEvent(function(){ 
 		var tp_fieldString = "?text="+ encodeURIComponent('<%= topicnewpoint.txt %>')+"&ptext="+encodeURIComponent(tp_textbox.value)+"&returnPoint=1";
 		doAJAX("tl_newpointtopic_ajax","new_point_topic.php"+tp_fieldString,function(result){
 			tl_log("new point topic: "+ result);
 			if (result===false) { alert("Point already linked to topic"); return; }
-			var inputelem = document.createElement("input"); inputelem.setAttribute("type","checkbox");
-			inputelem.setAttribute("name","checkpoint"); inputelem.setAttribute("value",result);
-			var listelem = document.getElementById("<%= divid %>");
-			var newitem = document.createElement("div");
-			newitem.className = "point_ref";
-			var link = document.createElement("a"); link.setAttribute("href","/points/"+result); link.setAttribute("target","_blank");
-			link.appendChild(document.createTextNode(tp_textbox.value));
-			var spanelem = document.createElement("span"); spanelem.id = "topic_list_small"+result; spanelem.className = "topic_list_small";
 			
-			newitem.appendChild(inputelem);
-			newitem.appendChild(link);
-			newitem.appendChild(spanelem);
-			listelem.insertBefore(newitem,listelem.childNodes[0]);
+			var div = document.createElement("div");
+			div.id = "holder-"+result;
+
+			ajaxReplace('/points/'+result+'/expand','holder-'+result);			
+			
+			var listelem = document.getElementById("<%= divid %>");
+			listelem.appendChild(div);
 		});
 	});
 	tp_suggest.setResultCallback(function(item){ 
@@ -33,3 +28,4 @@
     	return row;
  	});
 </script>
+

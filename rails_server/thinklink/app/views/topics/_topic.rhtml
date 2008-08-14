@@ -1,0 +1,54 @@
+
+
+<% points = topic.points
+   children = topic.children
+ %>
+
+<% if points.empty? && children.empty? %>
+
+		<div class="point_ref" id="topicholder-<%=topic.id%>">
+		<img src="/images/tree_single2.png"/>	
+		<span id="topic-<%=topic.id%>">
+		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+		</span>
+		</div>
+
+
+<% else %>
+	
+	<% if expand %>
+		<div class="point_ref" id="topicholder-<%=topic.id%>">
+		<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('topicpoints-<%=topic.id%>'))"/>	
+		<span id="topic-<%=topic.id%>">
+		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+		</span>
+		</div>
+	
+		<div class="subpoints_section" id="topicpoints-<%=topic.id%>">
+				<% if !children.empty? %>
+					<div class="relationtitle">subtopics</div>
+					<div class="subpoints">
+					<% children.slice(0,10).each do |subtopic| %>
+						<%= render_partial 'topics/topic', subtopic, :expand => false %>
+					<% end %>
+					</div>
+				<% end %>
+				<% if !points.empty? %>
+					<div class="relationtitle">points</div>
+					<div class="subpoints">
+					<% points.slice(0,10).each do |point| %>
+						<%= render_partial 'points/point', point, :expandPoints => {} %>
+					<% end %>
+					</div>
+				<% end %>
+		</div>
+	<% else %>
+		<div class="point_ref" id="topicholder-<%=topic.id%>">
+		<img src="/images/tree_open.png" onclick="ajaxReplace('/topics/<%=topic.id%>/expand','topicholder-<%=topic.id%>')"/>	
+		<span id="topic-<%=topic.id%>">
+		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+		</span>
+		</div>
+	<% end %>
+
+<% end %>

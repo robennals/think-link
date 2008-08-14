@@ -438,3 +438,18 @@ function tl_dragStop(event) {
   }
 }
 
+function tl_ajaxGet(url, handler) {
+    var req = false;
+    if (window.XMLHttpRequest) {
+        req = new XMLHttpRequest();
+    }else if (window.ActiveXObject) {     // IE
+        req = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    req.open("GET", url, true);
+    req.onreadystatechange = function() {
+      if (req.readyState == 4 && req.status == 200) {
+           handler(req.responseText);
+      }
+    };
+    req.send("");
+}

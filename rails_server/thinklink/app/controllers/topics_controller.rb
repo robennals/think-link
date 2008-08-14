@@ -11,6 +11,12 @@ class TopicsController < ApplicationController
 		emit(@topics)
 	end
 	
+	def expand
+		@topic = Topic.find(params[:id])
+		render :partial => "topic", :locals => {:expand => true}, :object => @topic
+	end
+
+	
 	def mine
 		@minititle = "My Topics"
 		@topics = @user.topics
@@ -29,8 +35,9 @@ class TopicsController < ApplicationController
 		if @topic.ismine(@user)
 			@editlink = true
 		end
-		@mypoints = @user.points_for_topic(@topic)
-		@notmine = @user.points_notmine_for_topic(@topic)
+#		@mypoints = @user.points_for_topic(@topic)
+#		@notmine = @user.points_notmine_for_topic(@topic)
+		@points = @topic.points
 		emit(@topic,{:only => [:txt], :include => :points})
 	end
 	

@@ -1,0 +1,29 @@
+
+<div class="point_ref" id="<%=point.id%>" 
+	onmouseover="dragOver(event)" 
+	onmouseout="dragOut(event)" 
+	onmousedown="dragStart(event)"
+	onmouseup="dragCapture(event)">
+	<%=point.txt%>
+</div>
+
+<% if expandPoints[point.id] %>
+	<div class="subpoints" id="subpoints-<%=point.id%>">
+			<% supports = point.supporting_points %>
+			<% if !supports.empty? %>
+				<div class="relationtitle">supported by</div>
+				<% supports.slice(0,10).each do |subpoint| %>
+					<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+				<% end %>
+			<% end %>
+			<% opposes = point.opposing_points %>
+			<% if !opposes.empty? %>
+				<div class="relationtitle">opposed by</div>
+				<% opposes.slice(0,10).each do |subpoint| %>
+					<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+				<% end %>
+			<% end %>
+
+	</div>
+<% end %>
+

@@ -125,8 +125,18 @@ class Point < ActiveRecord::Base
 				WHERE #{sql_oppoints('point_a_id')}
 				AND howlinked = 'supports'
 			) 			 
-		");
+		")
 	end	
+
+	def opposite_points
+		return Point.find_by_sql("
+			SELECT * FROM points 
+			WHERE id IN (
+				SELECT point_b_id FROM point_links
+				WHERE point_a_id = #{self.id}
+				AND howlinked = 'opposite'
+			)")
+	end
 
 	def supporting_links(user)
 	  links = PointLink.find(:all, :conditions => "(point_b_id = #{self.id} AND howlinked='supports') OR (point_a_id = #{self.id} AND howlinked='supports')")

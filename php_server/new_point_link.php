@@ -9,7 +9,8 @@ if(!$email){
 }
 $user = getUser($email,$pass);
 
-$destid = postarg("destid"); // destination point id
+$destid = postarg("destid"); // destination point id (the one dropped onto)
+$sourceid = postarg("sourceid"); // source point id (the one dragged)
 $rel = postarg("rel");
 $text = postarg("text"); // source point text
 
@@ -17,12 +18,14 @@ $text = postarg("text"); // source point text
 $user = getUser($email,$pass);
 
 // get source text id
-$source = sql_to_array("SELECT id FROM points WHERE txt='$text'");
-if (empty($source)) { 
-	sql_query("INSERT INTO points (txt,user_id) VALUES ('$text',$user);"); // create new
-	$sourceid = mysql_insert_id();
+if(!$sourceid){
+	$source = sql_to_array("SELECT id FROM points WHERE txt='$text'");
+	if (empty($source)) { 
+		sql_query("INSERT INTO points (txt,user_id) VALUES ('$text',$user);"); // create new
+		$sourceid = mysql_insert_id();
+	}
+	else $sourceid=$source[0]['id']; // use existing
 }
-else $sourceid=$source[0]['id']; // use existing
 
 $outid = $sourceid;
 

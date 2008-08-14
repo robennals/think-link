@@ -62,7 +62,7 @@ a img {
 	color: #000077;
 }
 .point_ref {
-	padding-top: 6px;
+	padding-top: 2px; 
 }
 .relationtitle {
 	margin-left: 5px;
@@ -79,10 +79,9 @@ a img {
 	/*min-width: 800px;*/
 }
 .maintable td {
-	/*min-width: 400px;*/
+	min-width: 400px;
 	text-align: left;
-	width: 50%;
-	
+	width: 50%; 
 }
 
 .maintable tr td {
@@ -117,9 +116,15 @@ a img {
 	max-width: 500px;
 }
 .point_ref, .topic_ref {
-	padding-left: 10px;
+/*	padding-left: 10px; */
 	padding-right: 10px;
 }
+
+.topic_ref {
+	padding-left: 10px; 
+	padding-right: 10px;
+}
+
 .point_list {
 	padding-bottom: 10px;
 }
@@ -284,4 +289,31 @@ h1 {
 .hidden {
 	visibility:hidden;
 	display:none;
+}
+
+.subpoints_section {
+	border-left: 1px dotted black;
+	margin-left: 5px;	
+	padding-bottom: 5px;
+}
+
+.subpoints {
+	padding-left: 15px;
+}
+
+.point_container {
+	padding: 5px;
+}
+
+.pointtable td {
+	width: "10px";
+}
+
+.point_ref img {
+	padding-top: "4px";
+}
+
+.point_text {
+	background-color: white;
+	padding: 8px;
 }
