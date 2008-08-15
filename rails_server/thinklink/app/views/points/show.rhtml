@@ -23,6 +23,27 @@
 	<h2>Parent Points</h2>
 		<%= render_partial 'points/points', supports.concat(opposes), :options => {:preview=>true}, :action => 'points' %>
 </div>
+<% else %>
+	<script language="javascript">
+
+	var draggedPoint = null;
+
+	function makePointDiv(id,text){
+		var div = document.createElement("div");
+		div.className = "point_ref";
+		div.id = "point_"+id;
+		div.appendChild(document.createTextNode(text));
+		return div;
+	}
+
+	function makePoint(parent,id,text){
+		div = makePointDiv(id,text);
+		dragDropPoint(div);	
+		parent.appendChild(div);
+	}
+
+
+	</script>
 <% end %>
 
 <div class="points">
