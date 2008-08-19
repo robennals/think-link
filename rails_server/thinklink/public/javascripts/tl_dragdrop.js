@@ -104,7 +104,7 @@ function pointCapture(ev){
 		.click(function(){linkPoints(dialog,"supports",sourceId,targetId);});
 	var opposes = $("<input type='button' value='Opposes'/>")
 		.appendTo(body)
-		.click(function(){linkPoints(dialog,"supports",sourceId,targetId);});				
+		.click(function(){linkPoints(dialog,"opposes",sourceId,targetId);});				
 		
 	var second = $("<div/>").addClass("point_text").text(ev.target.textContent).appendTo(body);
 }

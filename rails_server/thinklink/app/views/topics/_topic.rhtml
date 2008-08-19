@@ -9,7 +9,7 @@
 		<div class="point_ref" id="topicholder-<%=topic.id%>">
 		<img src="/images/tree_single2.png"/>	
 		<span id="topic-<%=topic.id%>">
-		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+		<a href="/topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
 		</span>
 		</div>
 
@@ -20,7 +20,7 @@
 		<div class="point_ref" id="topicholder-<%=topic.id%>">
 		<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('topicpoints-<%=topic.id%>'))"/>	
 		<span id="topic-<%=topic.id%>">
-		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+			<a href="/topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
 		</span>
 		</div>
 	
@@ -46,7 +46,7 @@
 		<div class="point_ref" id="topicholder-<%=topic.id%>">
 		<img src="/images/tree_open.png" onclick="ajaxReplace('/topics/<%=topic.id%>/expand','topicholder-<%=topic.id%>')"/>	
 		<span id="topic-<%=topic.id%>">
-		<a href="/topics/<%=topic.id%>"><%=topic.txt%></a>
+			<a href="topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
 		</span>
 		</div>
 	<% end %>

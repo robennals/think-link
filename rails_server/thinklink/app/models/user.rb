@@ -89,8 +89,13 @@ class User < ActiveRecord::Base
 	end	
 		
 	def recenttopics
-		pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC")
-		topics = Array.new
+	  topics = Array.new
+	  pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC") # point-topics i connected
+	  snips = self.snippets
+	  snips.each do |s|
+	    point = s.point
+	    pt.concat(PointTopic.find(:all, :conditions=>"point_id=#{point.id}", :order=> "point_id DESC")) # point-topics i contributed snippet to
+	  end
 		pt.each do |p|
 		  topics.push(p.topic)
 		end

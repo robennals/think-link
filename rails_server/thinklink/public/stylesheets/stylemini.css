@@ -1,3 +1,29 @@
+.tl_dialog {
+/*	background-color: #CCDDDD; */
+	background-color: #eeeeee;
+	border: 2px solid #242E35;
+	color: #242E35;
+	padding: 1px;
+	overflow: auto;
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+.tl_dialog_title {
+/*	background-color: #4A7B6F; 
+	color: #EEEEE7; */
+	background-color: #5867a2;
+	color: #c2d7ef;
+	text-align: left;
+	font-size: 12pt;
+	font-family: verdana, sans-serif;
+	border-bottom: 2px solid #242E35;
+	padding: 2px;	
+	margin-bottom: 5px;
+}
+
+
 body {
    font-family: Helvetica, Geneva, Arial, sans-serif;
    font-size: small;

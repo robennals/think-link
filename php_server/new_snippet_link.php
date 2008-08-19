@@ -37,6 +37,7 @@ if (empty($title)) { $title = $summary['title']; }
 
 if($url != null){
 	if ($urlreal == null) { $urlreal = $url; }
+	//sql_query("INSERT INTO snippets (url,txt,user_id,pagetitle,title,source_id,point_id) VALUES ('$url','$sniptext',$user,'$pagetitle','$title','$source','$id')");
 	sql_query("INSERT INTO snippets (url,url_real,txt,user_id,pagetitle,title,source_id,point_id) VALUES ('$url','$urlreal','$sniptext',$user,'$pagetitle','$title','$source','$id')");
 	$id2 = mysql_insert_id();
 }
