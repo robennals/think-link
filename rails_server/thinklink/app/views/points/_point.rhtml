@@ -35,7 +35,7 @@
 				<% if !supports.empty? %>
 					<div class="relationtitle">supported by</div>
 					<div class="subpoints">
-					<% supports.slice(0,10).each do |subpoint| %>
+					<% supports.each do |subpoint| %>
 						<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
 					<% end %>
 					</div>
@@ -43,7 +43,7 @@
 				<% if !opposes.empty? %>
 					<div class="relationtitle">opposed by</div>
 					<div class="subpoints">
-					<% opposes.slice(0,10).each do |subpoint| %>
+					<% opposes.each do |subpoint| %>
 						<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
 					<% end %>
 					</div>
