@@ -7,9 +7,9 @@ class NewsController < ApplicationController
 	# Allow ordering by time, etc
 	# Bias according to friends
 	def index
-		@title = "Recent Activity"
-		@mypoints = @user.mypoints
-		@notmypoints = @user.notmypoints
+#		@title = "Recent Activity"
+#		@mypoints = @user.mypoints
+#		@notmypoints = @user.notmypoints
 		emit(Snippet.all(:limit => 10))
 	end	
 end

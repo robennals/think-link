@@ -2,18 +2,16 @@
 
 <table class="maintable">
 <tr>
-<td>
+<td class="firstcolumn">
 
 <div>
-	<div class="topics">
-	<h2>Recent Topics</h2>
-		<div class="topic_list">
-		<%= render_partial 'topics/topics', @user.recenttopics.slice(0,10) %>
-		</div>
-		<span class="more"><%= link_to 'see all', {:controller => 'topics', :action => 'mine'} %></span>
 
-	</div>
+<%= render_partial 'topics/topicbrowser',@user %>
 
+<%= render_partial 'topics/topicbrowser',@user %>
+
+
+<% if false %>
 	<div class="points">
 		<h2>Recent Points</h2>
 		<div id="recentpoints" class="point_container">
@@ -30,22 +28,48 @@
 
 
 	</div>
+<% end %>	
 	
-	<%= render_partial 'points/minisearch',nil %>
+	
+<!--	<%= render_partial 'points/minisearch',nil %> -->
 
 </div>
 
-</td><td>
+</td><td class="secondcolumn">
+
+<div class="actions hidden" id="actions_point">
+	<h2>Actions for Point</h2>
+	<div class="action"><img src="/images/lightbulb.png"> Create more general point</div>
+	<div class="action"><img src="/images/connect.png"> Relate to another point or topic</div>
+	<div class="action"><img src="/images/disconnect.png"> Disconnect point</div>
+	<div class="action"><img src="/images/cross.png"> Delete point</div>
+</div>
+
+<div class="actions" id="actions_folder">
+	<h2>Actions for Folder</h2>
+	<div class="action"><img src="/images/folder.png"> Create subfolder</div>
+	<div class="action"><img src="/images/cross.png"> Delete folder</div>
+	<div class="action"><img src="/images/application.png"> Open in new window</div>
+</div>
+
 
 <div>
-	<div class="snippets">
-	<h2>My Recent Snippets</h2>
+	<div class="snippets" id="preview_container">
+	<h2 id="preview_title">Snippets</h2>
+		<div class="snippet_container" id="preview_panel">
 		<% @user.snippets.slice(0,4).each do |snippet| %>
 		<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor => true} %>
 		<% end %> 
-		<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'mine'} %></span>
+		</div>
 	</div>
 
+	<div class="topics" id="topics_container">
+		<h2 id="topics_title">More General Folders</h2>
+		<div class="snippet_container" id="topics_panel">
+		</div>	
+	</div>
+
+<!--
 	<div class="snippets"</h2>
 	<h2>Snippets from Friends</h2>
 		<% Snippet.all(:order => "created_at desc", :conditions=>"user_id<>#{@user.id}").slice(0,4).each do |snippet| %>
@@ -53,6 +77,8 @@
 		<% end %> 
 		<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'friends'} %></span>
 	</div>
+	
+	-->
 </div>
 
 

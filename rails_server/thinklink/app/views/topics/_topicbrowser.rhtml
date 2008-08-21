@@ -1,0 +1,50 @@
+
+<% idnum = getUniq %>
+
+
+<table class="browsetable">
+<colgroup>
+<col width="50px"/>
+<col/>
+</colgroup>
+<tr>
+<td>
+
+<div class="browestab_top"></div>
+
+<div class="browsetab" id="all-<%=idnum%>">
+All Topics
+</div>
+<div class="browsetab browsetab_selected" id="recent-<%=idnum%>">
+My Recent
+</div>
+<div class="browsetab" id="scratch-<%=idnum%>">
+Scratch Pad
+</div>
+<div class="browsetab" id="hot-<%=idnum%>">
+Hot
+</div>
+<div class="browsetab" id="friends-<%=idnum%>">
+Friends
+</div>
+<div class="browsetab" onclick="searchMode(<%=idnum%>)" id="search-<%=idnum%>">
+Search
+</div>
+</td>
+<td>
+
+	<div class="topics" id="topics-<%=idnum%>">
+		<h2 id="title-<%=idnum%>">Recent Topics</h2>
+		<div class="hidden" id="searchbar-<%=idnum%>">
+			<input class="searchbox" type="text" id="searchbox-<%=idnum%>"/>
+			<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
+		</div>
+		<div class="browse_container">
+			<div id="body-<%=idnum%>" class="topic_list">
+			<%= render_partial 'topics/topics', @user.recenttopics.slice(0,25) %>
+			</div>
+		</div>
+	</div>
+</td>
+</tr>
+</table>	

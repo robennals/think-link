@@ -4,33 +4,11 @@
 <% opposes = point.opposing_points %>
 
 <% if supports.empty? && opposes.empty? %>
-
-		<div class="point_ref" id="holder-<%=point.id%>">
-		<img src="/images/tree_single2.png"/>	
-		<span id="<%=point.id%>"
-			onmouseover="dragOver(event)" 
-			onmouseout="dragOut(event)" 
-			onmousedown="dragStart(event)"
-			onmouseup="pointCapture(event)">
-		<a href="/points/<%=point.id%>" target="_top"><%=point.txt%></a>
-		</span>
-		</div>
-
-
+		<%= render_partial 'main/dragitem', point, :treesingle => true %>
 <% else %>
-	
 	<% if expandPoints[point.id] %>
-		<div class="point_ref" id="holder-<%=point.id%>">
-		<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('subpoints-<%=point.id%>'))"/>	
-		<span id="<%=point.id%>"
-			onmouseover="dragOver(event)" 
-			onmouseout="dragOut(event)" 
-			onmousedown="dragStart(event)"
-			onmouseup="pointCapture(event)">
-		<a href="/points/<%=point.id%>" target="_top"><%=point.txt%></a>
-		</span>
-		</div>
-	
+		<%= render_partial 'main/dragitem', point, :treeclose => ('subpoints-'+point.id.to_s) %>
+
 		<div class="subpoints_section" id="subpoints-<%=point.id%>">
 				<% if !supports.empty? %>
 					<div class="relationtitle">supported by</div>
@@ -50,16 +28,7 @@
 				<% end %>
 		</div>
 	<% else %>
-		<div class="point_ref" id="holder-<%=point.id%>">
-		<img src="/images/tree_open.png" onclick="ajaxReplace('/points/<%=point.id%>/expand','holder-<%=point.id%>')"/>	
-		<span id="<%=point.id%>"
-			onmouseover="dragOver(event)" 
-			onmouseout="dragOut(event)" 
-			onmousedown="dragStart(event)"
-			onmouseup="pointCapture(event)">
-		<a href="/points/<%=point.id%>" target="_top"><%=point.txt%></a>
-		</span>
-		</div>
+		<%= render_partial 'main/dragitem', point, :treeopen => ('/points/'+point.id.to_s+'/expand') %>
 	<% end %>
 
 <% end %>

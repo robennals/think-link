@@ -3,6 +3,7 @@ body {
    font-size: small;
    font-color: #000;
    background-color: #fff;
+   margin: 0px;
 }
 input { 
    margin-bottom: 5px;
@@ -76,17 +77,30 @@ a img {
 
 .maintable{
 	padding-top: 5px;
-	/*min-width: 800px;*/
+	width: 800px;
 }
-.maintable td {
-	min-width: 400px;
+.maintable .firstcolumn {
+/*	min-width: 400px; */
 	text-align: left;
-	width: 50%; 
+	width: 60%; 
+}
+
+.maintable .secondcolumn {
+	width: 40%;
+}
+
+.topics {
+	min-width: 400px;
 }
 
 .maintable tr td {
 	vertical-align: top;
 }
+
+.dragtable tr td {
+	vertical-align: middle;
+}
+
 .snippet_url {
 	text-decoration: none;
 	color: #000077;
@@ -105,7 +119,7 @@ a img {
 	text-decoration: none;
 	font-size: small;
 }
-.snippets, .points, .topics, .listitems {
+.snippets, .points, .topics, .actions, .listitems {
 	border: 1px solid #666666;
 /*	padding: 10px;
 	margin: 20px; */
@@ -303,6 +317,17 @@ h1 {
 
 .point_container {
 	padding: 5px;
+	overflow: auto;
+}
+
+.browse_container {
+	height: 400px;
+	overflow:auto;
+}
+
+.msg {
+	padding: 20px;
+	font-size: 16px;
 }
 
 .pointtable td {
@@ -316,4 +341,89 @@ h1 {
 .point_text {
 	background-color: white;
 	padding: 8px;
+}
+
+.browsetab {
+	padding: 4px;
+	-moz-border-radius-topleft: 8px;
+	-moz-border-radius-bottomleft: 8px;
+	margin-top: 4px;
+	background-color: #ececec;
+	border: 1px solid #666666;
+	border-right: none;
+	cursor: pointer;
+}
+
+.browsetab_top {
+	margin-top: 16px;
+}
+
+.browsetab_selected {
+	background-color: #d6effc;
+	border-color: #99defd;
+}
+
+.browsetab:hover {
+	background-color: #e2f5ff;
+	cursor: pointer;
+}
+
+.browsetable {
+	border-collapse: collapse;
+	padding: 0px;
+	margin: 0px;
+}
+
+.browsetable td {
+	padding: 0px;
+	margin: 0px;
+}
+
+
+.dragitem {
+	cursor: pointer;
+}
+
+.dragitem:hover {
+	background-color: #ebf7fd;
+/*	background-color: #e2f5ff; */
+	border-color: #d8f0fa;
+	-moz-border-radius: 2px;
+}
+
+.dragitem_selected, .dragitem_selected:hover {
+	background-color: #d5effc;
+	border-color: #99defd;
+	-moz-border-radius: 2px;	
+}
+
+.action {
+	padding: 4px;
+	margin: 4px;
+	-moz-border-radius: 4px;
+	border: 1px solid #666666;
+	background-color: #ececec;
+	cursor: pointer;
+}
+
+.action:hover {
+	background-color: #e2f5ff;
+}
+
+.action img {
+	vertical-align: middle;
+}
+
+.searchbar {
+	background-color: #eeeeee;
+}
+
+.input {
+ 	background-color: #ffffd3;
+}
+
+.searchbox {
+	width: 300px;
+	margin: 4px;
+	margin-left: 8px;
 }

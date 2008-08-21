@@ -61,4 +61,18 @@ module ApplicationHelper
 				 	:layout => 'standard'
 	end
 
+	def initialize
+		@uniq = 0
+	end
+
+	def getUniq
+#		@uniq = @uniq+1
+		return rand(100000)
+	end
+
+  def escape_single_quotes(str)
+    return str.gsub(/[']/, '\\\'')
+  end
+
+
 end

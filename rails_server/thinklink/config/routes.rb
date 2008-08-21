@@ -3,8 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :snippets, :collection => {:mine => :get, :list => :get, :friends => :get}
   map.resources :ratings
   map.resources :users, :member => {:snippets => :get, :points => :get, :topics => :get}
-  map.resources :points, :collection => {:list => :get, :search => :get, :mine => :get, :notmine => :get, :searchajax => :post}, :member => {:snippets => :get, :show => :get, :expand => :post}
-  map.resources :topics, :collection => {:list => :get, :search => :get, :mine => :get}, :member => {:show => :get, :points => :get, :parents => :get, :children => :get, :expand => :post}
+  map.resources :points, :collection => {:list => :get, :search => :post, :mine => :get, :notmine => :get, :searchajax => :post}, :member => {:snippets => :get, :show => :get, :expand => :post, :snippets => :post, :topics => :post}
+  map.resources :topics, :collection => {:list => :get, :search => :get, :mine => :get}, :member => {:show => :get, :points => :get, :parents => :get, :children => :get, :expand => :post, :parents => :post}
 
   # The priority is based upon order of creation: first created -> highest priority.
 

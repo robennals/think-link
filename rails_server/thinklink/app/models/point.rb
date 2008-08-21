@@ -222,7 +222,15 @@ class Point < ActiveRecord::Base
 	end
 	
 	validates_presence_of :txt
-	
+
+	def icon 
+		return "/images/lightbulb.png"
+	end	
+
+	def what
+		return "point"
+	end 
+
 
 	
 end

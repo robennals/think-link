@@ -2,31 +2,19 @@
 
 <% points = topic.points
    children = topic.children
+   idnum = getUniq
  %>
 
 <% if points.empty? && children.empty? %>
-
-		<div class="point_ref" id="topicholder-<%=topic.id%>">
-		<img src="/images/tree_single2.png"/>	
-		<span id="topic-<%=topic.id%>">
-		<a href="/topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
-		</span>
-		</div>
-
-
+		<%= render_partial 'main/dragitem', topic, :treesingle => true %>
 <% else %>
-	
+
 	<% if expand %>
-		<div class="point_ref" id="topicholder-<%=topic.id%>">
-		<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('topicpoints-<%=topic.id%>'))"/>	
-		<span id="topic-<%=topic.id%>">
-			<a href="/topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
-		</span>
-		</div>
+		<%= render_partial 'main/dragitem', topic, :treeclose => ('topicpoints-'+idnum.to_s) %>
 	
-		<div class="subpoints_section" id="topicpoints-<%=topic.id%>">
+		<div class="subpoints_section" id="topicpoints-<%=idnum%>">
 				<% if !children.empty? %>
-					<div class="relationtitle">subtopics</div>
+					<!-- <div class="relationtitle">subtopics</div> -->
 					<div class="subpoints">
 					<% children.each do |subtopic| %>
 						<%= render_partial 'topics/topic', subtopic, :expand => false %>
@@ -34,7 +22,8 @@
 					</div>
 				<% end %>
 				<% if !points.empty? %>
-					<div class="relationtitle">points</div>
+				  <!--
+					<div class="relationtitle">points</div> -->
 					<div class="subpoints">
 					<% points.each do |point| %>
 						<%= render_partial 'points/point', point, :expandPoints => {} %>
@@ -43,12 +32,9 @@
 				<% end %>
 		</div>
 	<% else %>
-		<div class="point_ref" id="topicholder-<%=topic.id%>">
-		<img src="/images/tree_open.png" onclick="ajaxReplace('/topics/<%=topic.id%>/expand','topicholder-<%=topic.id%>')"/>	
-		<span id="topic-<%=topic.id%>">
-			<a href="topics/<%=topic.id%>" target_"top"><%=topic.txt%></a>
-		</span>
-		</div>
+	
+		<%= render_partial 'main/dragitem', topic, :treeopen => ('/topics/'+topic.id.to_s+'/expand') %> 
+		
 	<% end %>
 
 <% end %>

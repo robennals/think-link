@@ -19,16 +19,16 @@
 		<a href="/">Think Link</a>
 		</span>
 		<span id="topright">
-			<span id="search">
+<!--			<span id="search">
 				<form action="/main/search" method="get">
 					<input type="text" name="query">
 					<input type="submit" value="search">
 				</form>
-			</span>
+			</span> -->
 			<span id="login">
 		<% if @user %>
-			<span id="username"><%= @user.email %></span> | 
-			<!-- <%= link_to 'Sign out', :controller => 'main', :action => 'signout' %> -->
+			<span id="username"><%= @user.email %></span> 
+			<!-- | <%= link_to 'Sign out', :controller => 'main', :action => 'signout' %> -->
 		<% else %>
 		<%= link_to 'Sign in', :controller => 'main', :action => 'login' %>
 		<% end %>

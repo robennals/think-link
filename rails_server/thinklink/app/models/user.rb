@@ -1,11 +1,11 @@
 class User < ActiveRecord::Base
 #	has_many :points
-	has_many :snippets, :order => "created_at DESC"
+	has_many :snippets, :order => "id DESC"
 #	has_many :points, :through => :snippets, :uniq => true, :order => "created_at DESC"
 	has_many :bookmarks, :order =>"id DESC"
 	has_many :deletions
 	has_many :point_deletions
-	has_many :topics, :order => "created_at DESC"
+	has_many :topics, :order => "id DESC"
 	
 	validates_uniqueness_of :email
 	validates_confirmation_of :password
@@ -89,29 +89,41 @@ class User < ActiveRecord::Base
 	end	
 		
 	def recenttopics
-	  topics = Array.new
-	  pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC") # point-topics i connected
-	  snips = self.snippets
-	  snips.each do |s|
-	    point = s.point
-	    pt.concat(PointTopic.find(:all, :conditions=>"point_id=#{point.id}", :order=> "point_id DESC")) # point-topics i contributed snippet to
-	  end
-		pt.each do |p|
-		  topics.push(p.topic)
-		end
-		return topics.uniq
-	end
-	
-	def snippets
-	  snips = Array.new
-	  self.bookmarks.each do |b|
-	    snips.push(Snippet.find(b.snippet_id))
-    end
-	  snips = snips.concat(Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC"))
-	  snips.delete_if { |s|
-	    s.isdeleted(self) || s.isdeletedall
-	  }
-    return snips.uniq
-	end
+		return Topic.find_by_sql("
+			SELECT * FROM topics WHERE
+			id IN (
+				SELECT point_topics.topic_id FROM point_topics,snippets 
+				WHERE snippets.user_id = #{self.id}
+				AND point_topics.point_id = snippets.point_id 
+			)			
+			ORDER BY id DESC
+		");
+	end	
 		
+#	def recenttopics
+#	  topics = Array.new
+#	  pt = PointTopic.find(:all, :conditions=>"user_id=#{self.id}", :order=> "point_id DESC") # point-topics i connected
+#	  snips = self.snippets
+#	  snips.each do |s|
+#	    point = s.point
+#	    pt.concat(PointTopic.find(:all, :conditions=>"point_id=#{point.id}", :order=> "point_id DESC")) # point-topics i contributed snippet to
+#	  end
+#		pt.each do |p|
+#		  topics.push(p.topic)
+#		end
+#		return topics.uniq
+#	end
+	
+#	def snippets
+#	  snips = Array.new
+#	  self.bookmarks.each do |b|
+#	    snips.push(Snippet.find(b.snippet_id))
+#    end
+#	  snips = snips.concat(Snippet.find(:all, :conditions=>"user_id=#{self.id}", :order=>"created_at DESC"))
+#	  snips.delete_if { |s|
+#	    s.isdeleted(self) || s.isdeletedall
+#	  }
+#    return snips.uniq
+#	end
+
 end

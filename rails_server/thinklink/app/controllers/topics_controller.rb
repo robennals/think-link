@@ -58,9 +58,10 @@ class TopicsController < ApplicationController
 
 	def parents  
 	  @topic = Topic.find(params[:id]);
-	  @title = "Parent topics for #{@topic.txt}"
+	  # @title = "Parent topics for #{@topic.txt}"
 		@topics = @topic.parents
-		render :action => 'index'
+		render :partial => "topics", :object => @topics
+#		render :action => 'index'
 	end
 
 	

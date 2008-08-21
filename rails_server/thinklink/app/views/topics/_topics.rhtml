@@ -8,27 +8,6 @@
 </div>
 
 
-<script language="javascript">
-
-var draggedPoint = null;
-
-function makePointDiv(id,text){
-	var div = document.createElement("div");
-	div.className = "point_ref";
-	div.id = "point_"+id;
-	div.appendChild(document.createTextNode(text));
-	return div;
-}
-
-function makePoint(parent,id,text){
-	div = makePointDiv(id,text);
-	dragDropPoint(div);	
-	parent.appendChild(div);
-}
-
-
-</script>
-
 <div class="point_container">
 <% topics.each do |topic| %>
 		<%= render_partial 'topics/topic', topic, :expand => false %>

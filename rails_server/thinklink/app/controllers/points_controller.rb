@@ -11,7 +11,7 @@ class PointsController < ApplicationController
 	def search 
 		@minititle = "Points matching '#{params[:query]}'";
 		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
-		render :action => :index  
+		render :partial => "points", :object => @points  
 	end
 	def searchajax
 		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
@@ -62,11 +62,22 @@ class PointsController < ApplicationController
 		end
 		render :layout => 'mini'		
 	end
-	def snippets
+	def snippets_old
 		@point = Point.find(params[:id])
-		@snippets = @point.snippets
+		@snippets = @point.snippets		
 		emit(@snippets,{:methods => :avgrating})
 	end
+	
+	def snippets
+		@point = Point.find(params[:id])
+		render :partial => "snippets/snippets", :object => @point.snippets, :locals => {:options => {:nopoint => true}}
+	end
+	
+	def topics 
+		@point = Point.find(params[:id])
+		render :partial => "topic/topics", :object => @point.topics
+	end
+	
 	
 	def new
 		@point = Point.new

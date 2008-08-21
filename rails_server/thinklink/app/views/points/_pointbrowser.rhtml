@@ -1,0 +1,16 @@
+	<div class="points">
+		<h2>Recent Points</h2>
+		<div id="recentpoints" class="point_container">
+			<% if ! @mypoints.empty? %>
+			<span class="relationtitle">Mine</span>
+			<%= render_partial 'points/points', @mypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :controller=>'points', :action => 'mine' %>
+			<span class="relationtitle">Others</span>
+			<% end %>
+	
+			<%= render_partial 'points/points', @notmypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :controller=>'points',:action => 'notmine' %>
+		</div>		
+		
+		<%= render_partial 'points/newpoint', nil, :divid=>'recentpoints' %>
+
+
+	</div>

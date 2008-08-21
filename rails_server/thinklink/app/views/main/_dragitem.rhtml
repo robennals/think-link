@@ -1,0 +1,68 @@
+
+<% 
+idnum = getUniq 
+itemid = dragitem.id
+itemtxt = escape_single_quotes(dragitem.txt)
+ %>
+
+		<% if (defined? treeopen) && treeopen %>
+		<div class="dragholder" id="holder-<%=idnum%>">
+		<% end %>
+		
+		<table class="dragtable">
+		<tr>
+		<td>
+				<% if (defined? treeopen) && treeopen %>
+					<img src="/images/tree_open.png" onclick="ajaxReplace('<%=treeopen%>','holder-<%=idnum%>')"/>	
+				<% elsif (defined? treeclose) && treeclose %>
+					<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('<%=treeclose%>'))"/>	
+				<% elsif defined? treesingle && treesingle %>
+					<img src="/images/tree_single2.png"/>	
+				<% end %>
+		</td>
+				<% if defined? dragitem.icon %> 
+				<td><img src="<%=dragitem.icon%>"/></td>
+				<% end %>
+		<td>
+			<div class="dragitem" id="<%=idnum%>"
+				onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
+				onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
+				onmousedown="dragStart(event, <%= itemid %>, '<%=itemtxt%>','<%=dragitem.class%>')"
+				onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+				onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
+
+			<%=dragitem.txt%>
+			</div>
+		</td>
+		</tr>
+		</table>
+		
+		<% if (defined? treeopen) && treeopen %>
+		</div>
+		<% end %>
+
+<!--
+		<div class="dragholder" id="holder-<%=idnum%>">
+			<div class="dragitem" id="<%=idnum%>"
+				onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
+				onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
+				onmousedown="dragStart(event, <%= itemid %>, '<%=itemtxt%>','<%=dragitem.class%>')"
+				onmouseup="pointCapture(event, <%= itemid %>)"
+				onclick="selectItem(event, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
+				
+				<% if (defined? treeopen) && treeopen %>
+					<img src="/images/tree_open.png" onclick="ajaxReplace('<%=treeopen%>','holder-<%=idnum%>')"/>	
+				<% elsif (defined? treeclose) && treeclose %>
+					<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('<%=treeclose%>'))"/>	
+				<% elsif defined? treesingle && treesingle %>
+					<img src="/images/tree_single2.png"/>	
+				<% end %>
+							
+				<% if defined? dragitem.icon %> 
+					<img src="<%=dragitem.icon%>"/>
+				<% end %>
+				<%=itemtxt%>	
+			</div>
+		</div>
+		
+		-->

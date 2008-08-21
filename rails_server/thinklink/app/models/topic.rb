@@ -38,6 +38,14 @@ class Topic < ActiveRecord::Base
 	  end
 	  return user.eql?(u)
 	end
+	
+	def icon 
+		return "/images/folder.png"
+	end
+	 
+	def what
+		return "topic"
+	end 
 	  
 end
 
