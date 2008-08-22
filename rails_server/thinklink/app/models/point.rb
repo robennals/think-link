@@ -223,8 +223,18 @@ class Point < ActiveRecord::Base
 	
 	validates_presence_of :txt
 
-	def icon 
-		return "/images/lightbulb.png"
+	def icon(user) 
+		if ! Bookmark.find_by_sql("
+				SELECT 1 FROM bookmarks,snippets
+						WHERE bookmarks.user_id=#{user.id}
+						AND snippets.id = bookmarks.snippet_id
+						AND snippets.point_id=#{self.id}").empty?
+			return "/images/lightbulb.png"
+		elsif PointLink.find(:first,:conditions=>"point_b_id=#{self.id} AND (howlinked='opposes' OR howlinked='opposite')")
+			return "/images/lightbulb_red.png"
+		else 
+			return "/images/lightbulb_off.png"
+		end
 	end	
 
 	def what

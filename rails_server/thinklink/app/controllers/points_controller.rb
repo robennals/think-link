@@ -34,6 +34,15 @@ class PointsController < ApplicationController
 		@points = @user.notmypoints
 		render :action => :index
 	end
+	def scratch
+		@points = Point.find_by_sql("
+			SELECT * FROM points WHERE
+			id IN (SELECT point_id FROM snippets WHERE user_id = #{@user.id})
+			AND id NOT IN (SELECT point_a_id FROM point_links)
+			AND id NOT IN (SELECT point_id FROM point_topics)
+		");
+		render :partial => 'points/points', :object => @points, :locals => {:options => {}}
+	end
 	
 	def show
 		@point = Point.find(params[:id])

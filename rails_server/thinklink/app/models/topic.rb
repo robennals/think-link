@@ -39,7 +39,7 @@ class Topic < ActiveRecord::Base
 	  return user.eql?(u)
 	end
 	
-	def icon 
+	def icon(user) 
 		return "/images/folder.png"
 	end
 	 

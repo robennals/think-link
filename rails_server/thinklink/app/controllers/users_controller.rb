@@ -18,6 +18,6 @@ class UsersController < ApplicationController
 		render_snippets @showuser.snippets
 	end
 	def recent
-		render :partial => 'topics/topics', @showuser.recenttopics.slice(0,25)
+		render :partial => 'topics/topics', :object => @showuser.recenttopics.slice(0,25)
 	end
 end
