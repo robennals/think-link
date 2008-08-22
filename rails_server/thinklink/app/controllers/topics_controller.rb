@@ -64,6 +64,9 @@ class TopicsController < ApplicationController
 #		render :action => 'index'
 	end
 
+	def recent
+		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25)
+	end
 	
 	def new
 	  @topic = Topic.new

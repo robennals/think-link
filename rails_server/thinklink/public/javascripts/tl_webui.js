@@ -39,6 +39,7 @@ function clearSelect(idnum){
 	getel("hot-"+idnum).className = "browsetab";	
 	getel("friends-"+idnum).className = "browsetab";	
 	getel("search-"+idnum).className = "browsetab";	
+	getel("searchbar-"+idnum).className = "hidden";
 }
 
 function searchMode(idnum){
@@ -51,6 +52,14 @@ function searchMode(idnum){
 
 function searchDo(idnum){
 	var query = getel("searchbox-"+idnum).value;
-	ajaxReplace("/points/searchajax?query="+query,"body-"+idnum);
-	
+	ajaxReplace("/points/searchajax?query="+query,"body-"+idnum);	
 }
+
+function recentMode(idnum){
+	getel("title-"+idnum).textContent = "My Recent";
+	clearSelect(idnum);
+	getel("recent-"+idnum).className = "browsetab browsetab_selected";
+	ajaxReplace("/topics/recent","body-"+idnum);
+
+}
+
