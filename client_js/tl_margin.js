@@ -142,11 +142,51 @@ function tl_margin()
 		}
 
 	}
+	
+	this.createMarginPull = function() {
+		var that = this;
+		var pull = document.createElement("span");
+		pull.id = "tl_marginpull";
+		arrowimg = document.createElement("img"); arrowimg.setAttribute("src",thinklink_imagebase+"lightbulb_right.png");
+		arrowimg.id = "tl_marginpull_img";
+		pull.appendChild(arrowimg);
+		document.body.appendChild(pull);
+		pull.addEventListener('click',function(){
+			if (arrowimg.getAttribute("src")==thinklink_imagebase+"lightbulb_right.png") {
+				that.showMarginPull();
+			}
+			else {
+				that.hideMarginPull();
+			}
+		},false);
+	}
+	
+	this.showMarginPull = function(){
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		var pull = document.getElementById("tl_marginpull");
+		var pullimg = document.getElementById("tl_marginpull_img");
+		this.showMargin();
+		pull.style.left = "200px";
+		pullimg.setAttribute("src",thinklink_imagebase+"lightbulb_left.png");
+	}
+	
+	this.hideMarginPull = function(){
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		var pull = document.getElementById("tl_marginpull");
+		var pullimg = document.getElementById("tl_marginpull_img");
+		this.hideMargin();
+		pull.style.left = "0px";
+		pullimg.setAttribute("src",thinklink_imagebase+"lightbulb_right.png");
+	}
 
 	this.showToolbarIcon = function(){
-	  var evt = document.createEvent("Events");
-    evt.initEvent("thinklink-showicon", true, false);
-    document.body.dispatchEvent(evt);
+	  	var evt = document.createEvent("Events");
+    	evt.initEvent("thinklink-showicon", true, false);
+    	document.body.dispatchEvent(evt);
+
+		// show lit lightbulb and arrow to pull out margin
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		
 	};
 
 	this.hideToolbarIcon = function(){

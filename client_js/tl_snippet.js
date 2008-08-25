@@ -237,6 +237,7 @@ function tl_snippet_dialog(margin) {
 			// refresh items in margin and clean up
 			that.margin.itemsLoaded=false;
 			that.margin.refresh();
+			that.margin.showMarginPull();
 			tl_log("refreshed margin");
 			that.hideMe();
 		});
