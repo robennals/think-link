@@ -64,6 +64,19 @@ class TopicsController < ApplicationController
 #		render :action => 'index'
 	end
 
+	def recent
+		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25)
+	end
+	
+	def toplevel
+		toptopics = Topic.find_by_sql("
+				SELECT * FROM topics WHERE
+				id NOT IN (
+					SELECT child_id FROM topic_links 
+				)
+			");
+		render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {}}
+	end
 	
 	def new
 	  @topic = Topic.new

@@ -17,4 +17,7 @@ class UsersController < ApplicationController
 		@title = "Recent snippets read by #{@showuser.email}"
 		render_snippets @showuser.snippets
 	end
+	def recent
+		render :partial => 'topics/topics', :object => @showuser.recenttopics.slice(0,25)
+	end
 end

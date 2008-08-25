@@ -2,7 +2,7 @@
 <% idnum = getUniq %>
 
 
-<table class="browsetable">
+<table class="browsetable" id="browser-<%=idnum%>">
 <colgroup>
 <col width="50px"/>
 <col/>
@@ -12,19 +12,19 @@
 
 <div class="browestab_top"></div>
 
-<div class="browsetab" id="all-<%=idnum%>">
+<div class="browsetab" id="all-<%=idnum%>" onclick="topMode(<%=idnum%>)">
 All Topics
 </div>
-<div class="browsetab browsetab_selected" id="recent-<%=idnum%>">
+<div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
 My Recent
 </div>
-<div class="browsetab" id="scratch-<%=idnum%>">
+<div class="browsetab" id="scratch-<%=idnum%>" onclick="scratchMode(<%=idnum%>)">
 Scratch Pad
 </div>
-<div class="browsetab" id="hot-<%=idnum%>">
+<div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
 Hot
 </div>
-<div class="browsetab" id="friends-<%=idnum%>">
+<div class="browsetab" id="friends-<%=idnum%>" onclick="friendsMode(<%=idnum%>)">
 Friends
 </div>
 <div class="browsetab" onclick="searchMode(<%=idnum%>)" id="search-<%=idnum%>">
@@ -36,15 +36,20 @@ Search
 	<div class="topics" id="topics-<%=idnum%>">
 		<h2 id="title-<%=idnum%>">Recent Topics</h2>
 		<div class="hidden" id="searchbar-<%=idnum%>">
-			<input class="searchbox" type="text" id="searchbox-<%=idnum%>"/>
+			<input class="searchbox inputbox" type="text" id="searchbox-<%=idnum%>"/>
 			<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
 		</div>
-		<div class="browse_container">
+		<div class="browse_container" id="container-<%=idnum%>">
 			<div id="body-<%=idnum%>" class="topic_list">
 			<%= render_partial 'topics/topics', @user.recenttopics.slice(0,25) %>
 			</div>
 		</div>
 	</div>
+	
+	<div class="dragbar" id="dragbar-<%=idnum%>" onmousedown="dragBar(event,<%=idnum%>)">
+	</div>
+
 </td>
 </tr>
 </table>	
+

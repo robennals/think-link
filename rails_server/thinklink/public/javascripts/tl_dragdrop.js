@@ -30,7 +30,7 @@ var dragText;
 var dragId;
 var dragClass;
 
-function dragStart(ev,id,txt,cls){
+function dragStart(ev,id,cls){
 	dragText = ev.target.textContent;
 	dragId = id;
 	dragClass = cls;

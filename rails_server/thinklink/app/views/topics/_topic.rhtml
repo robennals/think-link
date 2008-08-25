@@ -25,9 +25,7 @@
 				  <!--
 					<div class="relationtitle">points</div> -->
 					<div class="subpoints">
-					<% points.each do |point| %>
-						<%= render_partial 'points/point', point, :expandPoints => {} %>
-					<% end %>
+						<%= render_partial 'points/points', points, :options => {:intopic => true} %>
 					</div>
 				<% end %>
 		</div>

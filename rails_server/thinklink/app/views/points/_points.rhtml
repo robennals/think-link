@@ -52,38 +52,15 @@
 	end
 %>
 
-
-<% linkedto = options[:linkedto] %>
-<% relation = options[:rel]%>
-
 <div id='points-<%=rnd%>'>
 </div>
 
-
-<script language="javascript">
-
-var draggedPoint = null;
-
-function makePointDiv(id,text){
-	var div = document.createElement("div");
-	div.className = "point_ref";
-	div.id = "point_"+id;
-	div.appendChild(document.createTextNode(text));
-	return div;
-}
-
-function makePoint(parent,id,text){
-	div = makePointDiv(id,text);
-	dragDropPoint(div);	
-	parent.appendChild(div);
-}
-
-
-</script>
-
+<% if !options[:intopic] %>
 <div class="point_container">
-<% $topPoints.each do |point| %>
-		<%= render_partial 'points/point', point, :expandPoints => {} %>
-<% end %>
+<%end%>
+	<% $topPoints.each do |point| %>
+			<%= render_partial 'points/point', point, :expandPoints => {} %>
+	<% end %>
+<% if !options[:intopic] %>
 </div>
-
+<%end%>
