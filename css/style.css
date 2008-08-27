@@ -131,6 +131,12 @@
 	z-index: 105;
 }
 
+#tl_marginpull {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 105;
+}
 
 #tl_point_dialog {
 	position: fixed;
@@ -264,6 +270,11 @@
 
 .highlight {
 	background: #FFFF00;
+}
+
+.highlight_con {
+	background: #FF3333;
+	color: #000000;
 }
 
 img {

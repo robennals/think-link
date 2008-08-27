@@ -17,6 +17,20 @@ function tl_showDiv(divid) {
 	elem.style.display = "block";
 }
 
+function tl_showTooltip(text,x,y) {
+	var box = document.createElement("div");
+	box.className = "help_box";
+	box.style.top = y+"px";
+	box.style.left = x+"px";
+	box.appendChild(document.createTextNode(text));
+	document.body.appendChild(box);
+	return box;
+}
+
+function tl_hideTooltip(elem) {
+	document.body.removeChild(elem);
+}
+
 function doAJAX(scriptID,url,callback) {
 	//if (typeof thinklink_callback !== "undefined") { tl_log("callback: "+thinklink_callback); }
 	var url = thinklink_urlbase + url;
@@ -29,7 +43,8 @@ function doAJAX(scriptID,url,callback) {
     doc.getElementsByTagName("head")[0].appendChild(scripttag);
 }
 
-function mark_snippet(snippet) {
+function mark_snippet(snippet,hilite_class) {
+	if (hilite_class==null){ hilite_class = "highlight"; }
 	if(snippet[snippet.length-1] == " "){
 		snippet = snippet.substring(0,snippet.length-1);
 	}
@@ -39,11 +54,11 @@ function mark_snippet(snippet) {
 
 	var snipspans = [];
 	
-	addspans(document.body,offset,snippet.length,snippet,snipspans,false,false);
+	addspans(document.body,offset,snippet.length,snippet,snipspans,false,false,hilite_class);
 	return snipspans;
 }
 
-function addspans(node,start,length,snipText,snipspans,sawSpace,ispre) {
+function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_class) {
 	var nodeText = node.textContent.replace(/\s+/g," ");
 	
 	if (start+length < nodeText.length) {
@@ -68,7 +83,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre) {
 		}
 		// during snippet
 		var newSpan = document.createElement("span");
-		newSpan.className = "highlight";
+		newSpan.className =hilite_class;
 		
 		var middleTxt = nodeText.substring(start,start+length);
 		if(ispre) {middleTxt = expand_whitespace(middleTxt,start,white.white);	}	
@@ -102,7 +117,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre) {
 			if (childText[0] && childText[0].match(/^\s$/) && sawSpace) {start++;}
 			if (start < childText.length) {
 				var newLength = Math.min(childText.length,length);
-				addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false,ispre);
+				addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false,ispre,hilite_class);
 				length -= childText.length - start;
 				snipText = snipText.substring(newLength);
 			}

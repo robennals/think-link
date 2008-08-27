@@ -31,8 +31,13 @@ function tl_margin()
 	this.bookmarkURL = "new_bookmark.php";
 	this.unbookmarkURL = "new_unbookmark.php";
 	this.deleteURL = "new_deletion.php";
+	this.highlightAll = true;
+	this.haveOpposedPoint = false;
+	this.lightbulb_right = thinklink_imagebase+"lightbulb_right.png";
+	this.lightbulb_left = thinklink_imagebase+"lightbulb_left.png";
 	
 	this.init = function() {
+		var that = this;
 		this.urlList.push(this.url);
 		this.urlList.push(this.normTool.normalizeUrl(this.url));
 		var permaLinks = this.normTool.findPermalinks();
@@ -142,11 +147,68 @@ function tl_margin()
 		}
 
 	}
+	
+	this.toggleSnippetShow = function() {
+		if (this.highlightAll) { this.unhighlightSnippets(); }
+		else { this.highlightSnippets(); }
+		this.highlightAll = !this.highlightAll;
+	}
+	
+	this.createMarginPull = function() {
+		var that = this;
+		var pull = document.createElement("div");
+		pull.id = "tl_marginpull";
+		arrowimg = document.createElement("img"); arrowimg.setAttribute("src",this.lightbulb_right);
+		arrowimg.id = "tl_marginpull_img";
+		pull.appendChild(arrowimg);
+		document.body.appendChild(pull);
+		pull.addEventListener('click',function(){
+			if (arrowimg.getAttribute("src")==that.lightbulb_right) {
+				that.showMarginPull();
+			}
+			else {
+				that.hideMarginPull();
+			}
+		},false);
+		
+		var tooltip = null;
+		$(pull).hover(function(){
+			var msg;
+			if (that.haveOpposedPoint) {msg = "There are \"controversial\" points on this page!"; }
+			else { msg= "There are points on this page!"; }
+			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",mouseX+20,mouseY+20); 
+		}, function(){
+			tl_hideTooltip(tooltip);
+		});
+		
+	}
+	
+	this.showMarginPull = function(){
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		var pull = document.getElementById("tl_marginpull");
+		var pullimg = document.getElementById("tl_marginpull_img");
+		this.showMargin();
+		pull.style.left = "200px";
+		pullimg.setAttribute("src",this.lightbulb_left);
+	}
+	
+	this.hideMarginPull = function(){
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		var pull = document.getElementById("tl_marginpull");
+		var pullimg = document.getElementById("tl_marginpull_img");
+		this.hideMargin();
+		pull.style.left = "0px";
+		pullimg.setAttribute("src",this.lightbulb_right);
+	}
 
 	this.showToolbarIcon = function(){
-	  var evt = document.createEvent("Events");
-    evt.initEvent("thinklink-showicon", true, false);
-    document.body.dispatchEvent(evt);
+	  	var evt = document.createEvent("Events");
+    	evt.initEvent("thinklink-showicon", true, false);
+    	document.body.dispatchEvent(evt);
+
+		// show lit lightbulb and arrow to pull out margin
+		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
+		
 	};
 
 	this.hideToolbarIcon = function(){
@@ -170,11 +232,6 @@ function tl_margin()
 			urls = urls.substring(1); // trim preceding ampersand
 			
 			doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
-				if(result.length > 0){
-						that.showToolbarIcon();
-  				}else{
-  					that.hideToolbarIcon();
-  				}
 				
 				// for each result item, make a new tl_snippet and add it to the margin's array
 				for (var item=0; item< result.length; item++) {
@@ -184,11 +241,26 @@ function tl_margin()
 						unescape(result[item].snipText),
 						unescape(result[item].pointText),
 						result[item].pointID,
+						result[item].opposed,
 						result[item].date
 					),result[item].bookmark);
+					if (result[item].opposed != null) { that.haveOpposedPoint = true; }
 				}
+				
+				if (that.haveOpposedPoint) {
+					that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
+					that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
+				}
+				
+				if(result.length > 0){
+						that.showToolbarIcon();
+  				}else{
+  					that.hideToolbarIcon();
+  				}
+				
 				//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
 				that.itemsLoaded=true;
+				if (that.highlightAll) {that.highlightSnippets(); } // highlight everything by default
 				
 				// add set title/author buttons if this is thinklink pdf document
 				if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
@@ -334,6 +406,36 @@ function tl_margin()
 		$("#" + this.divID).animate({ width: 'hide', opacity: 'hide' }, 'slow');
 	}
 	
+	this.highlightSnippets = function() {
+		var that = this;
+		for (var i=0; i<this.items.length; i++){
+			var snippet = this.items[i];
+			var tooltext = snippet.pointText;
+			var tool;
+			if (snippet.opposed != null) { snippet.spanList = mark_snippet(snippet.sourceText,"highlight_con"); }
+			else {snippet.spanList = mark_snippet(snippet.sourceText); }
+			
+			for (var s=0; s <snippet.spanList.length; s++) {
+				snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
+				$(snippet.spanList[s]).hover(
+					function(){ tool=tl_showTooltip("This snippet claims: \""+that.items[this.id].pointText+"\". Click for more information.",mouseX+10,mouseY-30); },
+					function(){ tl_hideTooltip(tool); }
+				)
+				.click(function(){
+					myBrowser.viewFrame(that.items[this.id].pointID, that.items[this.id].id);
+				});
+			}
+		}
+	}
+	
+	this.unhighlightSnippets = function() {
+		for (var i=0; i<this.items.length; i++){
+			var snippet = this.items[i];
+			if (snippet.spanList == null) { continue; }
+			removeSpans(snippet.spanList);
+		}
+	}
+	
 	this.addItem = function(snippet,bookmarked){
 		var that = this;
 		
@@ -350,12 +452,18 @@ function tl_margin()
 			.css("top",snippet.position[1])
 			.attr("id", "margin"+snippet.id)
 			.hover(function(){ // highlight source text when the annotation is hovered over
-				snippet.spanList = mark_snippet(snippet.sourceText);
+				if (snippet.spanList == null && !that.highlightAll) {
+					if (snippet.opposed != null) { snippet.spanList = mark_snippet(snippet.sourceText,"highlight_con"); }
+					else {snippet.spanList = mark_snippet(snippet.sourceText); }
+				}
 				$(margin_item).text(snippet.pointText);
 				$(margin_item).addClass("tl_margin_item_info");
 				$(margin_item).prepend(buttonBox);
 			}, function(){
-				removeSpans(snippet.spanList);
+				if (!that.highlightAll) {
+					removeSpans(snippet.spanList);
+					snippet.spanList = null;
+				}
 				$(margin_item).text(snippet.displayText);
 				$(margin_item).removeClass("tl_margin_item_info");
 				//$(margin_item).remove(buttonBox);
@@ -373,6 +481,7 @@ function tl_margin()
 			doAJAX("tl_delete",that.deleteURL+"?snippet="+snippet.id,function(result){
 				tl_log("mark deleted: "+ snippet.id+ ", "+result);
 				removeSpans(snippet.spanList);
+				snippet.spanList = null;
 				document.getElementById(that.divID).removeChild(document.getElementById("margin"+snippet.id));
 			});
 
