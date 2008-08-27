@@ -7,6 +7,7 @@ class CreateSnippets < ActiveRecord::Migration
 			t.column :source_id, :integer
 			t.column :pagetitle, :string, :limit => 128, :null => false
 			t.column :url, :string, :limit => 2048, :null => false
+			t.column :url_real, :string, :limit => 2048, :null => false
       t.timestamps
     end
   end

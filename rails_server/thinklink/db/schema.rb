@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20080719024533) do
     t.integer  "source_id",  :limit => 11
     t.string   "pagetitle",  :limit => 128,  :default => "", :null => false
     t.string   "url",        :limit => 2048, :default => "", :null => false
+    t.string   "url_real",        :limit => 2048, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -16,6 +16,10 @@ class TopicsController < ApplicationController
 		render :partial => "topic", :locals => {:expand => true}, :object => @topic
 	end
 
+	def expandfolder
+		@topic = Topic.find(params[:id])
+		render :partial => "topic", :locals => {:expand => true, :options => {:pointfolders => true}}, :object => @topic
+	end
 	
 	def mine
 		@minititle = "My Topics"

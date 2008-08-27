@@ -66,10 +66,20 @@ a img {
 	padding-top: 2px; 
 }
 .relationtitle {
-	margin-left: 5px;
+	margin-left: 15px;
 	font-style: italic;
 	border-bottom: 1px #000 solid;
+	font-size: 13px;
+	cursor: pointer;
 }
+.relationtitle:hover {
+	background-color: #ebf7fd;
+}
+
+.relationtitle_selected, .relationtitle_selected:hover {
+	background-color: #d5effc;
+}
+
 .edit {
 	font-size: small;
 	font-weight: normal;
@@ -176,7 +186,8 @@ h2 {
 	padding: 1px 1px 1px 5px;
 	margin: 0px;
 /*	color: #C41200; */
-	font-size: 12pt;	
+	font-size: 16px;
+	font-weight: bold;	
 	background-color: #5867a2;
 	color: #c2d7ef;
 	-moz-border-radius-topleft: 5px;
@@ -319,12 +330,12 @@ h1 {
 }
 
 .point_container {
-	padding: 5px;
+	padding-left: 5px;
 	overflow: auto;
 }
 
 .browse_container {
-	height: 400px;
+	height: 190px;
 	overflow:auto;
 }
 
@@ -355,6 +366,7 @@ h1 {
 	border: 1px solid #666666;
 	border-right: none;
 	cursor: pointer;
+	font-size: 13px;
 }
 
 .browsetab_top {
@@ -385,6 +397,7 @@ h1 {
 
 .dragitem {
 	cursor: pointer;
+	font-size: 13px;
 }
 
 .dragitem:hover {
@@ -437,4 +450,61 @@ h1 {
 	height: 8px;
 	margin: 5px;
 	margin-right: 10px;
+}
+
+.pointinput_empty {
+	width: 420px;
+ 	background-color: #ffffd3;
+ 	color: grey;
+ 	font-style: italic;
+}
+
+.pointinput {
+	width: 420px;
+	background-color: #ffffd3;
+}
+
+.dialogbuttons {
+	float: right;
+}
+
+.browsetable td {
+	vertical-align: top;
+}
+
+.savewhat, .savewhere {
+/*	font-weight: bold; */
+	margin-bottom: 2px;
+}
+
+.pointicon {
+	vertical-align: middle;
+	padding-right: 2px;
+/*	padding-left: 50px; */
+}
+
+.folder_add {
+	font-size: 8pt;
+	background-color: #ececec;
+	-moz-border-radius: 3px;
+	color: black;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-top: 0px;
+	padding-top: 0px;
+	cursor: pointer;
+}
+
+.folder_add:hover{
+	background-color: #e2f5ff;	
+}
+
+.folder_add img {
+	vertical-align: middle;
+}
+
+.foldername {
+	font-weight: normal;
+/*	background-color: #e2f5ff;
+	-moz-border-radius: 3px; */
 }

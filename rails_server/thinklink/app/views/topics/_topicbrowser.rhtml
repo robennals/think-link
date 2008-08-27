@@ -1,5 +1,12 @@
 
-<% idnum = getUniq %>
+<% idnum = getUniq 
+
+if ! (defined? options)
+	options = {}
+end
+
+%>
+
 
 
 <table class="browsetable" id="browser-<%=idnum%>">
@@ -13,7 +20,7 @@
 <div class="browestab_top"></div>
 
 <div class="browsetab" id="all-<%=idnum%>" onclick="topMode(<%=idnum%>)">
-All Topics
+All Folders
 </div>
 <div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
 My Recent
@@ -21,12 +28,15 @@ My Recent
 <div class="browsetab" id="scratch-<%=idnum%>" onclick="scratchMode(<%=idnum%>)">
 Scratch Pad
 </div>
+
+<% if defined? showsocial %>
 <div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
 Hot
 </div>
 <div class="browsetab" id="friends-<%=idnum%>" onclick="friendsMode(<%=idnum%>)">
 Friends
 </div>
+<% end %>
 <div class="browsetab" onclick="searchMode(<%=idnum%>)" id="search-<%=idnum%>">
 Search
 </div>
@@ -34,20 +44,34 @@ Search
 <td>
 
 	<div class="topics" id="topics-<%=idnum%>">
-		<h2 id="title-<%=idnum%>">Recent Topics</h2>
-		<div class="hidden" id="searchbar-<%=idnum%>">
-			<input class="searchbox inputbox" type="text" id="searchbox-<%=idnum%>"/>
-			<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
-		</div>
-		<div class="browse_container" id="container-<%=idnum%>">
+		<h2>
+			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
+			<span id="title-<%=idnum%>">My Recent Folders</span> 
+			</td><td class="browsefolderadd" style="text-align:right">
+			<span class="folder_add" onclick="newFolder(<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></span>
+			</tr>
+			</table>
+		</h2>
+		<div class="browse_container" id="container-<%=idnum%>"
+		<% if (defined? big) && big %>
+			style="height:400px"
+			<%end %>
+		>
+			<div class="hidden" id="searchbar-<%=idnum%>">
+				<input class="searchbox inputbox" type="text" id="searchbox-<%=idnum%>" onkeypress="searchKeyPress(event,<%=idnum%>)"/>
+				<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
+			</div>
+
 			<div id="body-<%=idnum%>" class="topic_list">
-			<%= render_partial 'topics/topics', @user.recenttopics.slice(0,25) %>
+			<%= render_partial 'topics/topics', @user.recenttopics.slice(0,25), :options => options %>
 			</div>
 		</div>
 	</div>
 	
+	<% if (defined? dragbar) && (dragbar == true) %>
 	<div class="dragbar" id="dragbar-<%=idnum%>" onmousedown="dragBar(event,<%=idnum%>)">
 	</div>
+	<% end %>
 
 </td>
 </tr>

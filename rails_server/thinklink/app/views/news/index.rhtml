@@ -6,33 +6,11 @@
 
 <div>
 
-<%= render_partial 'topics/topicbrowser',@user %>
+<%= render_partial 'topics/topicbrowser',@user, :dragbar => true, :big => true %>
 
-<%= render_partial 'topics/topicbrowser',@user %>
+<%= render_partial 'topics/topicbrowser',@user, :dragbar => true, :big => true %>
 
-
-<% if false %>
-	<div class="points">
-		<h2>Recent Points</h2>
-		<div id="recentpoints" class="point_container">
-			<% if ! @mypoints.empty? %>
-			<span class="relationtitle">Mine</span>
-			<%= render_partial 'points/points', @mypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :controller=>'points', :action => 'mine' %>
-			<span class="relationtitle">Others</span>
-			<% end %>
 	
-			<%= render_partial 'points/points', @notmypoints, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist'}, :renderer => 'points/pointref', :controller=>'points',:action => 'notmine' %>
-		</div>		
-		
-		<%= render_partial 'points/newpoint', nil, :divid=>'recentpoints' %>
-
-
-	</div>
-<% end %>	
-	
-	
-<!--	<%= render_partial 'points/minisearch',nil %> -->
-
 </div>
 
 </td><td class="secondcolumn">
@@ -41,8 +19,6 @@
 	<h2>Actions for Point</h2>
 	<div class="action"><img src="/images/lightbulb.png"> Create more general point</div>
 	<div class="action"><img src="/images/connect.png"> Organize points </div>
-<!--	<div class="action"><img src="/images/disconnect.png"> Disconnect point</div> -->
-<!--	<div class="action"><img src="/images/cross.png"> Delete point</div> -->
 	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit point text</div>
 </div>
 
@@ -71,21 +47,9 @@
 		</div>	
 	</div>
 
-<!--
-	<div class="snippets"</h2>
-	<h2>Snippets from Friends</h2>
-		<% Snippet.all(:order => "created_at desc", :conditions=>"user_id<>#{@user.id}").slice(0,4).each do |snippet| %>
-		<%=	render_partial 'snippets/snippet', snippet, :options => {} %>
-		<% end %> 
-		<span class="more"><%= link_to 'see all', {:controller => 'snippets', :action => 'friends'} %></span>
-	</div>
-	
-	-->
 </div>
 
 
 </td></tr>
 </table>
 
-
-<!-- <p><%= link_to "Add new Point", {:action => 'new' }%></p> -->

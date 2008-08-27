@@ -1,0 +1,33 @@
+
+<script type="text/javascript">
+// pass info up to the firefox plugin
+
+var arg_url = "<%=params[:url]%>";
+var arg_realurl = "<%=params[:realurl]%>";
+var arg_title = "<%=params[:title]%>";
+
+</script>
+
+<div style="padding:4px">
+<%= render_partial 'topics/topicbrowser',@user, :options => {:pointfolders => true} %>
+
+<div class="savewhat">The snippet text:</div>
+<div class="snippet_text" id="snippet_text" style="height: 50px; overflow: auto; border-style: inset; border-width: 2px; padding: 2px; margin: 4px;">
+<%= params['txt'] %>
+</div>
+
+<form>
+<span class="savewhat">claims that </span>
+<!-- <img src="/images/lightbulb.png" class="pointicon"/> -->
+	<input type="text" id="pointname" class="pointinput_empty"
+		onfocus="enableInput('pointname')" 
+		value="Enter a statement that this snippet is asserting is true"/>
+</form>
+
+
+<div class="dialogbuttons">
+	<input type="button" value="Save" onclick="clickSave()"/>
+	<input type="button" value="Cancel" onclick="clickClose()"/>
+</div>
+</div>
+

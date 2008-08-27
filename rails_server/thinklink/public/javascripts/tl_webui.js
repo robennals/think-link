@@ -13,42 +13,86 @@ function selectItem(div,itemid,divid,cls){
 	if(renameItem && divid != selectedDivId){
 		editFinished();
 	}
+	if(oldselection){
+		if(selectedCls == "Oppose" || selectedCls == "Support"){
+			oldselection.className = "relationtitle";
+		}else{
+			oldselection.className = "dragitem";		
+		}
+	}
+
 	selectedId = itemid;
 	selectedDivId = divid;
 	selectedCls = cls;
-	if(oldselection){
-		oldselection.className = "dragitem";		
+	
+	if(selectedCls == "Oppose" || selectedCls == "Support"){
+		div.className = "relationtitle relationtitle_selected";
+	}else{
+		div.className = "dragitem dragitem_selected";
 	}
-	div.className = "dragitem dragitem_selected";
 	oldselection = div;
 	
-	var preview_panel = document.getElementById("preview_panel");
-	var preview_title = document.getElementById("preview_title");
+	var preview_panel = getel("preview_panel");
+	var preview_title = getel("preview_title");
+	var pointname = getel("pointname");
+	var foldername = getel("foldername");
 
-	if(cls=="Topic"){
-		getel("actions_point").className = "hidden";
-		getel("actions_folder").className = "actions";	
-		getel("preview_container").className = "hidden";
-		getel("topics_title").textContent = "More General Folders";
-		ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
-	}else if(cls=="Point"){
-		getel("actions_point").className = "actions";
-		getel("actions_folder").className = "hidden";
-		getel("preview_container").className = "snippets";
-		preview_title.textContent = "Snippets for Selected Point";
-		getel("topics_title").textContent = "Topics for Selected Point";
-		ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
-		ajaxReplace("/points/"+itemid+"/topics","topics_panel");
+	if(pointname){	// in the new snippet dialog
+		tl_log(cls);
+		if(cls == "Point"){
+			enableInput("pointname");
+			pointname.value = getTextOfSelected();
+		}else if(cls == "Topic"){
+			// foldername.textContent = getTextOfSelected();
+			// tl_log(getTextOfSelected());
+			// tl_log(foldername);
+		}else if(cls == "Support"){
+		}else if(cls == "Oppose"){
+		}
+		
+	}else{
+	
+		if(cls=="Topic"){
+			getel("actions_point").className = "hidden";
+			getel("actions_folder").className = "actions";	
+			getel("preview_container").className = "hidden";
+			getel("topics_title").textContent = "More General Folders";
+			ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+		}else if(cls=="Point"){
+			getel("actions_point").className = "actions";
+			getel("actions_folder").className = "hidden";
+			getel("preview_container").className = "snippets";
+			preview_title.textContent = "Snippets for Selected Point";
+			getel("topics_title").textContent = "Topics for Selected Point";
+			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
+			ajaxReplace("/points/"+itemid+"/topics","topics_panel");
+		}
+	}
+}
+
+function enableInput(id){
+	var input = getel(id);
+	if(input.className == "pointinput_empty"){
+		input.value = "";
+		input.className = "pointinput";
+	}
+}
+
+function clearButton(what,idnum){
+	var but = getel(what+"-"+idnum);
+	if(but){
+		but.className = "browsetab";
 	}
 }
 
 function clearSelect(idnum){
-	getel("all-"+idnum).className = "browsetab";	
-	getel("recent-"+idnum).className = "browsetab";	
-	getel("scratch-"+idnum).className = "browsetab";	
-	getel("hot-"+idnum).className = "browsetab";	
-	getel("friends-"+idnum).className = "browsetab";	
-	getel("search-"+idnum).className = "browsetab";	
+	clearButton("all",idnum);
+	clearButton("recent",idnum);
+	clearButton("scratch",idnum);
+	clearButton("hot",idnum);
+	clearButton("friends",idnum);
+	clearButton("search",idnum);
+
 	getel("searchbar-"+idnum).className = "hidden";
 }
 
@@ -66,7 +110,7 @@ function searchDo(idnum){
 }
 
 function recentMode(idnum){
-	getel("title-"+idnum).textContent = "My Recent";
+	getel("title-"+idnum).textContent = "My Recent Folders";
 	clearSelect(idnum);
 	getel("recent-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/recent","body-"+idnum);
@@ -74,7 +118,7 @@ function recentMode(idnum){
 
 function topMode(idnum){
 	clearSelect(idnum);
-	getel("title-"+idnum).textContent = "All Topics";
+	getel("title-"+idnum).textContent = "All Folders";
 	getel("all-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/toplevel","body-"+idnum);
 }
@@ -117,13 +161,25 @@ function resizeStop(ev){
 var renameItem;
 var renameInput;
 
+function normalizeText(txt){
+	txt = txt.replace(/\s+/g," ");
+	txt = txt.replace(/^\s*/,"");
+	txt = txt.replace(/\s*$/,"");
+	return txt;
+}
+
+function getTextOfSelected(){
+	var item = getel(selectedDivId);
+	return normalizeText(item.textContent);
+}
+
 function actionEdit(idnum,id){
 	var dragitem = getel(selectedDivId);
 	renameItem = dragitem;
 	var input = document.createElement("input");
 	input.setAttribute("type","text");
 	input.setAttribute("class","renamebox inputbox");
-	var txt = dragitem.textContent.replace(/\s?/g," ");
+	var txt = dragitem.textContent.replace(/\s+/g," ");
 	txt = txt.replace(/^\s*/,"");
 	txt = txt.replace(/\s*$/,"");
 	input.setAttribute("value",dragitem.textContent.replace(/\s+/g," "));
@@ -155,4 +211,89 @@ function editKeyPress(ev){
 	if(ev.keyCode == KEYENTER){
 		editFinished();
 	}
+}
+
+function searchKeyPress(ev,idnum){
+	var KEYENTER = 13;
+	if(ev.keyCode == KEYENTER){
+		searchDo(idnum);
+	}
+}
+
+function newFolder(idnum){
+	function mk(tag){return document.createElement(tag);}
+	
+	var body = document.getElementById("body-"+idnum);
+	
+	var dragtable = mk("table");
+	dragtable.className = "dragtable";
+	var dragrow = mk("tr");
+	dragtable.appendChild(dragrow);
+	var dragsinglecol = mk("td");
+	dragrow.appendChild(dragsinglecol);
+	var singleicon = mk("img");
+	dragsinglecol.appendChild(singleicon);
+	singleicon.src = "/images/tree_single2.png";
+	var dragfoldercol = mk("td");
+	dragrow.appendChild(dragfoldercol);
+	var foldericon = mk("img");
+	dragfoldercol.appendChild(foldericon);
+	foldericon.src = "/images/folder.png";
+	var dragmaincol = mk("td");
+	dragrow.appendChild(dragmaincol);
+	var drageditdiv = mk("div");
+	dragmaincol.appendChild(drageditdiv);
+	drageditdiv.className = "dragitem";
+	var input = mk("input");
+	input.setAttribute("type","text");
+	drageditdiv.appendChild(input);
+	input.focus();
+
+	body.appendChild(dragtable);	
+	
+	dragtable.scrollIntoView();
+}
+
+function clickSave(){
+	//	TODO: save the snippet
+	var pointnode = getel("pointname");
+	var pointname = normalizeText(pointnode.value);
+	var sniptxt = normalizeText(getel("snippet_text").textContent);
+	
+	var baseurl = "new_snippet.php?txt="+encodeURIComponent(sniptxt)
+		+"&url="+encodeURIComponent(arg_url)
+		+"&realurl="+encodeURIComponent(arg_realurl)
+		+"&pointname="+encodeURIComponent(pointname)
+		+"&title="+encodeURIComponent(arg_title);
+	
+	if(selectedCls == "Point"){
+		doAJAX("tl_snippet",baseurl+"&pointid="+selectedId,function(result){
+			clickClose();
+		});
+		return;
+	}else{
+		if(pointname == "" || pointnode.className == "pointinput_empty"){
+			alert("You must enter the point that this snippet is making");
+		}
+	}
+	
+	if(selectedCls == "Topic"){
+		doAJAX("tl_snippet",baseurl+"&topicid="+selectedId,function(result){
+			clickClose();
+		});		
+	}else if(selectedCls == "Oppose"){
+		doAJAX("tl_snippet",baseurl+"&opposeid="+selectedId,function(result){
+			clickClose();
+		});
+	}else if(selectedCls == "Support"){
+		doAJAX("tl_snippet",baseurl+"&supportid="+selectedId,function(result){
+			clickClose();
+		});
+	}
+}
+
+function clickClose(){
+	var evt = document.createEvent("Events");
+  evt.initEvent("thinklink-close", true, false);
+  document.body.dispatchEvent(evt);
 }

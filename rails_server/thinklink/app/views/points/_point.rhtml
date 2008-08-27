@@ -1,25 +1,34 @@
 
+<%
+	if !(defined? options) || !options
+		options = {}
+	end
+	idnum = getUniq
+	itemid = point.id
+%>
 
 <% supports = point.supporting_points %>
 <% opposes = point.opposing_points %>
 
-<% if supports.empty? && opposes.empty? %>
+<% if supports.empty? && opposes.empty? && !options[:pointfolders]%>
 		<%= render_partial 'main/dragitem', point, :treesingle => true %>
 <% else %>
 	<% if expandPoints[point.id] %>
 		<%= render_partial 'main/dragitem', point, :treeclose => ('subpoints-'+point.id.to_s) %>
 
 		<div class="subpoints_section" id="subpoints-<%=point.id%>">
-				<% if !supports.empty? %>
-					<div class="relationtitle">supported by</div>
+				<% if !supports.empty? || options[:pointfolders] %>
+					<div class="relationtitle" 
+						onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'Support')">supported by</div>
 					<div class="subpoints">
 					<% supports.each do |subpoint| %>
 						<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
 					<% end %>
 					</div>
 				<% end %>
-				<% if !opposes.empty? %>
-					<div class="relationtitle">opposed by</div>
+				<% if !opposes.empty? || options[:pointfolders] %>
+					<div class="relationtitle"
+						onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'Oppose')">opposed by</div>
 					<div class="subpoints">
 					<% opposes.each do |subpoint| %>
 						<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
@@ -28,7 +37,11 @@
 				<% end %>
 		</div>
 	<% else %>
-		<%= render_partial 'main/dragitem', point, :treeopen => ('/points/'+point.id.to_s+'/expand') %>
+		<% if options[:pointfolders] %>
+			<%= render_partial 'main/dragitem', point, :treeopen => ('/points/'+point.id.to_s+'/expandfolder') %>
+ 		<% else %>
+			<%= render_partial 'main/dragitem', point, :treeopen => ('/points/'+point.id.to_s+'/expand') %>
+		<% end %>
 	<% end %>
 
 <% end %>

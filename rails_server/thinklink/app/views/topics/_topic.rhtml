@@ -3,6 +3,10 @@
 <% points = topic.points
    children = topic.children
    idnum = getUniq
+   
+   if (!defined? options) || !options
+   	 options = {}
+   end
  %>
 
 <% if points.empty? && children.empty? %>
@@ -17,7 +21,7 @@
 					<!-- <div class="relationtitle">subtopics</div> -->
 					<div class="subpoints">
 					<% children.each do |subtopic| %>
-						<%= render_partial 'topics/topic', subtopic, :expand => false %>
+						<%= render_partial 'topics/topic', subtopic, :expand => false, :options => options %>
 					<% end %>
 					</div>
 				<% end %>
@@ -25,14 +29,17 @@
 				  <!--
 					<div class="relationtitle">points</div> -->
 					<div class="subpoints">
-						<%= render_partial 'points/points', points, :options => {:intopic => true} %>
+						<%= render_partial 'points/points', points, :options => options.merge ({:intopic => true}) %>
 					</div>
 				<% end %>
 		</div>
 	<% else %>
 	
+		<% if options[:pointfolders] %>
+		<%= render_partial 'main/dragitem', topic, :treeopen => ('/topics/'+topic.id.to_s+'/expandfolder') %> 
+		<% else %>
 		<%= render_partial 'main/dragitem', topic, :treeopen => ('/topics/'+topic.id.to_s+'/expand') %> 
-		
+		<% end %>		
 	<% end %>
 
 <% end %>

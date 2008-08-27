@@ -2,6 +2,11 @@
 
 <%
 	rnd = rand(100000).to_s
+	
+	if !defined? options
+		options = {}
+	end
+	
 	%>
 
 <div id='points-<%=rnd%>'>
@@ -10,7 +15,7 @@
 
 <div class="point_container">
 <% topics.each do |topic| %>
-		<%= render_partial 'topics/topic', topic, :expand => false %>
+		<%= render_partial 'topics/topic', topic, :expand => false, :options => options %>
 <% end %>
 </div>
 

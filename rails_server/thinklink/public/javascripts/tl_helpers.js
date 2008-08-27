@@ -385,8 +385,8 @@ function tl_dragStart(event, id) {
     window.event.returnValue = false;
   }
   if (tl_browserInfo.isNS) {
-    document.addEventListener("mousemove", tl_dragGo,   true);
-    document.addEventListener("mouseup",   tl_dragStop, true);
+    window.addEventListener("mousemove", tl_dragGo,   true);
+    window.addEventListener("mouseup",   tl_dragStop, true);
     event.preventDefault();
   }
 
@@ -433,8 +433,8 @@ function tl_dragStop(event) {
     document.detachEvent("onmouseup",   tl_dragStop);
   }
   if (tl_browserInfo.isNS) {
-    document.removeEventListener("mousemove", tl_dragGo,   true);
-    document.removeEventListener("mouseup",   tl_dragStop, true);
+    window.removeEventListener("mousemove", tl_dragGo,   true);
+    window.removeEventListener("mouseup",   tl_dragStop, true);
   }
 }
 

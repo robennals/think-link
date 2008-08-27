@@ -6,7 +6,7 @@
 	charset=iso-8859-1" />
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title><%= @title %> - Think Link</title>
-	<%= stylesheet_link_tag "stylemini" %>
+	<%= stylesheet_link_tag "style" %>
 	<!-- <%= javascript_include_tag :all, :cache => true %> -->
 	<% if @user.email.eql?("trush@eecs.berkeley.edu") %>
 		<script type="text/javascript" src="/javascripts/tl_bethconfig.js"></script>
@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="/javascripts/tl_helpers.js"></script>
 	<script type="text/javascript" src="/javascripts/tl_ruby_helpers.js"></script>
 	<script type="text/javascript" src="/javascripts/tl_dragdrop.js"></script>
+	<script type="text/javascript" src="/javascripts/tl_webui.js"></script>
 
 	
 </head>

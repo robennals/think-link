@@ -16,7 +16,7 @@
 		
 	<% end %>
 </div>
-<%= "<a class='snippet_url'  target='_top' href='#{snippet.url}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
+<%= "<a class='snippet_url'  target='_top' href='#{snippet.goodurl}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)}</a>" %>  
 <% if !options[:noauthor] %>
 <div class="snippet_author"><img src="/images/user.png"/><%= link_to snippet.user.name, user_path(snippet.user), :target=>"_top" %> </div>
 <% end %>

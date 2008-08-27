@@ -26,7 +26,9 @@ class SnippetsController < ApplicationController
 		@options = {}
 		render :action => :index
 	end
-	
+	def newsnippet
+		render :layout => 'mini', :action => 'newsnippet'
+	end
 	def show
 		@snippet = Snippet.find(params[:id])
 	end

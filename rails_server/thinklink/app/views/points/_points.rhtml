@@ -3,6 +3,10 @@
 <%
 	rnd = rand(100000).to_s
 	
+	if !defined? options
+		options = {}
+	end
+	
 	$donecount = 0
 	
 	$parentPoints = {}
@@ -59,7 +63,7 @@
 <div class="point_container">
 <%end%>
 	<% $topPoints.each do |point| %>
-			<%= render_partial 'points/point', point, :expandPoints => {} %>
+			<%= render_partial 'points/point', point, :expandPoints => {}, :options => options %>
 	<% end %>
 <% if !options[:intopic] %>
 </div>

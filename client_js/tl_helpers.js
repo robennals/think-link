@@ -399,13 +399,19 @@ function getBrowserInfo() {
 	
 }
 
-function tl_dragStart(event, id) {
+function tl_dragStart(event, id, hiderid) {
 
   var el;
   var x, y;
 
   // If an element id was given, find it. Otherwise use the element being
   // clicked on.
+
+	if(hiderid){
+		var hider = document.getElementById(hiderid);
+		hider.style.visibility = "hidden";
+		tl_dragElement.hider = hider;
+	}
 
   if (id)
     tl_dragElement.elNode = document.getElementById(id);
@@ -455,8 +461,8 @@ function tl_dragStart(event, id) {
     window.event.returnValue = false;
   }
   if (tl_browserInfo.isNS) {
-    document.addEventListener("mousemove", tl_dragGo,   true);
-    document.addEventListener("mouseup",   tl_dragStop, true);
+    window.addEventListener("mousemove", tl_dragGo,   true);
+    window.addEventListener("mouseup",   tl_dragStop, true);
     event.preventDefault();
   }
 
@@ -503,8 +509,9 @@ function tl_dragStop(event) {
     document.detachEvent("onmouseup",   tl_dragStop);
   }
   if (tl_browserInfo.isNS) {
-    document.removeEventListener("mousemove", tl_dragGo,   true);
-    document.removeEventListener("mouseup",   tl_dragStop, true);
+    window.removeEventListener("mousemove", tl_dragGo,   true);
+    window.removeEventListener("mouseup",   tl_dragStop, true);
   }
+  tl_dragElement.hider.style.visibility = "";
 }
 
