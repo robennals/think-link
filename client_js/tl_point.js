@@ -413,7 +413,7 @@ function tl_point_browser() {
 		var me = document.getElementById(this.divID);
 		me.style.overflow = "hidden";
 		me.style.position = "fixed";
-		me.style.top = "0px";
+		me.style.top = "50px";
 		me.style.left = "200px";
 		me.style.width = (window.innerWidth * (2/3)) + "px";
 		me.style.height = (window.innerHeight * (2/3)) + "px";

@@ -1,9 +1,10 @@
-function tl_snippet(id,author,sourceText,pointText,pointID,date) {
+function tl_snippet(id,author,sourceText,pointText,pointID,pointOpposed,date) {
 	this.author = author;
 	this.sourceText = sourceText;
 	this.displayText = pointText;
 	this.pointText = pointText;
 	this.pointID = pointID;
+	this.opposed = pointOpposed;
 	this.timestamp = date;
 	this.id = id;
 	this.position;

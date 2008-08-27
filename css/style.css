@@ -131,7 +131,7 @@
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	z-index: 2147483647;
+	z-index: 105;
 }
 
 #tl_point_dialog {
@@ -266,6 +266,11 @@
 
 .highlight {
 	background: #FFFF00;
+}
+
+.highlight_con {
+	background: #FF3333;
+	color: #000000;
 }
 
 img {

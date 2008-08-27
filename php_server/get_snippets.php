@@ -38,9 +38,31 @@ $query = "SELECT * FROM
 		WHERE user_id=$user)
 	) AS q1
 	LEFT JOIN 
+	(
+		(SELECT snippet_id AS bookmark FROM bookmarks WHERE user_id=$user) AS q2,
+     	(SELECT COUNT(*) AS opposed, point_b_id AS pointID FROM point_links WHERE howlinked='opposes' GROUP BY point_b_id) AS q3
+	)
+	ON (q1.id = q2.bookmark AND q1.pointID=q3.pointID)";
+/*
+$query = "SELECT * FROM
+	(SELECT snippets.id as id, snippets.txt as snipText, points.txt as pointText, points.id as pointID, snippets.created_at as date, snippets.user_id AS creator, howlinked 
+	FROM snippets, points 
+	WHERE (url IN ($urlList) OR url_real IN ($urlList)) AND points.id= snippets.point_id 
+	AND snippets.id NOT IN (
+		SELECT snippet_id AS id 
+		FROM deletions
+		GROUP BY snippet_id
+		HAVING COUNT(user_id) > 2) 
+	AND snippets.id NOT IN (
+		SELECT snippet_id AS id 
+		FROM deletions 
+		WHERE user_id=$user)
+	) AS q1
+	LEFT JOIN 
 	(SELECT snippet_id AS bookmark FROM bookmarks WHERE user_id=$user) AS q2
-	ON q1.id = q2.bookmark"; 
-
+	ON q1.id = q2.bookmark,
+	(SELECT COUNT(*) AS opposed, point_b_id AS pointID FROM `point_links` WHERE howlinked='opposes' AND point_b_id=points.id GROUP BY point_b_id)"; 
+*/
 if($id) {
 	$query .= " AND snippets.id=$id";
 }
