@@ -23,7 +23,8 @@ while (!empty($url)) {
 }
 $urlList = implode(",",$urls);
 
-$query = "SELECT * FROM
+$query = "SELECT * FROM 
+	(SELECT * FROM 
 	(SELECT snippets.id as id, snippets.txt as snipText, points.txt as pointText, points.id as pointID, snippets.created_at as date, snippets.user_id AS creator, howlinked 
 	FROM snippets, points 
 	WHERE (url IN ($urlList) OR url_real IN ($urlList)) AND points.id= snippets.point_id 
@@ -39,10 +40,15 @@ $query = "SELECT * FROM
 	) AS q1
 	LEFT JOIN 
 	(
-		(SELECT snippet_id AS bookmark FROM bookmarks WHERE user_id=$user) AS q2,
-     	(SELECT COUNT(*) AS opposed, point_b_id AS pointID FROM point_links WHERE howlinked='opposes' GROUP BY point_b_id) AS q3
+		(SELECT snippet_id AS bookmark FROM bookmarks WHERE user_id=$user) AS q2
 	)
-	ON (q1.id = q2.bookmark AND q1.pointID=q3.pointID)";
+	ON (q1.id = q2.bookmark)) AS part1
+	LEFT JOIN
+	(
+     	(SELECT COUNT(*) AS opposed, point_b_id FROM point_links WHERE howlinked='opposes' GROUP BY point_b_id) AS part2
+	)
+	ON (part1.pointID=part2.point_b_id)";
+	//echo $query;
 /*
 $query = "SELECT * FROM
 	(SELECT snippets.id as id, snippets.txt as snipText, points.txt as pointText, points.id as pointID, snippets.created_at as date, snippets.user_id AS creator, howlinked 
