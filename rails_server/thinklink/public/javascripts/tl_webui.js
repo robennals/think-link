@@ -5,6 +5,22 @@ function getel(id){
 	return document.getElementById(id);
 }
 
+var savemode = false;
+var expandcommand = "expand";
+var params = ""
+
+function initParams(){
+	if(getel("pointname")){
+			savemode = true;
+			expandcommand = "expandfolder";
+			params = "savemode=true";
+	}
+}
+
+initParams();
+window.addEventListener("load",function(){initParams()},true);
+
+
 var selectedId;
 var selectedDivId;
 var selectedCls;
@@ -42,12 +58,16 @@ function selectItem(div,itemid,divid,cls){
 		if(cls == "Point"){
 			enableInput("pointname");
 			pointname.value = getTextOfSelected();
+			inputstarted = false;
 		}else if(cls == "Topic"){
+			disableInput("pointname","Enter point to add within the selected folder");
 			// foldername.textContent = getTextOfSelected();
 			// tl_log(getTextOfSelected());
 			// tl_log(foldername);
 		}else if(cls == "Support"){
+			disableInput("pointname","Enter point that supports the selected point"); 
 		}else if(cls == "Oppose"){
+			disableInput("pointname","Enter point that opposes the selected point"); 
 		}
 		
 	}else{
@@ -70,12 +90,23 @@ function selectItem(div,itemid,divid,cls){
 	}
 }
 
+var inputstarted = false;
+
 function enableInput(id){
 	var input = getel(id);
 	if(input.className == "pointinput_empty"){
 		input.value = "";
 		input.className = "pointinput";
 	}
+}
+
+function disableInput(id,msg){
+	if(inputstarted){
+		return;
+	}
+	var input = getel(id);
+	input.className = "pointinput_empty";
+	input.value = msg;
 }
 
 function clearButton(what,idnum){
@@ -98,7 +129,7 @@ function clearSelect(idnum){
 
 function searchMode(idnum){
 	clearSelect(idnum);
-	getel("title-"+idnum).textContent = "Search Points";
+	getel("title-"+idnum).textContent = "Search Folders and Points";
 	getel("searchbar-"+idnum).className = "searchbar";
 	getel("search-"+idnum).className = "browsetab browsetab_selected";
 	getel("body-"+idnum).innerHTML = "<div class='msg'>Enter search terms above</div>";
@@ -106,28 +137,28 @@ function searchMode(idnum){
 
 function searchDo(idnum){
 	var query = getel("searchbox-"+idnum).value;
-	ajaxReplace("/points/searchajax?query="+query,"body-"+idnum);	
+	ajaxReplace("/points/searchajax?query="+query+"&"+params,"body-"+idnum);	
 }
 
 function recentMode(idnum){
 	getel("title-"+idnum).textContent = "My Recent Folders";
 	clearSelect(idnum);
 	getel("recent-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/topics/recent","body-"+idnum);
+	ajaxReplace("/topics/recent?"+params,"body-"+idnum);
 }
 
 function topMode(idnum){
 	clearSelect(idnum);
 	getel("title-"+idnum).textContent = "All Folders";
 	getel("all-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/topics/toplevel","body-"+idnum);
+	ajaxReplace("/topics/toplevel?"+params,"body-"+idnum);
 }
 
 function scratchMode(idnum){
 	clearSelect(idnum);
 	getel("title-"+idnum).textContent = "Scratch Points"; 
 	getel("scratch-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/points/scratch","body-"+idnum);
+	ajaxReplace("/points/scratch?"+params,"body-"+idnum);
 }
 
 
@@ -206,6 +237,15 @@ function editFinished(){
 
 }
 
+function pointKeyPress(ev){
+	var KEYENTER = 13;
+	if(ev.keyCode == KEYENTER){
+		clickSave();
+	}else{
+		inputstarted = true;
+	}
+}
+
 function editKeyPress(ev){
 	var KEYENTER = 13;
 	if(ev.keyCode == KEYENTER){
@@ -223,17 +263,24 @@ function searchKeyPress(ev,idnum){
 function newFolder(idnum){
 	function mk(tag){return document.createElement(tag);}
 	
-	var body = document.getElementById("body-"+idnum);
+	var uniq = Math.ceil(Math.random()*10000000);
 	
+	var container = mk("div");
+	container.className = "point_container";
+	var holder = mk("div");
+	holder.className = "dragholder";
+	holder.setAttribute("id","holder-"+uniq);
+	container.appendChild(holder);
 	var dragtable = mk("table");
 	dragtable.className = "dragtable";
+	holder.appendChild(dragtable);
 	var dragrow = mk("tr");
 	dragtable.appendChild(dragrow);
 	var dragsinglecol = mk("td");
 	dragrow.appendChild(dragsinglecol);
 	var singleicon = mk("img");
 	dragsinglecol.appendChild(singleicon);
-	singleicon.src = "/images/tree_single2.png";
+	singleicon.src = "/images/tree_open.png";
 	var dragfoldercol = mk("td");
 	dragrow.appendChild(dragfoldercol);
 	var foldericon = mk("img");
@@ -247,11 +294,74 @@ function newFolder(idnum){
 	var input = mk("input");
 	input.setAttribute("type","text");
 	drageditdiv.appendChild(input);
-	input.focus();
-
-	body.appendChild(dragtable);	
 	
-	dragtable.scrollIntoView();
+	input.addEventListener("blur",function(){
+		folderFinished(container,input,uniq);
+	},false);
+	
+	input.addEventListener("keypress",function(ev){
+		var KEYENTER = 13;
+		if(ev.keyCode == KEYENTER){
+			folderFinished(container,input,uniq);
+		}
+	},false);
+
+	var body;		
+	if(selectedDivId && selectedCls == "Topic" && findSubTopics(selectedDivId)){
+		body = findSubTopics(selectedDivId);
+		container.className = "subpoints";		
+	}else if(selectedDivId && selectedCls == "Topic"){
+		var holder = getel("holder-"+selectedDivId);
+		container.className = "subpoints";		
+		body = mk("div");
+		body.className = "subpoints_section";
+		holder.appendChild(body);	 
+	}else{
+		body = document.getElementById("body-"+idnum);
+	}
+	
+	body.appendChild(container);	
+	
+	if(!isVisible(dragtable)){
+		dragtable.scrollIntoView(false);
+	}
+	
+	input.focus();
+}
+
+function isVisible(el){
+	if(el.offsetTop > el.parentNode.offsetHeight){
+		return true;
+	}
+	return false;
+}
+
+function findSubTopics(idnum){
+	var holder = getel(findHolderId(idnum));
+	for(var i = 0; i < holder.childNodes.length; i++){
+		var child = holder.childNodes[i];
+		if(child.className == "subpoints_section"){
+			return child;
+		}
+	}
+	return null;
+}
+
+function folderFinished(container,input,newDivId){
+	if(input.value != ""){
+		var nametxt = normalizeText(input.value);
+		if(selectedId && selectedCls == "Topic"){
+			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt)+"&parentid="+selectedId,function(id){
+				ajaxReplace('/topics/'+selectedId+'/'+expandcommand,findHolderId(selectedDivId))
+			});
+		}else{
+			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt),function(id){
+				ajaxReplace('/topics/'+id+'/'+expandcommand,"holder-"+newDivId);
+			});
+		}		
+	}else{
+		container.parentNode.removeChild(container);
+	}
 }
 
 function clickSave(){

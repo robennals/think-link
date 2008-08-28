@@ -69,17 +69,28 @@ class TopicsController < ApplicationController
 	end
 
 	def recent
-		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25)
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
+		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25), :locals => {:options => options}
 	end
 	
 	def toplevel
+		if params[:savemode]
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
 		toptopics = Topic.find_by_sql("
 				SELECT * FROM topics WHERE
 				id NOT IN (
 					SELECT child_id FROM topic_links 
 				)
+				ORDER BY txt ASC
 			");
-		render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {}}
+		render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options}
 	end
 	
 	def new

@@ -150,6 +150,9 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 	}
 	
 	if(dropclass == "Topic" && dragClass == "Topic"){
+		if(dropid == dragID){ // don't drop onto self
+			return;
+		}
 		var fieldString = "?parentid="+dropid+"&childid="+dragId;
 		doAJAX("tl_newtopiclink_ajax","new_topic_link.php"+fieldString,function(result){
 			ajaxReplace('/topics/'+dropid+"/expand",holderid);

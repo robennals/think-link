@@ -20,7 +20,8 @@ var arg_title = "<%=params[:title]%>";
 <span class="savewhat">claims that </span>
 <!-- <img src="/images/lightbulb.png" class="pointicon"/> -->
 	<input type="text" id="pointname" class="pointinput_empty"
-		onfocus="enableInput('pointname')" 
+		onfocus="enableInput('pointname')"
+		onkeypress="pointKeyPress('pointname')" 
 		value="Enter a statement that this snippet is asserting is true"/>
 </form>
 

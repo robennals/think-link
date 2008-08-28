@@ -16,7 +16,12 @@ class PointsController < ApplicationController
 	def searchajax
 		@topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
 		@points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
-		render :partial => "topicsandpoints", :object => {:points => @points, :topics => @topics}, :locals => {:options => {:notop => true}}
+		if params[:savemode]
+			options = {:pointfolders => true, :notop => true}
+		else
+			options = {:notop => true}
+		end
+		render :partial => "topicsandpoints", :object => {:points => @points, :topics => @topics}, :locals => {:options => options}
 	end
 
 	def index

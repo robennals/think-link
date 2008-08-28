@@ -90,14 +90,23 @@ class User < ActiveRecord::Base
 		
 	def recenttopics
 		return Topic.find_by_sql("
-			SELECT * FROM topics WHERE
-			id IN (
-				SELECT point_topics.topic_id FROM point_topics,snippets 
-				WHERE snippets.user_id = #{self.id}
-				AND point_topics.point_id = snippets.point_id 
-			)			
-			ORDER BY id DESC
-		");
+		SELECT topics.txt, topics.id, topics.user_id, topics.created_at, MAX(snippets.id) AS snipid
+			FROM topics, point_topics, snippets
+			WHERE snippets.point_id = point_topics.point_id
+			AND point_topics.topic_id = topics.id
+			AND snippets.user_id =1
+			GROUP BY topics.id
+			ORDER BY snipid DESC");
+			
+#		return Topic.find_by_sql("
+#			SELECT * FROM topics WHERE
+#			id IN (
+#				SELECT point_topics.topic_id FROM point_topics,snippets 
+#				WHERE snippets.user_id = #{self.id}
+#				AND point_topics.point_id = snippets.point_id 
+#			)			
+#			ORDER BY id DESC
+#		");
 	end	
 		
 #	def recenttopics
