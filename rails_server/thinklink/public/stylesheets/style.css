@@ -17,6 +17,7 @@ div#container {
 		max-width: 800px; 
 		display: table;
 		margin: auto;
+		width: 100%;
 }
 div#header {
 /*   text-align: center; */
@@ -26,7 +27,7 @@ div#content {
    float: left;
 /*   max-width: 550px; */
 /*      margin-left: 100px; */
-
+		width: 100%;
 }
 div#content h3 {
    margin-top: 15px;
@@ -87,7 +88,8 @@ a img {
 
 .maintable{
 	padding-top: 5px;
-	width: 800px;
+	max-width: 800px;
+	width: 100%;
 }
 .maintable .firstcolumn {
 /*	min-width: 400px; */
@@ -100,7 +102,7 @@ a img {
 }
 
 .topics {
-	min-width: 400px;
+	min-width: 200px;
 }
 
 .maintable tr td {
@@ -387,6 +389,7 @@ h1 {
 	border-collapse: collapse;
 	padding: 0px;
 	margin: 0px;
+	width: 100%;
 }
 
 .browsetable td {
@@ -577,4 +580,12 @@ h1 {
 .pathselect{
 	width: 250px;
 	font-weight: bold;
+}
+
+.actiontable {
+	width: 100%;
+}
+
+.actiontable td {
+	width: 50%;
 }

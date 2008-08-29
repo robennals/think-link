@@ -1,7 +1,7 @@
 
 <% 
 
-if (idnum.nil?)
+if !(defined? idnum) || idnum.nil?
 	idnum = getUniq 
 end
 

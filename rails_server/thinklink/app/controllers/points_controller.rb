@@ -59,6 +59,47 @@ class PointsController < ApplicationController
  
     emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
   end
+ 	def showajax
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end	
+		@point = Point.find(params[:id])
+		render :partial => "point", :locals => {:expandPoints => {@point.id => true}, :noholder => true, :expand => true, :options => options}, :object => @point
+	end
+
+	#find any topics this point is part of, or points that it supports
+	def pathajax
+		@point = Point.find(params[:id])
+		parents = [@point]
+		curpoint = @point
+		done = {}
+		count = 0
+		while curpoint.topics.empty? && count < 10 && !done[curpoint.id]
+			count = count+1
+			done[curpoint.id] = true
+			supports = curpoint.supports_points
+			opposes = curpoint.opposes_points
+			if !supports.empty? 
+				parents.push[supports[0]]
+				curpoint = supports[0]
+			elsif !opposes.empty?
+				parents.push[opposes[0]]
+				curpoint = opposes[0];
+			end
+		end
+		
+		if(! curpoint.topics.empty?)
+			curtopic = curpoint.topics[0];
+			while ! curtopic.parents.empty?
+				parents.push curtopic.parents[0]
+				curtopic = curtopic.parents[0]
+			end
+		end
+		render :partial => "pathlist", :object => parents		
+	end
+
   
   def expand
     @point = Point.find(params[:id])

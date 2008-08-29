@@ -35,7 +35,7 @@
 						<!-- <div class="relationtitle">subtopics</div> -->
 						<div class="subpoints">
 						<% children.each do |subtopic| %>
-							<%= render_partial 'topics/topic', subtopic, :options => options %>
+							<%= render_partial 'topics/topic', subtopic, :expand=>false, :options => options %>
 						<% end %>
 						</div>
 					<% end %>

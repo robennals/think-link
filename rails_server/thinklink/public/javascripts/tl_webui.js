@@ -269,7 +269,8 @@ function gotoParent(node){
 	if(node.value == "0"){
 		topMode(getNodeIdNum(browser));
 	}else{
-		actionOpen(browser,node.value);
+		var cls = node.options[node.selectedIndex].getAttribute("tl_cls");
+		actionOpen(browser,node.value,cls);
 	}
 }
 
@@ -280,19 +281,21 @@ function actionOpen(browser,id,cls){
 	if(!browser){
 		browser = findSelectedBrowser();
 	}
-	if (!cls){
+
+	if(!cls){
 		cls = selectedCls;
 	}
 	var idnum = getNodeIdNum(browser);
 	
 	topMode(idnum);
 	clearSelect(idnum);
-	getel("title-"+idnum).textContent = "All Folders";
-	getel("all-"+idnum).className = "browsetab browsetab_selected";
-	
+
 	if(cls == "Topic"){
 		ajaxReplace("/topics/"+id+"/showajax?"+params,"body-"+idnum);
 		ajaxReplace("/topics/"+id+"/pathajax?"+params,"title-"+idnum);
+	}else if(cls == "Point"){
+		ajaxReplace("/points/"+id+"/showajax?"+params,"body-"+idnum);
+		ajaxReplace("/points/"+id+"/pathajax?"+params,"title-"+idnum);
 	}	
 }
 
@@ -450,6 +453,10 @@ function findSelectionInfo(node){
 }
 
 function newFolder(idnum){
+	if(!idnum){
+		idnum = getNodeIdNum(findSelectedBrowser());
+	}
+	
 	function mk(tag){return document.createElement(tag);}
 	
 	var uniq = Math.ceil(Math.random()*10000000);
@@ -543,8 +550,9 @@ function findSubTopics(idnum){
 	return null;
 }
 
+
 function folderFinished(container,input,newDivId,parentid,parentdivid){
-	if(input.value != "" || input.done){
+	if(input.value != "" && !input.done){
 		var nametxt = normalizeText(input.value);
 		if(parentid){
 			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt)+"&parentid="+parentid,function(id){
@@ -674,3 +682,6 @@ function actionDelete(ev){
 	)
 }
 
+function actionOrganize(){
+	alert("Organize points and folders using drag and drop.\n Drop a point onto another point to say if it supports or opposes the other point.");
+}
