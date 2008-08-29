@@ -395,12 +395,13 @@ h1 {
 }
 
 
-.dragitem {
+.dragitem,.previewitem {
 	cursor: pointer;
 	font-size: 13px;
 }
 
-.dragitem:hover {
+
+.dragitem:hover,.previewitem:hover {
 	background-color: #ebf7fd;
 /*	background-color: #e2f5ff; */
 	border-color: #d8f0fa;

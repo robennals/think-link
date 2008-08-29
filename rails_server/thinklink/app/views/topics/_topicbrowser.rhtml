@@ -1,5 +1,9 @@
 
-<% idnum = getUniq 
+<% 
+
+if (idnum.nil?)
+	idnum = getUniq 
+end
 
 if ! (defined? options)
 	options = {}

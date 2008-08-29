@@ -15,7 +15,11 @@
 
 <div class="point_container">
 <% topics.each do |topic| %>
-		<%= render_partial 'topics/topic', topic, :expand => false, :options => options %>
+		<% if !options.nil? && !options[:expanded].nil? && topic.id==options[:expanded].id %>
+			<%= render_partial 'topics/topic', topic, :expand => true, :scroll=>true,:options => options %>
+		<% else %>
+			<%= render_partial 'topics/topic', topic, :expand => false, :options => options %>
+		<% end %>
 <% end %>
 </div>
 

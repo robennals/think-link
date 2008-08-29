@@ -5,10 +5,13 @@
 <td class="firstcolumn">
 
 <div>
+<% 
+	browserid1 = 1#getUniq
+	browserid2 = getUniq
+%>
+<%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid1, :dragbar => true, :big => true %>
 
-<%= render_partial 'topics/topicbrowser',@user, :dragbar => true, :big => true %>
-
-<%= render_partial 'topics/topicbrowser',@user, :dragbar => true, :big => true %>
+<%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid2, :dragbar => true, :big => true %>
 
 	
 </div>

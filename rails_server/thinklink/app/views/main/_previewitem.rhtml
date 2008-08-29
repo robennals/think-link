@@ -1,0 +1,28 @@
+
+<% 
+idnum = getUniq 
+itemid = previewitem.id
+itemtxt = escape_single_quotes(previewitem.txt)
+if previewitem.class == Point
+	topicid = previewitem.topics[0].id
+else
+	topicid = previewitem.id
+end
+ %>
+
+		
+		<table class="dragtable">
+		<tr>
+		<td>
+		</td>
+				<% if defined? previewitem.icon %> 
+				<td><img src="<%=previewitem.icon(@user)%>"/></td>
+				<% end %>
+		<td>
+			<div class="previewitem" id="<%=idnum%>" 
+				onclick="adjustBrowser(1,<%= topicid %>);" >
+			<%=previewitem.txt%>
+			</div>
+		</td>
+		</tr>
+		</table>

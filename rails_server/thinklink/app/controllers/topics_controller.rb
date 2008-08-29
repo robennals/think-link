@@ -79,7 +79,13 @@ class TopicsController < ApplicationController
 					SELECT child_id FROM topic_links 
 				)
 			");
-		render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {}}
+	
+		if (!params[:id].nil?) # which topic to expand by default
+		  topic = Topic.find(params[:id]);
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {:expanded=>topic}}
+		else
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {}}
+		end
 	end
 	
 	def new
