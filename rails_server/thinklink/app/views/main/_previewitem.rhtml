@@ -20,7 +20,13 @@ end
 				<td><img src="<%=previewitem.icon(@user)%>"/></td>
 				<% end %>
 			-->
-			<td><img src="/images/application_go.png"/></td>
+			<% if previewitem.class == Point %>
+				<td><img src="/images/lightbulb_go.png"/></td>
+			<% else %>
+				<td><img src="/images/folder_go.png"/></td>
+			
+			<% end %>
+				
 		<td>
 			<div class="previewitem" id="<%=idnum%>" 
 				onclick="actionOpen(getDefaultBrowserNode(),<%= itemid %>,'<%= previewitem.class %>'); adjustPreview(<%= itemid %>,'<%=previewitem.class%>');" >
