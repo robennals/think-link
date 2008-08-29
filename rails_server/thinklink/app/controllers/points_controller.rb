@@ -62,12 +62,12 @@ class PointsController < ApplicationController
 	
 	def expand
 		@point = Point.find(params[:id])
-		render :partial => "point", :locals => {:expandPoints => {@point.id => true}}, :object => @point
+		render :partial => "point", :locals => {:noholder => true, :expandPoints => {@point.id => true}}, :object => @point
 	end
 	
 	def expandfolder
 		@point = Point.find(params[:id])
-		render :partial => "point", :locals => {:expandPoints => {@point.id => true}, :options => {:pointfolders => true}}, :object => @point
+		render :partial => "point", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => {:pointfolders => true}}, :object => @point
 	end
 	
 	

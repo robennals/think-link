@@ -21,14 +21,21 @@ var arg_title = "<%=params[:title]%>";
 <!-- <img src="/images/lightbulb.png" class="pointicon"/> -->
 	<input type="text" id="pointname" class="pointinput_empty"
 		onfocus="enableInput('pointname')"
-		onkeypress="pointKeyPress('pointname')" 
+		onkeypress="pointKeyPress(event)" 
 		value="Enter a statement that this snippet is asserting is true"/>
 </form>
 
 
-<div class="dialogbuttons">
+	<table width="100%">
+	<tr>
+	<td>
+	<input type="button" value="Open Organizer" onclick="openOrganizer()"/>
+	</td>
+	<td class="dialogbuttons">
 	<input type="button" value="Save" onclick="clickSave()"/>
 	<input type="button" value="Cancel" onclick="clickClose()"/>
-</div>
+	</td>
+	</tr>
+	</table>
 </div>
 

@@ -13,12 +13,14 @@ class TopicsController < ApplicationController
 	
 	def expand
 		@topic = Topic.find(params[:id])
-		render :partial => "topic", :locals => {:expand => true}, :object => @topic
+		logTopicView(@topic)
+		render :partial => "topic", :locals => {:noholder => true, :expand => true}, :object => @topic
 	end
 
 	def expandfolder
 		@topic = Topic.find(params[:id])
-		render :partial => "topic", :locals => {:expand => true, :options => {:pointfolders => true}}, :object => @topic
+		logTopicView(@topic)
+		render :partial => "topic", :locals => {:noholder => true, :expand => true, :options => {:pointfolders => true}}, :object => @topic
 	end
 	
 	def mine
@@ -35,6 +37,7 @@ class TopicsController < ApplicationController
 	
 	def show
 		@topic = Topic.find(params[:id])
+		logTopicView(@topic)
 		@title = "Topic: "+@topic.txt
 		if @topic.ismine(@user)
 			@editlink = true
@@ -74,7 +77,7 @@ class TopicsController < ApplicationController
 		else
 			options = {}
 		end
-		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25), :locals => {:options => options}
+		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,50), :locals => {:options => options}
 	end
 	
 	def toplevel

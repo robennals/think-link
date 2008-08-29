@@ -67,12 +67,17 @@ module ApplicationHelper
 
 	def getUniq
 #		@uniq = @uniq+1
-		return rand(100000)
+		return rand(100000000000)
+	end
+	
+	def logTopicView(topic)
+		Topic.connection.execute("INSERT INTO topicviews (user_id,topic_id) VALUES ('#{@user.id}','#{topic.id}');")
 	end
 
   def escape_single_quotes(str)
     return str.gsub(/[']/, '\\\'')
   end
 
+	
 
 end

@@ -9,10 +9,6 @@
 	
 	%>
 
-<div id='points-<%=rnd%>'>
-</div>
-
-
 <div class="point_container">
 <% topics.each do |topic| %>
 		<%= render_partial 'topics/topic', topic, :expand => false, :options => options %>

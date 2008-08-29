@@ -439,7 +439,7 @@ h1 {
 }
 
 .searchbox {
-	width: 300px;
+	width: 290px;
 	margin: 4px;
 	margin-left: 8px;
 }
@@ -507,4 +507,68 @@ h1 {
 	font-weight: normal;
 /*	background-color: #e2f5ff;
 	-moz-border-radius: 3px; */
+}
+
+.tl_dialog {
+/*	background-color: #CCDDDD; */
+	background-color: #eeeeee;
+	border: 2px solid #242E35;
+	color: #242E35;
+	padding: 1px;
+	overflow: auto;
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+.tl_dialog td {
+	font-size: 9pt;
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+.tl_dialog_title {
+/*	background-color: #4A7B6F; 
+	color: #EEEEE7; */
+	background-color: #5867a2;
+	color: #c2d7ef;
+	text-align: left;
+	font-size: 12pt;
+	font-family: verdana, sans-serif;
+/*	border-bottom: 2px solid #242E35; */
+	padding: 2px;	
+/*	margin-bottom: 5px; */
+	cursor: move;
+}
+
+.tl_dialog_title td {
+	font-size: 12pt;
+	font-family: verdana, sans-serif;
+}
+
+.tl_dialog_body {
+	margin: 4px;
+}
+
+.tl_dialog a:link {
+	color: #7F5E17;
+	text-decoration: none;
+}
+
+.tl_dialog a:visited {
+	color: #7F5E17;
+	text-decoration: none;
+}
+
+.tl_dialog a:hover {
+	color: #7F5E17;
+	text-decoration: underline;
+}
+
+.dragcopymsg {
+	color: blue;
+}
+
+.dragmovemsg {
+	color: red;
 }

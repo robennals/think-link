@@ -5,8 +5,8 @@ itemid = dragitem.id
 itemtxt = escape_single_quotes(dragitem.txt)
  %>
 
-		<% if (defined? treeopen) && treeopen %>
-		<div class="dragholder" id="holder-<%=idnum%>">
+		<% if ((defined? treeopen) && treeopen) || ((defined? treesingle) && treesingle) %>
+		<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=dragitem.class%>">
 		<% end %>
 		
 		<table class="dragtable">
@@ -27,7 +27,7 @@ itemtxt = escape_single_quotes(dragitem.txt)
 			<div class="dragitem" id="<%=idnum%>"
 				onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
 				onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
-				onmousedown="dragStart(event, <%= itemid %>,'<%=dragitem.class%>')"
+				onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
 				onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
 				onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
 
@@ -37,6 +37,6 @@ itemtxt = escape_single_quotes(dragitem.txt)
 		</tr>
 		</table>
 		
-		<% if (defined? treeopen) && treeopen %>
+		<% if ((defined? treeopen) && treeopen) || ((defined? treesingle) && treesingle) %>
 		</div>
 		<% end %>

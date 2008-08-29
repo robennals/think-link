@@ -204,16 +204,13 @@ function getTextOfSelected(){
 	return normalizeText(item.textContent);
 }
 
-function actionEdit(idnum,id){
+function actionEdit(){
 	var dragitem = getel(selectedDivId);
 	renameItem = dragitem;
 	var input = document.createElement("input");
 	input.setAttribute("type","text");
 	input.setAttribute("class","renamebox inputbox");
-	var txt = dragitem.textContent.replace(/\s+/g," ");
-	txt = txt.replace(/^\s*/,"");
-	txt = txt.replace(/\s*$/,"");
-	input.setAttribute("value",dragitem.textContent.replace(/\s+/g," "));
+	input.setAttribute("value",normalizeText(dragitem.textContent));
 	input.style.width = Math.max(150,dragitem.offsetWidth + 10) + "px";
 	dragitem.textContent="";
 	dragitem.parentNode.appendChild(input);
@@ -226,18 +223,23 @@ function actionEdit(idnum,id){
 
 function editFinished(){
 	if(!renameItem) return;
+	var myItem = renameItem;
+	renameItem = null;
 	try{ // HACK
-		renameItem.textContent = renameInput.value;
-		renameItem.className = "dragitem";
-		renameInput.parentNode.removeChild(renameInput);
+		var txt = encodeURIComponent(normalizeText(renameInput.value));
+		doAJAX("tl_rename","rename.php?cls="+selectedCls+"&id="+selectedId+"&txt="+txt,function(){
+			myItem.textContent = renameInput.value;
+			myItem.className = "dragitem";
+			renameInput.parentNode.removeChild(renameInput);
+			renameInput = null;
+		});
 	}catch(e){
 	}
-	renameItem = null;
-	renameInput = null;
 
 }
 
 function pointKeyPress(ev){
+	ev.stopPropagation();
 	var KEYENTER = 13;
 	if(ev.keyCode == KEYENTER){
 		clickSave();
@@ -247,6 +249,7 @@ function pointKeyPress(ev){
 }
 
 function editKeyPress(ev){
+	ev.stopPropagation();
 	var KEYENTER = 13;
 	if(ev.keyCode == KEYENTER){
 		editFinished();
@@ -254,10 +257,86 @@ function editKeyPress(ev){
 }
 
 function searchKeyPress(ev,idnum){
+	ev.stopPropagation();
 	var KEYENTER = 13;
 	if(ev.keyCode == KEYENTER){
 		searchDo(idnum);
 	}
+}
+
+function findParentHolder(node){
+	if(!node) return null;
+	var id = node.getAttribute("tl_id");
+	while(node != null && node.getAttribute){
+		var node_tl_id = node.getAttribute("tl_id");
+		if(node_tl_id && node_tl_id != id){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;
+}
+
+function findParentFolderHolder(node){
+	if(!node) return null;
+	var id = node.getAttribute("tl_id");
+	while(node != null && node.getAttribute){
+		var node_tl_cls = node.getAttribute("tl_cls");
+		var node_tl_id = node.getAttribute("tl_id");
+		if(node_tl_cls && node_tl_id && node_tl_cls == "Topic" && node_tl_id != id){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;	
+}
+
+function findHolder(node){
+	while(node != null && node.getAttribute){
+		var node_tl_id = node.getAttribute("tl_id");
+		if(node_tl_id){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;	
+}
+
+function findSelectedHolder(){
+	if(selectedDivId && selectedId){
+		return findHolder(document.getElementById(selectedDivId));
+	}else{
+		return null;
+	}
+}
+
+function findSelectionInfo(node){
+	var holder;
+	if(node){
+		holder = findHolder(node);
+	}else{
+		holder = findSelectedHolder();
+	}
+	var parent = findParentHolder(holder);
+	var folder = findParentFolderHolder(holder);
+	if(parent){
+		var parentid = parent.getAttribute("tl_id");
+		var parentcls = parent.getAttribute("tl_cls");
+	}
+	if(folder){
+		var folderid = folder.getAttribute("tl_id");
+	}
+	var res = {
+		holder: holder,
+		'itemid': holder.getAttribute("tl_id"),
+		cls: holder.getAttribute("tl_cls"),
+		'parent': parent,
+		parentid: parentid,
+		parentcls: parentcls,
+		folder: folder,
+		folderid: folderid
+	};
+	return res;
 }
 
 function newFolder(idnum){
@@ -265,12 +344,9 @@ function newFolder(idnum){
 	
 	var uniq = Math.ceil(Math.random()*10000000);
 	
-	var container = mk("div");
-	container.className = "point_container";
 	var holder = mk("div");
 	holder.className = "dragholder";
 	holder.setAttribute("id","holder-"+uniq);
-	container.appendChild(holder);
 	var dragtable = mk("table");
 	dragtable.className = "dragtable";
 	holder.appendChild(dragtable);
@@ -294,33 +370,43 @@ function newFolder(idnum){
 	var input = mk("input");
 	input.setAttribute("type","text");
 	drageditdiv.appendChild(input);
+
+	var selectedholder = findSelectedHolder();
+	var parent = findParentFolderHolder(selectedholder);
+	var parentid;
+	var parentdivid = null;
+	if(parent){
+		parentid = parent.getAttribute("tl_id");
+		parentdivid = parent.getAttribute("id");
+	}else{
+		parentid = null;
+	}
 	
 	input.addEventListener("blur",function(){
-		folderFinished(container,input,uniq);
+		folderFinished(holder,input,uniq,parentid,parentdivid);
 	},false);
 	
 	input.addEventListener("keypress",function(ev){
+		ev.stopPropagation();
 		var KEYENTER = 13;
 		if(ev.keyCode == KEYENTER){
-			folderFinished(container,input,uniq);
+			folderFinished(holder,input,uniq,parentid,parentdivid);
 		}
 	},false);
 
-	var body;		
-	if(selectedDivId && selectedCls == "Topic" && findSubTopics(selectedDivId)){
-		body = findSubTopics(selectedDivId);
-		container.className = "subpoints";		
-	}else if(selectedDivId && selectedCls == "Topic"){
-		var holder = getel("holder-"+selectedDivId);
-		container.className = "subpoints";		
-		body = mk("div");
-		body.className = "subpoints_section";
-		holder.appendChild(body);	 
+	if(selectedholder){
+		selectedholder.parentNode.insertBefore(holder,selectedholder);
 	}else{
-		body = document.getElementById("body-"+idnum);
+		var body = document.getElementById("body-"+idnum);
+		var container = mk("div");
+		container.className = "point_container";	
+		container.appendChild(holder);
+		if(body.childNodes.length > 0){
+			body.insertBefore(container,body.childNodes[0]);
+		}else{
+			body.appendChild(container);
+		}
 	}
-	
-	body.appendChild(container);	
 	
 	if(!isVisible(dragtable)){
 		dragtable.scrollIntoView(false);
@@ -347,18 +433,19 @@ function findSubTopics(idnum){
 	return null;
 }
 
-function folderFinished(container,input,newDivId){
-	if(input.value != ""){
+function folderFinished(container,input,newDivId,parentid,parentdivid){
+	if(input.value != "" || input.done){
 		var nametxt = normalizeText(input.value);
-		if(selectedId && selectedCls == "Topic"){
-			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt)+"&parentid="+selectedId,function(id){
-				ajaxReplace('/topics/'+selectedId+'/'+expandcommand,findHolderId(selectedDivId))
+		if(parentid){
+			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt)+"&parentid="+parentid,function(id){
+				ajaxReplace('/topics/'+parentid+'/'+expandcommand,parentdivid)
 			});
 		}else{
 			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt),function(id){
 				ajaxReplace('/topics/'+id+'/'+expandcommand,"holder-"+newDivId);
 			});
-		}		
+		}				
+		input.done = true;
 	}else{
 		container.parentNode.removeChild(container);
 	}
@@ -407,3 +494,73 @@ function clickClose(){
   evt.initEvent("thinklink-close", true, false);
   document.body.dispatchEvent(evt);
 }
+
+function openOrganizer(){
+	window.open("/");
+}
+
+function keyDownHandler(ev){
+	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
+		if(ev.keyCode == 17){
+			dragCopyMode = true;
+			dragCopyMsg.className = "dragcopymsg";
+			dragMoveMsg.className = "hidden";
+		}	
+		if(ev.keyCode == 27){
+			dragStop();
+		}
+	}
+}
+
+function keyUpHandler(ev){
+	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
+		if(ev.keyCode == 17){
+			dragCopyMode = false;
+			dragCopyMsg.className = "hidden";
+			dragMoveMsg.className = "dragmovemsg";
+		}
+	}
+}
+
+function keyPressHandler(ev){
+	var keycode = ev.keyCode;
+	if(!selectedId){
+		return;
+	}
+	
+	if(keycode == 8 || keycode == 46){ // delete
+		actionDelete(ev);
+	}
+	if(keycode == 113 || keycode == 13){ // F2 or enter
+		actionEdit();
+	}
+}
+		
+function actionDelete(ev){
+	var selinfo = findSelectionInfo();
+
+	var what = "folder";
+	if(selectedCls == "Point"){
+		what = "point";
+	}
+	var parentwhat = "folder";
+	if(selinfo.parentcls == "Point"){
+		parentwhat = "point";
+	}
+
+	choiceBox(ev,"What do you want to do?",
+		"You can delete this "+what+" completely, or unlink it from this parent "+parentwhat+", keeping it in other parent "+parentwhat+"s",
+		["Delete Completely","Remove from Parent"],
+		null,function(choice){
+			if(choice == "Delete Completely"){
+				action = "delete.php?cls="+selinfo.cls+"&id="+selinfo.itemid;
+			}else{
+				action = "unlink.php?cls="+selinfo.cls+"&id="+selinfo.itemid+"&parcls="+selinfo.parentcls+"&parentid="+selinfo.parentid;					
+			}
+			doAJAX("tl_delete",action,function(result){
+				selinfo.holder.parentNode.removeChild(selinfo.holder);
+			})
+		}
+	)
+}
+

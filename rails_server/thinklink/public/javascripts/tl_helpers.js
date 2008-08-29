@@ -329,6 +329,9 @@ function getBrowserInfo() {
 	
 }
 
+var tl_dragElement;
+var tl_browserInfo;
+
 function tl_dragStart(event, id) {
 
   var el;
@@ -336,6 +339,9 @@ function tl_dragStart(event, id) {
 
   // If an element id was given, find it. Otherwise use the element being
   // clicked on.
+
+	tl_dragElement = {};
+	tl_browserInfo = new getBrowserInfo();
 
   if (id)
     tl_dragElement.elNode = document.getElementById(id);
