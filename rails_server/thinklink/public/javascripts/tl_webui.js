@@ -1,5 +1,6 @@
 
 var oldselection = null;
+var defaultBrowser = null;
 
 function getel(id){
 	return document.getElementById(id);
@@ -20,6 +21,13 @@ function initParams(){
 initParams();
 window.addEventListener("load",function(){initParams()},true);
 
+function setDefaultBrowser(idnum){
+	defaultBrowser = idnum;
+}
+
+function getDefaultBrowserNode() {
+	return document.getElementById('container-'+defaultBrowser);
+}
 
 var selectedId;
 var selectedDivId;
@@ -76,8 +84,9 @@ function selectItem(div,itemid,divid,cls){
 			getel("actions_point").className = "hidden";
 			getel("actions_folder").className = "actions";	
 			getel("preview_container").className = "hidden";
-			getel("topics_title").textContent = "More General Folders";
-			ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+			getel("topics_title").textContent = "Topic Summary";
+			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 		}else if(cls=="Point"){
 			getel("actions_point").className = "actions";
 			getel("actions_folder").className = "hidden";
@@ -92,10 +101,32 @@ function selectItem(div,itemid,divid,cls){
 	}
 }
 
-function adjustBrowser(browserid,topicid) {
-	topMode_expand(browserid,topicid);
+function adjustPreview(itemid,cls) {
+	var preview_panel = getel("preview_panel");
+	var preview_title = getel("preview_title");
+	var pointname = getel("pointname");
+	var foldername = getel("foldername");
+	
+	if(cls=="Topic"){
+			getel("actions_point").className = "hidden";
+			getel("actions_folder").className = "actions";	
+			getel("preview_container").className = "hidden";
+			getel("topics_title").textContent = "Topic Summary";
+			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
+	}else if(cls=="Point"){
+			getel("actions_point").className = "actions";
+			getel("actions_folder").className = "hidden";
+			getel("preview_container").className = "snippets";
+			preview_title.textContent = "Snippets for Selected Point";
+			getel("topics_title").textContent = "References to Selected Point";
+			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
+			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
+			ajaxReplace("/points/"+itemid+"/places","topics_panel"); // containing topics and point relationships
+	}
 
 }
+
 var inputstarted = false;
 
 function enableInput(id){
@@ -250,11 +281,15 @@ function actionOpen(browser,id,cls){
 	if(!browser){
 		browser = findSelectedBrowser();
 	}
+
 	if(!cls){
 		cls = selectedCls;
 	}
 	var idnum = getNodeIdNum(browser);
+	
+	topMode(idnum);
 	clearSelect(idnum);
+
 	if(cls == "Topic"){
 		ajaxReplace("/topics/"+id+"/showajax?"+params,"body-"+idnum);
 		ajaxReplace("/topics/"+id+"/pathajax?"+params,"title-"+idnum);

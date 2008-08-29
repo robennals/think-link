@@ -1,0 +1,23 @@
+	<% parents = topicsummary.parents 
+		snips = topicsummary.snippets
+		snipPreviewEnd = 5
+	%>
+	
+	<% if !parents.empty? %>
+		<div class="relationtitle">more general folders</div>
+			<%= render_partial 'topics/topics', parents, :options=>{:nodrag=>true, :link=>true} %>
+		</div>
+	<% end %>
+	<% if !snips.empty? %>
+		<br/>
+		<div class="relationtitle">snippets
+			<% if snips.size > snipPreviewEnd %>
+			 preview
+			<% end %>
+		</div>
+			<% if !options[:snippets].nil? && options[:snippets] %>
+				<%= render_partial 'snippets/snippets',snips.slice(0,snipPreviewEnd), :options=>{} %>
+			<% end %>
+		</div>
+	<% end %>
+	
