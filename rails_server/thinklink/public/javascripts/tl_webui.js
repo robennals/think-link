@@ -204,6 +204,36 @@ function getTextOfSelected(){
 	return normalizeText(item.textContent);
 }
 
+function getNodeIdNum(node){
+	var id = node.getAttribute("id");
+	var m = id.match(/.*-(\d*)/);
+	return m[1];
+}
+
+function gotoParent(node){
+	var browser = findBrowser(node);
+	if(node.value == "0"){
+		topMode(getNodeIdNum(browser));
+	}else{
+		actionOpen(browser,node.value);
+	}
+}
+
+function actionOpen(browser,id){
+	if(!id){
+		id = selectedId;
+	}
+	if(!browser){
+		browser = findSelectedBrowser();
+	}
+	var idnum = getNodeIdNum(browser);
+	clearSelect(idnum);
+	if(selectedCls == "Topic"){
+		ajaxReplace("/topics/"+id+"/showajax?"+params,"body-"+idnum);
+		ajaxReplace("/topics/"+id+"/pathajax?"+params,"title-"+idnum);
+	}	
+}
+
 function actionEdit(){
 	var dragitem = getel(selectedDivId);
 	renameItem = dragitem;
@@ -308,6 +338,24 @@ function findSelectedHolder(){
 	}else{
 		return null;
 	}
+}
+
+function findBrowser(node){
+	while(node != null && node.getAttribute){
+		if(node.className == "browsetable"){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;
+}
+
+function findSelectedBrowser(){
+	if(selectedDivId && selectedId){
+		var node = document.getElementById(selectedDivId);
+		return findBrowser(node);
+	}
+	return null;
 }
 
 function findSelectionInfo(node){
