@@ -83,13 +83,19 @@ function selectItem(div,itemid,divid,cls){
 			getel("actions_folder").className = "hidden";
 			getel("preview_container").className = "snippets";
 			preview_title.textContent = "Snippets for Selected Point";
-			getel("topics_title").textContent = "Topics for Selected Point";
+			getel("topics_title").textContent = "References to Selected Point";
 			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
-			ajaxReplace("/points/"+itemid+"/topics","topics_panel");
+			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
+			ajaxReplace("/points/"+itemid+"/places","topics_panel"); // containing topics and point relationships
 		}
+		
 	}
 }
 
+function adjustBrowser(browserid,topicid) {
+	topMode_expand(browserid,topicid);
+
+}
 var inputstarted = false;
 
 function enableInput(id){
@@ -152,6 +158,23 @@ function topMode(idnum){
 	getel("title-"+idnum).textContent = "All Folders";
 	getel("all-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/toplevel?"+params,"body-"+idnum);
+}
+
+
+function topMode_expand(idnum,topicid){
+	clearSelect(idnum);
+	getel("title-"+idnum).textContent = "All Folders";
+	getel("all-"+idnum).className = "browsetab browsetab_selected";
+	
+	// do this instead of traditional ajax replace
+	ajaxPost("/topics/toplevel/"+topicid,function(response){
+		var node = document.getElementById("body-"+idnum);
+		node.innerHTML = response;
+		var toppos = findPos(document.getElementById('primary_scrollElem'))[1];
+		if (toppos < 80) {toppos=0;}
+		else {toppos-=80; }
+		document.getElementById("container-"+idnum).scrollTop = toppos;
+	});
 }
 
 function scratchMode(idnum){

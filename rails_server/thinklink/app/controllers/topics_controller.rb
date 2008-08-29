@@ -114,7 +114,13 @@ class TopicsController < ApplicationController
 				)
 				ORDER BY txt ASC
 			");
-		render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options}
+	
+		if (!params[:id].nil?) # which topic to expand by default
+		  topic = Topic.find(params[:id]);
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options.merge({:expanded=>topic})}
+		else
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options}
+		end
 	end
 	
 	def new
