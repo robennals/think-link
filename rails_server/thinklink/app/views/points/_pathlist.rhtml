@@ -1,0 +1,12 @@
+
+<select class="pathselect" onchange="gotoParent(this)">
+	<option value="0">All Folders</option>
+<% pathlist.reverse.each do |topic| %>
+		<option value="<%= topic.id%>" tl_cls="<%=topic.class%>"
+		<% if topic.id == pathlist[0].id %>
+		  selected="true"
+		<% end %>
+		><%= topic.txt %></option>
+<% end %>
+</select>
+
