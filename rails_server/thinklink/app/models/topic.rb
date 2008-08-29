@@ -21,6 +21,15 @@ class Topic < ActiveRecord::Base
     }
     return p
   end
+  
+  def snippets
+    snips = Array.new
+    points = self.points;
+    points.each { |p|
+      snips.concat(p.snippets)
+    }
+    return snips
+  end
 
 	def identical 
 		return Topic.find_by_sql("SELECT * FROM topics 

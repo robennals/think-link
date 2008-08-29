@@ -76,8 +76,9 @@ function selectItem(div,itemid,divid,cls){
 			getel("actions_point").className = "hidden";
 			getel("actions_folder").className = "actions";	
 			getel("preview_container").className = "hidden";
-			getel("topics_title").textContent = "More General Folders";
-			ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+			getel("topics_title").textContent = "Topic Summary";
+			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
+			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 		}else if(cls=="Point"){
 			getel("actions_point").className = "actions";
 			getel("actions_folder").className = "hidden";

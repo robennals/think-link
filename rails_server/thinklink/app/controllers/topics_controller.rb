@@ -70,6 +70,11 @@ class TopicsController < ApplicationController
 		render :partial => "topics", :object => @topics
 #		render :action => 'index'
 	end
+	
+	def summary
+	  @topic = Topic.find(params[:id]);
+	  render :partial => 'topics/topicsummary', :object=> @topic, :locals=> {:options=>{:link=>true, :snippets=>true}}
+	end
 
 	def recent
 		if params[:savemode] 
