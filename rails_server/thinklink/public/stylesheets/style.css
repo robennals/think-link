@@ -573,3 +573,8 @@ h1 {
 .dragmovemsg {
 	color: red;
 }
+
+.pathselect{
+	width: 250px;
+	font-weight: bold;
+}

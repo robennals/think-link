@@ -48,6 +48,27 @@ class TopicsController < ApplicationController
 		emit(@topic,{:only => [:txt], :include => :points})
 	end
 	
+	def showajax
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end	
+		@topic = Topic.find(params[:id])
+		render :partial => "topic", :locals => {:noholder => true, :expand => true, :options => options}, :object => @topic
+	end
+	
+	def pathajax
+		@topic = Topic.find(params[:id])
+		parents = [@topic];
+		curtopic = @topic;
+		while ! curtopic.parents.empty?
+			parents.push curtopic.parents[0]
+			curtopic = curtopic.parents[0]
+		end
+		render :partial => "pathlist", :object => parents		
+	end
+	
 	def points
 	  @topic = Topic.find(params[:id])
 	  @minititle = "Points for #{@topic.txt}"

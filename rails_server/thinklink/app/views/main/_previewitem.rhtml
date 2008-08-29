@@ -23,7 +23,7 @@ end
 			<td><img src="/images/application_go.png"/></td>
 		<td>
 			<div class="previewitem" id="<%=idnum%>" 
-				onclick="adjustBrowser(1,<%= topicid %>);" >
+				onclick="actionOpen(getDefaultBrowserNode(),<%= itemid %>,'<%= previewitem.class %>'); adjustPreview(<%= itemid %>,'<%=previewitem.class%>');" >
 			<%=previewitem.txt%>
 			</div>
 		</td>

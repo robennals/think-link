@@ -4,11 +4,17 @@
 <tr>
 <td class="firstcolumn">
 
-<div>
 <% 
 	browserid1 = 1#getUniq
 	browserid2 = getUniq
 %>
+
+<div>
+
+<script language="javascript">
+	setDefaultBrowser(<%= browserid1 %>);
+</script>
+
 <%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid1, :dragbar => true, :big => true %>
 
 <%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid2, :dragbar => true, :big => true %>
