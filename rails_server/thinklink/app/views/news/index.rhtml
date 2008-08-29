@@ -20,17 +20,37 @@
 
 <div class="actions hidden" id="actions_point">
 	<h2>Actions for Point</h2>
-	<div class="action"><img src="/images/lightbulb.png"> Create more general point</div>
-	<div class="action"><img src="/images/connect.png"> Organize points </div>
+	<table class="actiontable" cellpadding="0" cellspacing="0">
+	<tr>
+	<td>
+	<div class="action"><img src="/images/lightbulb_add.png"> New point</div>
+	<div class="action" onclick="actionOpen()"><img src="/images/lightbulb_go.png"> Open Point</div>
+	</td>
+	<td>
+	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete point</div>
+	<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize points</div>
 	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit point text</div>
+	</td>
+	</tr>
+	</table>
 </div>
 
 <div class="actions" id="actions_folder">
 	<h2>Actions for Folder</h2>
+	
+	<table class="actiontable" cellpadding="0" cellspacing="0">
+	<tr>
+	<td>
+	<div class="action" onclick="newFolder()"><img src="/images/folder_add.png"> New folder</div>
+	<div class="action" onclick="actionOpen()"><img src="/images/folder_go.png"> Open Folder </div>
+	</td>
+	<td>
 	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete folder</div>
-	<div class="action" onclick="actionOpen()"><img src="/images/application_go.png"> Open Folder </div>
-	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Open in new window</div>
+	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Open in new window</div> 
 	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit folder name</div>
+	</td>
+	</tr>
+	</table>
 </div>
 
 

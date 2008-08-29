@@ -7,19 +7,33 @@ class Topic < ActiveRecord::Base
   # has_many :children, :class_name=> 'Topic', :through=> :topic_links, :foreign_key => 'child_id'
 
   def parents
-    p = Array.new
-    TopicLink.find(:all, :conditions=>"child_id=#{self.id}").each { |l|
-      p.push(l.parent)
-    }
-    return p
+  	return Topic.find_by_sql("
+  		SELECT topics.id, topics.txt, topics.user_id 
+  			FROM topics,topic_links 
+  			WHERE topics.id = topic_links.parent_id
+  			AND topic_links.child_id = #{self.id}
+  			ORDER BY txt ASC");
+    
+#    
+#    TopicLink.find(:all, :conditions=>"child_id=#{self.id}", :order => "txt ASC").each { |l|
+#      p.push(l.parent)
+#    }
+#    return p
   end
   
   def children
-    p = Array.new
-    TopicLink.find(:all, :conditions=>"parent_id=#{self.id}").each { |l|
-      p.push(l.child)
-    }
-    return p
+   	return Topic.find_by_sql("
+  		SELECT topics.id, topics.txt, topics.user_id 
+  			FROM topics,topic_links 
+  			WHERE topics.id = topic_links.child_id
+  			AND topic_links.parent_id = #{self.id}
+  			ORDER BY txt ASC");
+#
+#    p = Array.new
+#    TopicLink.find(:all, :conditions=>"parent_id=#{self.id}", :order => "txt ASC").each { |l|
+#      p.push(l.child)
+#    }
+#    return p
   end
 
 	def identical 

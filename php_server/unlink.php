@@ -24,13 +24,13 @@ if($cls == "Topic" && $parcls == "Topic"){
 
 if($cls == "Point" && $parcls == "Topic"){
 	$oldrow = sql_to_row("SELECT * FROM point_topics WHERE topic_id = '$parentid' && point_id = '$id';");
-	sql_query("DELETE FROM topic_links WHERE topic_id = '$parentid' && point_id = '$id';");
+	sql_query("DELETE FROM point_topics WHERE topic_id = '$parentid' && point_id = '$id';");
 	$oldtable = "point_topics";
 }
 
 if($cls == "Point" && $parcls == "Point"){
 	$oldrow = sql_to_row("SELECT * FROM point_links WHERE point_a_id = '$parentid' && point_b_id = '$id';");
-	sql_query("DELETE FROM topic_links WHERE topic_id = '$parentid' && point_id = '$id';");
+	sql_query("DELETE FROM point_links WHERE topic_id = '$parentid' && point_id = '$id';");
 	$oldtable = "point_links";
 }
 
