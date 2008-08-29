@@ -203,8 +203,8 @@ function tl_snippet_dialog(margin) {
 				title = "Recent topics you added points to";
 			}
 			return {url: "search_topics.php?text="+encodeURIComponent(text),title: title};
-		}
-
+		};
+		
 		topicSuggest.setResultCallback(function(item){ 
 			var row = document.createElement("div");  row.id = item.id;
 			row.appendChild(document.createTextNode(item.txt));

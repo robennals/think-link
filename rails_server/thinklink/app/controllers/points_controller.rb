@@ -99,6 +99,11 @@ class PointsController < ApplicationController
     render :partial => "topic/topics", :object => @point.topics
   end
   
+  def places
+	  @point = Point.find(params[:id])
+	  render :partial => "pointplaces", :object => @point
+	  
+	end
   
   def new
     @point = Point.new

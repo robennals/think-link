@@ -7,13 +7,15 @@
 	<meta http-equiv="Content-Language" content="en-us" />
 	<% if @title %>
 	<title><%= @title %> - Think Link</title>
-	<% else %>
+	<% elif @minititle %>
 	<title><%= @minititle %> - Think Link</title>
+	<% else %>
+	<title>Think Link</title>
 	<% end %>
 	<%= stylesheet_link_tag "style" %>
 	<%= javascript_include_tag :all, :cache => true %>
 </head>
-<body id="body">
+<body id="body" onkeypress="keyPressHandler(event)" onkeydown="keyDownHandler(event)" onkeyup="keyUpHandler(event)">
 	<div id="topbar">
 		<span id="logo">
 		<a href="/">Think Link</a>

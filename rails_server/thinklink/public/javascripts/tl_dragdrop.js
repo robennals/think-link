@@ -25,19 +25,26 @@ var startX;
 var startY;
 var dragStarted;
 var dragId;
+var dragCopyMode = false;
 
 var dragText;
 var dragId;
+var dragDivId;
 var dragClass;
+var dragCopyMsg;
+var dragMoveMsg;
 
-function dragStart(ev,id,cls){
+
+function dragStart(ev,id,divid,cls){
 	dragText = ev.target.textContent;
 	dragId = id;
+	dragDivId = divid;
 	dragClass = cls;
 	
 	ev.preventDefault();
 
 	draggedPoint = null;	
+	dragCopyMode = false;
 		
 	startX = ev.clientX;
 	startY = ev.clientY;
@@ -64,6 +71,14 @@ function dragMove(ev){
 		if((ev.clientX < startX - 16) || (ev.clientX > startX + 16)
 		 || (ev.clientY < startY - 16) || (ev.clientY > startY + 16)){
 			draggedPoint = makePointDiv(dragText);
+			dragCopyMsg = document.createElement("div");
+			dragCopyMsg.className = "hidden";
+			dragCopyMsg.appendChild(document.createTextNode("linked copy"));
+			draggedPoint.appendChild(dragCopyMsg);
+			dragMoveMsg = document.createElement("div");
+			dragMoveMsg.className = "dragmovemsg";
+			dragMoveMsg.appendChild(document.createTextNode("move - press ctrl to copy"));
+			draggedPoint.appendChild(dragMoveMsg);			
 			document.body.appendChild(draggedPoint);
 			draggedPoint.style.opacity = "0.4";	
 			var div = draggedPoint;
@@ -99,6 +114,46 @@ function findHolderId(id){
 	}
 }
 
+function choiceBox(ev,title,messagetop,choices,messagebottom,callback){
+		var dialog = $("<div/>").addClass("tl_dialog").attr("id","reldialog")
+			.css("left",100).css("top",100).css("position","fixed").css("width","300px")
+			.appendTo(document.body);
+		var title = $("<div>").addClass("tl_dialog_title")
+			.text(title)
+			.mousedown(function(e) { tl_dragStart(e,"reldialog") }) // use title bar to drag browser;
+			.appendTo(dialog);
+	
+		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
+		var cancelbut = $("<img src='/images/cancel.png'/>").appendTo(cancel)
+			.click(function(){
+				$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
+				dialog.remove();
+			});
+		var body = $("<form/>").addClass("tl_dialog_body").appendTo(dialog);
+		
+		if(messagetop){
+			var first = $("<div>").addClass("point_text").text(messagetop).appendTo(body);
+		}
+		
+		for(var i = 0; i < choices.length; i++){
+			makeChoiceItem(choices[i],body,dialog,callback);
+		}	
+			
+		if(messagebottom){		
+			var second = $("<div/>").addClass("point_text").text(messagebottom).appendTo(body);
+		}
+}
+
+function makeChoiceItem(text,body,dialog,callback){
+		var option = $("<input type='button'/>").attr("value",text)
+		.appendTo(body).css("margin-left","75px")
+		.click(function(){
+			callback(text);
+			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
+			dialog.parentNode.removeChild(dialog);			
+		});
+}
+
 function dragCapture(ev,dropid,dropdivid,dropclass){
 	if(!draggedPoint){
 		return;
@@ -106,6 +161,9 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 	}
 
 	var holderid = findHolderId(dropdivid);
+
+	var draginfo = findSelectionInfo(document.getElementById(dragDivId));
+	var dropinfo = findSelectionInfo(document.getElementById(dropdivid));
 
 	if(dropclass == "Point" && dragClass == "Point"){
 	
@@ -149,10 +207,23 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 		var second = $("<div/>").addClass("point_text").text(ev.target.textContent).appendTo(body);
 	}
 	
+	if(dropclass == "Topic" && dragClass == "Point"){
+		var fieldString = "?topicid="+dropid+"&pointid="+dragId;
+		doAJAX("tl_newtopicpoint_ajax","new_topic_point.php"+fieldString,function(result){
+			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);		
+		});
+	}
+	
 	if(dropclass == "Topic" && dragClass == "Topic"){
+		if(dropid == dragId){ // don't drop onto self
+			return;
+		}
 		var fieldString = "?parentid="+dropid+"&childid="+dragId;
 		doAJAX("tl_newtopiclink_ajax","new_topic_link.php"+fieldString,function(result){
-			ajaxReplace('/topics/'+dropid+"/expand",holderid);
+			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);
+			if(!draginfo.parent){
+				draginfo.holder.parentNode.removeChild(draginfo.holder);
+			}
 		});		
 	}
 }
@@ -163,10 +234,10 @@ function linkPoints(dialog,rel,sourceid,targetid,holderid){
 			tl_log("new point link: "+ result);
 			if (result==false) { alert("A point cannot link to itself"); return;}
 		
-			ajaxReplace('/points/'+sourceid+'/expand',holderid);			
+			ajaxReplace('/points/'+sourceid+'/'+expandcommand,holderid);			
 			
 			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
-			dialog.parentNode.removeChild(dialog);			
+			dialog.get(0).parentNode.removeChild(dialog);			
 		});
 }
 

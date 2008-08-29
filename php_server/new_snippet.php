@@ -28,6 +28,7 @@ if(!$pointid){
 	
 	if($topicid){
 		sql_query("INSERT INTO point_topics (point_id, topic_id, user_id) VALUES ($pointid,$topicid,$user)");	
+		sql_query("INSERT INTO topicviews (user_id,topic_id) VALUES ($user,$topicid)");
 	}
 	
 	if($opposeid){

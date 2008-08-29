@@ -9,10 +9,6 @@
 	
 	%>
 
-<div id='points-<%=rnd%>'>
-</div>
-
-
 <div class="point_container">
 <% topics.each do |topic| %>
 		<% if !options.nil? && !options[:expanded].nil? && topic.id==options[:expanded].id %>

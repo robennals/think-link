@@ -13,12 +13,14 @@ class TopicsController < ApplicationController
 	
 	def expand
 		@topic = Topic.find(params[:id])
-		render :partial => "topic", :locals => {:expand => true}, :object => @topic
+		logTopicView(@topic)
+		render :partial => "topic", :locals => {:noholder => true, :expand => true}, :object => @topic
 	end
 
 	def expandfolder
 		@topic = Topic.find(params[:id])
-		render :partial => "topic", :locals => {:expand => true, :options => {:pointfolders => true}}, :object => @topic
+		logTopicView(@topic)
+		render :partial => "topic", :locals => {:noholder => true, :expand => true, :options => {:pointfolders => true}}, :object => @topic
 	end
 	
 	def mine
@@ -35,6 +37,7 @@ class TopicsController < ApplicationController
 	
 	def show
 		@topic = Topic.find(params[:id])
+		logTopicView(@topic)
 		@title = "Topic: "+@topic.txt
 		if @topic.ismine(@user)
 			@editlink = true
@@ -69,22 +72,33 @@ class TopicsController < ApplicationController
 	end
 
 	def recent
-		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,25)
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
+		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,50), :locals => {:options => options}
 	end
 	
 	def toplevel
+		if params[:savemode]
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
 		toptopics = Topic.find_by_sql("
 				SELECT * FROM topics WHERE
 				id NOT IN (
 					SELECT child_id FROM topic_links 
 				)
+				ORDER BY txt ASC
 			");
 	
 		if (!params[:id].nil?) # which topic to expand by default
 		  topic = Topic.find(params[:id]);
-		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {:expanded=>topic}}
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options.merge({:expanded=>topic})}
 		else
-		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => {}}
+		  render :partial => 'topics/topics', :object => toptopics, :locals => {:options => options}
 		end
 	end
 	

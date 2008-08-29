@@ -502,9 +502,9 @@ function tl_dragGo(event) {
 // Move drag element by the same amount the cursor has moved.
 
   tl_dragElement.elNode.style.left =
-    (tl_dragElement.elStartLeft + x - tl_dragElement.cursorStartX) + "px";
+    Math.min(window.innerWidth - 50,Math.max(0,tl_dragElement.elStartLeft + x - tl_dragElement.cursorStartX)) + "px";
   tl_dragElement.elNode.style.top  =
-    (tl_dragElement.elStartTop  + y - tl_dragElement.cursorStartY) + "px";
+    Math.min(window.innerHeight - 50,Math.max(0,tl_dragElement.elStartTop  + y - tl_dragElement.cursorStartY)) + "px";
 
 	if (tl_browserInfo.isIE) {
 	    window.event.cancelBubble = true;
