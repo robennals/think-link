@@ -7,6 +7,12 @@
 <% 
 	browserid1 = 1#getUniq
 	browserid2 = getUniq
+	if !defined? options
+		options = {}
+	end
+	if (!defined? @point) && @point
+		options = {:point => @point}
+	end
 %>
 
 <div>
@@ -15,9 +21,9 @@
 	setDefaultBrowser(<%= browserid1 %>);
 </script>
 
-<%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid1, :dragbar => true, :big => true %>
+<%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid1, :options => options, :dragbar => true, :big => true %>
 
-<%= render_partial 'topics/topicbrowser',@user, :idnum=>browserid2, :dragbar => true, :big => true %>
+<%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid2, :dragbar => true, :big => true %>
 
 	
 </div>
@@ -29,13 +35,16 @@
 	<table class="actiontable" cellpadding="0" cellspacing="0">
 	<tr>
 	<td>
-	<div class="action"><img src="/images/lightbulb_add.png"> New point</div>
 	<div class="action" onclick="actionOpen()"><img src="/images/lightbulb_go.png"> Open Point</div>
+	<div class="action"><img src="/images/lightbulb_add.png"> New Point</div>
 	</td>
 	<td>
-	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete point</div>
-	<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize points</div>
-	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit point text</div>
+	<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize </div>
+	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete</div>
+	</td>
+	<td>
+	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Window</div> 
+	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Rename</div>
 	</td>
 	</tr>
 	</table>
@@ -43,18 +52,19 @@
 
 <div class="actions" id="actions_folder">
 	<h2>Actions for Folder</h2>
-
-	
 	<table class="actiontable" cellpadding="0" cellspacing="0">
 	<tr>
 	<td>
-	<div class="action" onclick="newFolder()"><img src="/images/folder_add.png"> New folder</div>
-	<div class="action" onclick="actionOpen()"><img src="/images/folder_go.png"> Open Folder </div>
+	<div class="action" onclick="actionOpen()"><img src="/images/folder_go.png"> Open Folder</div>
+	<div class="action" onclick="newFolder()"><img src="/images/folder_add.png"> New Folder</div>
 	</td>
 	<td>
-	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete folder</div>
-	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Open in new window</div> 
-	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit folder name</div>
+	<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize </div>
+	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete </div>
+	</td>
+	<td>
+	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Window</div> 
+	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Rename </div>
 	</td>
 	</tr>
 	</table>

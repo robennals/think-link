@@ -25,10 +25,13 @@ class PointsController < ApplicationController
   end
  
   def index
-    @title = "Points"
-    @points = Point.find(:all)
-    @options = {}
-    emit(@points)
+    @point = Point.find(params[:id])
+    render :template => 'news/index', :object => nil, :locals => {:point => @point}
+    
+#    @title = "Points"
+#    @points = Point.find(:all)
+#    @options = {}
+#    emit(@points)
   end
   def mine
     @minititle = "My Points"
@@ -52,10 +55,15 @@ class PointsController < ApplicationController
   
   def show
     @point = Point.find(params[:id])
-    @title = "Point: "+@point.txt
-    if @point.ismine(@user)
-      @editlink = true
-    end
+    
+    render :template => 'news/index', :object => nil, :locals => {:point => @point}
+    
+#    @title = "Point: "+@point.txt
+#    if @point.ismine(@user)
+#      @editlink = true
+#    end
+#    
+#    
  
     emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
   end
@@ -67,6 +75,37 @@ class PointsController < ApplicationController
 		end	
 		@point = Point.find(params[:id])
 		render :partial => "point", :locals => {:expandPoints => {@point.id => true}, :noholder => true, :expand => true, :options => options}, :object => @point
+	end
+
+	def findparents point
+		parents = [point]
+		curpoint = point
+		done = {}
+		count = 0
+				
+		while curpoint.topics.empty? && count < 10 && !done[curpoint.id]
+			count = count+1
+			done[curpoint.id] = true
+			supports = curpoint.supports_points
+			opposes = curpoint.opposes_points
+			if !supports.empty? 
+				parents.push[supports[0]]
+				curpoint = supports[0]
+			elsif !opposes.empty?
+				parents.push[opposes[0]]
+				curpoint = opposes[0]
+			end
+		end
+			
+		if(! curpoint.topics.empty?)
+			curtopic = curpoint.topics[0]
+			parents.push curtopic
+			while ! curtopic.parents.empty?
+				parents.push curtopic.parents[0]
+				curtopic = curtopic.parents[0]
+			end
+		end
+		return parents	
 	end
 
 	#find any topics this point is part of, or points that it supports
@@ -114,7 +153,12 @@ class PointsController < ApplicationController
   
   def showmini
     @point = Point.find(params[:id])
-    render :layout => 'mini', :action => 'show'
+    @parents = findparents @point
+    @snippets = @point.snippets
+    render :action => "showmini", :locals => {:options => {:point => @point}}, :layout => 'mini'
+    
+#    @point = Point.find(params[:id])
+#    render :layout => 'mini', :action => 'show'
   end
   def showmini_old
   

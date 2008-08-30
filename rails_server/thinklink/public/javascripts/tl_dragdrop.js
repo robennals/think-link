@@ -237,7 +237,7 @@ function linkPoints(dialog,rel,sourceid,targetid,holderid){
 			ajaxReplace('/points/'+sourceid+'/'+expandcommand,holderid);			
 			
 			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
-			dialog.get(0).parentNode.removeChild(dialog);			
+			$(dialog).get(0).parentNode.removeChild(dialog);			
 		});
 }
 

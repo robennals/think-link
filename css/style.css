@@ -270,6 +270,7 @@
 
 .highlight {
 	background: #FFFF00;
+	cursor: pointer;
 }
 
 .highlight_con {

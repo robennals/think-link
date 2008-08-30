@@ -417,8 +417,9 @@ function tl_margin()
 			
 			for (var s=0; s <snippet.spanList.length; s++) {
 				snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
-				$(snippet.spanList[s]).hover(
-					function(){ tool=tl_showTooltip("This snippet claims: \""+that.items[this.id].pointText+"\". Click for more information.",mouseX+10,mouseY-30); },
+				$(snippet.spanList[s]).
+				hover(
+					function(){ tool=tl_delayedShowTooltip("\""+that.items[this.id].pointText+"\"",mouseX+10,mouseY-30); },
 					function(){ tl_hideTooltip(tool); }
 				)
 				.click(function(){

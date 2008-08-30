@@ -415,7 +415,8 @@ function tl_point_browser() {
 		me.style.position = "fixed";
 		me.style.top = "50px";
 		me.style.left = "200px";
-		me.style.width = (window.innerWidth * (2/3)) + "px";
+//		me.style.width = (window.innerWidth * (2/3)) + "px";
+		me.style.width = (window.innerWidth - 250) + "px";
 		me.style.height = (window.innerHeight * (2/3)) + "px";
 
 		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
@@ -432,12 +433,14 @@ function tl_point_browser() {
 			var titleBar = $("<div/>").appendTo($("#"+that.divID))
 				.attr("id","tl_pb_title")
 				.css("margin-bottom","0px")
-				.css("cursor","auto")
+				.css("cursor","move")
+				.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
+
 				//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
 				.addClass("tl_dialog_title");
 
 			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-			var titleBox = $("<nobr>").text(that.pointText).appendTo(titleBar);
+			var titleBox = $("<nobr>").text("Browse Points").appendTo(titleBar);
 
 
 			var defaultText ="";
@@ -445,35 +448,35 @@ function tl_point_browser() {
 			else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
 
 			var explainSpan = $("<span/>").css("padding-left","10px").text(defaultText);
-
-			var thumbup = $("<img/>")
-				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(buttonBox).css("padding-left","4px")
-				.click(that.ratePointHandler).attr("id",1)
-				.hover(function(){ 
-					$(this).addClass("highlight");
-					$(explainSpan).text("I agree");
-				}, function(){ 
-					$(this).removeClass("highlight");
-					$(explainSpan).text(defaultText); 
-				});
-
-			var thumbdown = $("<img/>")
-				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(buttonBox)
-				.click(that.ratePointHandler).attr("id",0)
-				.hover(function(){ 
-					$(this).addClass("highlight");
-					$(explainSpan).text("I disagree");
-				}, function(){ 
-					$(this).removeClass("highlight");
-					$(explainSpan).text(defaultText); 
-				});
+//
+//			var thumbup = $("<img/>")
+//				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(buttonBox).css("padding-left","4px")
+//				.click(that.ratePointHandler).attr("id",1)
+//				.hover(function(){ 
+//					$(this).addClass("highlight");
+//					$(explainSpan).text("I agree");
+//				}, function(){ 
+//					$(this).removeClass("highlight");
+//					$(explainSpan).text(defaultText); 
+//				});
+//
+//			var thumbdown = $("<img/>")
+//				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(buttonBox)
+//				.click(that.ratePointHandler).attr("id",0)
+//				.hover(function(){ 
+//					$(this).addClass("highlight");
+//					$(explainSpan).text("I disagree");
+//				}, function(){ 
+//					$(this).removeClass("highlight");
+//					$(explainSpan).text(defaultText); 
+//				});
 
 			explainSpan.appendTo(titleBox);	
 
-			var help = $("<img/>")
-				.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
-				.click(that.showHelpBox)
-				.appendTo(buttonBox);	
+//			var help = $("<img/>")
+//				.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
+//				.click(that.showHelpBox)
+//				.appendTo(buttonBox);	
 			var close = $("<img/>")
 				.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
 				.click(function(){
@@ -487,6 +490,7 @@ function tl_point_browser() {
 			pointframe.style.width="100%";
 			pointframe.style.height="100%";
 			pointframe.style.overflow = "auto";
+			pointframe.setAttribute("id","tl_point_frame");
 			frameholder.appendChild(pointframe);
 			frameholder.style.width="100%";
 			frameholder.style.height="100%";
@@ -519,8 +523,9 @@ function tl_point_browser() {
 			me.style.overflow = "hidden";
 			me.style.position = "fixed";
 			me.style.top = "0px";
-			me.style.width = (window.width * (2/3)) + "px";
-			me.style.height = (window.height * (2/3)) + "px";
+			//		me.style.width = (window.innerWidth * (2/3)) + "px";
+			me.style.width = (window.innerWidth - 250) + "px";
+		me.style.height = (window.height * (2/3)) + "px";
 
 		
 		var titleBar = $("<div/>").appendTo($("#"+this.divID))

@@ -43,6 +43,9 @@ function selectItem(div,itemid,divid,cls){
 		}else{
 			oldselection.className = "dragitem";		
 		}
+		if(selectedDivId == divid){
+			return;
+		}
 	}
 
 	selectedId = itemid;
@@ -81,16 +84,20 @@ function selectItem(div,itemid,divid,cls){
 	}else{
 	
 		if(cls=="Topic"){
-			getel("actions_point").className = "hidden";
-			getel("actions_folder").className = "actions";	
-			getel("preview_container").className = "hidden";
+			if(getel("actions_point")){
+				getel("actions_point").className = "hidden";
+				getel("actions_folder").className = "actions";	
+				getel("preview_container").className = "hidden";
+			}
 			getel("topics_title").textContent = "Topic Summary";
 			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
 			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 		}else if(cls=="Point"){
-			getel("actions_point").className = "actions";
-			getel("actions_folder").className = "hidden";
-			getel("preview_container").className = "snippets";
+			if(getel("actions_point")){
+				getel("actions_point").className = "actions";
+				getel("actions_folder").className = "hidden";
+				getel("preview_container").className = "snippets";
+			}
 			preview_title.textContent = "Snippets for Selected Point";
 			getel("topics_title").textContent = "References to Selected Point";
 			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
@@ -274,6 +281,11 @@ function gotoParent(node){
 	}
 }
 
+function dblClick(node,id,cls){
+	var browser = findBrowser(node);
+	actionOpen(browser,id,cls);
+}
+
 function actionOpen(browser,id,cls){
 	if(!id){
 		id = selectedId;
@@ -287,7 +299,6 @@ function actionOpen(browser,id,cls){
 	}
 	var idnum = getNodeIdNum(browser);
 	
-	topMode(idnum);
 	clearSelect(idnum);
 
 	if(cls == "Topic"){

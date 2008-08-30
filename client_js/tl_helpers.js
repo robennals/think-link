@@ -17,6 +17,26 @@ function tl_showDiv(divid) {
 	elem.style.display = "block";
 }
 
+function tl_delayedShowTooltip(text,x,y){
+	var box = document.createElement("div");
+	box.className = "hidden";
+	box.style.top = y+"px";
+	box.style.left = x+"px";
+	box.appendChild(document.createTextNode(text));
+	document.body.appendChild(box);
+	
+	setTimeout(function(){
+		if(box.parentNode){
+			box.className = "help_box";
+			box.style.top = (mouseY - 30) + "px";
+			box.style.left = (mouseX + 10) + "px";
+		}
+	},1000);
+	
+	return box;
+	
+}
+
 function tl_showTooltip(text,x,y) {
 	var box = document.createElement("div");
 	box.className = "help_box";

@@ -109,6 +109,12 @@ a img {
 	vertical-align: top;
 }
 
+.minitable tr td{
+	vertical-align: top;
+}
+
+
+
 .dragtable tr td {
 	vertical-align: middle;
 }
@@ -418,12 +424,13 @@ h1 {
 }
 
 .action {
-	padding: 4px;
-	margin: 4px;
+	padding: 2px;
+	margin: 2px;
 	-moz-border-radius: 4px;
 	border: 1px solid #666666;
 	background-color: #ececec;
 	cursor: pointer;
+	font-size: 8pt;
 }
 
 .action:hover {
@@ -587,5 +594,26 @@ h1 {
 }
 
 .actiontable td {
-	width: 50%;
+	width: 33%;
+}
+
+.browsetabspacer{
+	padding-top: 20px;
+}
+
+.actiontab {
+	padding: 4px;
+	-moz-border-radius-topleft: 8px;
+	-moz-border-radius-bottomleft: 8px;
+	margin-top: 4px;
+	background-color: #ececec;
+	border: 1px solid #666666;
+	border-right: none;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.actiontab:hover {
+	background-color: #e2f5ff;
+	cursor: pointer;
 }

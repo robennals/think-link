@@ -1,132 +1,85 @@
 
 
-<div class="point">
-	
-
 <table class="maintable">
 <tr>
-<td>
+<td class="firstcolumn">
+
+<% 
+	browserid1 = 1#getUniq
+	browserid2 = getUniq
+%>
+
 <div>
-	<div class="points">
-		<h2>Points in this topic</h2>
-		<div class="points_container" id="pointslist2">
-		<%= render_partial 'points/points', @points, :options => {:notools => true, :preview=>true, :noclass=>true,:divid=> 'pointslist2'}, :renderer => 'points/pointref', :action => 'points' %>
-		</div>
 
-		<%= render_partial 'topics/topicnewpoint', @topic, :divid=>'pointslist2' %>
+<script language="javascript">
+	setDefaultBrowser(<%= browserid1 %>);
+</script>
 
-	</div>
+<%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid1, :dragbar => true, :big => true %>
+
+<%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid2, :dragbar => true, :big => true %>
+
+	
 </div>
 
-<%= render_partial 'points/minisearch',nil %>
+</td><td class="secondcolumn">
 
-
-</td>
-<td>
-<div>
-	<div class="topics">
-		<h2>Parent Topics</h2>
-		<%= render_partial 'main/previewlist', @topic.parents, :options => {:noclass=>true, :divid=>'parentslist'}, :renderer => 'topics/topicref', :action => 'parents' %>
-		<div id="new_parent"  style="padding:4px">
-		</div>
-		<script language="javascript">
-			var suggest = new tl_suggest(document.getElementById('new_parent'), true,"search_topics.php","text");
-			var textbox = suggest.init();
-			suggest.setDefaultText("<Enter parent topic>");
-			suggest.setButtonText("add");
-			suggest.setWidth("160px");
-			suggest.setButtonClickEvent(function(){ 
-				$.get("/topics/newparent/<%= @topic.id %>.json",{topic:textbox.value}, function(result){
-					tl_log("new parent topic: "+result);
-					var listelem = document.getElementById("parentslist");
-					var newitem = document.createElement("div");
-					newitem.className = "topic_ref";
-					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
-					link.appendChild(document.createTextNode(textbox.value));
-					newitem.appendChild(link);
-					listelem.insertBefore(newitem,listelem.childNodes[0]);
-				});
-			});
-			suggest.setResultCallback(function(item){ 
-		    	var row = document.createElement("span");  
-		    	row.id = item.id;
-		    	row.appendChild(document.createTextNode(item.txt));
-		    	return row;
-		 	});
-		</script>
-	</div>
-	
-	<div class="topics">
-		<h2>Sub Topics</h2>
-		<%= render_partial 'main/previewlist', @topic.children, :options => {:noclass=>true, :divid=>'childrenlist'}, :renderer => 'topics/topicref', :action => 'children' %>
-
-		<div id="new_child" style="padding:4px">
-		</div>
-		<script language="javascript">
-			var suggest2 = new tl_suggest(document.getElementById('new_child'), true,"search_topics.php","text");
-			var textbox2 = suggest2.init();
-			suggest2.setDefaultText("<Enter sub topic>");
-			suggest2.setButtonText("add");
-			suggest2.setWidth("160px");
-			suggest2.setButtonClickEvent(function(){ 
-				$.get("/topics/newchild/<%= @topic.id %>.json",{topic:textbox2.value}, function(result){
-					tl_log("new child topic: "+result);
-					var listelem = document.getElementById("childrenlist");
-					var newitem = document.createElement("div");
-					newitem.className = "topic_ref";
-					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
-					link.appendChild(document.createTextNode(textbox2.value));
-					newitem.appendChild(link);
-					listelem.insertBefore(newitem,listelem.childNodes[0]);
-				});
-			});
-			suggest2.setResultCallback(function(item){ 
-		    	var row = document.createElement("span");  
-		    	row.id = item.id;
-		    	row.appendChild(document.createTextNode(item.txt));
-		    	return row;
-		 	});
-		</script>
-	</div>
-	
-	<!--
-	<div class="topics">
-		<h2>Identical Topics</h2>
-		<%= render_partial 'main/previewlist', @topic.identical, :options => {:noclass=>true, :divid=>'identicallist'}, :renderer => 'topics/topicref', :action => 'identical' %>
-
-		<div id="new_identical" style="padding:4px">
-		</div>
-		<script language="javascript">
-			var suggest3 = new tl_suggest(document.getElementById('new_identical'), true,"search_topics.php","text");
-			var textbox3 = suggest3.init();
-			suggest3.setDefaultText("<Enter identical topic>");
-			suggest3.setButtonText("add");
-			suggest3.setWidth("160px");
-			suggest3.setButtonClickEvent(function(){ 
-				$.get("/topics/newidentical/<%= @topic.id %>.json",{topic:textbox3.value}, function(result){
-					tl_log("new equivalent topic: "+result);
-					var listelem = document.getElementById("identicallist");
-					var newitem = document.createElement("div");
-					newitem.className = "topic_ref";
-					var link = document.createElement("a"); link.setAttribute("href","/topics/"+result);
-					link.appendChild(document.createTextNode(textbox3.value));
-					newitem.appendChild(link);
-					listelem.insertBefore(newitem,listelem.childNodes[0]);
-				});
-			});
-			suggest3.setResultCallback(function(item){ 
-		    	var row = document.createElement("span");  
-		    	row.id = item.id;
-		    	row.appendChild(document.createTextNode(item.txt));
-		    	return row;
-		 	});
-		</script>
-	</div>
-	
-	-->
-
+<div class="actions hidden" id="actions_point">
+	<h2>Actions for Point</h2>
+	<table class="actiontable" cellpadding="0" cellspacing="0">
+	<tr>
+	<td>
+	<div class="action"><img src="/images/lightbulb_add.png"> New point</div>
+	<div class="action" onclick="actionOpen()"><img src="/images/lightbulb_go.png"> Open Point</div>
+	</td>
+	<td>
+	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete point</div>
+	<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize points</div>
+	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit point text</div>
 	</td>
 	</tr>
-	</table>	
+	</table>
 </div>
+
+<div class="actions" id="actions_folder">
+	<h2>Actions for Folder</h2>
+
+	
+	<table class="actiontable" cellpadding="0" cellspacing="0">
+	<tr>
+	<td>
+	<div class="action" onclick="newFolder()"><img src="/images/folder_add.png"> New folder</div>
+	<div class="action" onclick="actionOpen()"><img src="/images/folder_go.png"> Open Folder </div>
+	</td>
+	<td>
+	<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete folder</div>
+	<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Open in new window</div> 
+	<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Edit folder name</div>
+	</td>
+	</tr>
+	</table>
 </div>
+
+
+<div>
+	<div class="snippets" id="preview_container">
+	<h2 id="preview_title">Snippets</h2>
+		<div class="snippet_container" id="preview_panel">
+		<% @user.snippets.slice(0,4).each do |snippet| %>
+		<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor => true} %>
+		<% end %> 
+		</div>
+	</div>
+
+	<div class="topics" id="topics_container">
+		<h2 id="topics_title">More General Folders</h2>
+		<div class="snippet_container" id="topics_panel">
+		</div>	
+	</div>
+
+</div>
+
+
+</td></tr>
+</table>
+

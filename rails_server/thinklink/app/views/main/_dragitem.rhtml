@@ -29,6 +29,7 @@ itemtxt = escape_single_quotes(dragitem.txt)
 				onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
 				onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
 				onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+				ondblclick="dblClick(this,<%= itemid %>, '<%=dragitem.class%>')"
 				onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
 
 			<%=dragitem.txt%>

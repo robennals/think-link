@@ -5,8 +5,12 @@ if !(defined? idnum) || idnum.nil?
 	idnum = getUniq 
 end
 
-if ! (defined? options)
+if ! (defined? options) || !options
 	options = {}
+end
+
+if !options[:topics] && !options[:point]
+	options[:topics] = @user.recenttopics.slice(0,50)
 end
 
 %>
@@ -26,7 +30,11 @@ end
 <div class="browsetab" id="all-<%=idnum%>" onclick="topMode(<%=idnum%>)">
 All Folders
 </div>
+<% if topicbrowser %>
+<div class="browsetab" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
+<% else %>
 <div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
+<% end %>
 My Recent
 </div>
 <!-- <div class="browsetab" id="scratch-<%=idnum%>" onclick="scratchMode(<%=idnum%>)">
@@ -44,16 +52,25 @@ Friends
 <div class="browsetab" onclick="searchMode(<%=idnum%>)" id="search-<%=idnum%>">
 Search
 </div>
-</td>
+
 <td>
 
 	<div class="topics" id="topics-<%=idnum%>">
 		<h2>
 			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
-			<span id="title-<%=idnum%>">My Recent Folders</span> 
+			<span id="title-<%=idnum%>">
+			<% if options[:parents] %>
+				<%= render_partial "topics/pathlist", options[:parents] %>		
+			<% else %>
+				My Recent Folders
+			<% end %>
+			</span> 
 			</td><td class="browsefolderadd" style="text-align:right">
-			<span class="folder_add" onclick="newFolder(<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></span>
+			<%if !options[:point]%>
+			<nobr class="folder_add" onclick="newFolder(<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></nobr>
+			<% end %>
 			</tr>
+			
 			</table>
 		</h2>
 		<div class="browse_container" id="container-<%=idnum%>"
@@ -67,7 +84,11 @@ Search
 			</div>
 
 			<div id="body-<%=idnum%>" class="browser_body">
-			<%= render_partial 'topics/topics', @user.recenttopics.slice(0,25), :options => options %>
+			<% if options[:topics] %>
+			<%= render_partial 'topics/topics', options[:topics], :options => options %>
+			<% elsif options[:point] %>
+			<%= render_partial 'points/point', options[:point], :expandPoints => {options[:point].id => true}, :options => options %>
+			<% end %>
 			</div>
 		</div>
 	</div>
