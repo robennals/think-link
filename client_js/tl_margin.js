@@ -393,12 +393,14 @@ function tl_margin()
 	}
 
 	this.showMargin = function(){
+		var that = this;
 		tl_showDiv(this.divID);
 		$("#" + this.divID).animate({ width: 'fast', opacity: 'show' }, 'slow');
 		$("body").css("padding-left",215); // scoot the main document to the right
 
-		this.setHeight();
-		
+		setTimeout(function(){
+			that.setHeight();
+		},50);
 	}
 
 	this.hideMargin = function(){

@@ -48,6 +48,8 @@ $title = $summary['title'];
 sql_query("INSERT INTO snippets (url,url_real,txt,user_id,pagetitle,title,source_id,point_id) VALUES ('$url','$urlreal','$sniptext',$user,'$pagetitle','$title','$source','$pointid')");
 $snippetid = mysql_insert_id();	
 
+sql_query("INSERT INTO bookmarks (snippet_id, user_id) VALUES ('$snippetid','$user');");
+
 echo "\n";
 
 json_out($snippetid);

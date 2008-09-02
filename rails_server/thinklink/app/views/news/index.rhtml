@@ -19,18 +19,70 @@
 
 <script language="javascript">
 	setDefaultBrowser(<%= browserid1 %>);
+	
+	var shown = false;
+	function toggleSecondBrowser(button){
+		$("#second_browser").animate({height:'toggle'},500);
+		shown = !shown;
+		if(shown){
+			button.value = "Hide Second Browser";
+		}else{
+			button.value = "Show Second Browser";
+		}
+	}
 </script>
 
 <%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid1, :options => options, :dragbar => true, :big => true %>
 
+<input type="button" value="Show Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
+<div id="second_browser" style="display:none;">
 <%= render_partial 'topics/topicbrowser',nil, :idnum=>browserid2, :dragbar => true, :big => true %>
-
+</div>
 	
 </div>
 
 </td><td class="secondcolumn">
 
-<div class="actions hidden" id="actions_point">
+<div id="actions-panel">
+	<div id="actions_point" class="hidden">
+		<table class="actiontable" cellpadding="0" cellspacing="0">
+		<tr>
+		<td>
+		<div class="action" onclick="actionOpen()"><img src="/images/lightbulb_go.png"> Open Point</div>
+		<div class="action"><img src="/images/lightbulb_add.png"> New Point</div>
+		</td>
+		<td>
+		<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize </div>
+		<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete</div>
+		</td>
+		<td>
+		<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Window</div> 
+		<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Rename</div>
+		</td>
+		</tr>
+		</table>	
+	</div>
+	<div id="actions_folder" class="actions">
+		<table class="actiontable" cellpadding="0" cellspacing="0">
+		<tr>
+		<td>
+		<div class="action" onclick="actionOpen()"><img src="/images/folder_go.png"> Open Folder</div>
+		<div class="action" onclick="newFolder()"><img src="/images/folder_add.png"> New Folder</div>
+		</td>
+		<td>
+		<div class="action" onclick="actionOrganize()"><img src="/images/connect.png"> Organize </div>
+		<div class="action" onclick="actionDelete()"><img src="/images/cross.png"> Delete </div>
+		</td>
+		<td>
+		<div class="action" onclick="actionOpenNew()"><img src="/images/application.png"> Window</div> 
+		<div class="action" onclick="actionEdit()"><img src="/images/pencil.png"> Rename </div>
+		</td>
+		</tr>
+		</table>
+	</div>
+</div>
+
+<!-- <div class="actions hidden" id="actions_point">
 	<h2>Actions for Point</h2>
 	<table class="actiontable" cellpadding="0" cellspacing="0">
 	<tr>
@@ -48,7 +100,7 @@
 	</td>
 	</tr>
 	</table>
-</div>
+</div> 
 
 <div class="actions" id="actions_folder">
 	<h2>Actions for Folder</h2>
@@ -69,17 +121,9 @@
 	</tr>
 	</table>
 </div>
-
+-->
 
 <div>
-	<div class="snippets" id="preview_container">
-	<h2 id="preview_title">Snippets</h2>
-		<div class="snippet_container" id="preview_panel">
-		<% @user.snippets.slice(0,4).each do |snippet| %>
-		<%=	render_partial 'snippets/snippet', snippet, :options => {:noauthor => true} %>
-		<% end %> 
-		</div>
-	</div>
 
 	<div class="topics" id="topics_container">
 		<h2 id="topics_title">More General Folders</h2>

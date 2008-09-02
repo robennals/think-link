@@ -77,6 +77,16 @@ a img {
 	background-color: #ebf7fd;
 }
 
+.summarytitle {
+	margin-left: 0px;
+	padding-left: 5px;
+	font-style: italic;
+	border-bottom: 1px #000 solid;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+
 .relationtitle_selected, .relationtitle_selected:hover {
 	background-color: #d5effc;
 }
@@ -615,5 +625,9 @@ h1 {
 
 .actiontab:hover {
 	background-color: #e2f5ff;
+	cursor: pointer;
+}
+
+#tl_marginpull {
 	cursor: pointer;
 }

@@ -85,24 +85,39 @@ function selectItem(div,itemid,divid,cls){
 	
 		if(cls=="Topic"){
 			if(getel("actions_point")){
+//				$("#actions_folder").animate({opacity:"show"},200);
+//				$("#actions_point").animate({opacity:"hide"},{queue:true,duration:200});
+
+				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);
 				getel("actions_point").className = "hidden";
 				getel("actions_folder").className = "actions";	
-				getel("preview_container").className = "hidden";
+//				getel("preview_container").className = "hidden";
 			}
 			getel("topics_title").textContent = "Topic Summary";
 			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
-			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
+			$("#topics_panel").animate({height:'hide'},500);
+			ajaxReplace("/topics/"+itemid+"/summary","topics_panel",function(){
+				$("#topics_panel").animate({height:'show'},500);			
+			});
 		}else if(cls=="Point"){
 			if(getel("actions_point")){
+//				$("#actions_point").animate({height:"show"},200);
+//				$("#actions_folder").animate({height:"hide"},{queue:true,duration:200});
+	
+				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);		
 				getel("actions_point").className = "actions";
 				getel("actions_folder").className = "hidden";
-				getel("preview_container").className = "snippets";
+//				getel("preview_container").className = "snippets";
 			}
-			preview_title.textContent = "Snippets for Selected Point";
+//			preview_title.textContent = "Snippets for Selected Point";
 			getel("topics_title").textContent = "References to Selected Point";
-			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
+//			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
 			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
-			ajaxReplace("/points/"+itemid+"/places","topics_panel"); // containing topics and point relationships
+			$("#topics_panel").animate({height:'hide'},500);
+			ajaxReplace("/points/"+itemid+"/summary","topics_panel",function(){ // containing topics and point relationships
+				$("#topics_panel").animate({height:'show'},500);			
+			});
+
 		}
 		
 	}
@@ -117,17 +132,17 @@ function adjustPreview(itemid,cls) {
 	if(cls=="Topic"){
 			getel("actions_point").className = "hidden";
 			getel("actions_folder").className = "actions";	
-			getel("preview_container").className = "hidden";
+	//		getel("preview_container").className = "hidden";
 			getel("topics_title").textContent = "Topic Summary";
 			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
 			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 	}else if(cls=="Point"){
 			getel("actions_point").className = "actions";
 			getel("actions_folder").className = "hidden";
-			getel("preview_container").className = "snippets";
+//			getel("preview_container").className = "snippets";
 			preview_title.textContent = "Snippets for Selected Point";
 			getel("topics_title").textContent = "References to Selected Point";
-			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
+//			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
 			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
 			ajaxReplace("/points/"+itemid+"/places","topics_panel"); // containing topics and point relationships
 	}

@@ -1,18 +1,19 @@
-	<div class="relationtitle">belongs to folder(s)</div>
+	<div class="summarytitle">belongs to folder(s)</div>
 		<%= render_partial 'topics/topics', pointplaces.topics, :options=>{:nodrag=>true, :link=>true} %>
 	</div>
-	<br/>
 	<!--<div class="subpoints" id="subpoints-<%=pointplaces.id%>">-->
 			<% supports = pointplaces.supports_points %>
 			<% if !supports.empty? %>
-				<div class="relationtitle">supports</div>
+				<br/>
+				<div class="summarytitle">this point supports</div>
 				<% supports.slice(0,10).each do |subpoint| %>
 					<%= render_partial 'main/previewitem', subpoint %>
 				<% end %>
 			<% end %>
 			<% opposes = pointplaces.opposes_points %>
 			<% if !opposes.empty? %>
-				<div class="relationtitle">opposes</div>
+				<br/>
+				<div class="summarytitle">this point opposes</div>
 				<% opposes.slice(0,10).each do |subpoint| %>
 					<%= render_partial 'main/previewitem', subpoint %>
 				<% end %>

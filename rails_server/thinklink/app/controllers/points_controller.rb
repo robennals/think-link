@@ -186,10 +186,14 @@ class PointsController < ApplicationController
   
   def places
 	  @point = Point.find(params[:id])
-	  render :partial => "pointplaces", :object => @point
-	  
+	  render :partial => "pointplaces", :object => @point	  
 	end
-  
+	
+	def summary
+	  @point = Point.find(params[:id])
+ 	  render :partial => 'summary', :object=> @point
+	end
+	  
   def new
     @point = Point.new
   end

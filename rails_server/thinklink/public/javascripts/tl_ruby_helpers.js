@@ -109,9 +109,12 @@ function ajaxPost(url, handler) {
     req.send("");
 }
 
-function ajaxReplace(url, id){
+function ajaxReplace(url, id,callback){
 		ajaxPost(url,function(response){
 			var node = document.getElementById(id);
 			node.innerHTML = response;
+			if(callback){
+				callback();
+			}
 		});
 }

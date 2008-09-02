@@ -4,13 +4,13 @@
 	%>
 	
 	<% if !parents.empty? %>
-		<div class="relationtitle">more general folders</div>
+		<div class="summarytitle">more general folders</div>
 			<%= render_partial 'topics/topics', parents, :options=>{:nodrag=>true, :link=>true} %>
 		</div>
 	<% end %>
 	<% if !snips.empty? %>
 		<br/>
-		<div class="relationtitle">snippets
+		<div class="summarytitle">snippets
 			<% if snips.size > snipPreviewEnd %>
 			 preview
 			<% end %>

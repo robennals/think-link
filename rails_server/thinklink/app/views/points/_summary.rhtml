@@ -1,0 +1,18 @@
+	<% snips = summary.snippets
+		snipPreviewEnd = 5
+		if (!defined? options) || !options
+		 	options = {}
+		end
+	%>
+	
+	<%= render_partial 'points/pointplaces', summary %>
+	<% if !snips.empty? %>
+		<br/>
+		<div class="summarytitle">snippets
+			<% if snips.size > snipPreviewEnd %>
+			 preview
+			<% end %>
+		</div>
+		<%= render_partial 'snippets/snippets',snips.slice(0,snipPreviewEnd), :options=>{} %>
+	<% end %>
+	
