@@ -5,9 +5,9 @@
 	      src="chrome://thinklink/content/thinklink.js" />
 
 	<toolbarpalette id="BrowserToolbarPalette">
-			<toolbarbutton class="toolbarbutton-1" label="Show Think Link Margin" id="thinklink-button" position="2" 
+<!--			<toolbarbutton class="toolbarbutton-1" label="Show Think Link Margin" id="thinklink-button" position="2" 
 	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_show(this)" tooltiptext="Open Think Link Margin"/>
-
+-->
 			<toolbarbutton class="toolbarbutton-1" label="New Think Link Snippet" id="thinklink-snipbutton" position="2" 
 	image="chrome://thinklink/skin/comment.png" oncommand="thinklink_new_snippet()" tooltiptext="New Think Link Snippet"/>
 	</toolbarpalette>

@@ -54,25 +54,29 @@ function tl_margin()
 		topfixed.id = "tl_snippet_activate";
 		$("#" + this.divID).append($(topfixed));
 		
-		// add listener to popup annotation box if have selection
-		//$('<input type="button" value="select snippet" />').attr("id","tl_snippet_activate").appendTo($("#" + this.divID));
-		$('<input type="button" value="select snippet" />').appendTo($(topfixed)).click(function(){
-			var hilite = getText();		
-			if(hilite){	
-				mySnip.new(hilite.toString().replace(/\s+/g," "));
-			}
+		$('<input type="button" value="Browse Think Link"/>').appendTo($(topfixed)).click(function(){
+			window.open(thinklink_mainhome);
 		});
 		
-		// add link to main web UI
-		var homelink = document.createElement("a");
-		homelink.setAttribute("target","_blank");
-		homelink.setAttribute("href",thinklink_mainhome);
-		var home = document.createElement("img");
-		home.setAttribute("src",thinklink_imagebase+"house.png");
-		home.setAttribute("border","0");
-		home.style.paddingLeft = "10px";
-		homelink.appendChild(home);
-		topfixed.appendChild(homelink);
+//		// add listener to popup annotation box if have selection
+//		//$('<input type="button" value="select snippet" />').attr("id","tl_snippet_activate").appendTo($("#" + this.divID));
+//		$('<input type="button" value="select snippet" />').appendTo($(topfixed)).click(function(){
+//			var hilite = getText();		
+//			if(hilite){	
+//				mySnip.new(hilite.toString().replace(/\s+/g," "));
+//			}
+//		});
+//		
+//		// add link to main web UI
+//		var homelink = document.createElement("a");
+//		homelink.setAttribute("target","_blank");
+//		homelink.setAttribute("href",thinklink_mainhome);
+//		var home = document.createElement("img");
+//		home.setAttribute("src",thinklink_imagebase+"house.png");
+//		home.setAttribute("border","0");
+//		home.style.paddingLeft = "10px";
+//		homelink.appendChild(home);
+//		topfixed.appendChild(homelink);
 		
 		this.setHeight(); 		// match margin height to document height
 		//$("#" + this.divID).hide();	// hide the margin 

@@ -87,9 +87,9 @@ function thinklink_updateMarginVisibility(){
 }
 
 function thinklink_setIcon(image,doc){
-	var doc = thinklink_winlistener.getDoc();
-	document.getElementById("thinklink-button").setAttribute("image",image);
-	doc.thinklink_icon = image;
+//	var doc = thinklink_winlistener.getDoc();
+//	document.getElementById("thinklink-button").setAttribute("image",image);
+//	doc.thinklink_icon = image;
 }
 
 var thinklink_winlistener = {
@@ -126,7 +126,7 @@ var thinklink_winlistener = {
 
 			
 			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-				document.getElementById("thinklink-button").checked = false;
+//				document.getElementById("thinklink-button").checked = false;
 				if(!doc.thinklink_iconon){
 					thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
 				}
@@ -176,7 +176,7 @@ var thinklink_winlistener = {
 	  if(doc.thinklink_icon){
 	  	thinklink_setIcon(doc.thinklink_icon,doc); 	
 	  }else{
-  		document.getElementById("thinklink-button").setAttribute("image","chrome://thinklink/skin/lightbulb_wait.png");
+//  		document.getElementById("thinklink-button").setAttribute("image","chrome://thinklink/skin/lightbulb_wait.png");
 	  }
 	  if(!doc.thinklink_injected){
 	      doc.addEventListener("thinklink-showicon", function(e){
@@ -199,7 +199,7 @@ var thinklink_winlistener = {
 
 	  	this.injectScripts();
 	  }
-  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
+//  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
 
 			thinklink_updateMarginVisibility();
 

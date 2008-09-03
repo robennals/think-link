@@ -633,4 +633,5 @@ h1 {
 
 #tl_marginpull {
 	cursor: pointer;
+	z-index: 2147483647;
 }

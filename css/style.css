@@ -135,7 +135,7 @@
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	z-index: 105;
+	z-index: 2147483647;
 }
 
 #tl_point_dialog {

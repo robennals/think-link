@@ -199,6 +199,7 @@ function removeSpans(spanList) {
 	}
 	// do the replacing
 	for (var i=0; i<textNodes.length;i++) {
+		if(!spanList[i].parentNode) continue;
 		spanList[i].parentNode.insertBefore(textNodes[i],spanList[i]);
 		spanList[i].parentNode.removeChild(spanList[i]);		
 	}

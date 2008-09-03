@@ -679,10 +679,10 @@ function openOrganizer(){
 
 function keyDownHandler(ev){
 	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
-		if(ev.keyCode == 17){
-			dragCopyMode = true;
-			dragCopyMsg.className = "dragcopymsg";
-			dragMoveMsg.className = "hidden";
+		if(ev.keyCode == 16){ // SHIFT
+			dragCopyMode = false;
+			dragCopyMsg.className = "hidden";
+			dragMoveMsg.className = "dragmovemsg";
 		}	
 		if(ev.keyCode == 27){
 			dragStop();
@@ -692,10 +692,10 @@ function keyDownHandler(ev){
 
 function keyUpHandler(ev){
 	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
-		if(ev.keyCode == 17){
-			dragCopyMode = false;
-			dragCopyMsg.className = "hidden";
-			dragMoveMsg.className = "dragmovemsg";
+		if(ev.keyCode == 16){
+			dragCopyMode = true;
+			dragCopyMsg.className = "dragcopymsg";
+			dragMoveMsg.className = "hidden";
 		}
 	}
 }
@@ -740,6 +740,14 @@ function actionDelete(ev){
 			})
 		}
 	)
+}
+
+// unlink the currently selected node from it's location
+function actionUnlink(selinfo){
+	action = "unlink.php?cls="+selinfo.cls+"&id="+selinfo.itemid+"&parcls="+selinfo.parentcls+"&parentid="+selinfo.parentid;					
+	doAJAX("tl_unlink",action,function(result){
+		selinfo.holder.parentNode.removeChild(selinfo.holder);
+	})		
 }
 
 function actionOrganize(){

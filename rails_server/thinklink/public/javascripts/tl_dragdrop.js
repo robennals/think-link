@@ -25,7 +25,7 @@ var startX;
 var startY;
 var dragStarted;
 var dragId;
-var dragCopyMode = false;
+var dragCopyMode = true;
 
 var dragText;
 var dragId;
@@ -44,7 +44,7 @@ function dragStart(ev,id,divid,cls){
 	ev.preventDefault();
 
 	draggedPoint = null;	
-	dragCopyMode = false;
+	dragCopyMode = true;
 		
 	startX = ev.clientX;
 	startY = ev.clientY;
@@ -72,15 +72,15 @@ function dragMove(ev){
 		 || (ev.clientY < startY - 16) || (ev.clientY > startY + 16)){
 			draggedPoint = makePointDiv(dragText);
 			dragCopyMsg = document.createElement("div");
-			dragCopyMsg.className = "hidden";
-			dragCopyMsg.appendChild(document.createTextNode("linked copy"));
+			dragCopyMsg.className = "dragcopymsg";
+			dragCopyMsg.appendChild(document.createTextNode("add link - press shift to move"));
 			draggedPoint.appendChild(dragCopyMsg);
 			dragMoveMsg = document.createElement("div");
-			dragMoveMsg.className = "dragmovemsg";
-			dragMoveMsg.appendChild(document.createTextNode("move - press ctrl to copy"));
+			dragMoveMsg.className = "hidden";
+			dragMoveMsg.appendChild(document.createTextNode("move"));
 			draggedPoint.appendChild(dragMoveMsg);			
 			document.body.appendChild(draggedPoint);
-			draggedPoint.style.opacity = "0.4";	
+	//		draggedPoint.style.opacity = "0.4";	
 			var div = draggedPoint;
 			div.style.position = "fixed";
 			div.style.left = (ev.clientX+2)+"px";
@@ -173,7 +173,7 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 		var targetId = dragId;
 		
 		if(sourceId == targetId){
-			alert("Cannot related a point to itself");
+			alert("Cannot relate a point to itself");
 			return;
 		}
 	
@@ -226,6 +226,11 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 			}
 		});		
 	}
+	
+	if(!dragCopyMode){
+		actionUnlink(draginfo);
+	}
+	
 }
 
 function linkPoints(dialog,rel,sourceid,targetid,holderid){
