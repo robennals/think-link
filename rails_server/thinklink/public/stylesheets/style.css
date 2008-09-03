@@ -341,10 +341,13 @@ h1 {
 	border-left: 1px dotted black;
 	margin-left: 5px;	
 	padding-bottom: 5px;
+	padding-left: 15px;
 }
 
 .subpoints {
-	padding-left: 15px;
+/*	padding-left: 15px; */
+	padding: 0px;
+	margin: 0px;
 }
 
 .point_container {

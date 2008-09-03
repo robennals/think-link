@@ -7,9 +7,9 @@
 		<div class="summarytitle">more general folders</div>
 			<%= render_partial 'topics/topics', parents, :options=>{:nodrag=>true, :link=>true} %>
 		</div>
+		<br/>
 	<% end %>
 	<% if !snips.empty? %>
-		<br/>
 		<div class="summarytitle">snippets
 			<% if snips.size > snipPreviewEnd %>
 			 preview

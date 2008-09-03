@@ -88,12 +88,12 @@ function selectItem(div,itemid,divid,cls){
 //				$("#actions_folder").animate({opacity:"show"},200);
 //				$("#actions_point").animate({opacity:"hide"},{queue:true,duration:200});
 
-				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);
-				getel("actions_point").className = "hidden";
-				getel("actions_folder").className = "actions";	
+//				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);
+//				getel("actions_point").className = "hidden";
+//				getel("actions_folder").className = "actions";	
 //				getel("preview_container").className = "hidden";
 			}
-			getel("topics_title").textContent = "Topic Summary";
+			getel("topics_title").textContent = "Summary of Selected Folder";
 			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
 			$("#topics_panel").animate({height:'hide'},500);
 			ajaxReplace("/topics/"+itemid+"/summary","topics_panel",function(){
@@ -104,13 +104,13 @@ function selectItem(div,itemid,divid,cls){
 //				$("#actions_point").animate({height:"show"},200);
 //				$("#actions_folder").animate({height:"hide"},{queue:true,duration:200});
 	
-				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);		
-				getel("actions_point").className = "actions";
-				getel("actions_folder").className = "hidden";
+//				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);		
+//				getel("actions_point").className = "actions";
+//				getel("actions_folder").className = "hidden";
 //				getel("preview_container").className = "snippets";
 			}
 //			preview_title.textContent = "Snippets for Selected Point";
-			getel("topics_title").textContent = "References to Selected Point";
+			getel("topics_title").textContent = "Summary of Selected Claim";
 //			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
 			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
 			$("#topics_panel").animate({height:'hide'},500);
@@ -130,15 +130,15 @@ function adjustPreview(itemid,cls) {
 	var foldername = getel("foldername");
 	
 	if(cls=="Topic"){
-			getel("actions_point").className = "hidden";
-			getel("actions_folder").className = "actions";	
+//			getel("actions_point").className = "hidden";
+//			getel("actions_folder").className = "actions";	
 	//		getel("preview_container").className = "hidden";
-			getel("topics_title").textContent = "Topic Summary";
+			getel("topics_title").textContent = "Folder Summary";
 			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
 			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 	}else if(cls=="Point"){
-			getel("actions_point").className = "actions";
-			getel("actions_folder").className = "hidden";
+//			getel("actions_point").className = "actions";
+//			getel("actions_folder").className = "hidden";
 //			getel("preview_container").className = "snippets";
 			preview_title.textContent = "Snippets for Selected Point";
 			getel("topics_title").textContent = "References to Selected Point";
@@ -398,6 +398,19 @@ function findParentHolder(node){
 	return null;
 }
 
+function findSubPoints(holder){
+	for(var i = 0; i < holder.childNodes.length; i++){
+		var child = holder.childNodes[i];
+		if(child.className == "subpoints_section"){
+			return child;
+		}
+	}
+	var subpoints = document.createElement("div");
+	subpoints.className = "subpoints_section";
+	holder.appendChild(subpoints);
+	return subpoints;
+}
+
 function findParentFolderHolder(node){
 	if(!node) return null;
 	var id = node.getAttribute("tl_id");
@@ -426,6 +439,14 @@ function findHolder(node){
 function findSelectedHolder(){
 	if(selectedDivId && selectedId){
 		return findHolder(document.getElementById(selectedDivId));
+	}else{
+		return null;
+	}
+}
+
+function findSelectedFolderHolder(){
+	if(selectedDivId && selectedId){
+		return findParentFolderHolder(document.getElementById(selectedDivId));
 	}else{
 		return null;
 	}
@@ -478,7 +499,7 @@ function findSelectionInfo(node){
 	return res;
 }
 
-function newFolder(idnum){
+function newThing(idnum,what){
 	if(!idnum){
 		idnum = getNodeIdNum(findSelectedBrowser());
 	}
@@ -499,12 +520,16 @@ function newFolder(idnum){
 	dragrow.appendChild(dragsinglecol);
 	var singleicon = mk("img");
 	dragsinglecol.appendChild(singleicon);
-	singleicon.src = "/images/tree_open.png";
+	singleicon.src = "/images/tree_single2.png";
 	var dragfoldercol = mk("td");
 	dragrow.appendChild(dragfoldercol);
 	var foldericon = mk("img");
 	dragfoldercol.appendChild(foldericon);
-	foldericon.src = "/images/folder.png";
+	if(what == 'folder'){
+		foldericon.src = "/images/folder.png";
+	}else{
+		foldericon.src = "/images/lightbulb.png";
+	}
 	var dragmaincol = mk("td");
 	dragrow.appendChild(dragmaincol);
 	var drageditdiv = mk("div");
@@ -515,7 +540,8 @@ function newFolder(idnum){
 	drageditdiv.appendChild(input);
 
 	var selectedholder = findSelectedHolder();
-	var parent = findParentFolderHolder(selectedholder);
+//	var parent = findParentFolderHolder(selectedholder);
+	var parent = findSelectedFolderHolder();
 	var parentid;
 	var parentdivid = null;
 	if(parent){
@@ -526,19 +552,22 @@ function newFolder(idnum){
 	}
 	
 	input.addEventListener("blur",function(){
-		folderFinished(holder,input,uniq,parentid,parentdivid);
+		createFinished(holder,input,uniq,parentid,parentdivid,what);
 	},false);
 	
 	input.addEventListener("keypress",function(ev){
 		ev.stopPropagation();
 		var KEYENTER = 13;
 		if(ev.keyCode == KEYENTER){
-			folderFinished(holder,input,uniq,parentid,parentdivid);
+			createFinished(holder,input,uniq,parentid,parentdivid,what);
 		}
 	},false);
 
 	if(selectedholder){
-		selectedholder.parentNode.insertBefore(holder,selectedholder);
+		var subpoints = findSubPoints(selectedholder);
+		subpoints.appendChild(holder);
+		subpoints.style.display = "";
+//		selectedholder.parentNode.insertBefore(holder,selectedholder);
 	}else{
 		var body = document.getElementById("body-"+idnum);
 		var container = mk("div");
@@ -577,15 +606,20 @@ function findSubTopics(idnum){
 }
 
 
-function folderFinished(container,input,newDivId,parentid,parentdivid){
+function createFinished(container,input,newDivId,parentid,parentdivid,what){
+	if(what == 'folder'){
+		phpurl = "new_topic.php";
+	}else{
+		phpurl = "new_point.php";
+	}
 	if(input.value != "" && !input.done){
 		var nametxt = normalizeText(input.value);
 		if(parentid){
-			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt)+"&parentid="+parentid,function(id){
+			doAJAX("newfolder",phpurl+"?txt="+encodeURIComponent(nametxt)+"&parentid="+parentid,function(id){
 				ajaxReplace('/topics/'+parentid+'/'+expandcommand,parentdivid)
 			});
 		}else{
-			doAJAX("newfolder","new_topic.php?txt="+encodeURIComponent(nametxt),function(id){
+			doAJAX("newfolder",phpurl+"?txt="+encodeURIComponent(nametxt),function(id){
 				ajaxReplace('/topics/'+id+'/'+expandcommand,"holder-"+newDivId);
 			});
 		}				
@@ -614,7 +648,7 @@ function clickSave(){
 		return;
 	}else{
 		if(pointname == "" || pointnode.className == "pointinput_empty"){
-			alert("You must enter the point that this snippet is making");
+			alert("You must enter the claim that this snippet is making");
 		}
 	}
 	
@@ -709,5 +743,5 @@ function actionDelete(ev){
 }
 
 function actionOrganize(){
-	alert("Organize points and folders using drag and drop.\n Drop a point onto another point to say if it supports or opposes the other point.");
+	alert("Organize claims and folders using drag and drop.\n Drop a claim onto another claim to say if it supports or opposes the other claim.");
 }
