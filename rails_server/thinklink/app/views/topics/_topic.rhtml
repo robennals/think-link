@@ -24,7 +24,11 @@
 	<% if !options[:link].nil? && options[:link] %>
 	<!-- don't show folder expandability -->
 	<% else %>
+
 		<% if expand %>
+		
+			<div class="dragholder" tl_cls="Topic" tl_id="<%=topic.id%>" id="holder-<%=idnum%>">
+
 			<% if scroll %>
 				<span id="primary_scrollElem"></span>
 			<% end %>
@@ -47,6 +51,7 @@
 						</div>
 					<% end %>
 			</div>
+			</div>
 		<% else %>
 	
 			<% if options[:pointfolders] %>
@@ -55,6 +60,7 @@
 			<%= render_partial 'main/dragitem', topic, :treeopen => ('/topics/'+topic.id.to_s+'/expand') %> 
 			<% end %>		
 		<% end %>
+		
 	<% end %>
 
 <% end %>
