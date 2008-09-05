@@ -15,19 +15,11 @@
 <input style="margin-bottom:5px" type="button" value="Organize Points" onclick="openOrganizer()">
 
 <div>
-	<div class="snippets" id="preview_container">
-	<h2 id="preview_title">Snippets for Selected Point</h2>
-		<div class="snippet_container" id="preview_panel">
-		<% @snippets.each do |snippet| %>
-		<%=	render_partial 'snippets/snippet', snippet, :options => {:nopoint => true} %>
-		<% end %> 
-		</div>
-	</div>
 
 	<div class="topics" id="topics_container">
-		<h2 id="topics_title">References to Selected Point</h2>
+		<h2 id="topics_title">Summary of Selected Claim</h2>
 		<div class="snippet_container" id="topics_panel">
-			 <%= render_partial 'points/pointplaces', @point %>
+			 <%= render_partial 'points/summary', @point %>
 		</div>	
 	</div>
 

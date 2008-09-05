@@ -14,13 +14,13 @@ class TopicsController < ApplicationController
 	def expand
 		@topic = Topic.find(params[:id])
 		logTopicView(@topic)
-		render :partial => "topic", :locals => {:noholder => true, :expand => true}, :object => @topic
+		render :partial => "subitems", :locals => {:noholder => true, :options => {}, :expand => true},  :object => @topic
 	end
 
 	def expandfolder
 		@topic = Topic.find(params[:id])
 		logTopicView(@topic)
-		render :partial => "topic", :locals => {:noholder => true, :expand => true, :options => {:pointfolders => true}}, :object => @topic
+		render :partial => "subitems", :locals => {:noholder => true, :expand => true, :options => {:pointfolders => true}}, :object => @topic
 	end
 	
 	def mine

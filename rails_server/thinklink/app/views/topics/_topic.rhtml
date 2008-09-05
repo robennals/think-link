@@ -8,6 +8,7 @@
    if (!defined? options) || !options
    	 options = {}
    end
+   options = options.merge ({:intopic => true})
    if (!defined? expand)
    	 expand = false
    end
@@ -17,7 +18,7 @@
  %>
 
 <% if points.empty? && children.empty? %>
-		<%= render_partial 'main/dragitem', topic, :treesingle => true %>
+		<%= render_partial 'main/dragitem', topic, :expand => expand, :treesingle => true %>
 <% elsif options[:nodrag]%>
 	<%= render_partial 'main/previewitem', topic, :options=>options %>
 <% else %>
@@ -29,29 +30,10 @@
 		<% if expand %>
 		
 			<div class="dragholder" tl_cls="Topic" tl_id="<%=topic.id%>" id="holder-<%=idnum%>">
-
-			<% if scroll %>
-				<span id="primary_scrollElem"></span>
-			<% end %>
-			<%= render_partial 'main/dragitem', topic, :treeclose => ('topicpoints-'+idnum.to_s) %>
-		
-			<div class="subpoints_section" id="topicpoints-<%=idnum%>">
-					<% if !children.empty? %>
-						<!-- <div class="relationtitle">subtopics</div> -->
-						<div class="subpoints">
-						<% children.each do |subtopic| %>
-							<%= render_partial 'topics/topic', subtopic, :expand=>false, :options => options %>
-						<% end %>
-						</div>
-					<% end %>
-					<% if !points.empty? %>
-					  <!--
-						<div class="relationtitle">points</div> -->
-						<div class="subpoints">
-							<%= render_partial 'points/points', points, :options => options.merge ({:intopic => true}) %>
-						</div>
-					<% end %>
-			</div>
+				<% if scroll %>
+					<span id="primary_scrollElem"></span>
+				<% end %>
+				<%= render_partial 'main/dragitem', topic, :expand => true, :treeclose => ('topicpoints-'+idnum.to_s) %>
 			</div>
 		<% else %>
 	

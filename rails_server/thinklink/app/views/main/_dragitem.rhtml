@@ -3,41 +3,53 @@
 idnum = getUniq 
 itemid = dragitem.id
 itemtxt = escape_single_quotes(dragitem.txt)
- %>
 
-		<% if ((defined? treeopen) && treeopen) || ((defined? treesingle) && treesingle) %>
-		<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=dragitem.class%>">
-		<% end %>
+if dragitem.class == Topic
+	partial = "topics/subitems"
+else
+	partial = "points/subitems"
+end
+
+%>
+
+	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=dragitem.class%>">
 		
 		<table class="dragtable">
-		<tr>
-		<td>
-				<% if (defined? treeopen) && treeopen %>
-					<img src="/images/tree_open.png" onclick="ajaxReplace('<%=treeopen%>','holder-<%=idnum%>')"/>	
-				<% elsif (defined? treeclose) && treeclose %>
-					<img src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('<%=treeclose%>'))"/>	
-				<% elsif defined? treesingle && treesingle %>
-					<img src="/images/tree_single2.png"/>	
-				<% end %>
-		</td>
-				<% if defined? dragitem.icon %> 
-				<td><img src="<%=dragitem.icon(@user)%>"/></td>
-				<% end %>
-		<td>
-			<div class="dragitem" id="<%=idnum%>"
-				onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
-				onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
-				onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
-				onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
-				ondblclick="dblClick(this,<%= itemid %>, '<%=dragitem.class%>')"
-				onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
-
-			<%=dragitem.txt%>
-			</div>
-		</td>
-		</tr>
+			<tr>
+			<td>
+					<% if (defined? treeopen) && treeopen %>
+						<img id="button-<%=idnum%>" src="/images/tree_open.png" onclick="toggleExpanded(<%=idnum%>)"/>	
+					<% elsif (defined? treeclose) && treeclose %>
+						<img id="button-<%=idnum%>" src="/images/tree_close.png" onclick="toggleShown(this,document.getElementById('<%=treeclose%>'))"/>	
+					<% elsif defined? treesingle && treesingle %>
+						<img id="button-<%=idnum%>" src="/images/tree_single2.png"/>	
+					<% end %>
+			</td>
+					<% if defined? dragitem.icon %> 
+					<td><img src="<%=dragitem.icon(@user)%>"/></td>
+					<% end %>
+			<td>
+				<div class="dragitem" id="<%=idnum%>"			
+					<% if (defined? expand) && expand %>
+					style="font-size: 20px;"
+					<% end %>			
+					onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
+					onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
+					onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+					onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+					ondblclick="dblClick(this,<%= itemid %>, '<%=dragitem.class%>')"
+					onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
+	
+				<%=dragitem.txt%>
+				</div>
+			</td>
+			</tr>
 		</table>
 		
-		<% if ((defined? treeopen) && treeopen) || ((defined? treesingle) && treesingle) %>
+		<div id="subitems-<%=idnum%>" class="subpoints_section" style="display:none;">
+			<% if treeclose %>
+				<%= render_partial partial, dragitem, :options => options %>
+			<% end %>
 		</div>
-		<% end %>
+		
+	</div>

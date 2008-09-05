@@ -35,7 +35,130 @@ var selectedId;
 var selectedDivId;
 var selectedCls;
 
+function findSiblings(node){
+	var holder = findHolder(node);
+	if(!holder) return [];
+	var siblings = [];
+	for(var i = 0; i < holder.parentNode.childNodes.length; i++){
+		var child = holder.parentNode.childNodes[i];
+		if(child.getAttribute && ((child.getAttribute("tl_id") != holder.getAttribute("tl_id")) || 
+				(child.getAttribute("tl_cls") != holder.getAttribute("tl_cls")))){
+			siblings.push(child);
+		}
+	}
+	return siblings;
+	
+//	var parent = findParentHolder(holder);
+//	var children = findChildHolders(parent);
+//	var siblings = [];
+//	for(var i = 0; i < children.length; i++){
+//		var child = children[i];
+//		if((child.getAttribute("tl_id") != holder.getAttribute("tl_id")) || 
+//				(child.getAttribute("tl_cls") != holder.getAttribute("tl_cls"))){
+//			siblings.push(child);
+//		}
+//	}	
+	return siblings;
+}
+
+function expandItem(idnum){
+	var holder = getel("holder-"+idnum);
+	var id = holder.getAttribute("tl_id");
+	var cls = holder.getAttribute("tl_cls");
+	var subitems = getel("subitems-"+idnum);
+	var button = getel("button-"+idnum);
+	subitems.style.display = "";
+	if(button.getAttribute("src") == "/images/tree_open.png"){
+		button.setAttribute("src","/images/tree_close.png");
+	}
+	if(!subitems.tl_loaded){
+		subitems.tl_loaded = true;			
+		
+		var requrl;
+		if (cls == "Topic"){
+			requrl = "/topics/";
+		}else{
+			requrl = "/points/";
+		}		
+		ajaxReplace(requrl+id+"/expand",'subitems-'+idnum);
+	}
+}
+
+function closeItem(idnum){
+	var subitems = getel("subitems-"+idnum);
+	var button = getel("button-"+idnum);
+	if(!button) return;
+	if(button.getAttribute("src") == "/images/tree_close.png"){
+		button.setAttribute("src","/images/tree_open.png");
+	}
+	subitems.style.display = "none";	
+}
+
+function toggleExpanded(idnum){
+	var subitems = getel("subitems-"+idnum);
+	if(subitems.style.display == "none"){
+		expandItem(idnum);
+	}else{
+		closeItem(idnum);
+	}
+}
+
+function findSectionHeader(node){
+	while(node){
+		if(node.className == "relationtitle"){
+			return node;
+		}
+		node = node.previousSibling;
+	}
+	return null;
+}
+		
+function hideSiblings(node){
+	var header = findSectionHeader(findHolder(node));
+	var siblings = findSiblings(node);
+	for(var i = 0; i < siblings.length; i++){
+		var sibling = siblings[i];
+		if(sibling != header){
+			$(sibling).animate({height:'hide'},500);
+		}
+	}
+}
+
+function showSiblings(node){
+	var siblings = findSiblings(node);
+	for(var i = 0; i < siblings.length; i++){
+		var sibling = siblings[i];
+		$(sibling).animate({height:'show'},500);
+	}
+}
+
+function findChildren(idnum){
+	var subsection = getel("subitems-"+idnum);
+	var children = [];
+	for(var i = 0; i < subsection.childNodes.length; i++){
+		var child = subsection.childNodes[i];
+		if(child.className == "dragholder" || child.className == "relationtitle"){
+			children.push(child);
+		}
+	}
+	return children;
+}
+
+function showChildren(idnum){
+	var children = findChildren(idnum);
+	for(var i = 0; i < children.length; i++){
+		var child = children[i];
+		if(child.style.display == "none"){
+			$(child).animate({height:'show'},500);
+		}
+	}
+}
+
 function selectItem(div,itemid,divid,cls){
+	var selinfo = findSelectionInfo(div);
+	if(!divid){
+		divid = getNodeIdNum(selinfo.holder);
+	}
 	if(renameItem && divid != selectedDivId){
 		editFinished();
 	}
@@ -48,12 +171,24 @@ function selectItem(div,itemid,divid,cls){
 		if(selectedDivId == divid){
 			return;
 		}
+		$(oldselection).animate({fontSize:"13px"},500);
+
+		if(selinfo.parentid != selectedId){				
+			closeItem(selectedDivId);
+		}
+//		showSiblings(oldselection);
 	}
 
 	selectedId = itemid;
 	selectedDivId = divid;
 	selectedCls = cls;
-	
+
+	$(div).animate({fontSize:"20px"},500);
+	hideSiblings(div);
+	showChildren(divid);
+
+	expandItem(divid);	
+
 	if(selectedCls == "Oppose" || selectedCls == "Support"){
 		div.className = "relationtitle relationtitle_selected";
 	}else{
@@ -218,7 +353,7 @@ function hotMode(idnum){
 function topMode(idnum){
 	clearSelect(idnum);
 	getel("title-"+idnum).textContent = "All Folders";
-	getel("all-"+idnum).className = "browsetab browsetab_selected";
+//	getel("all-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/toplevel?"+params,"body-"+idnum);
 }
 
@@ -418,6 +553,29 @@ function findSubPoints(holder){
 	subpoints.className = "subpoints_section";
 	holder.appendChild(subpoints);
 	return subpoints;
+}
+
+function findSubSubPoints(holder){
+	var subpoints = findSubPoints(holder);
+	for(var i = 0; i < holder.childNodes.length; i++){
+		var child = holder.childNodes[i];
+		if(child.className == "subpoints"){
+			return child;
+		}
+	}
+	return null;
+}
+
+function findChildHolders(holder){
+	var subsubpoints = findSubSubPoints(holder);
+	var childholders = [];
+	for(var i = 0; i < subsub.childNodes.length; i++){
+		var child = subsub.childNodes[i];
+		if(child.className == "dragholder"){
+			childholders.push(child);
+		}
+	}
+	return childholders;	
 }
 
 function findParentFolderHolder(node){
