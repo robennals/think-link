@@ -1,0 +1,16 @@
+<%
+	 topic = subitems
+	 points = topic.points
+   children = topic.children
+%>
+
+		<% if !children.empty? %>
+			<div class="relationtitle">sub-topics</div>
+			<% children.each do |subtopic| %>
+			<%= render_partial 'topics/topic', subtopic, :expand=>false, :options => options %>
+			<% end %>
+		<% end %>
+		<% if !points.empty? %>
+			<div class="relationtitle">claims about this topic</div>
+			<%= render_partial 'points/points', points, :options => options.merge ({:intopic => true}) %>
+		<% end %>

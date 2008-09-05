@@ -1,0 +1,20 @@
+<%
+	point = subitems 
+ supports = point.supporting_points 
+ opposes = point.opposing_points 
+ %>
+
+<% if !supports.empty? || options[:pointfolders] %>
+	<div class="relationtitle" 
+		onclick="selectItem(this, <%= point.id %>,null,'Support')">supported by</div>
+	<% supports.each do |subpoint| %>
+		<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+	<% end %>
+<% end %>
+<% if !opposes.empty? || options[:pointfolders] %>
+	<div class="relationtitle"
+		onclick="selectItem(this, <%= point.id %>,null,'Oppose')">opposed by</div>
+	<% opposes.each do |subpoint| %>
+		<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+	<% end %>
+<% end %>
