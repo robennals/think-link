@@ -35,6 +35,25 @@ class TopicsController < ApplicationController
 		render :action => :index  
 	end
 	
+	def hot
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
+		@topics = Topic.find_by_sql ("
+				SELECT topics.id, topics.txt, topics.user_id FROM topics
+					INNER JOIN (
+						SELECT * FROM topicviews 
+						ORDER BY id DESC 
+						LIMIT 200) 
+					AS rows 
+					ON rows.topic_id = topics.id
+				GROUP BY topic_id 
+				ORDER BY COUNT(rows.user_id) DESC");
+			render :partial => "topics/topics", :object => @topics, :locals => {:options => options}
+	end
+	
 	def show
 		@topic = Topic.find(params[:id])
 		logTopicView(@topic)

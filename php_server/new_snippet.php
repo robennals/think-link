@@ -36,7 +36,7 @@ if(!$pointid){
 	}
 
 	if($supportid){
-		sql_query("INSERT INTO point_links (point_a_id, point_b_id, howlinked, user_id) VALUES ($pointid,$opposeid,'supports',$user)");
+		sql_query("INSERT INTO point_links (point_a_id, point_b_id, howlinked, user_id) VALUES ($pointid,$supportid,'supports',$user)");
 	}
 }
 
@@ -49,6 +49,8 @@ sql_query("INSERT INTO snippets (url,url_real,txt,user_id,pagetitle,title,source
 $snippetid = mysql_insert_id();	
 
 sql_query("INSERT INTO bookmarks (snippet_id, user_id) VALUES ('$snippetid','$user');");
+sql_query("INSERT INTO bookmark_points (point_id, user_id) VALUES ('$snippetid','$user');");
+
 
 echo "\n";
 

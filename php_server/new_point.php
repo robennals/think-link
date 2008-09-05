@@ -35,6 +35,8 @@ if($topicid){
 	sql_query("INSERT INTO point_topics (point_id,topic_id,user_id) VALUES ('$pointid','$topicid','$user')");
 }
 
+sql_query("INSERT INTO bookmark_points (point_id,user_id) VALUES ('$pointid','$user');");
+
 json_out($pointid);
 
 ?>

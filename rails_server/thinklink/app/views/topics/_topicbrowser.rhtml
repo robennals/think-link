@@ -15,6 +15,9 @@ end
 
 %>
 
+<script type="text/javascript">
+	setDefaultBrowser(<%=idnum%>);
+</script>
 
 
 <table class="browsetable" id="browser-<%=idnum%>">
@@ -36,6 +39,9 @@ All Folders
 <div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
 <% end %>
 My Recent
+</div>
+<div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
+Hot Topics
 </div>
 <!-- <div class="browsetab" id="scratch-<%=idnum%>" onclick="scratchMode(<%=idnum%>)">
 Scratch Pad
@@ -67,7 +73,8 @@ Search
 			</span> 
 			</td><td class="browsefolderadd" style="text-align:right">
 			<%if !options[:point]%>
-			<nobr class="folder_add" onclick="newFolder(<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></nobr>
+			<nobr class="folder_add" onclick="newThing('claim',<%=idnum%>)">New Claim <img src="/images/lightbulb_add.png"/></nobr>
+			<nobr class="folder_add" onclick="newThing('folder',<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></nobr>
 			<% end %>
 			</tr>
 			

@@ -21,6 +21,8 @@ if($parentid){
 	sql_query("INSERT INTO topic_links (parent_id, child_id, user_id) VALUES ($parentid,$topicid,$user)");
 }
 
+sql_query("INSERT INTO bookmark_topics (topic_id,user_id) VALUES ('$topicid','$user');");
+
 echo "\n";
 
 json_out($topicid);

@@ -22,7 +22,9 @@ initParams();
 window.addEventListener("load",function(){initParams()},true);
 
 function setDefaultBrowser(idnum){
-	defaultBrowser = idnum;
+	if(!defaultBrowser){
+		defaultBrowser = idnum;
+	}
 }
 
 function getDefaultBrowserNode() {
@@ -182,7 +184,7 @@ function clearSelect(idnum){
 	clearButton("hot",idnum);
 	clearButton("friends",idnum);
 	clearButton("search",idnum);
-
+	clearButton("hot",idnum);
 	getel("searchbar-"+idnum).className = "hidden";
 }
 
@@ -204,6 +206,13 @@ function recentMode(idnum){
 	clearSelect(idnum);
 	getel("recent-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/recent?"+params,"body-"+idnum);
+}
+
+function hotMode(idnum){
+	getel("title-"+idnum).textContent = "Hot Topics";
+	clearSelect(idnum);
+	getel("hot-"+idnum).className = "browsetab browsetab_selected";
+	ajaxReplace("/topics/hot?"+params,"body-"+idnum);
 }
 
 function topMode(idnum){
@@ -467,6 +476,9 @@ function findSelectedBrowser(){
 		var node = document.getElementById(selectedDivId);
 		return findBrowser(node);
 	}
+	if(defaultBrowser){
+		return getel("browser-"+defaultBrowser);	
+	}
 	return null;
 }
 
@@ -499,7 +511,7 @@ function findSelectionInfo(node){
 	return res;
 }
 
-function newThing(idnum,what){
+function newThing(what,idnum){
 	if(!idnum){
 		idnum = getNodeIdNum(findSelectedBrowser());
 	}

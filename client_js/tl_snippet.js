@@ -79,9 +79,38 @@ function tl_snippet_dialog(margin) {
 		this.topicSuggest.close();
 	}
 	
+	this.noSelection = function(){
+		var dialog = $("<div/>").addClass("tl_dialog").attr("id","reldialog")
+			.css("left",100).css("top",100).css("position","fixed").css("width","300px")
+			.appendTo(document.body);
+		var title = $("<div>").addClass("tl_dialog_title")
+			.text("Think Link")
+			.mousedown(function(e) { tl_dragStart(e,"reldialog") }) // use title bar to drag browser;
+			.appendTo(dialog);	
+		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
+		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
+			.click(function(){
+				$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
+				dialog.remove();
+			});
+		var body = $("<form/>").addClass("tl_dialog_body").appendTo(dialog);
+		
+		var first = $("<div>").addClass("point_text")
+			.text("You don't have any text selected and so cannot create a new snippet. Would you like to browse Think Link?")
+			.appendTo(body);
+
+		var open = $("<input type='button'/>").attr("value","Browse Think Link")
+		.appendTo(body).css("margin-left","75px")
+		.click(function(){
+			window.open(thinklink_mainhome);
+			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
+			dialog.parentNode.removeChild(dialog);			
+		});
+	}
+	
 	this.new = function(sourceText){
 		if (sourceText=="" || sourceText == null) {
-			 alert("You need to select some text before clicking this button");
+			this.noSelection();
 			 return; 
 		}
 		this.sourceText = sourceText;

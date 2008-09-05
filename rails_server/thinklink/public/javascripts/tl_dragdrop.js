@@ -199,7 +199,7 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 	
 		var supports = $("<input type='button' value='Supports'/>")
 			.appendTo(body).css("margin-left","75px")
-			.click(function(){linkPoints(dialog,"supports",sourceId,targetId);});
+			.click(function(){linkPoints(dialog,"supports",sourceId,targetId,holderid);});
 		var opposes = $("<input type='button' value='Opposes'/>")
 			.appendTo(body)
 			.click(function(){linkPoints(dialog,"opposes",sourceId,targetId,holderid);});				

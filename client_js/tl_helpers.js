@@ -17,12 +17,18 @@ function tl_showDiv(divid) {
 	elem.style.display = "block";
 }
 
+var tl_tooltip = null;
+var tl_tooltipCancelled = false;
+
 function tl_delayedShowTooltip(text,x,y){
-	var box = document.createElement("div");
+	if(!tl_tooltip){
+		tl_tooltip = document.createElement("div");
+	}
+	var box = tl_tooltip;
 	box.className = "hidden";
 	box.style.top = y+"px";
 	box.style.left = x+"px";
-	box.appendChild(document.createTextNode(text));
+	box.textContent = text;
 	document.body.appendChild(box);
 	
 	setTimeout(function(){
@@ -34,21 +40,28 @@ function tl_delayedShowTooltip(text,x,y){
 	},1000);
 	
 	return box;
-	
 }
 
 function tl_showTooltip(text,x,y) {
-	var box = document.createElement("div");
+	if(!tl_tooltip){
+		tl_tooltip = document.createElement("div");
+	}
+	var box = tl_tooltip;
 	box.className = "help_box";
 	box.style.top = y+"px";
 	box.style.left = x+"px";
-	box.appendChild(document.createTextNode(text));
+	box.textContent = text;
 	document.body.appendChild(box);
 	return box;
 }
 
 function tl_hideTooltip(elem) {
-	document.body.removeChild(elem);
+	if(tl_tooltip && tl_tooltip.parentnode){
+		tl_tooltip.className = "hidden";
+		tl_tooltip.parentNode.removeChild(tl_tooltip);
+	}else{
+		document.body.removeChild(elem);
+	}
 }
 
 function doAJAX(scriptID,url,callback) {

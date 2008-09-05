@@ -429,7 +429,9 @@ function tl_margin()
 					function(){ tl_hideTooltip(tool); }
 				)
 				.click(function(){
-					myBrowser.viewFrame(that.items[this.id].pointID, that.items[this.id].id);
+					if(!getText() || !getText().toString()){
+						myBrowser.viewFrame(that.items[this.id].pointID, that.items[this.id].id);
+					}
 				});
 			}
 		}
