@@ -151,8 +151,8 @@
 	position: fixed;
 	top: 200px;
 	left: 200px;
-	min-height: 400px;
-	min-width: 600px;
+/*	min-height: 400px;
+	min-width: 600px; */
 	z-index: 2147483647;
 }
 

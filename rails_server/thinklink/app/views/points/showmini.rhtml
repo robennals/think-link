@@ -2,24 +2,24 @@
 
 <table class="minitable">
 <tr>
-<td class="firstcolumn">
+<td class="firstcolumn" style="width:50%">
 <div>
 
-<%= render_partial 'topics/topicbrowser',nil, :options => {:point => @point, :parents => @parents}, :dragbar => true, :big => true %>
+<%= render_partial 'topics/topicbrowser',@point, :options => {}, :dragbar => true, :big => true %>
 
 	
 </div>
 
-</td><td class="secondcolumn">
+</td><td class="secondcolumn" style="width:50%">
 
 <input style="margin-bottom:5px" type="button" value="Organize Points" onclick="openOrganizer()">
 
 <div>
 
 	<div class="topics" id="topics_container">
-		<h2 id="topics_title">Summary of Selected Claim</h2>
+		<h2 id="topics_title">Snippets</h2>
 		<div class="snippet_container" id="topics_panel">
-			 <%= render_partial 'points/summary', @point %>
+			 <%= render_partial 'snippets/snippets', @point.snippets, :options => {:nopoint => true} %>
 		</div>	
 	</div>
 

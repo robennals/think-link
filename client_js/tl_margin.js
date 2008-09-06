@@ -398,7 +398,7 @@ function tl_margin()
 		var that = this;
 		var tool;
 		for (var s=0; s <snippet.spanList.length; s++) {
-			snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
+//			snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
 			$(snippet.spanList[s]).
 			hover(
 				function(){ tool=tl_delayedShowTooltip("\""+snippet.pointText+"\" (click for more info)",mouseX+10,mouseY-30); },

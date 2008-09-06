@@ -8,7 +8,7 @@
 	
 	<% if !topics.empty? %>
 		<% topics.each do |topic| %>
-			<%= render_partial 'main/draglabel', topic, :label => "topic:" %>
+			<%= render_partial 'main/draglabel', topic, :label => "about:" %>
 		<% end %>
 	<% end %>
 
@@ -18,7 +18,7 @@
 		<% end %>
 	<% end %>
 
-	<% if !supports.empty? %>
+	<% if !opposes.empty? %>
 		<% opposes.each do |oppose| %>
 			<%= render_partial 'main/draglabel', oppose, :label => "opposes:" %>
 		<% end %>

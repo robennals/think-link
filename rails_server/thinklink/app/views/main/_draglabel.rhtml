@@ -8,20 +8,14 @@ dragitem = draglabel
 itemtxt = escape_single_quotes(draglabel.txt)
 
 %>
-
-<% if (defined? expand) && expand %>
-	<script type="text/javascript">
-		setSelectionOnStartup(<%=idnum%>);
-	</script>
-<% end %>
-			
+		
 
 	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=dragitem.class%>">		
 		<table class="dragtable">
 			<tr>
 				<td id="label-<%=idnum%>" class="draglabel">
 					<% if (defined? label) && label %> 
-						<%= label %>
+						<nobr><%= label %></nobr>
 					<% end %>					
 				</td>
 				<% if defined? dragitem.icon %> 

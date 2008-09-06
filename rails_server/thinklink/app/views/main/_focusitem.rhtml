@@ -15,12 +15,14 @@ elsif focusitem.class == Collection
 end
 %>
 
+<div id="propholder-<%=idnum%>"></div>
+
 <div id="parents-<%=idnum%>" class="item-parents" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">
 		<%= render_partial parpartial, focusitem, :options => options %>
 </div>
 
 <div id="current-<%=idnum%>" class="item-current" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">
-	<%= render_partial 'main/draglabel', focusitem, :expand => true, :label => nil %>
+	<%= render_partial 'main/draglabel', focusitem, :expand => true, :idnum => idnum, :label => nil %>
 </div>
 
 <div id="children-<%=idnum%>" class="item-children" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">

@@ -417,11 +417,8 @@ function tl_point_browser() {
 		me.style.left = "200px";
 //		me.style.width = (window.innerWidth * (2/3)) + "px";
 		me.style.width = (window.innerWidth - 250) + "px";
-		me.style.height = (window.innerHeight * (2/3)) + "px";
 
 		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
-		var height =  $("#"+this.divID).height();
-		var width = $("#"+this.divID).width();
 		var position = findPos(document.getElementById(this.divID));
 		
 		var scriptID = "tl_point_ajax";
@@ -448,35 +445,8 @@ function tl_point_browser() {
 			else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
 
 			var explainSpan = $("<span/>").css("padding-left","10px").text(defaultText);
-//
-//			var thumbup = $("<img/>")
-//				.attr("src",thinklink_imagebase+"thumb_up.png").appendTo(buttonBox).css("padding-left","4px")
-//				.click(that.ratePointHandler).attr("id",1)
-//				.hover(function(){ 
-//					$(this).addClass("highlight");
-//					$(explainSpan).text("I agree");
-//				}, function(){ 
-//					$(this).removeClass("highlight");
-//					$(explainSpan).text(defaultText); 
-//				});
-//
-//			var thumbdown = $("<img/>")
-//				.attr("src",thinklink_imagebase+"thumb_down.png").appendTo(buttonBox)
-//				.click(that.ratePointHandler).attr("id",0)
-//				.hover(function(){ 
-//					$(this).addClass("highlight");
-//					$(explainSpan).text("I disagree");
-//				}, function(){ 
-//					$(this).removeClass("highlight");
-//					$(explainSpan).text(defaultText); 
-//				});
-
 			explainSpan.appendTo(titleBox);	
 
-//			var help = $("<img/>")
-//				.attr("src",thinklink_imagebase+"help.png").appendTo(buttonBox)
-//				.click(that.showHelpBox)
-//				.appendTo(buttonBox);	
 			var close = $("<img/>")
 				.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
 				.click(function(){
@@ -485,6 +455,8 @@ function tl_point_browser() {
 			
 			// add actual content
 			var frameholder = document.createElement("div");
+			frameholder.style.height = (window.innerHeight * (2/3)) + "px";
+
 			var pointframe = document.createElement("iframe");
 			pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
 			pointframe.style.width="100%";
@@ -493,7 +465,7 @@ function tl_point_browser() {
 			pointframe.setAttribute("id","tl_point_frame");
 			frameholder.appendChild(pointframe);
 			frameholder.style.width="100%";
-			frameholder.style.height="100%";
+//			frameholder.style.height="100%";
 			$("#"+that.divID).append($(frameholder));
 
 			that.showMe();	

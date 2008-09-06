@@ -155,8 +155,13 @@ class PointsController < ApplicationController
 	end
   
   def expand
+		if params[:savemode] 
+			options = {:pointfolders => true}
+		else
+			options = {}
+		end
     @point = Point.find(params[:id])
-    render :partial => "subitems", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => {}}, :object => @point
+    render :partial => "subitems", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => options}, :object => @point
   end  
   
   def expandfolder

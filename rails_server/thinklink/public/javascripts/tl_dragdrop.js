@@ -210,7 +210,8 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 	if(dropclass == "Topic" && dragClass == "Point"){
 		var fieldString = "?topicid="+dropid+"&pointid="+dragId;
 		doAJAX("tl_newtopicpoint_ajax","new_topic_point.php"+fieldString,function(result){
-			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);		
+			refreshChildren(dropinfo.holder);
+//			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);		
 		});
 	}
 	
@@ -220,7 +221,8 @@ function dragCapture(ev,dropid,dropdivid,dropclass){
 		}
 		var fieldString = "?parentid="+dropid+"&childid="+dragId;
 		doAJAX("tl_newtopiclink_ajax","new_topic_link.php"+fieldString,function(result){
-			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);
+				refreshChildren(dropinfo.holder);
+//			ajaxReplace('/topics/'+dropid+"/"+expandcommand,holderid);
 			if(!draginfo.parent){
 				draginfo.holder.parentNode.removeChild(draginfo.holder);
 			}
@@ -238,8 +240,9 @@ function linkPoints(dialog,rel,sourceid,targetid,holderid){
 		doAJAX("tl_newpointlink_ajax","new_point_link.php"+fieldString,function(result){
 			tl_log("new point link: "+ result);
 			if (result==false) { alert("A point cannot link to itself"); return;}
-		
-			ajaxReplace('/points/'+sourceid+'/'+expandcommand,holderid);			
+
+			refreshChildren(getel(holderid));		
+//			ajaxReplace('/points/'+sourceid+'/'+expandcommand,holderid);			
 			
 			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
 			$(dialog).get(0).parentNode.removeChild(dialog);			

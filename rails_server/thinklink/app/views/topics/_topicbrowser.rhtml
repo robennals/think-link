@@ -35,10 +35,10 @@ end
 <% else %>
 <div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
 <% end %>
-My Recent
+Recent Topics
 </div>
 <div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
-Hot Topics
+Hot Claims
 </div>
 
 <% if defined? showsocial %>
@@ -62,10 +62,10 @@ Search
 				Idea Browser
 			</span> 
 			</td><td class="browsefolderadd" style="text-align:right">
-			<%if !options[:point]%>
+<!--			<%if !options[:point]%>
 			<nobr class="folder_add" onclick="newThing('claim',<%=idnum%>)">New Claim <img src="/images/lightbulb_add.png"/></nobr>
-			<nobr class="folder_add" onclick="newThing('folder',<%=idnum%>)">New Folder <img src="/images/folder_add.png"/></nobr>
-			<% end %>
+			<nobr class="folder_add" onclick="newThing('folder',<%=idnum%>)">New Topic <img src="/images/folder_add.png"/></nobr>
+			<% end %> -->
 			</tr>
 			
 			</table>

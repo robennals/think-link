@@ -80,7 +80,7 @@ function expandItem(idnum){
 		}else{
 			requrl = "/points/";
 		}		
-		ajaxReplace(requrl+id+"/expand",'subitems-'+idnum);
+		ajaxReplace(requrl+id+"/expand?"+params,'subitems-'+idnum);
 	}
 }
 
@@ -190,6 +190,8 @@ function hideLabel(holder){
 function updateSnippets(holder){
 	var itemid = holder.getAttribute("tl_id");
 	var cls = holder.getAttribute("tl_cls");
+	var panel = getel("topics_panel");
+	if(!panel) return;
 	
 	$("#topics_panel").animate({height:'hide'},500);
 	
@@ -204,11 +206,36 @@ function updateSnippets(holder){
 	}
 }
 
-function selectItem(div){
-	if(selections){
-		processSelections();
+function setupInitialSelection(browser,idnum){
+	var div = getel(idnum);
+	if(div){
+		browser.selectedDiv = div;
 	}
+}
+
+var selectedRelation = null;
+
+function selectRelationTitle(div){
+	if(selectedRelation){
+		selectedRelation.className = "relationtitle";
+	}
+	div.className = "relationtitle relationtitle_selected";
+	selectedRelation = div;
+
 	
+	var pointname = getel("pointname");
+	var cls = div.getAttribute("tl_cls");
+	if(pointname){
+		if(cls == "Support"){
+			disableInput("pointname","Enter claim that supports the selected claim");
+		}
+		if(cls == "Oppose"){
+			disableInput("pointname","Enter claim that opposes the selected claim");
+		}
+	}
+}
+
+function selectItem(div){
 	var browser = findBrowser(div);
 	var holder = findHolder(div);
 	var group = findNodeGroup(div);
@@ -216,8 +243,46 @@ function selectItem(div){
 	var current = getel("current-"+idnum);
 	var parents = getel("parents-"+idnum);
 	var children = getel("children-"+idnum);
+	var propholder = getel("propholder-"+idnum);
+	var cls = div.getAttribute("tl_cls");
+	if(!cls){
+		cls = holder.getAttribute("tl_cls");
+	}
+	var pointname = getel("pointname");
+
+	if(pointname){ // in save dialog
+		if(cls == "Support"){
+			disableInput("pointname","Enter claim that supports the selected claim");
+		}
+		if(cls == "Oppose"){
+			disableInput("pointname","Enter claim that opposes the selected claim");
+		}
+		if(cls == "Point"){
+			enableInput("pointname");
+			pointname.value = normalizeText(div.textContent);
+		}
+		if(cls == "Topic"){
+			disableInput("pointname","Enter claim about the selected topic");
+		}
+	}
+	
+	if(div.className == "relationtitle"){
+		return;	
+	}	
+
+	browser.selectedDiv = div;
+
+	selectedDivId = div.getAttribute("id");
+	selectedId = holder.getAttribute("tl_id");
+	selectedCls = holder.getAttribute("tl_cls");
 	
 	updateSnippets(holder);
+
+	clearSelect(getNodeIdNum(browser));
+	
+	if(!propholder.selectedDiv){
+		propholder.selectedDiv = getel(idnum);
+	}
 	
 	if(group.className == "item-parents"){
 		current.setAttribute("id","children-"+idnum);
@@ -227,9 +292,9 @@ function selectItem(div){
 		newparents.className = "item-parents";
 		newparents.setAttribute("id","parents-"+idnum);
 		group.parentNode.insertBefore(newparents,parents);
-		
-		if(browser.selectedDiv){
-			$(browser.selectedDiv).animate({fontSize:'13px'},500);
+	 		 	
+ 		if(propholder.selectedDiv){
+			$(propholder.selectedDiv).animate({fontSize:'13px'},500);
 		}		
 		hideSiblings(div);
 		hideLabel(holder);
@@ -242,11 +307,12 @@ function selectItem(div){
 		$(div).animate({fontSize:"20px"},500,function(){
 			parents.className = "item-current";
 		});				
+		propholder.selectedDiv = div;
 		
 		var url = getHolderUrl(holder);
 				
-		smoothReplace(url+"expand","children-"+idnum);
-		smoothReplace(url+"parents","parents-"+idnum);
+		smoothReplace(url+"expand?"+params,"children-"+idnum);
+		smoothReplace(url+"parents?"+params,"parents-"+idnum);
 		
 		if(children){
 			$(children).animate({height:'hide'},500,function(){
@@ -262,8 +328,8 @@ function selectItem(div){
 		newchildren.setAttribute("id","children-"+idnum);
 		group.parentNode.appendChild(newchildren);	
 		
-		if(browser.selectedDiv){
-			$(browser.selectedDiv).animate({fontSize:"13px"},500);
+		if(propholder.selectedDiv){
+			$(propholder.selectedDiv).animate({fontSize:"13px"},500);
 		}
 		hideSiblings(div);
 		$(div).animate({fontSize:"20px"},500,function(){
@@ -276,10 +342,10 @@ function selectItem(div){
 
 		var url = getHolderUrl(holder);
 		
-		smoothReplace(url+"expand","children-"+idnum);
-		smoothReplace(url+"parents","parents-"+idnum);
+		smoothReplace(url+"expand?"+params,"children-"+idnum);
+		smoothReplace(url+"parents?"+params,"parents-"+idnum);
 		
-		browser.selectedDiv = div;
+		propholder.selectedDiv = div;
 		if(parents){
 			$(parents).animate({height:'hide'},500,function(){
 				parents.parentNode.removeChild(parents);								
@@ -287,8 +353,17 @@ function selectItem(div){
 		}
 	}else if (group.className == "item-current"){
 		// already selected. Do nothing 
-		browser.selectedDiv = div;
+		propholder.selectedDiv = div;
 	}	
+}
+
+function refreshChildren(node){
+	var browser = findBrowser(node);
+	var holder = findHolder(browser.selectedDiv);
+	var group = findNodeGroup(browser.selectedDiv);		
+	var url = getHolderUrl(holder);
+	var idnum = getNodeIdNum(group);
+	smoothReplace(url+"expand","children-"+idnum);
 }
 
 function smoothReplace(url,id){
@@ -308,117 +383,11 @@ function getHolderUrl(holder){
 	var cls = holder.getAttribute("tl_cls");
 	var id = holder.getAttribute("tl_id");
 	if(cls == "Topic"){
-		return "topics/"+id+"/";
+		return "/topics/"+id+"/";
 	}else if(cls == "Point"){
-		return "points/"+id+"/";
+		return "/points/"+id+"/";
 	}else if(cls == "Collection"){
 		return null;  // TODO: work out what to do here...
-	}
-}
-
-function selectItem_old(div,itemid,divid,cls){
-	var selinfo = findSelectionInfo(div);
-	if(!divid){
-		divid = getNodeIdNum(selinfo.holder);
-	}
-	if(renameItem && divid != selectedDivId){
-		editFinished();
-	}
-	if(oldselection){
-		if(selectedCls == "Oppose" || selectedCls == "Support"){
-			oldselection.className = "relationtitle";
-		}else{
-			oldselection.className = "dragitem";		
-		}
-		if(selectedDivId == divid){
-			return;
-		}
-		$(oldselection).animate({fontSize:"13px"},500);
-
-		if(selinfo.parentid != selectedId){				
-			closeItem(selectedDivId);
-		}
-//		showSiblings(oldselection);
-	}
-
-	selectedId = itemid;
-	selectedDivId = divid;
-	selectedCls = cls;
-
-	$(div).animate({fontSize:"20px"},500);
-	hideSiblings(div);
-	showChildren(divid);
-
-	expandItem(divid);	
-
-	if(selectedCls == "Oppose" || selectedCls == "Support"){
-		div.className = "relationtitle relationtitle_selected";
-	}else{
-		div.className = "dragitem dragitem_selected";
-	}
-	oldselection = div;
-	
-	var preview_panel = getel("preview_panel");
-	var preview_title = getel("preview_title");
-	var pointname = getel("pointname");
-	var foldername = getel("foldername");
-
-	if(pointname){	// in the new snippet dialog
-		tl_log(cls);
-		if(cls == "Point"){
-			enableInput("pointname");
-			pointname.value = getTextOfSelected();
-			inputstarted = false;
-		}else if(cls == "Topic"){
-			disableInput("pointname","Enter point to add within the selected folder");
-			// foldername.textContent = getTextOfSelected();
-			// tl_log(getTextOfSelected());
-			// tl_log(foldername);
-		}else if(cls == "Support"){
-			disableInput("pointname","Enter point that supports the selected point"); 
-		}else if(cls == "Oppose"){
-			disableInput("pointname","Enter point that opposes the selected point"); 
-		}
-		
-	}else{
-	
-		if(cls=="Topic"){
-			if(getel("actions_point")){
-//				$("#actions_folder").animate({opacity:"show"},200);
-//				$("#actions_point").animate({opacity:"hide"},{queue:true,duration:200});
-
-//				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);
-//				getel("actions_point").className = "hidden";
-//				getel("actions_folder").className = "actions";	
-//				getel("preview_container").className = "hidden";
-			}
-			getel("topics_title").textContent = "Summary of Selected Folder";
-			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
-			$("#topics_panel").animate({height:'hide'},500);
-			ajaxReplace("/topics/"+itemid+"/summary","topics_panel",function(){
-				$("#topics_panel").animate({height:'show'},500);			
-			});
-		}else if(cls=="Point"){
-			if(getel("actions_point")){
-//				$("#actions_point").animate({height:"show"},200);
-//				$("#actions_folder").animate({height:"hide"},{queue:true,duration:200});
-	
-//				$("#actions-panel").animate({opacity:0},500).animate({opacity:1},500);		
-//				getel("actions_point").className = "actions";
-//				getel("actions_folder").className = "hidden";
-//				getel("preview_container").className = "snippets";
-			}
-//			preview_title.textContent = "Snippets for Selected Point";
-			getel("topics_title").textContent = "Summary of Selected Claim";
-//			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
-			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
-			$("#topics_panel").animate({height:'hide'},500);
-			ajaxReplace("/points/"+itemid+"/summary","topics_panel",function(){ // containing topics and point relationships
-				$("#topics_panel").animate({height:'show'},500);			
-			});
-
-		}
-		
 	}
 }
 
@@ -429,20 +398,11 @@ function adjustPreview(itemid,cls) {
 	var foldername = getel("foldername");
 	
 	if(cls=="Topic"){
-//			getel("actions_point").className = "hidden";
-//			getel("actions_folder").className = "actions";	
-	//		getel("preview_container").className = "hidden";
 			getel("topics_title").textContent = "Folder Summary";
-			//ajaxReplace("/topics/"+itemid+"/parents","topics_panel");
 			ajaxReplace("/topics/"+itemid+"/summary","topics_panel");
 	}else if(cls=="Point"){
-//			getel("actions_point").className = "actions";
-//			getel("actions_folder").className = "hidden";
-//			getel("preview_container").className = "snippets";
 			preview_title.textContent = "Snippets for Selected Point";
 			getel("topics_title").textContent = "References to Selected Point";
-//			ajaxReplace("/points/"+itemid+"/snippets","preview_panel");
-			//ajaxReplace("/points/"+itemid+"/topics","topics_panel");
 			ajaxReplace("/points/"+itemid+"/places","topics_panel"); // containing topics and point relationships
 	}
 
@@ -760,10 +720,20 @@ function findParentFolderHolder(node){
 	return null;	
 }
 
+function findRelationTitle(node){
+	while(node != null){
+		if(node.className == 'relationtitle'){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;	
+}
+
 function findHolder(node){
 	while(node != null && node.getAttribute){
 		var node_tl_id = node.getAttribute("tl_id");
-		if(node_tl_id){
+		if(node_tl_id && node.className == "dragholder"){
 			return node;
 		}
 		node = node.parentNode;
@@ -837,14 +807,32 @@ function findSelectionInfo(node){
 	return res;
 }
 
-function newThing(what,idnum){
-	if(!idnum){
-		idnum = getNodeIdNum(findSelectedBrowser());
+
+function findTitle(childgroup,txt){
+	for(var i = 0; i < childgroup.childNodes.length; i++){
+		var child = childgroup.childNodes[i];
+		if(child.className == "relationtitle" && normalizeText(child.textContent) == txt){
+			return child;
+		}
 	}
+	var newtitle = document.createElement("div");
+	newtitle.className = "relationtitle";
+	newtitle.textContent = txt;
+	childgroup.appendChild(newtitle);
+	return newtitle;
+}
+
+function newThing(div,what){
+	var titlenode = findRelationTitle(div);
+	var browser = findBrowser(titlenode);
+	var holder = findHolder(browser.selectedDiv);
 	
+	var cls = holder.getAttribute("tl_cls");
+	var id = holder.getAttribute("tl_id");	
+		
 	function mk(tag){return document.createElement(tag);}
-	
 	var uniq = Math.ceil(Math.random()*10000000);
+
 	
 	var holder = mk("div");
 	holder.className = "dragholder";
@@ -854,16 +842,11 @@ function newThing(what,idnum){
 	holder.appendChild(dragtable);
 	var dragrow = mk("tr");
 	dragtable.appendChild(dragrow);
-	var dragsinglecol = mk("td");
-	dragrow.appendChild(dragsinglecol);
-	var singleicon = mk("img");
-	dragsinglecol.appendChild(singleicon);
-	singleicon.src = "/images/tree_single2.png";
 	var dragfoldercol = mk("td");
 	dragrow.appendChild(dragfoldercol);
 	var foldericon = mk("img");
 	dragfoldercol.appendChild(foldericon);
-	if(what == 'folder'){
+	if(what == 'subtopic'){
 		foldericon.src = "/images/folder.png";
 	}else{
 		foldericon.src = "/images/lightbulb.png";
@@ -877,50 +860,19 @@ function newThing(what,idnum){
 	input.setAttribute("type","text");
 	drageditdiv.appendChild(input);
 
-	var selectedholder = findSelectedHolder();
-//	var parent = findParentFolderHolder(selectedholder);
-	var parent = findSelectedFolderHolder();
-	var parentid;
-	var parentdivid = null;
-	if(parent){
-		parentid = parent.getAttribute("tl_id");
-		parentdivid = parent.getAttribute("id");
-	}else{
-		parentid = null;
-	}
-	
+	titlenode.parentNode.insertBefore(holder,titlenode.nextSibling);
+
 	input.addEventListener("blur",function(){
-		createFinished(holder,input,uniq,parentid,parentdivid,what);
+		createFinished(holder,input,id,what);
 	},false);
 	
 	input.addEventListener("keypress",function(ev){
 		ev.stopPropagation();
 		var KEYENTER = 13;
 		if(ev.keyCode == KEYENTER){
-			createFinished(holder,input,uniq,parentid,parentdivid,what);
+			createFinished(holder,input,id,what);
 		}
 	},false);
-
-	if(selectedholder){
-		var subpoints = findSubPoints(selectedholder);
-		subpoints.appendChild(holder);
-		subpoints.style.display = "";
-//		selectedholder.parentNode.insertBefore(holder,selectedholder);
-	}else{
-		var body = document.getElementById("body-"+idnum);
-		var container = mk("div");
-		container.className = "point_container";	
-		container.appendChild(holder);
-		if(body.childNodes.length > 0){
-			body.insertBefore(container,body.childNodes[0]);
-		}else{
-			body.appendChild(container);
-		}
-	}
-	
-	if(!isVisible(dragtable)){
-		dragtable.scrollIntoView(false);
-	}
 	
 	input.focus();
 }
@@ -944,26 +896,25 @@ function findSubTopics(idnum){
 }
 
 
-function createFinished(container,input,newDivId,parentid,parentdivid,what){
-	if(what == 'folder'){
-		phpurl = "new_topic.php";
-	}else{
-		phpurl = "new_point.php";
-	}
+function createFinished(container,input,id,what){
 	if(input.value != "" && !input.done){
 		var nametxt = normalizeText(input.value);
-		if(parentid){
-			doAJAX("newfolder",phpurl+"?txt="+encodeURIComponent(nametxt)+"&parentid="+parentid,function(id){
-				ajaxReplace('/topics/'+parentid+'/'+expandcommand,parentdivid)
-			});
-		}else{
-			doAJAX("newfolder",phpurl+"?txt="+encodeURIComponent(nametxt),function(id){
-				ajaxReplace('/topics/'+id+'/'+expandcommand,"holder-"+newDivId);
-			});
-		}				
+		if(what == "subtopic"){
+			phpurl = "new_topic.php?parentid="+id;
+		}else if(what == "claim"){
+			phpurl = "new_point.php?topicid="+id;			
+		}else if(what == "support"){
+			phpurl = "new_point.php?supportid="+id;
+		}else if(what == "oppose"){
+			phpurl = "new_point.php?opposeid="+id;
+		}
+		doAJAX("newfolder",phpurl+"&txt="+encodeURIComponent(nametxt),function(id){
+			refreshChildren(container);
+		});
 		input.done = true;
 	}else{
 		container.parentNode.removeChild(container);
+		// refreshChildren(container);
 	}
 }
 
@@ -1089,5 +1040,5 @@ function actionUnlink(selinfo){
 }
 
 function actionOrganize(){
-	alert("Organize claims and folders using drag and drop.\n Drop a claim onto another claim to say if it supports or opposes the other claim.");
+	alert("To connect claims and topics together, open the second browser and then use drag and drop to connect claims and topics");
 }

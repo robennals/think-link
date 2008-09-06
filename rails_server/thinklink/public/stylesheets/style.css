@@ -1,6 +1,6 @@
 body {
    font-family: Helvetica, Geneva, Arial, sans-serif;
-   font-size: small;
+   font-size: 13px;
    font-color: #000;
    background-color: #fff;
    margin: 0px;
@@ -78,7 +78,7 @@ a img {
 	cursor: pointer;
 }
 .relationtitle:hover {
-	background-color: #ebf7fd;
+/*	background-color: #ebf7fd; */
 }
 
 .summarytitle {
@@ -142,10 +142,12 @@ a img {
 .snippet_text {
 	font-size: 8pt;
 	font-style: normal;
+	padding: 8px;
 	color: #666666;
 	margin-left: 10px;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 	-moz-border-radius: 8px;
+	background-color: white;
 }
 .snippet_author {
 	margin-left: 10px;
@@ -459,12 +461,39 @@ h1 {
 	vertical-align: middle;
 }
 
+.empty {
+	font-style: italic;
+	font-size: 13px;
+	padding-left: 20px;
+	color: #aaaaaa;
+}
+
+.newthing {
+	font-style: normal;
+/*	background-color: #ececec;
+	-moz-border-radius: 3px;
+	margin-left: 10px;
+	padding: 3px;
+	border: 1px solid black; */
+	margin-left: 5px;
+	vertical-align: bottom;
+	cursor: pointer;
+}
+
+.newthing:hover{
+	background-color: #e2f5ff;
+}
+
 .searchbar {
 	background-color: #eeeeee;
 }
 
 .inputbox {
  	background-color: #ffffd3;
+}
+
+.renamebox {
+	font-size: 20px;
 }
 
 .searchbox {
@@ -519,8 +548,8 @@ h1 {
 	color: black;
 	padding-left: 3px;
 	padding-right: 3px;
-	margin-top: 0px;
-	padding-top: 0px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 	cursor: pointer;
 }
 
@@ -642,13 +671,14 @@ h1 {
 }
 
 .item-children {
-	margin-left: 10px;
-	padding-left: 10px;
+	margin-left: 15px;
+	padding-left: 5px;
 	border-left: 1px dotted black;
 }
 
 .draglabel {
 	font-style: italic;
+	font-size: 13px;
 }
 
 .item-parents {

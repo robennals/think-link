@@ -4,15 +4,17 @@
    children = topic.children
 %>
 
-		<% if !children.empty? %>
-			<div class="relationtitle">sub-topics</div>
+			<div class="relationtitle">more specific topics <img class="newthing" onclick="newThing(this,'subtopic')" src="/images/add.png"/></div>
 			<% children.each do |subtopic| %>
 				<%= render_partial 'main/draglabel', subtopic, :label => nil %>
 			<% end %>
-		<% end %>
-		<% if !points.empty? %>
-			<div class="relationtitle">claims about this topic</div>
+			<% if children.empty? %>
+				<div class="empty">empty</div>
+			<% end %>
+			<div class="relationtitle">claims about this topic  <img class="newthing" onclick="newThing(this,'claim')" src="/images/add.png"/></div>
 			<% points.each do |point| %>
 				<%= render_partial 'main/draglabel', point, :label => nil %>
 			<% end %>
-		<% end %>
+			<% if points.empty? %>
+				<div class="empty">empty</div>
+			<% end %>
