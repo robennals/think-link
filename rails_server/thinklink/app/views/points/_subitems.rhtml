@@ -8,13 +8,13 @@
 	<div class="relationtitle" 
 		onclick="selectItem(this, <%= point.id %>,null,'Support')">supported by</div>
 	<% supports.each do |subpoint| %>
-		<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+		<%= render_partial 'main/draglabel', subpoint, :label => nil %>
 	<% end %>
 <% end %>
 <% if !opposes.empty? || options[:pointfolders] %>
 	<div class="relationtitle"
 		onclick="selectItem(this, <%= point.id %>,null,'Oppose')">opposed by</div>
 	<% opposes.each do |subpoint| %>
-		<%= render_partial 'points/point', subpoint, :expandPoints => expandPoints %>
+		<%= render_partial 'main/draglabel', subpoint, :label => nil %>
 	<% end %>
 <% end %>

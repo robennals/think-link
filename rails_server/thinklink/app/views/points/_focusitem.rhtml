@@ -1,0 +1,52 @@
+<% 
+idnum = getUniq 
+itemid = dragitem.id
+itemtxt = escape_single_quotes(dragitem.txt)
+
+if focusitem.class == Topic
+	parpartial = "topics/paritems"
+	subpartial = "topics/subitems"
+elsif focuitem.class == Point
+	parpartial = "topics/paritems"
+	subpartial = "points/subitems"
+elsif focusitem.class == Collection
+	parpartial = "main/empty"
+	subpartial = "collection/subitems"
+end
+%>
+
+<div id="parents-<%=idnum%>" class="item-parents">
+		<%= render_partial parpartial, focusitem, :options => options %>
+</div>
+
+<div id="current-<%=idnum%>" class="item-current" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">
+	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">
+		<table class="dragtable">
+			<tr>		
+				<% if defined? dragitem.icon %> 
+				<td><img src="<%=dragitem.icon(@user)%>"/></td>
+					<% end %>
+				<td>
+					<div class="dragitem" id="<%=idnum%>"			
+						<% if (defined? expand) && expand %>
+						style="font-size: 20px;"
+						<% end %>			
+						onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
+						onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
+						onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+						onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=dragitem.class%>')"
+						ondblclick="dblClick(this,<%= itemid %>, '<%=dragitem.class%>')"
+						onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=dragitem.class%>')" >
+					<%=dragitem.txt%>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div id="children-<%=idnum%>" class="item-children">
+		<%= render_partial subpartial, focusitem, :options => options %>
+</div>
+
+ 

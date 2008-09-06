@@ -1,0 +1,26 @@
+
+
+<% 
+	supports = paritems.supports_points
+	opposes = paritems.opposes_points
+	topics = paritems.topics
+%>
+	
+	<% if !topics.empty? %>
+		<% topics.each do |topic| %>
+			<%= render_partial 'main/draglabel', topic, :label => "topic:" %>
+		<% end %>
+	<% end %>
+
+	<% if !supports.empty? %>
+		<% supports.each do |support| %>
+			<%= render_partial 'main/draglabel', support, :label => "supports:" %>
+		<% end %>
+	<% end %>
+
+	<% if !supports.empty? %>
+		<% opposes.each do |oppose| %>
+			<%= render_partial 'main/draglabel', oppose, :label => "opposes:" %>
+		<% end %>
+	<% end %>
+

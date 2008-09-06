@@ -1,0 +1,9 @@
+
+<% parents = paritems.parents 
+%>
+	
+	<% if !parents.empty? %>
+		<% parents.each do |parent| %>
+			<%= render_partial 'main/draglabel', parent, :label => "topic:" %>
+		<% end %>
+	<% end %>

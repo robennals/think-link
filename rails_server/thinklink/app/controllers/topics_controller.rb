@@ -11,6 +11,11 @@ class TopicsController < ApplicationController
 		emit(@topics)
 	end
 	
+	def parents
+		@topic = Topic.find(params[:id])
+		render :partial => "paritems", :object => @topic
+	end
+	
 	def expand
 		@topic = Topic.find(params[:id])
 		logTopicView(@topic)
@@ -41,17 +46,18 @@ class TopicsController < ApplicationController
 		else
 			options = {}
 		end
-		@topics = Topic.find_by_sql ("
-				SELECT topics.id, topics.txt, topics.user_id FROM topics
-					INNER JOIN (
-						SELECT * FROM topicviews 
-						ORDER BY id DESC 
-						LIMIT 200) 
-					AS rows 
-					ON rows.topic_id = topics.id
-				GROUP BY topic_id 
-				ORDER BY COUNT(rows.user_id) DESC");
-			render :partial => "topics/topics", :object => @topics, :locals => {:options => options}
+		render :partial => 'main/focusitem', :object => Collection.hot, :locals => {:options => options}
+#		@topics = Topic.find_by_sql ("
+#				SELECT topics.id, topics.txt, topics.user_id FROM topics
+#					INNER JOIN (
+#						SELECT * FROM topicviews 
+#						ORDER BY id DESC 
+#						LIMIT 200) 
+#					AS rows 
+#					ON rows.topic_id = topics.id
+#				GROUP BY topic_id 
+#				ORDER BY COUNT(rows.user_id) DESC");
+#			render :partial => "topics/topics", :object => @topics, :locals => {:options => options}
 	end
 	
 	def show
@@ -103,18 +109,23 @@ class TopicsController < ApplicationController
 		render :action => 'index'
 	end
 
-	def parents  
-	  @topic = Topic.find(params[:id]);
-	  # @title = "Parent topics for #{@topic.txt}"
-		@topics = @topic.parents
-		render :partial => "topics", :object => @topics
-#		render :action => 'index'
-	end
+#	def parents  
+#	  @topic = Topic.find(params[:id]);
+#	  # @title = "Parent topics for #{@topic.txt}"
+#		@topics = @topic.parents
+#		render :partial => "topics", :object => @topics
+##		render :action => 'index'
+#	end
 	
 	def summary
 	  @topic = Topic.find(params[:id]);
 	  render :partial => 'topics/topicsummary', :object=> @topic, :locals=> {:options=>{:link=>true, :snippets=>true}}
 	end
+	
+	def snippets
+    @topic = Topic.find(params[:id])
+    render :partial => "snippets/snippets", :object => @topic.snippets, :locals => {:options => {}}
+  end
 
 	def recent
 		if params[:savemode] 
@@ -122,7 +133,9 @@ class TopicsController < ApplicationController
 		else
 			options = {}
 		end
-		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,50), :locals => {:options => options}
+		recent = Collection.recent(@user)
+		render :partial => 'main/focusitem', :object => recent, :locals => {:options => options}  
+#		render :partial => 'topics/topics', :object => @user.recenttopics.slice(0,50), :locals => {:options => options}
 	end
 	
 	def toplevel

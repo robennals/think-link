@@ -30,10 +30,6 @@ end
 
 <div class="browestab_top"></div>
 
-<!--
-<div class="browsetab" id="all-<%=idnum%>" onclick="topMode(<%=idnum%>)">
-All Folders
-</div> -->
 <% if topicbrowser %>
 <div class="browsetab" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
 <% else %>
@@ -44,9 +40,6 @@ My Recent
 <div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
 Hot Topics
 </div>
-<!-- <div class="browsetab" id="scratch-<%=idnum%>" onclick="scratchMode(<%=idnum%>)">
-Scratch Pad
-</div> -->
 
 <% if defined? showsocial %>
 <div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
@@ -66,11 +59,7 @@ Search
 		<h2>
 			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
 			<span id="title-<%=idnum%>">
-			<% if options[:parents] %>
-				<%= render_partial "topics/pathlist", options[:parents] %>		
-			<% else %>
-				My Recent Folders
-			<% end %>
+				Idea Browser
 			</span> 
 			</td><td class="browsefolderadd" style="text-align:right">
 			<%if !options[:point]%>
@@ -91,12 +80,8 @@ Search
 				<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
 			</div>
 
-			<div id="body-<%=idnum%>" class="browser_body">
-			<% if options[:topics] %>
-			<%= render_partial 'topics/topics', options[:topics], :options => options %>
-			<% elsif options[:point] %>
-			<%= render_partial 'points/point', options[:point], :expandPoints => {options[:point].id => true}, :options => options %>
-			<% end %>
+			<div id="body-<%=idnum%>" class="browser_body">			
+			<%= render_partial 'main/focusitem', topicbrowser, :options => options %>
 			</div>
 		</div>
 	</div>

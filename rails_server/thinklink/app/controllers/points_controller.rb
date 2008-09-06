@@ -14,15 +14,24 @@ class PointsController < ApplicationController
     render :partial => "points", :object => @points  
   end
   def searchajax
-    @topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
-    @points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
     if params[:savemode]
       options = {:pointfolders => true, :notop => true}
     else
       options = {:notop => true}
     end
-    render :partial => "topicsandpoints", :object => {:points => @points, :topics => @topics}, :locals => {:options => options}
+
+  	render :partial => 'main/focusitem', :object => Collection.search(params[:query]), :locals => {:options => options}
+  
+#    @topics = Topic.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
+#    @points = Point.find :all, :conditions => "MATCH (txt) AGAINST ('#{params[:query]}' IN BOOLEAN MODE)"
+#    if params[:savemode]
+#      options = {:pointfolders => true, :notop => true}
+#    else
+#      options = {:notop => true}
+#    end
+#    render :partial => "topicsandpoints", :object => {:points => @points, :topics => @topics}, :locals => {:options => options}
   end
+ 
  
   def index
     @point = Point.find(params[:id])
@@ -74,7 +83,8 @@ class PointsController < ApplicationController
 			options = {}
 		end	
 		@point = Point.find(params[:id])
-		render :partial => "point", :locals => {:expandPoints => {@point.id => true}, :noholder => true, :expand => true, :options => options}, :object => @point
+		render :partial => "main/focusitem", :object => @point, :locals => {:options => options}
+#		render :partial => "point", :locals => {:expandPoints => {@point.id => true}, :noholder => true, :expand => true, :options => options}, :object => @point
 	end
 
 	def findparents point
@@ -139,11 +149,15 @@ class PointsController < ApplicationController
 		render :partial => "pathlist", :object => parents		
 	end
 
+	def parents
+		@point = Point.find(params[:id])
+		render :partial => "paritems", :object => @point
+	end
   
   def expand
     @point = Point.find(params[:id])
     render :partial => "subitems", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => {}}, :object => @point
-  end
+  end  
   
   def expandfolder
     @point = Point.find(params[:id])

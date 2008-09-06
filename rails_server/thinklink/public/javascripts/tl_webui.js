@@ -114,13 +114,13 @@ function findSectionHeader(node){
 }
 		
 function hideSiblings(node){
-	var header = findSectionHeader(findHolder(node));
+//	var header = findSectionHeader(findHolder(node));
 	var siblings = findSiblings(node);
 	for(var i = 0; i < siblings.length; i++){
 		var sibling = siblings[i];
-		if(sibling != header){
+//		if(sibling != header){
 			$(sibling).animate({height:'hide'},500);
-		}
+//		}
 	}
 }
 
@@ -154,7 +154,169 @@ function showChildren(idnum){
 	}
 }
 
-function selectItem(div,itemid,divid,cls){
+function findNodeGroup(node){
+	while(node){
+		if(node.className == "item-parents" || node.className == "item-current" || node.className == "item-children"){
+			return node;
+		}
+		node = node.parentNode;
+	}
+	return null;
+}
+
+var selections = [];
+
+function setSelectionOnStartup(idnum){
+	if(!selections) selections = [];
+	selections.push(idnum);
+}
+
+function processSelections(){	
+	for(var i = 0; i < selections.length; i++){	
+		var div = getel(selections[i]);
+		if(!div) continue;
+		var browser = findBrowser(div);
+		browser.selectedDiv = div;
+	}
+	selections = null;
+}
+
+function hideLabel(holder){
+	var idnum = getNodeIdNum(holder);
+	var label = getel("label-"+idnum);
+	$(label).animate({width:'hide'},500);
+}
+
+function updateSnippets(holder){
+	var itemid = holder.getAttribute("tl_id");
+	var cls = holder.getAttribute("tl_cls");
+	
+	$("#topics_panel").animate({height:'hide'},500);
+	
+	if(cls == "Point"){
+		ajaxReplace("/points/"+itemid+"/snippets","topics_panel",function(){
+			$("#topics_panel").animate({height:'show'},500);			
+		});
+	}else if(cls == "Topic"){
+		ajaxReplace("/topics/"+itemid+"/snippets","topics_panel",function(){
+			$("#topics_panel").animate({height:'show'},500);			
+		});
+	}
+}
+
+function selectItem(div){
+	if(selections){
+		processSelections();
+	}
+	
+	var browser = findBrowser(div);
+	var holder = findHolder(div);
+	var group = findNodeGroup(div);
+	var idnum = getNodeIdNum(group);
+	var current = getel("current-"+idnum);
+	var parents = getel("parents-"+idnum);
+	var children = getel("children-"+idnum);
+	
+	updateSnippets(holder);
+	
+	if(group.className == "item-parents"){
+		current.setAttribute("id","children-"+idnum);
+		children.setAttribute("id","dead-"+idnum);
+		parents.setAttribute("id","current-"+idnum);
+		var newparents = document.createElement("div");
+		newparents.className = "item-parents";
+		newparents.setAttribute("id","parents-"+idnum);
+		group.parentNode.insertBefore(newparents,parents);
+		
+		if(browser.selectedDiv){
+			$(browser.selectedDiv).animate({fontSize:'13px'},500);
+		}		
+		hideSiblings(div);
+		hideLabel(holder);
+
+
+		$(current).animate({borderLeft:'1px dotted grey',marginLeft:"5px",paddingLeft:"5px"},500,function(){
+			current.className = "item-children";
+		});
+
+		$(div).animate({fontSize:"20px"},500,function(){
+			parents.className = "item-current";
+		});				
+		
+		var url = getHolderUrl(holder);
+				
+		smoothReplace(url+"expand","children-"+idnum);
+		smoothReplace(url+"parents","parents-"+idnum);
+		
+		if(children){
+			$(children).animate({height:'hide'},500,function(){
+				children.parentNode.removeChild(children);
+			});
+		}				
+	}else if (group.className == "item-children"){
+		current.setAttribute("id","parents-"+idnum);
+		children.setAttribute("id","current-"+idnum);
+		parents.setAttribute("id","dead-"+idnum);
+		var newchildren = document.createElement("div");
+		newchildren.className = "item-children";
+		newchildren.setAttribute("id","children-"+idnum);
+		group.parentNode.appendChild(newchildren);	
+		
+		if(browser.selectedDiv){
+			$(browser.selectedDiv).animate({fontSize:"13px"},500);
+		}
+		hideSiblings(div);
+		$(div).animate({fontSize:"20px"},500,function(){
+			current.className = "item-parents";
+		});				
+		
+		$(group).animate({marginLeft:"0px",paddingLeft:"0px"},500,function(){
+			group.className = "item-current";
+		});
+
+		var url = getHolderUrl(holder);
+		
+		smoothReplace(url+"expand","children-"+idnum);
+		smoothReplace(url+"parents","parents-"+idnum);
+		
+		browser.selectedDiv = div;
+		if(parents){
+			$(parents).animate({height:'hide'},500,function(){
+				parents.parentNode.removeChild(parents);								
+			});
+		}
+	}else if (group.className == "item-current"){
+		// already selected. Do nothing 
+		browser.selectedDiv = div;
+	}	
+}
+
+function smoothReplace(url,id){
+	var div = getel(id);
+	var curheight = div.offsetHeight;
+	div.style.height = curheight+"px";
+	div.style.overflow = "hidden";
+	ajaxReplace(url,id,function(){
+		$(div).animate({height:div.scrollHeight},500,function(){
+			div.style.height = "";
+			div.style.overflow = "";
+		});
+	});
+}
+
+function getHolderUrl(holder){
+	var cls = holder.getAttribute("tl_cls");
+	var id = holder.getAttribute("tl_id");
+	if(cls == "Topic"){
+		return "topics/"+id+"/";
+	}else if(cls == "Point"){
+		return "points/"+id+"/";
+	}else if(cls == "Collection"){
+		return null;  // TODO: work out what to do here...
+	}
+}
+
+function selectItem_old(div,itemid,divid,cls){
 	var selinfo = findSelectionInfo(div);
 	if(!divid){
 		divid = getNodeIdNum(selinfo.holder);
@@ -325,7 +487,7 @@ function clearSelect(idnum){
 
 function searchMode(idnum){
 	clearSelect(idnum);
-	getel("title-"+idnum).textContent = "Search Folders and Points";
+//	getel("title-"+idnum).textContent = "Search Folders and Points";
 	getel("searchbar-"+idnum).className = "searchbar";
 	getel("search-"+idnum).className = "browsetab browsetab_selected";
 	getel("body-"+idnum).innerHTML = "<div class='msg'>Enter search terms above</div>";
@@ -337,14 +499,14 @@ function searchDo(idnum){
 }
 
 function recentMode(idnum){
-	getel("title-"+idnum).textContent = "My Recent Folders";
+	// getel("title-"+idnum).textContent = "My Recent Folders";
 	clearSelect(idnum);
 	getel("recent-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/recent?"+params,"body-"+idnum);
 }
 
 function hotMode(idnum){
-	getel("title-"+idnum).textContent = "Hot Topics";
+//	getel("title-"+idnum).textContent = "Hot Topics";
 	clearSelect(idnum);
 	getel("hot-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/hot?"+params,"body-"+idnum);
@@ -352,7 +514,7 @@ function hotMode(idnum){
 
 function topMode(idnum){
 	clearSelect(idnum);
-	getel("title-"+idnum).textContent = "All Folders";
+//	getel("title-"+idnum).textContent = "All Folders";
 //	getel("all-"+idnum).className = "browsetab browsetab_selected";
 	ajaxReplace("/topics/toplevel?"+params,"body-"+idnum);
 }
@@ -428,6 +590,12 @@ function getNodeIdNum(node){
 	var id = node.getAttribute("id");
 	var m = id.match(/.*-(\d*)/);
 	return m[1];
+}
+
+function gotoPoint(id){
+	var browser = findSelectedBrowser();
+	var idnum = getNodeIdNum(browser);
+	ajaxReplace("/points/"+id+"/showajax","body-"+idnum);
 }
 
 function gotoParent(node){

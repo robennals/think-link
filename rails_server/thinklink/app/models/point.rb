@@ -230,10 +230,15 @@ class Point < ActiveRecord::Base
 						AND snippets.id = bookmarks.snippet_id
 						AND snippets.point_id=#{self.id}").empty?
 		contentious = PointLink.find(:first,:conditions=>"point_b_id=#{self.id} AND (howlinked='opposes' OR howlinked='opposite')")
+		supported = PointLink.find(:first,:conditions=>"point_b_id=#{self.id} AND (howlinked='supports')")
 		if bookmarked && contentious
 			return "/images/lightbulb_redyellow.png"
+		elsif bookmarked && supported
+			return "/images/lightbulb_greenyellow.png"
 		elsif contentious
-			return "/images/lightbulb_red.png"
+			return "/images/lightbulb_red.png"			
+		elsif supported 
+			return "/images/lightbulb_green.png"
 		elsif bookmarked
 			return "/images/lightbulb.png"
 		else
