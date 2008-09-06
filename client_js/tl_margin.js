@@ -412,11 +412,31 @@ function tl_margin()
 		}
 	}
 	
+	this.setHighlightClass = function(snippet,enable){
+		if(!snippet.spanList) return;
+		highlightclass = "highlight";
+		if(snippet.opposed){
+			highlightclass += "_con";
+		}
+		if(enable){
+			highlightclass += "_bright";
+		}	
+		for(var i = 0; i < snippet.spanList.length; i++){
+			snippet.spanList[i].className = highlightclass;
+		}
+	}
+	
+	
 	this.addItem = function(snippet,bookmarked){
 		var that = this;
 		
-		// set up the highlight spans to determine the vertical position
-		snippet.spanList = mark_snippet(snippet.sourceText);
+		var highlightclass;
+		if(snippet.opposed != null){
+			highlightclass = "highlight_con";
+		}else{
+			highlightclass = "highlight";
+		}
+		snippet.spanList = mark_snippet(snippet.sourceText,highlightclass);
 		if(!snippet.spanList) return;
 		this.addSnippetClickHandler(snippet);
 		var position = findPos(snippet.spanList[0]); // get position of the first span element
@@ -429,25 +449,16 @@ function tl_margin()
 			.css("top",snippet.position[1])
 			.attr("id", "margin"+snippet.id)
 			.hover(function(){ // highlight source text when the annotation is hovered over
-				// TODO: change highlight color here
-//				if (snippet.spanList == null && !that.highlightAll) {
-//					if (snippet.opposed != null) { snippet.spanList = mark_snippet(snippet.sourceText,"highlight_con"); }
-//					else {snippet.spanList = mark_snippet(snippet.sourceText); }
-//				}
+				that.setHighlightClass(snippet,true);							
 				$(margin_item).text(snippet.pointText);
 				$(margin_item).addClass("tl_margin_item_info");
 				$(margin_item).prepend(buttonBox);
 			}, function(){
-				if (!that.highlightAll) {
-//					removeSpans(snippet.spanList);
-//					snippet.spanList = null;
-				}
+				that.setHighlightClass(snippet,false);	
 				$(margin_item).text(snippet.displayText);
 				$(margin_item).removeClass("tl_margin_item_info");
-				//$(margin_item).remove(buttonBox);
 			})
 			.click(function(){ // open point browse
-				//myBrowser.getPointData(snippet.pointID,snippet.id); // access global var
 				myBrowser.viewFrame(snippet.pointID, snippet.id);
 			})
 			.appendTo($("#" + this.divID));

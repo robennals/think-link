@@ -269,14 +269,27 @@
 }
 
 .highlight {
-	background: #FFFF00;
+	background: #ffffd3;
 	cursor: pointer;
 }
 
+.highlight_bright {
+	background: #FFFF00;
+	cursor: pointer;	
+}
+
 .highlight_con {
+	background: #ffd3d3;
+	color: #000000;
+	cursor: pointer;	
+}
+
+.highlight_con_bright {
 	background: #FF3333;
 	color: #000000;
+	cursor: pointer;	
 }
+
 
 img {
 	cursor: auto;

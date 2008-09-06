@@ -58,16 +58,14 @@ Search
 	<div class="topics" id="topics-<%=idnum%>">
 		<h2>
 			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
-			<span id="title-<%=idnum%>">
-				Idea Browser
-			</span> 
-			</td><td class="browsefolderadd" style="text-align:right">
-<!--			<%if !options[:point]%>
-			<nobr class="folder_add" onclick="newThing('claim',<%=idnum%>)">New Claim <img src="/images/lightbulb_add.png"/></nobr>
-			<nobr class="folder_add" onclick="newThing('folder',<%=idnum%>)">New Topic <img src="/images/folder_add.png"/></nobr>
-			<% end %> -->
-			</tr>
-			
+				<span id="title-<%=idnum%>">
+					Idea Browser
+				</span> 
+				</td><td class="browsefolderadd" style="text-align:right">
+				<nobr class="folder_add" onclick="actionEdit()"><img src="/images/pencil.png">rename</nobr>
+				<nobr class="folder_add" onclick="actionDelete()"><img src="/images/cross.png">delete</nobr>	
+				</td>		
+				</tr>		
 			</table>
 		</h2>
 		<div class="browse_container" id="container-<%=idnum%>"
