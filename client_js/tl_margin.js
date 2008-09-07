@@ -293,7 +293,7 @@ function tl_margin()
 	
 	this.setItemPositions = function() {
 		for (var index=0; index<this.items.length; index++) {			// set the positions of the annotations within the margin
-			var snipspans = this.items[index].snipSpans;
+			var snipspans = this.items[index].spanList;
 			if(!snipspans) continue;
 			var position = findPos(snipspans[0]); // get position of the first span element
 			position[1] = this.getSafeItemPosition(position,this.items[index].id);
