@@ -14,7 +14,7 @@ var thinklink_scriptUrls;
 var thinklink_styleUrl;
 
 function thinklink_setScriptUrls(username){
-	if(username == "rob@ennals.org"){
+	if(username != "trush@eecs.berkeley.edu"){
 	 	thinklink_base = thinklink_base_rob;
 	}
 	
@@ -30,7 +30,7 @@ function thinklink_setScriptUrls(username){
 		thinklink_base+"tl_suggest.js",
 		thinklink_base+"tl_url.js"];
 		
-	if(username == "rob@ennals.org"){
+	if(username != "trush@eecs.berkeley.edu"){
 		thinklink_scriptUrls.push(thinklink_base+"tl_robconfig.js");	
 		thinklink_styleUrl = "http://mashmaker.intel-research.net/rob/css/style.css";
 	}else{
