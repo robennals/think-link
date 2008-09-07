@@ -11,7 +11,7 @@
 			<% if children.empty? %>
 				<div class="empty">empty</div>
 			<% end %>
-			<div class="relationtitle">claims about this topic  <img class="newthing" onclick="newThing(this,'claim')" src="/images/add.png"/></div>
+			<div class="relationtitle">claims about <%=topic.txt %><img class="newthing" onclick="newThing(this,'claim')" src="/images/add.png"/></div>
 			<% points.each do |point| %>
 				<%= render_partial 'main/draglabel', point, :label => nil %>
 			<% end %>

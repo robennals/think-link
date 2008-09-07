@@ -172,7 +172,7 @@ class PointsController < ApplicationController
   
   def showmini
     @point = Point.find(params[:id])
-    @parents = findparents @point
+#    @parents = findparents @point
     @snippets = @point.snippets
     render :action => "showmini", :locals => {:options => {:point => @point}}, :layout => 'mini'
     

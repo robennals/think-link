@@ -510,17 +510,21 @@ h1 {
 	margin-right: 10px;
 }
 
-.pointinput_empty {
+.pointinput, .pointinput_empty {
 	width: 420px;
- 	background-color: #ffffd3;
+/*	background-color: #ffffd3; */
+	border-style: inset; 
+	border-width: 2px; 
+	padding: 2px; 
+	margin: 4px;
+	-moz-border-radius: 4px;
+}
+
+.pointinput_empty {
  	color: grey;
  	font-style: italic;
 }
 
-.pointinput {
-	width: 420px;
-	background-color: #ffffd3;
-}
 
 .dialogbuttons {
 	float: right;

@@ -16,12 +16,13 @@ var arg_title = "<%=params[:title]%>";
 <%= params['txt'] %>
 </div>
 
+<div style="padding-top: 4px; padding-bottom: 4px;">
 <span class="savewhat">claims that </span>
 <!-- <img src="/images/lightbulb.png" class="pointicon"/> -->
-	<input type="text" id="pointname" class="pointinput_empty"
-		onfocus="enableInput('pointname')"
-		onkeypress="pointKeyPress(event)" 
-		value="Enter a statement that this snippet is asserting is true"/>
+	<span id="pointname" class="pointinput_empty">
+		Select the claim that this snippet is making from the interface above	
+	</span>
+</div>
 
 	<table width="100%">
 	<tr>

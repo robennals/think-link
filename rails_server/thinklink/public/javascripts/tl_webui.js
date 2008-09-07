@@ -252,17 +252,17 @@ function selectItem(div){
 
 	if(pointname){ // in save dialog
 		if(cls == "Support"){
-			disableInput("pointname","Enter claim that supports the selected claim");
+			disableInput("pointname","Select the claim that this snippet is making from the interface abovem");
 		}
 		if(cls == "Oppose"){
-			disableInput("pointname","Enter claim that opposes the selected claim");
+			disableInput("pointname","Select the claim that this snippet is making from the interface above");
 		}
 		if(cls == "Point"){
 			enableInput("pointname");
-			pointname.value = normalizeText(div.textContent);
+			pointname.textContent = normalizeText(div.textContent);
 		}
 		if(cls == "Topic"){
-			disableInput("pointname","Enter claim about the selected topic");
+			disableInput("pointname","Select the claim that this snippet is making from the interface above");
 		}
 	}
 	
@@ -413,7 +413,7 @@ var inputstarted = false;
 function enableInput(id){
 	var input = getel(id);
 	if(input.className == "pointinput_empty"){
-		input.value = "";
+		input.textContent = "";
 		input.className = "pointinput";
 	}
 }
@@ -424,7 +424,7 @@ function disableInput(id,msg){
 	}
 	var input = getel(id);
 	input.className = "pointinput_empty";
-	input.value = msg;
+	input.textContent = msg;
 }
 
 function clearButton(what,idnum){
@@ -921,7 +921,7 @@ function createFinished(container,input,id,what){
 function clickSave(){
 	//	TODO: save the snippet
 	var pointnode = getel("pointname");
-	var pointname = normalizeText(pointnode.value);
+	var pointname = normalizeText(pointnode.textContent);
 	var sniptxt = normalizeText(getel("snippet_text").textContent);
 	
 	var baseurl = "new_snippet.php?txt="+encodeURIComponent(sniptxt)
@@ -1006,27 +1006,25 @@ function keyPressHandler(ev){
 function actionDelete(ev){
 	var selinfo = findSelectionInfo();
 
-	var what = "folder";
+	var what = "topic";
 	if(selectedCls == "Point"){
-		what = "point";
+		what = "claim";
 	}
 	var parentwhat = "folder";
 	if(selinfo.parentcls == "Point"){
 		parentwhat = "point";
 	}
 
-	choiceBox(ev,"What do you want to do?",
-		"You can delete this "+what+" completely, or unlink it from this parent "+parentwhat+", keeping it in other parent "+parentwhat+"s",
-		["Delete Completely","Remove from Parent"],
+	choiceBox(ev,"Completely delete "+what+"?",
+		"Are you sure you want to delete this "+what+"? Deleting it will completely remove it from our database",
+		["Yes, Delete Completely","No, don't delete"],
 		null,function(choice){
-			if(choice == "Delete Completely"){
+			if(choice == "Yes, Delete Completely"){
 				action = "delete.php?cls="+selinfo.cls+"&id="+selinfo.itemid;
-			}else{
-				action = "unlink.php?cls="+selinfo.cls+"&id="+selinfo.itemid+"&parcls="+selinfo.parentcls+"&parentid="+selinfo.parentid;					
+				doAJAX("tl_delete",action,function(result){
+					selinfo.holder.parentNode.removeChild(selinfo.holder);
+				})
 			}
-			doAJAX("tl_delete",action,function(result){
-				selinfo.holder.parentNode.removeChild(selinfo.holder);
-			})
 		}
 	)
 }
