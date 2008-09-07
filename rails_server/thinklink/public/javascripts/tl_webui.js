@@ -967,12 +967,12 @@ function openOrganizer(){
 }
 
 function keyDownHandler(ev){
-	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
-		if(ev.keyCode == 16){ // SHIFT
-			dragCopyMode = false;
-			dragCopyMsg.className = "hidden";
-			dragMoveMsg.className = "dragmovemsg";
-		}	
+	if(window.draggedPoint !== undefined && draggedPoint){
+//		if(ev.keyCode == 16){ // SHIFT
+//			dragCopyMode = false;
+//			dragCopyMsg.className = "hidden";
+//			dragMoveMsg.className = "dragmovemsg";
+//		}	
 		if(ev.keyCode == 27){
 			dragStop();
 		}
@@ -981,11 +981,11 @@ function keyDownHandler(ev){
 
 function keyUpHandler(ev){
 	if(window.draggedPoint !== undefined && draggedPoint && dragCopyMsg){
-		if(ev.keyCode == 16){
-			dragCopyMode = true;
-			dragCopyMsg.className = "dragcopymsg";
-			dragMoveMsg.className = "hidden";
-		}
+//		if(ev.keyCode == 16){
+//			dragCopyMode = true;
+//			dragCopyMsg.className = "dragcopymsg";
+//			dragMoveMsg.className = "hidden";
+//		}
 	}
 }
 

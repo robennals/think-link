@@ -71,14 +71,20 @@ function dragMove(ev){
 		if((ev.clientX < startX - 16) || (ev.clientX > startX + 16)
 		 || (ev.clientY < startY - 16) || (ev.clientY > startY + 16)){
 			draggedPoint = makePointDiv(dragText);
-			dragCopyMsg = document.createElement("div");
-			dragCopyMsg.className = "dragcopymsg";
-			dragCopyMsg.appendChild(document.createTextNode("add link - press shift to move"));
-			draggedPoint.appendChild(dragCopyMsg);
-			dragMoveMsg = document.createElement("div");
-			dragMoveMsg.className = "hidden";
-			dragMoveMsg.appendChild(document.createTextNode("move"));
-			draggedPoint.appendChild(dragMoveMsg);			
+			var dragMsg = document.createElement("div");
+			dragMsg.className = "dragcopymsg";
+			dragMsg.appendChild(document.createTextNode("drop on the point or topic you want to associate with"));
+			draggedPoint.appendChild(dragMsg);
+			
+//			
+//			dragCopyMsg = document.createElement("div");
+//			dragCopyMsg.className = "dragcopymsg";
+//			dragCopyMsg.appendChild(document.createTextNode("add link - press shift to move"));
+//			draggedPoint.appendChild(dragCopyMsg);
+//			dragMoveMsg = document.createElement("div");
+//			dragMoveMsg.className = "hidden";
+//			dragMoveMsg.appendChild(document.createTextNode("move"));
+//			draggedPoint.appendChild(dragMoveMsg);			
 			document.body.appendChild(draggedPoint);
 	//		draggedPoint.style.opacity = "0.4";	
 			var div = draggedPoint;
