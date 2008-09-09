@@ -25,9 +25,9 @@
 		$("#second_browser").animate({height:'toggle'},500);
 		shown = !shown;
 		if(shown){
-			button.value = "Hide Second Browser";
+			button.value = "Close Second Browser";
 		}else{
-			button.value = "Show Second Browser";
+			button.value = "Open Second Browser";
 		}
 	}
 </script>
@@ -38,11 +38,17 @@
 
 <%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid1, :options => options, :dragbar => true, :big => true %>
 
-<input type="button" value="Show Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
+<input type="button" value="Open Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
 <div id="second_browser" style="display:none;">
 <%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid2, :dragbar => true, :big => true %>
 </div>
 	
+</div>
+
+<div class="helpmessage">
+To organize claims and topics, open the second browser and use drag and drop.
+<br/><br/>
+Drag the claim onto the claim it supports or opposes. Drag a claim into a topic it is part of.
 </div>
 
 </td><td class="secondcolumn">

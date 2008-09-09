@@ -16,12 +16,11 @@ var arg_title = "<%=params[:title]%>";
 <%= params['txt'] %>
 </div>
 
-<div style="padding-top: 4px; padding-bottom: 4px;">
+<div style="padding: 0px;">
 <span class="savewhat">claims that </span>
 <!-- <img src="/images/lightbulb.png" class="pointicon"/> -->
-	<span id="pointname" class="pointinput_empty">
-		Select the claim that this snippet is making from the interface above	
-	</span>
+	<input type="text" readonly="true" id="pointname" class="pointinput_empty"
+		value="Select a claim from the claim browser"/>
 </div>
 
 	<table width="100%">

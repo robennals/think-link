@@ -130,7 +130,7 @@ a img {
 
 
 .dragtable tr td {
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 .snippet_url {
@@ -511,7 +511,9 @@ h1 {
 }
 
 .pointinput, .pointinput_empty {
-	width: 420px;
+	font-size: 13px;
+	width: 400px;
+	overflow: hidden;
 /*	background-color: #ffffd3; */
 	border-style: inset; 
 	border-width: 2px; 
@@ -537,6 +539,7 @@ h1 {
 .savewhat, .savewhere {
 /*	font-weight: bold; */
 	margin-bottom: 2px;
+  font-size: 13px;
 }
 
 .pointicon {
@@ -689,4 +692,13 @@ h1 {
 /*	margin-bottom: 10px;
 	padding: 5px;
 	border-bottom: 1px solid grey; */
+}
+
+.helpmessage {
+	background-color: #ffffd3;
+	border: 1px solid black;
+	-moz-border-radius: 8px;	
+	padding: 5px;
+	margin-left: 55px;
+	margin-right: 10px;
 }

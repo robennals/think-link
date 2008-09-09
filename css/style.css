@@ -15,11 +15,27 @@
 	z-index: 100;
 	background-color: #CCCCCC;
 	color: #003366;
-	width: 190px;
+	width: 188px;
 	padding-left:10px;
 	font-family: verdana, sans-serif;
 	font-size: 10pt;
 	text-align: left;
+	border: 1px solid white;
+	-moz-border-radius: 5px;
+}
+
+.tl_margin_item_con {
+	position: absolute;
+	z-index: 100;
+	background-color: #ffd3d3;
+	color: #003366;
+	width: 188px;
+	padding-left:10px;
+	font-family: verdana, sans-serif;
+	font-size: 10pt;
+	text-align: left;
+	border: 1px solid white;
+	-moz-border-radius: 5px;
 }
 
 .tl_margin_item_bookmarked {
@@ -33,6 +49,9 @@
 	font-family: verdana, sans-serif;
 	font-size: 10pt;
 	text-align: left;
+	border: 1px solid white;
+	-moz-border-radius: 5px;
+
 }
 
 .tl_margin_item_info {
@@ -325,4 +344,17 @@ a img {
 	padding: 2px;
 	font-size: 9pt;
 	font-family: verdana, sans-serif;
+}
+
+.tl_claim_warn {
+	color: red;
+}
+
+.tl_claim_prefix {
+	color: grey;
+}
+
+.tl_claim_click {
+	font-style: italic;
+	color: grey;
 }

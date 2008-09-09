@@ -20,7 +20,7 @@ function tl_showDiv(divid) {
 var tl_tooltip = null;
 var tl_tooltipCancelled = false;
 
-function tl_delayedShowTooltip(text,x,y){
+function tl_delayedShowTooltip(innerdiv,x,y){
 	if(!tl_tooltip){
 		tl_tooltip = document.createElement("div");
 	}
@@ -28,7 +28,9 @@ function tl_delayedShowTooltip(text,x,y){
 	box.className = "hidden";
 	box.style.top = y+"px";
 	box.style.left = x+"px";
-	box.textContent = text;
+	box.innerHTML = "";
+	box.appendChild(innerdiv);
+//	box.textContent = text;
 	document.body.appendChild(box);
 	
 	setTimeout(function(){

@@ -401,7 +401,16 @@ function tl_margin()
 //			snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
 			$(snippet.spanList[s]).
 			hover(
-				function(){ tool=tl_delayedShowTooltip("\""+snippet.pointText+"\" (click for more info)",mouseX+10,mouseY-30); },
+				function(){ 					
+					if (snippet.opposed){
+						var div = $("<div><span class='tl_claim_warn'>contentious claim: </span><span class='tl_claim_text'>"
+								+snippet.pointText+"</span><span class='tl_claim_click'> (click for more info)</span></div>").get(0);
+					}else{
+						var div = $("<div><span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
+							+snippet.pointText+"</span><span class='tl_claim_click'> (click for more info)</span></div>").get(0);
+					}
+					tool=
+					tl_delayedShowTooltip(div,mouseX+10,mouseY-30); },
 				function(){ tl_hideTooltip(tool); }
 			)
 			.click(function(){
@@ -501,6 +510,11 @@ function tl_margin()
 		if (bookmarked == null) { 
 			saveButton.setAttribute("src",thinklink_imagebase+"star_empty.png"); 
 			margin_item.addClass("tl_margin_item");
+			if (snippet.opposed){
+				margin_item.addClass("tl_margin_item_con");
+			}else{
+				margin_item.addClass("tl_margin_item");
+			}
 		}
 		else { 
 			saveButton.setAttribute("src",thinklink_imagebase+"star.png"); 

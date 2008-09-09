@@ -252,17 +252,17 @@ function selectItem(div){
 
 	if(pointname){ // in save dialog
 		if(cls == "Support"){
-			disableInput("pointname","Select the claim that this snippet is making from the interface abovem");
+			disableInput("pointname","Select a claim from the claim browser");
 		}
 		if(cls == "Oppose"){
-			disableInput("pointname","Select the claim that this snippet is making from the interface above");
+			disableInput("pointname","Select a claim from the claim browser");
 		}
 		if(cls == "Point"){
 			enableInput("pointname");
-			pointname.textContent = normalizeText(div.textContent);
+			pointname.value = normalizeText(div.textContent);
 		}
 		if(cls == "Topic"){
-			disableInput("pointname","Select the claim that this snippet is making from the interface above");
+			disableInput("pointname","Select a claim from the claim browser");
 		}
 	}
 	
@@ -413,7 +413,7 @@ var inputstarted = false;
 function enableInput(id){
 	var input = getel(id);
 	if(input.className == "pointinput_empty"){
-		input.textContent = "";
+		input.value = "";
 		input.className = "pointinput";
 	}
 }
@@ -424,7 +424,7 @@ function disableInput(id,msg){
 	}
 	var input = getel(id);
 	input.className = "pointinput_empty";
-	input.textContent = msg;
+	input.value = msg;
 }
 
 function clearButton(what,idnum){
@@ -921,7 +921,7 @@ function createFinished(container,input,id,what){
 function clickSave(){
 	//	TODO: save the snippet
 	var pointnode = getel("pointname");
-	var pointname = normalizeText(pointnode.textContent);
+	var pointname = normalizeText(pointnode.value);
 	var sniptxt = normalizeText(getel("snippet_text").textContent);
 	
 	var baseurl = "new_snippet.php?txt="+encodeURIComponent(sniptxt)
