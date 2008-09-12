@@ -80,12 +80,15 @@ function tl_snippet_dialog(margin) {
 	}
 
 	this.close = function(){
+		tl_log("close");
 		$("#tl_snippet_win").animate({ height: 'hide', opacity: 'hide' }, 'slow');
 		var dialog = document.getElementById("tl_snippet_win");
-		if(dialog){dialog.parentNode.removeChild(dialog)};
-		removeSpans(this.sourceSpans);
-		this.margin.itemsLoaded=false;
-		this.margin.refresh();
+		if(dialog){
+			dialog.parentNode.removeChild(dialog)
+			removeSpans(this.sourceSpans);
+			this.margin.itemsLoaded=false;
+			this.margin.refresh();
+		};
 	}
 
 	this.hideMe = function(){

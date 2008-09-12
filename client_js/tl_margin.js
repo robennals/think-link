@@ -143,13 +143,7 @@ function tl_margin()
 		}
 
 	}
-	
-	this.toggleSnippetShow = function() {
-		if (this.highlightAll) { this.unhighlightSnippets(); }
-		else { this.highlightSnippets(); }
-		this.highlightAll = !this.highlightAll;
-	}
-	
+		
 	this.createMarginPull = function() {
 		var that = this;
 		var pull = document.createElement("div");
@@ -215,6 +209,8 @@ function tl_margin()
 
 
 	this.refresh = function() {		
+		tl_log("refresh");
+		
 		this.removeAllHighlights(); // in case we already have some
 		var that = this;
 		var scriptID = "tl_margin_ajax";
@@ -228,10 +224,13 @@ function tl_margin()
 			}
 			urls = urls.substring(1); // trim preceding ampersand
 			
+			tl_log("doAjax");
 			doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
+				tl_log("doAjax callback");
 				
 				// for each result item, make a new tl_snippet and add it to the margin's array
 				for (var item=0; item< result.length; item++) {
+					tl_log("addItem");
 					that.addItem(new tl_snippet(
 						result[item].id,
 						result[item].creator,
@@ -375,32 +374,7 @@ function tl_margin()
 		$("body").css("padding-left",this.leftmargin); // scoot the main document back to the left
 		$("#" + this.divID).animate({ width: 'hide', opacity: 'hide' }, 'slow');
 	}
-	
-	this.highlightSnippets = function() {
-		var that = this;
-		for (var i=0; i<this.items.length; i++){
-			var snippet = this.items[i];
-			var tooltext = snippet.pointText;
-			var tool;
-			if (snippet.opposed != null) { snippet.spanList = mark_snippet(snippet.sourceText,"highlight_con"); }
-			else {snippet.spanList = mark_snippet(snippet.sourceText); }
-			
-			for (var s=0; s <snippet.spanList.length; s++) {
-				snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
-				$(snippet.spanList[s]).
-				hover(
-					function(){ tool=tl_delayedShowTooltip("\""+that.items[this.id].pointText+"\" (click for more info)",mouseX+10,mouseY-30); },
-					function(){ tl_hideTooltip(tool); }
-				)
-				.click(function(){
-					if(!getText() || !getText().toString()){
-						myBrowser.viewFrame(that.items[this.id].pointID, that.items[this.id].id);
-					}
-				});
-			}
-		}
-	}
-	
+		
 	this.removeAllHighlights = function() {
 		for (var i=0; i<this.items.length; i++){
 			var snippet = this.items[i];
