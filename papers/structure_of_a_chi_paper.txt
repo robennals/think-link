@@ -1,0 +1,85 @@
+Sections:
+
+=== Abstract ===
+
+Background to the area. Explanation of the problem. Summary of our solution. Summary of our results.
+
+=== Introduction ===
+
+=== Related Work ===
+
+=== Interviews and Fieldwork Informing Design ===
+
+What problems do people face?
+What are people doing now?
+
+Us:
+	Organizing information they have found - use a Word document
+	Finding bias - read multiple web sites. Don't know.
+	Sharing information with others
+	
+=== Interaction Techniques ===
+
+What it actually does, in terms of a new approach to interaction.
+	In our case, it's not clear that our "interaction techniques" really are that new.
+	What is new is the data we have and the way we use it.
+		Perfect for CSCW and WWW, but not CHI.
+	
+Our new interaction techniques:
+	Focussing on an idea and showing things around it.
+	Highlighting information on pages you browse, to tell you what to pay attention to.	
+	Lightbulb that slides out.
+	Claims dynamically rearranging themselves around things.
+		
+		
+=== Software Infrastructure ===
+
+How it was built...
+
+
+=== Preliminary User Feedback ===
+
+	Areas for improvement
+	
+	Us:
+		First study focussed on what people wanted. Looked at preliminary UI for looking at claims.
+		Looked at people's ability to correctly categorise snippets etc.
+		
+
+=== Conclusions ===
+
+=== Acknowledgements ===
+
+=== Related Work ===
+
+23 references in whiteboard paper
+
+
+---- Alternative Structure ----
+
+Abstract
+Introduction
+Method
+	participants, materials
+Results
+	Lots of graphs about the users
+
+
+---- Other comments ----
+
+A CHI paper should cover the entire iterative design cycle "observation, design, implementation, evaluation".
+	We did the entire cycle - using the first study as observation to motivate second design.
+
+--- what is wanted ---
+http://www.chi2009.org/Authors/CallForPapers/SelectingAType.html
+
+* Provide context about what is already done and what limitation exist
+* Motivate that this is a real problem worth solving
+* describe the artifact in sufficient detail for others to replicate it
+* Is there a rigorous and convincing evaluation
+
+
+
+---- UIST paper from Klemmer ----
+
+Not quite as user study focussed.

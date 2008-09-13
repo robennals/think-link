@@ -1,9 +1,22 @@
-\documentclass{sig-alt-release2}
-\usepackage{graphicx}
-\usepackage{url}
-\usepackage{textcomp}
+\documentclass{chi2009}
 \usepackage{times}
+\usepackage{url}
+\usepackage{graphics}
 \usepackage{color}
+\usepackage[pdftex]{hyperref}
+\hypersetup{%
+pdftitle={Browsing the Web of Factual Claims},
+pdfauthor={Beth Trushkowski and Rob Ennals},
+pdfkeywords={CSCW, sensemaking, web, browsers, collaboration, mind mapping},
+bookmarksnumbered,
+pdfstartview={FitH},
+colorlinks,
+citecolor=black,
+filecolor=black,
+linkcolor=black,
+urlcolor=black,
+breaklinks=true,
+}
 
 \newcommand{\todo}[1]{}
 % \newcommand{\todo}[1]{\footnote{{\bf TODO:} #1}}
@@ -12,11 +25,23 @@
 \newcommand{\idea}[1]{{\color{blue} IDEA: #1}\\}
 \newcommand{\studyresult}[1]{{\color{red} STUDY RESULT?: #1}\\}
 
-\begin{document}
-%
-\title{Connecting Documents to Ideas}
 
-\numberofauthors{3}
+\pagenumbering{arabic}  % Arabic page numbers for submission.  Remove this line to eliminate page numbers for the camera ready copy
+
+
+\begin{document}
+% to make various LaTeX processors do the right thing with page size
+\special{papersize=8.5in,11in}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+%
+\toappear{Submitted for review to CHI 2009.}
+
+\title{Browsing the Web of Factual Claims}
+
+\numberofauthors{2}
 
 \author{
 \alignauthor Beth Trushkowsky\\
@@ -37,11 +62,37 @@
 
 \begin{abstract}
 
-Much of the information contained on the web consists of opinions, arguments, blogs, articles, and other such unstructured natural language text. Each such document contains one or more statements or ideas that might be of interest to readers.
-
-We propose a new approach to finding, organizing, and sharing ideas contained in web pages. In this approach, a user marks points of interest 
+Traditional web browsing consists of looking at pages and following links between pages; however when a user browses the web it is often not the pages themselves that they are looking for but the factual claims contained within those documents. A page may contain claims that are contradicted by other pages, or contain one interesting new claim, hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
+We present Think Link, a tool that links pages to the factual claims that they make, and allows users to browse the web of factual claims, rather than the web of pages.
 
 \end{abstract}
+
+\keywords{CSCW, sensemaking, web, browsers, collaboration, mind mapping} 
+
+\category{H.5.2}{Information Interfaces and Presentation}{User Interfaces}[Graphical User Interfaces]
+
+
+\begin{figure}[ht]
+	\includegraphics[width=8.5cm]{../screenshots/redhighlight.png}
+	\caption{Browsing interface, with a contentious claim highlighted}
+	\label{redhighlight}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=8.5cm]{../screenshots/sidebar.png}
+	\caption{Browsing interface, with the sidebar opened}
+	\label{sidebar}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=8.5cm]{../screenshots/claim_popup.png}
+	\caption{The ``Investigate Claim'' window pops up when one clicks on a claim}
+	\label{redhighlight}
+\end{figure}
+
+
+
+
 
 \section{Introduction}
 1p:  
@@ -67,13 +118,7 @@ describe results,
 % What thinklink allows people to do
 
 % Why thinklink is needed
-\section{Motivation?}
-1-2pp: 
-how do people currently organize, interact, share with web content; 
-Thinklink data structures; 
-what can people now do with Thinklink
 
-\subsection{Why People Annotate}
 
 \idea{People already annotate documents, in the form of blogs, comments etc}
 
@@ -94,6 +139,14 @@ what can people now do with Thinklink
 \studyresult{Our users said they would use our tool}
 
 %\studyresult{The best way to find answers is social - by learning from friends who understand the topic}
+
+\section{Motivation?}
+1-2pp: 
+how do people currently organize, interact, share with web content; 
+Thinklink data structures; 
+what can people now do with Thinklink
+
+\subsection{Why People Annotate}
 
 
 \subsection{Organizing Knowledge}
@@ -136,41 +189,63 @@ what can people now do with Thinklink
 
 \studyresult{People liked the other features too}
 
-\section{Design}
-2pp: describe how the application works and show some screenshots; discuss some implementation decisions
-\subsection{Features}
-descriptions and screenshots: margin, snippet creation, relationship creation, web UI, point browser
-\begin{figure}[ht]
-	\includegraphics[scale=0.35]{../screenshots/snippetdialog_sm.jpg}
-	\caption{Snippet creation dialog}
-	\label{snippetdialog}
-\end{figure}
-
-\begin{figure}[ht]
-	\includegraphics[scale=0.3]{../screenshots/topicpage_sm.jpg}
-	\caption{Example topic page}
-	\label{topicpage}
-\end{figure}
-
-\subsection{Implementation Decisions}
-
-\idea{Wiki model not appropriate for points since want to manipulate several points at once}
-\idea{Need to visualize relationships in web of ideas}
 
 
-% \section{Creating Knowledge}
-% 
-% \section{Sharing Knowledge}
-% 
-% Why do users g
-% 
-% \section{Using Knowledge}
-% 
-% \section{Querying Data}
+\section{Related Work}
+
+\subsection{Web Annotation Systems}
+
+Diigo lets you save, import, tag, highlight, mark up and share Web pages
+	select content on webpage
+	share bookmarked content; bookmark url and see what people have tagged on that page
+	search over collection of selected content
+	tag selected content; social tagging
+	see friends activity; more social behavior than necessary (eg. msging)
+	meet people ``like'' me?
+Stickis
+Fleck
+Shiftspace
+SharedCopy
+JKN
+MyStickies
+DrawHere
+
+- UIs for highlighting
+- wikipedia highlighting not trustworthy stuff
+
+\subsection{Web Clippings}
+
+Google Notebook
+Trailfire
+
+\subsection{Semantic Linking}
+
+\subsection{Social Bookmarking}
+
+Shadows
+
+\subsection{User Contributed Links}
+
+Memex allowed users to describe their own paths between pages, rather than requiring the page authors to modify them.
+
+Everything2 creates soft-links between documents based on the browsing patterns of users.
+
+ENQUIRE contains bi-directional links that show who links to a document. TrackBack does the same.
+
+\subsection{Automated Reasoning}
+
+Case-Based reasoning
+Sensemaking
+
+\subsection{Argumentation Graphs}
+Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework [\idea{cite}], designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model [\idea{cite}], example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
+
+Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
 
 
-\section{User Studies}
-1.5pp: recruitment, environment, tasks, observations, smaller study
+
+\section{Observations Informing Design}
+
 
 \subsection{Recruitment}
 Our user study participants were selected from a pool of respondents to a Craigslist posting for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
@@ -228,6 +303,45 @@ Many of the study participants who said they would our application suggested use
 % Not for everyone! 3/12 people used it "incorrectly"
 Several of the study participants suggested specific use cases that mirror our initial motivation for the application. One example was a user who would use snippets to as supporting evidence for asserting the incorrectness of someone else's claim on a web forum, as simple comments are not as effective. Our application, however, is not for everyone. Three of the twelve user study participants used (or wanted to use) our application ``incorrectly,'' e.g. to compare airline flight prices.
 
+
+\section{Interaction Techniques}
+
+\subsection{Features}
+descriptions and screenshots: margin, snippet creation, relationship creation, web UI, point browser
+\begin{figure}[ht]
+	\includegraphics[scale=0.35]{../screenshots/snippetdialog_sm.jpg}
+	\caption{Snippet creation dialog}
+	\label{snippetdialog}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[scale=0.3]{../screenshots/topicpage_sm.jpg}
+	\caption{Example topic page}
+	\label{topicpage}
+\end{figure}
+
+\subsection{Implementation Decisions}
+
+\idea{Wiki model not appropriate for points since want to manipulate several points at once}
+\idea{Need to visualize relationships in web of ideas}
+
+
+% \section{Creating Knowledge}
+% 
+% \section{Sharing Knowledge}
+% 
+% Why do users g
+% 
+% \section{Using Knowledge}
+% 
+% \section{Querying Data}
+
+
+\section{Preliminary User Feedback}
+
+
+1.5pp: recruitment, environment, tasks, observations, smaller study
+
 \subsubsection{User Interface Redesign}
 The first user study demonstrated a few flaws in the application's user interface. These problems can be generalized as:
 \begin{itemize}
@@ -238,30 +352,13 @@ The first user study demonstrated a few flaws in the application's user interfac
 Our solution to these problems was to redesign the user interface to resemble the traditional file browser. The left-hand side shows the expandable/collapsable hierarchy and shortcut paths, while the right-hand side shows a content preview of the selected item from the left. For example, when a point is selected, the preview shows its snippets and related points. Snippet creation will resemble a \texttt{save as...} dialog where users can easily traverse the topic/point hierarchy, and create new topics inside existing ones as deemed necessary.
 This solution was implemented and used in a smaller user study. See section \ref{secondstudy}.
 
+\idea{remove confusion about ``where i am'' with fisheye view of current claim}
 
 \subsubsection{Second User Study}
 \label{secondstudy}
 There were six study participants who used the redesigned web interface.
 \studyresult{we solved organization difficulties with this redesign}
 
-\section{Related Work}
-1p
-
-\subsection{Web Annotation Systems}
-
-\subsection{Semantic Linking}
-
-\subsection{User Contributed Links}
-
-Memex allowed users to describe their own paths between pages, rather than requiring the page authors to modify them.
-
-Everything2 creates soft-links between documents based on the browsing patterns of users.
-
-ENQUIRE contains bi-directional links that show who links to a document. TrackBack does the same.
-
-\subsection{Automated Reasoning}
-
-\subsection{Argumentation Graphs}
 
 %\section{Evaluation}
 
@@ -270,5 +367,9 @@ ENQUIRE contains bi-directional links that show who links to a document. TrackBa
 
 \section{Conclusions}
 $1/2$p
+
+
+\bibliographystyle{abbrv}
+\bibliography{biblio.bib}
 
 \end{document}
