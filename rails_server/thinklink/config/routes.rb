@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :ratings
   map.resources :users, :member => {:snippets => :get, :points => :get, :topics => :get, :recent => :post}
 
-  map.resources :points, :collection => {:scrach => :post, :list => :get, :search => :post, :mine => :get, :notmine => :get, :searchajax => :post}, :member => {:parents => :post, :summary => :post, :snippets => :get, :show => :get, :expand => :post, :expandfolder => :post, :snippets => :post, :topics => :post, :places=>:post, :showajax => :post, :pathajax => :post}
+  map.resources :points, :collection => {:scrach => :post, :list => :get, :search => :post, :mine => :get, :notmine => :get, :searchajax => :post}, :member => {:parents => :post, :summary => :post, :snippets => :get, :show => :get, :expand => :post, :expandfolder => :post, :snippets => :post, :topics => :post, :places=>:post, :showajax => :post, :pathajax => :post, :showold => :get}
   map.resources :topics, :collection => {:hot => :post, :toplevel => :post, :recent => :post, :list => :get, :search => :get, :mine => :get}, :member => {:snippets => :post, :parents => :post, :show => :get, :points => :get, :parents => :get, :children => :get, :expandfolder => :post, :expand => :post, :parents => :post, :summary=>:post, :showajax => :post, :pathajax => :post}
 
 

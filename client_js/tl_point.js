@@ -102,7 +102,7 @@ function tl_point_browser() {
 				.addClass("tl_dialog_title");
 
 			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-			var titleBox = $("<nobr>").text("Browse Points").appendTo(titleBar);
+			var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
 
 
 			var defaultText ="";

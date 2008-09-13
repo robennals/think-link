@@ -91,6 +91,17 @@ class PointsController < ApplicationController
  
     emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
   end
+  
+  def showold
+     @point = Point.find(params[:id])
+
+    @title = "Point: "+@point.txt
+    if @point.ismine(@user)
+      @editlink = true
+    end
+		render :action => :show  	
+	end
+  
  	def showajax
 		if params[:savemode] 
 			options = {:pointfolders => true}

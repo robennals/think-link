@@ -277,6 +277,7 @@ function selectItem(div){
 	selectedCls = holder.getAttribute("tl_cls");
 	
 	updateSnippets(holder);
+	updateSnippetPanelTitle(selectedCls);
 
 	clearSelect(getNodeIdNum(browser));
 	
@@ -377,6 +378,15 @@ function smoothReplace(url,id){
 			div.style.overflow = "";
 		});
 	});
+}
+
+function updateSnippetPanelTitle(cls){
+	var title = getel("topics_title");
+	if(cls == "Topic"){
+		title.textContent = "Snippets in this Topic";
+	}else if(cls == "Point"){
+		title.textContent = "Snippets supporting this claim";
+	}
 }
 
 function getHolderUrl(holder){

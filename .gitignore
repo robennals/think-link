@@ -8,3 +8,6 @@ Edit.000
 *.jar
 *.zip
 *.tcp
+*.pdf
+*.aux
+*.out
