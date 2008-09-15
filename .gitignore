@@ -11,3 +11,6 @@ Edit.000
 *.pdf
 *.aux
 *.out
+*.bbl
+*.blg
+*.tps

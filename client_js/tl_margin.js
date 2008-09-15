@@ -335,17 +335,17 @@ function tl_margin()
 			// then if necessary change pos to be underneath, and check again
 			if (vertPos >= itemPos && vertPos <= itemPosRange) {
 				var itemAbove = document.getElementById("margin"+this.items[index].id);
-				if(!itemAbove.tl_squeezed){
-					itemAbove.textContent = itemAbove.textContent.substr(0,20) + "...";
-					this.items[index].displayText= itemAbove.textContent;				
-					itemAbove.tl_squeezed = true;
-					itemPosRange = itemPos + itemAbove.offsetHeight;
-					if (vertPos >= itemPos && vertPos <= itemPosRange) {
-						vertPos = itemPosRange + 1;
-					}					
-				}else{
+//				if(!itemAbove.tl_squeezed){
+//					itemAbove.textContent = itemAbove.textContent.substr(0,20) + "...";
+//					this.items[index].displayText= itemAbove.textContent;				
+//					itemAbove.tl_squeezed = true;
+//					itemPosRange = itemPos + itemAbove.offsetHeight;
+//					if (vertPos >= itemPos && vertPos <= itemPosRange) {
+//						vertPos = itemPosRange + 1;
+//					}					
+//				}else{
 					vertPos = itemPosRange+1;
-				}
+//				}
 			}
 		}
 		return vertPos;
@@ -393,10 +393,10 @@ function tl_margin()
 				function(){ 					
 					if (snippet.opposed){
 						var div = $("<div><span class='tl_claim_warn'>contentious claim: </span><span class='tl_claim_text'>"
-								+snippet.pointText+"</span><span class='tl_claim_click'> (click for more info)</span></div>").get(0);
+								+snippet.pointText+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
 					}else{
 						var div = $("<div><span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
-							+snippet.pointText+"</span><span class='tl_claim_click'> (click for more info)</span></div>").get(0);
+							+snippet.pointText+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
 					}
 					tool=
 					tl_delayedShowTooltip(div,mouseX+10,mouseY-30); },
@@ -449,12 +449,20 @@ function tl_margin()
 			.hover(function(){ // highlight source text when the annotation is hovered over
 				that.setHighlightClass(snippet,true);							
 				$(margin_item).text(snippet.pointText);
-				$(margin_item).addClass("tl_margin_item_info");
+				if(snippet.opposed){
+					$(margin_item).addClass("tl_margin_item_info_con");
+				}else{
+					$(margin_item).addClass("tl_margin_item_info");
+				}
 				$(margin_item).prepend(buttonBox);
-			}, function(){
+			}, function(){				
 				that.setHighlightClass(snippet,false);	
 				$(margin_item).text(snippet.displayText);
-				$(margin_item).removeClass("tl_margin_item_info");
+				if(snippet.opposed){
+					$(margin_item).removeClass("tl_margin_item_info_con");
+				}else{
+					$(margin_item).removeClass("tl_margin_item_info");
+				}
 			})
 			.click(function(){ // open point browse
 				myBrowser.viewFrame(snippet.pointID, snippet.id);
@@ -479,7 +487,7 @@ function tl_margin()
 			if (bookmarked==null) {
 				doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
 					tl_log("bookmarked: "+ snippet.id+ ", "+result);
-					saveButton.setAttribute("src",thinklink_imagebase+"star.png");
+					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png");
 					margin_item.addClass("tl_margin_item_bookmarked").removeClass("tl_margin_item");
 					bookmarked=snippet.id;
 				});
@@ -487,7 +495,7 @@ function tl_margin()
 			else {
 				doAJAX("tl_bookmark",that.unbookmarkURL+"?snippet="+snippet.id,function(result){
 					tl_log("unbookmarked: "+ snippet.id+ ", "+result);
-					saveButton.setAttribute("src",thinklink_imagebase+"star_empty.png");
+					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png");
 					margin_item.addClass("tl_margin_item").removeClass("tl_margin_item_bookmarked");
 					bookmarked=null;
 				});	
@@ -497,7 +505,7 @@ function tl_margin()
 			
 		// show fancy shmancy stuff if the snippet has been bookmarked
 		if (bookmarked == null) { 
-			saveButton.setAttribute("src",thinklink_imagebase+"star_empty.png"); 
+			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png"); 
 			margin_item.addClass("tl_margin_item");
 			if (snippet.opposed){
 				margin_item.addClass("tl_margin_item_con");
@@ -506,8 +514,12 @@ function tl_margin()
 			}
 		}
 		else { 
-			saveButton.setAttribute("src",thinklink_imagebase+"star.png"); 
-			margin_item.addClass("tl_margin_item_bookmarked");
+			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png"); 
+			if (snippet.opposed){
+				margin_item.addClass("tl_margin_item_con");
+			}else{
+				margin_item.addClass("tl_margin_item_bookmarked");
+			}
 		}
 		var buttonBox = $("<span/>").css("float","right").css("margin-left","2px");
 		buttonBox.append($(saveButton)); buttonBox.append($(deleteButton));

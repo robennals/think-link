@@ -63,7 +63,8 @@ breaklinks=true,
 \begin{abstract}
 
 Traditional web browsing consists of looking at pages and following links between pages; however when a user browses the web it is often not the pages themselves that they are looking for but the factual claims contained within those documents. A page may contain claims that are contradicted by other pages, or contain one interesting new claim, hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
-We present Think Link, a tool that links pages to the factual claims that they make, and allows users to browse the web of factual claims, rather than the web of pages.
+
+We present Think Link, a tool that links pages to the factual claims that they make, and allows users to browse the web of factual claims, rather than the web of pages. 
 
 \end{abstract}
 
@@ -74,27 +75,183 @@ We present Think Link, a tool that links pages to the factual claims that they m
 
 \begin{figure}[ht]
 	\includegraphics[width=8.5cm]{../screenshots/redhighlight.png}
-	\caption{Browsing interface, with a contentious claim highlighted}
-	\label{redhighlight}
+	\caption{Think Link highlights the key claims made by a page. Red means the claim is contentious.}
+	\label{highlight}
 \end{figure}
 
 \begin{figure}[ht]
-	\includegraphics[width=8.5cm]{../screenshots/sidebar.png}
-	\caption{Browsing interface, with the sidebar opened}
-	\label{sidebar}
+	\includegraphics[width=8.5cm]{../screenshots/sidebar3.png}
+	\caption{The margin shows a summary of the key claims made by the page}
+	\label{margin}
 \end{figure}
 
 \begin{figure}[ht]
 	\includegraphics[width=8.5cm]{../screenshots/claim_popup.png}
-	\caption{The ``Investigate Claim'' window pops up when one clicks on a claim}
-	\label{redhighlight}
+	\caption{Click on a claim to see supporting or opposing evidence on other web pages}
+	\label{claimview}
 \end{figure}
 
 
 
-
-
 \section{Introduction}
+
+The web provides users with a huge number of pages they can read, but extracting useful factual information from these pages can be hard work. Not everything on the web is true. A web site may make claims that are contradicted by other web sites. If a user is to avoid incorrect claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, not everything on the web is interesting. If a user wants to find interesting factual claims about a topic then they may have to waste time reading claims that they have either read elsewhere or do not find interesting in order to find the claims that interest them.
+
+Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them.
+
+Part of the problem is that traditional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links to other pages, as chosen by the page author, it does not provide an easy way for a user to validate whether the claims made by a page are supported by evidence that may be available on other pages. Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
+
+
+\subsection{Browse the Web of Factual Claims}
+
+We have created a tool called Think Link that connects pages on the web to the factual claims being made on those pages, and allows a user to quickly find snippets of text on other web pages that make supporting or opposing claims. We hope that this tool will make it easier for users to identify incorrect claims in documents they read, and to quickly identify the best arguments for and against claims that they may be interested in.
+
+As a user browses a web page Think Link will highlight snippets of text that make factual claims (Figure~\ref{highlight}). If a factual claim is contentious (meaning that other pages make opposing claims) then the highlight will be red. More information about highlighted claims can be found by either mousing over one of them, or opening the Think Link margin (Figure~\ref{margin}).
+
+These highlighted claims serve as entry points to a browsable graph of factual claims. Clicking on a claim will pop up a window that allows one to easily view the other claims that support or oppose the selected claim, and the snippets of text on the web that make these claims (Figure~\ref{claimview}).
+
+For example, if a user browsed a web page that claimed ``Global Warming does not exist'', then the text snippet that made this claim would be highlighted in red, indicating the fact that there are web pages elsewhere that make opposing claims. If the user were to click on the highlighted snippet then an ``investigate claim'' window would appear. This window would show that the claim ``Global Warming does not exist'' is opposed by the claim ``There is strong evidence for global warming''. If the user navigated to this new claim then they could quickly see the best claims that support the existence of global warming, and would be able to see summaries of the best sources that supported these claims.
+
+\subsection{Collaborating to connect claims}
+
+Think Link shares a lot in common with Wikis like Wikipedia~\cite{wikipedia}. The claim graph is shared between all users and editable by anyone. Any user can identify a claim made on a web page by selecting the web snippet that makes this claim and clicking the ``new snippet'' button on the browser toolbar. Similarly, any user can establish new supporting and opposing relationships between claims by using drag and drop within the claim browser. One can think of Think Link as being rather like a Wiki in which all the content is clipped from existing sources and links are created from those sources back to the wiki.
+
+Think Link uses collaborative filtering~\cite{collaborativefilter} to highlight the most interesting claims that support and oppose another claim, and the most interesting snippets that make a claim. If a user finds a snippet or claim interesting then they can mark it as such. When Think Link lists claims or snippets, it will show first those that the user marked as interesting, and order the rest according to the number of other users who marked them interesting.
+
+\subsection{The Mental Model}
+
+Think Link presents users with three kinds of object, each associated with a different family of icons:
+
+\begin{itemize}
+\item {\bf a claim} (\includegraphics[width=0.3cm]{../images/lightbulb_off.png}) is a factual claim about the world that may be true or false. For example ``Global warming exists''. A claim may support or oppose other claims. Claims are written as raw English\footnote{though one can imagine supporting other languages in the future} text and are not understood logically by Think Link.
+\item {\bf a snippet} (\includegraphics[width=0.3cm]{../images/comment.png}) is a section of text on a particular web site that asserts or assumes the truth of a particular claim. Many snippets may assert the same claim and users are encouraged to re-use existing claims rather than creating new ones when creating new snippets.
+\item {\bf a topic} (\includegraphics[width=0.3cm]{../images/folder_grey.png}) is a thing that claims can be about. For example ``Global Warming'', or ``Computer Science''. A claim can have one or more topics that it is about, and a topic can have one or more more general topics. Topics are used both to organize, and to disambiguate claims. For example ``Bush'' can mean either ``George H W Bush'', ``George W Bush'', ``Vannevar Bush'', ``Kate Bush'', ``The Rock Band Bush'', or just ``A Bush''. Associating a claim with a topic allows one to write shorter claims without worrying about being ambiguous.
+\end{itemize}
+
+The three icons are used consistently when refering to these three object types. 
+Yellow versions of these icons (\includegraphics[width=0.3cm]{../images/lightbulb.png},\includegraphics[width=0.3cm]{../images/folder.png},\includegraphics[width=0.3cm]{../images/comment_yellow.png}) are used to identify claims, folders, or snippets that the user has marked as interesting.
+
+
+\subsection{Why People Annotate}
+
+Tools like Think Link rely on user contributions in order to be useful. If no users are identifying factual claims on pages then other people who browse such pages will not see any claims identified. Similarly, if no other users are connecting claims together, then users will not see any supporting or opposing claims when they click on a highlighted snippet.
+
+Moreover, in order to become popular, a tool like Think Link needs to be useful even when very few people are using it. If a tool is only useful when it has a large community using it then it is unlikely that early adopters will stick with it enough for it to ever acquire a large community.
+
+Our user study participants identified several reasons why they would want to mark up factual claims in documents they found. The most common reason people gave for identifying and organizing factual claims was if the person was writing an article or researching a topic and wanted to keep track of the information they had found. One user (who was an active blogger) also expressed an interest in finding and marking up instances of claims that he disagreed with, so that readers would see the arguments highlighted in red and be directed to the counter-arguments. The same user also expressed an interest in marking up claims in documents he had made in his own articles so that readers could quickly see the evidence he had found in support of his claims.
+
+\studyresult{Quotes of users saying why they would use it}
+
+\subsection{Contributions}
+
+We believe that this work makes the following key contributions:
+
+\begin{itemize}
+\item We propose a new approach to browsing web pages that focusses on the factual claims made by these articles
+\item We develop interaction techniques that make it easy for a user to browse the web through factual claims
+\end{itemize}
+
+\section{Interaction Techniques}
+
+Users interact with Think Link in four key ways. Think Link will draw attention to interesting claims on pages that the user browses; it allows the user to identify new factual claims on pages they browse; it allows them to browse the graph of related claims and identify the strongest evidence supporting or opposing the claims they are looking at; and it allows them to organize the claim graph by making new connections between existing claims and topics.
+
+\subsection{Identifying factual claims on a page}
+
+When a user browses a web page, we want to make them aware of claims being made on the page that they might find interesting, or that other sources disagree with. Think Link draws attention to the factual claims that other users have identified on a web page by highlighting them (Figure~\ref{highlight}). Snippets are highlighted in red if they are contenious (other sources disagree with the claim), or yellow otherwise. The highlight colors are chosen such as to be pale enough to not impede reading, but dark enough to be noticeable. The colors are chosen to fit with people's normal associations with colors, where red is commonly associated with danger (e.g. a traffic light) and yellow is the standard color used for highlighter pens.
+
+While a highlight lets the user know that a the snippet is making an interesting or contentious claim, the user may still wonder what claim the snippet has been identified as making. A snippet could be interpreted as asserting the truth of several claims. For example the phrase ``Alice and Bob live in Canada'' asserts both that Alice lives in Canada and that Bob lives in Canada. Similarly, a user may have eroneously marked a snippet as asserting a claim that it does not directly assert to be true. For example ``Alice and Bob live together''.
+
+There are two ways that a user can identify the claims being made by the highlighted snippet; they can either hover their mose over a particular snippet to show information about that snippet (Figure~\ref{highlight}, or they can use the Think Link margin to show information about all snippets on the page (Figure~\ref{margin}).
+
+The Think Link Margin is designed to mimick the traditional margin notes that readers often write on physical documents they are reading~\cite{marginalia}. A margin space is added to the left of the page containing a margin note for each snippet. Each margin note is aligned vertically with the claim it is about and contains the text of the claim. To emphasise the connection between a margin note and its associated snippet, a snippet is highlighted more strongly when the user mouses over the associated margin note (Figure~\ref{margin}). 
+
+We found that when a participant sees a highlighted snippet, they will typically want to do one of four things: ignore it, remember it, delete it, or investigate it. If the user finds the snippet interesting and wants to use it later then they can bookmark it by clicking the bookmark icon that pops up when they mouse over the margin note. This will cause it to be displayed prominently in the claim browser (Section~\ref{browseclaims}). If the user believes the snippet to not be making the claim that it says it does or otherwise badly marked up then they can delete the snippet by clicking on the trash can icon on the margin note. If the user thinks the claim is interesting and wants to see how it relates to claims made by other snippets on the web then they can click on either the highlighted text or the margin note to open the claim browser (Section~\ref{browseclaims}).
+
+A user can also use the margin to provide a quick overview of a document. They can scroll quickly through the document and look to see what key claims other users have marked in the margins. Several users remarked on how useful it was when reading a long document to be able to quickly scan through it and see what other users have thought were the most interesting points. \studyresult{put in some quotes}
+
+\todo{sort out more consistent colors and icons between this view and the web view}
+\todo{give the margin consistent colors with the highlight sections}
+\todo{more nice zoomed-in screenshots showing the different interaction techniques}
+
+\subsection{Identifying new factual claims}
+
+If a user finds a snippet of text on a page that makes an interesting claim then they may want to enter it into Think Link. There are several reasons they may wish to do this. It may be that they find the snippet useful and may want to refer to it again in the future. It may be that they disagree with the claim, and want to alert other readers to the fact that there are opposing arguments, or it may be that they agree with the claim and want to provide easy access to evidence that backs it up. 
+
+
+\todo{Make new snippet icon throb when something is selected}
+
+
+\subsection{Browsing factual claims}
+\label{browseclaim}
+
+\subsection{Organizing factual claims}
+
+
+\section{Discussion}
+
+\subsection{Context of a Claim}
+
+\subsection{How many claims to show}
+
+\subsection{Beyond Claims}
+
+\section{Implementation}
+
+Think Link is implemented as three largely independent components:
+
+\begin{itemize}
+\item {\bf A server}, written using Ruby, PHP, and MySQL that maintains a graph of claims, topics, and snippets and provides an API that allows this data to be queried and modified
+\item {\bf A web UI}, written using Ruby on Rails~\cite{rails} that provides a visual interface to the claim graph
+\item {\bf A page enhancement script}, written in Javascript, that augments the page it is run on by highlighting the factual claims made on the page. This script also provides the ability to create new snippets or display the rails interface to investigate a particular claim.
+\item {\bf A browser extension}, implemented for Firefox~\cite{firefoxextension}, that inserts the page enhancement script into all pages the user browses to, and provides toolbar and context-menu shortcuts to the ``new snippet'' feature of the page enhancement script.
+\end{itemize}
+
+These components are largely independent. One could use the javascript script on a web page without using the firefox extension, by either manually including it on the page (e.g. to enhance your own blog) or by adding it using a proxy. Since the server API is public, one could write alternative tools that mark up web pages in different ways, or use the claim graph for different purposes.
+
+The source code to Think Link is publicly available under the Apache license at the following URL:
+
+{\b url removed for blind submission}
+
+We expect to have a public deployment available by the time of publication.
+
+We use icons from the free FamFamFam Silk~\cite{silkicons} collection.
+
+\section{Iterative Evaluation}
+
+Think link was developed using an iterative design process. During each iteration, we would talk to participants about the way they found and organized information on the web, and then perform a think aloud study where the participants would use the tool and tell us what they were thinking. After each iteration, we would study what we had learned from the participants and update our prototype accordingly. We went through a total of four iterations, with varying degrees of formality.
+
+\subsection{Investigatory Study}
+
+
+
+\subsection{Evaluation Study}
+
+
+
+
+We performed two user studies. In the first study, we asked participants about how they found and organized information on the web, and performed a think aloud study where they used the tool and told us what they were thinking. The learnings from the first study.
+
+In the first user study, we perf
+
+showed the participants an early version of the Think Link interface
+
+Think Link was developed using an iterative design process. 
+
+
+
+We performed two user studies. The aim of the first study was to determine 
+
+In the first of these studies, we recruited 12 paid subjects, aske
+
+
+
+
+
+\subsection{Interaction Techniques}
+
+
+The web has provided users with many pages that they can read. 
+
 1p:  
 overview, 
 motivation,
@@ -103,95 +260,46 @@ list of contributions,
 (briefly) describe user studies,
 describe results,
 
-% \idea{Much interesting data on the web is unstructured text}
-% 
-% \idea{These documents consist of ideas}
-% 
-% \idea{Think Link connects documents to the ideas they express}
-% 
-% %\idea{This paper is itself marked up in think link - with URL}
-% 
-% \idea{If the ideas in a document are known then this allows interesting queries}
-
-% Motivation for tool
-
-% What thinklink allows people to do
-
-% Why thinklink is needed
-
-
-\idea{People already annotate documents, in the form of blogs, comments etc}
-
-\idea{People already organize data, using text files, Google Notepad, OneNote, etc}
-
-\idea{People already share information, by mailing links, posting stories on facebook, sending messages on twitter, etc}
-
-\idea{People already want to see what each other are interested in - using Facebook, Twitter, Friendfeed, etc}
-
-\studyresult{Our users used these tools}
-
-\studyresult{Users want to put forward their opinions}
-
-\studyresult{People want to be seen as a source of useful information}
-
-\studyresult{People want to organize the information they find}
-
-\studyresult{Our users said they would use our tool}
-
-%\studyresult{The best way to find answers is social - by learning from friends who understand the topic}
-
-\section{Motivation?}
-1-2pp: 
-how do people currently organize, interact, share with web content; 
-Thinklink data structures; 
-what can people now do with Thinklink
-
-\subsection{Why People Annotate}
-
-
-\subsection{Organizing Knowledge}
-
-\idea{Like Wikipedia without the articles}
-
-\idea{Organize ideas with Points, snippets, and topics}
-
-\idea{A point can support or oppose another point}
-
-\idea{A point can be exactly the same or exactly opposite}
-
-\idea{Important to have wiki features to keep things in check}
-
-\studyresult{People found it useful to organize ideas}
-
-%\studyresult{People found the topic approach worked well}
-
-%\studyresult{People were able to easily find and reuse existing points and topics}
-
-
-\subsection{Using this Knowledge}
-
-\idea{Show me the points that other people disagree with}
-
-\idea{Show me the points that other people found interesting}
-
-\idea{Show me the points that my friends found interesting}
-
-% future queries want to support
-
-\idea{Show me the articles that make interesting points I haven't heard before}
-
-\idea{Show me when new snippets appear on points I'm interested in}
-
-\idea{Show me when new points appear on topics I'm interested in}
-
-
-%\studyresult{People liked to be able to monitor interesting new ideas on topics they were interested in}
-
-\studyresult{People liked the other features too}
-
+%\studyresult{The best way to find answcuters is social - by learning from friends who understand the topic}
 
 
 \section{Related Work}
+
+\subsection{Wikis}
+
+\subsection{Web Annotation}
+
+\subsection{Sensemaking}
+
+\subsection{Argumentation Theory}
+
+The 
+\cite{Korb97acognitive}
+\cite{toulmin}
+\cite{carneades}
+\cite{conceptmap}
+\cite{argmas}
+
+Memex
+Vannevar 
+Bush’s vision of Memex. Bush popularized the idea that 
+people can collaboratively organize and share knowledge: 
+“Wholly new forms of encyclopedias will appear, ready-made 
+with a mesh of associative trails running through them...” 
+[5]. In many ways the vision has come to pass with large 
+amounts of hyper-linked information in the World Wide 
+Web, digital libraries, and online encyclopedias. However, 
+researchers continue to point out that people, especially 
+those lacking domain expertise, struggle to navigate infor- 
+mation spaces. 
+
+
+\subsection{Identifying Ideas on the Web}
+
+\cite{quotations}, \cite{quotationdl} Overall aim is to identify and connect ideas. Do quotation matching as a partial solution.
+
+\cite{ideanavigation}, \cite{citesense}
+
 
 \subsection{Web Annotation Systems}
 
@@ -238,7 +346,7 @@ Case-Based reasoning
 Sensemaking
 
 \subsection{Argumentation Graphs}
-Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework [\idea{cite}], designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model [\idea{cite}], example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
+Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework~\cite{zeno}, designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model~\cite{ibis}, example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
 
 Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
 
@@ -370,6 +478,6 @@ $1/2$p
 
 
 \bibliographystyle{abbrv}
-\bibliography{biblio.bib}
+\bibliography{biblio}
 
 \end{document}

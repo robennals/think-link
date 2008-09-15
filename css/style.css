@@ -54,6 +54,21 @@
 
 }
 
+.tl_margin_item_info_con {
+	position: absolute;
+	z-index: 101;
+	background-color: #ff9999;
+	border: 2px #C0C0C0 solid;
+	color: #003366;
+	width: 180px;
+	padding-left:10px;
+	padding-right:10px;
+	font-family: verdana, sans-serif;
+	font-size: 10pt;
+	text-align: left;
+}
+
+
 .tl_margin_item_info {
 	position: absolute;
 	z-index: 101;
