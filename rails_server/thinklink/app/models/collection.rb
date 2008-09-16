@@ -63,13 +63,13 @@ class Collection
 	#TODO: make this more efficient
 	def self.hot
 		points = Point.find_by_sql("
-			SELECT points.id, points.txt, 
+			SELECT points.id, points.txt, MAX(bookmarks.id) as maxid, 
 				COUNT(bookmarks.user_id) AS count 
-				FROM points,
-					(SELECT * FROM bookmark_points LIMIT 200) AS bookmarks 
+			FROM points,
+				(SELECT * FROM bookmark_points ORDER BY id DESC LIMIT 200) AS bookmarks 
 			WHERE points.id = bookmarks.point_id 
 			GROUP BY points.id
-			ORDER BY count DESC, points.id DESC
+			ORDER BY count DESC, maxid DESC
 			LIMIT 50")
 		return Collection.new("hot","Hot Claims",points)			
 	end
