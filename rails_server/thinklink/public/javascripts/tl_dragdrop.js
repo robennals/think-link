@@ -171,7 +171,9 @@ function makeChoiceItem(text,body,dialog,callback){
 		.click(function(){
 			callback(text);
 			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
-			dialog.parentNode.removeChild(dialog);			
+			if(dialog && dialog.parentNode){
+				dialog.parentNode.removeChild(dialog);			
+			}
 		});
 }
 

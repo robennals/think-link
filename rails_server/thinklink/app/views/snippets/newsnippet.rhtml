@@ -29,7 +29,7 @@ var arg_title = "<%=escape_javascript(params[:title])%>";
 	<input type="button" value="Browse in New Window" onclick="openOrganizer()"/>
 	</td>
 	<td class="dialogbuttons">
-	<input type="button" value="Save" onclick="clickSave()"/>
+	<input type="button" value="Save" onclick="event.stopPropagation(); clickSave()"/>
 	<input type="button" value="Cancel" onclick="clickClose()"/>
 	</td>
 	</tr>

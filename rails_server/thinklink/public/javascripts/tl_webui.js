@@ -904,6 +904,8 @@ function newThing(div,what){
 		}
 	},false);
 	
+	activeCreation = true;
+	
 	input.focus();
 }
 
@@ -925,6 +927,8 @@ function findSubTopics(idnum){
 	return null;
 }
 
+var activeCreation = null;
+var saveCallback = null;
 
 function createFinished(container,input,id,what){
 	if(input.value != "" && !input.done){
@@ -939,7 +943,19 @@ function createFinished(container,input,id,what){
 			phpurl = "new_point.php?opposeid="+id;
 		}
 		doAJAX("newfolder",phpurl+"&txt="+encodeURIComponent(nametxt),function(id){			
-			refreshChildren(container);
+			gotoPoint(id);
+//			refreshChildren(container);
+			var cls = "Point";
+			if(what == "subtopic"){
+				cls = "Folder";							
+			}
+			selectedCls = cls;
+			selectedId = id;
+			if(saveCallback){
+				saveCallback(cls,id);
+				saveCallback = null;
+			}
+			activeCreation = null;
 		});
 		input.done = true;
 	}else{
@@ -949,6 +965,15 @@ function createFinished(container,input,id,what){
 }
 
 function clickSave(){
+	if(activeCreation){
+		saveCallback = function(cls,id){
+			selectedCls = cls;
+			selectedId = id;
+			clickSave();
+		};
+		return;
+	}
+	
 	//	TODO: save the snippet
 	var pointnode = getel("pointname");
 	var pointname = normalizeText(pointnode.value);
@@ -967,7 +992,8 @@ function clickSave(){
 		return;
 	}else{
 		if(pointname == "" || pointnode.className == "pointinput_empty"){
-			alert("You must enter the claim that this snippet is making");
+			alert("You must select the claim that this snippet is making");
+			return;
 		}
 	}
 	
