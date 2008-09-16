@@ -20,6 +20,8 @@ end
 </script>
 
 
+<% if !options[:raw] %>
+
 <table class="browsetable" id="browser-<%=idnum%>">
 <colgroup>
 <col width="50px"/>
@@ -68,9 +70,17 @@ Search
 				</tr>		
 			</table>
 		</h2>
+
+<% else %>
+
+<div class="browsetable" id="browser-<%=idnum%>">
+
+<% end %>		
+
 		<div class="browse_container" id="container-<%=idnum%>"
 		<% if (defined? big) && big %>
-			style="height:400px"
+			<% else %>
+			style="height:218px"
 			<%end %>
 		>
 			<div class="hidden" id="searchbar-<%=idnum%>">
@@ -84,6 +94,8 @@ Search
 		</div>
 	</div>
 	
+<% if !options[:raw] %>	
+	
 	<% if (defined? dragbar) && (dragbar == true) %>
 	<div class="dragbar" id="dragbar-<%=idnum%>" onmousedown="dragBar(event,<%=idnum%>)">
 	</div>
@@ -92,4 +104,8 @@ Search
 </td>
 </tr>
 </table>	
+
+<% else %>
+</div>
+<% end %>
 

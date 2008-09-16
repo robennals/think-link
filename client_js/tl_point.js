@@ -103,6 +103,11 @@ function tl_point_browser() {
 
 			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
 			var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
+			var openButton = $("<input class='tl_openbutton' type='button' value='New Window'/>").appendTo(buttonBox);
+			
+			openButton.click(function(){
+				window.open(thinklink_mainhome);
+			});
 
 
 			var defaultText ="";
@@ -113,6 +118,7 @@ function tl_point_browser() {
 			explainSpan.appendTo(titleBox);	
 
 			var close = $("<img/>")
+				.css("padding-top","2px")
 				.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
 				.click(function(){
 					that.hideMe();

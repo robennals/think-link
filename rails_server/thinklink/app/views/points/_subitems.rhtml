@@ -2,6 +2,7 @@
 	point = subitems 
  supports = point.supporting_points 
  opposes = point.opposing_points 
+ snippets = point.snippets
  %>
 
 	<div class="relationtitle" tl_cls="Support" tl_id="<%=point.id%>"
@@ -24,5 +25,8 @@
 
 	<div class="relationtitle" tl_cls="Oppose" tl_id="<%=point.id%>">snippets</div>
 	<div class="sub-snippets">
-		<%= render_partial "snippets/snippets", point.snippets, :options => {:nopoint => true} %>
+		<%= render_partial "snippets/snippets", snippets, :options => {:nopoint => true} %>
 		</div>
+			<% if snippets.empty? %>
+				<div class="empty">empty</div>
+			<% end %>
