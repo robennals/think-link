@@ -56,8 +56,8 @@ class Collection
 	end
 	
 	def self.recent(user)
-		items = user.recenttopics.slice(0,50)
-		return Collection.new("recent","Recent Folders",items)
+		items = user.recentthings.slice(0,50)
+		return Collection.new("recent","Recent Claims and Folders",items)
 	end
 	
 	#TODO: make this more efficient

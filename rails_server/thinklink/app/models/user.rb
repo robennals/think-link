@@ -102,6 +102,35 @@ class User < ActiveRecord::Base
 		)
 		GROUP BY points.id");
 	end	
+
+	def recentthings
+
+		topics = Topic.find_by_sql("
+		SELECT topics.txt, topics.id, topics.user_id, MAX(topicviews.created_at) AS created_at, MAX(topicviews.id) AS viewid
+			FROM topics, topicviews
+			WHERE topicviews.user_id = #{self.id}
+			AND topicviews.topic_id = topics.id
+			GROUP BY topics.id
+			ORDER BY viewid DESC
+			LIMIT 40");
+
+		points = Point.find_by_sql("
+		SELECT points.txt, points.id, points.user_id, MAX(pointviews.created_at) AS created_at, MAX(pointviews.id) AS viewid
+			FROM points, pointviews
+			WHERE pointviews.user_id = #{self.id}
+			AND pointviews.point_id = points.id
+			GROUP BY points.id
+			ORDER BY viewid DESC
+			LIMIT 40");
+					
+		all = topics.concat(points)
+			
+		all.sort! {|a,b| 
+			- (a.created_at <=> b.created_at)
+		}
+			
+		return all
+	end
 		
 	def recenttopics
 

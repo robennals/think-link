@@ -4,7 +4,7 @@
 
 var arg_url = "<%=params[:url]%>";
 var arg_realurl = "<%=params[:realurl]%>";
-var arg_title = "<%=params[:title]%>";
+var arg_title = "<%=escape_javascript(params[:title])%>";
 
 </script>
 
@@ -26,7 +26,7 @@ var arg_title = "<%=params[:title]%>";
 	<table width="100%">
 	<tr>
 	<td>
-	<input type="button" value="Browse Think Link" onclick="openOrganizer()"/>
+	<input type="button" value="Browse in New Window" onclick="openOrganizer()"/>
 	</td>
 	<td class="dialogbuttons">
 	<input type="button" value="Save" onclick="clickSave()"/>

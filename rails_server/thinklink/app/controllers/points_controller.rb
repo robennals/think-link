@@ -187,17 +187,20 @@ class PointsController < ApplicationController
 			options = {}
 		end
     @point = Point.find(params[:id])
+ 		logPointView(@point)
     render :partial => "subitems", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => options}, :object => @point
   end  
   
   def expandfolder
     @point = Point.find(params[:id])
+ 		logPointView(@point)
     render :partial => "subitems", :locals => {:noholder => true, :expandPoints => {@point.id => true}, :options => {:pointfolders => true}}, :object => @point
   end
   
   
   def showmini
     @point = Point.find(params[:id])
+ 		logPointView(@point)
 #    @parents = findparents @point
     @snippets = @point.snippets
     render :action => "showmini", :locals => {:options => {:point => @point}}, :layout => 'mini'

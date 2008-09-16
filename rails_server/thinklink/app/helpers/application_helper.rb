@@ -89,6 +89,11 @@ module ApplicationHelper
 		Topic.connection.execute("INSERT INTO topicviews (user_id,topic_id) VALUES ('#{@user.id}','#{topic.id}');")
 	end
 
+	def logPointView(point)
+		Topic.connection.execute("INSERT INTO pointviews (user_id,point_id) VALUES ('#{@user.id}','#{point.id}');")
+	end
+
+
   def escape_single_quotes(str)
     return str.gsub(/[']/, '\\\'')
   end

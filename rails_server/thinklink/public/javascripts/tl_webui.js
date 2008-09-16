@@ -382,6 +382,7 @@ function smoothReplace(url,id){
 
 function updateSnippetPanelTitle(cls){
 	var title = getel("topics_title");
+	if(!title) return;
 	if(cls == "Topic"){
 		title.textContent = "Snippets in this Topic";
 	}else if(cls == "Point"){
@@ -751,11 +752,21 @@ function findHolder(node){
 	return null;	
 }
 
-function findSelectedHolder(){
-	if(selectedDivId && selectedId){
-		return findHolder(document.getElementById(selectedDivId));
+function findSelectedHolder(node){
+	if(node){
+		var group = findNodeGroup(node);
+		var idnum = getNodeIdNum(group);
+		var propholder = getel("propholder-"+idnum);
+		if(!propholder.selectedDiv){
+			propholder.selectedDiv = getel(idnum);
+		}
+		return findHolder(propholder.selectedDiv);
 	}else{
-		return null;
+		if(selectedDivId && selectedId){
+			return findHolder(document.getElementById(selectedDivId));
+		}else{
+			return null;
+		}
 	}
 }
 
@@ -835,7 +846,7 @@ function findTitle(childgroup,txt){
 function newThing(div,what){
 	var titlenode = findRelationTitle(div);
 	var browser = findBrowser(titlenode);
-	var holder = findHolder(browser.selectedDiv);
+	var holder = findSelectedHolder(div);
 	
 	var cls = holder.getAttribute("tl_cls");
 	var id = holder.getAttribute("tl_id");	

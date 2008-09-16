@@ -1,17 +1,15 @@
 <div class="snippet" id="snippet<%= snippet.id %>">
+<% if !options[:nopoint] %>
 <div class="dragitem" onclick='gotoPoint(<%=snippet.point.id%>)'><img src="<%=snippet.point.icon(@user)%>"/><%= snippet.point.txt %></div>
-<div class="snippet_text">... <%= snippet.txt[0,400] %> ...
+<% end %>
+<div class="snippet_text">		<% if snippet.isbookmarked(@user) %>
+			<img src="/images/comment_yellow.png"  id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
+		<% else %>
+			<img src="/images/comment.png" id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
+		<% end %>	
+... <%= snippet.txt[0,400] %> ...
 	<% if options[:trash] %>
 			<img src="/images/bin_closed.png" onClick="trash(<%= snippet.id %>);" />	
-	<% end %>
-	<% if options[:bookmark] %>
-		<% if snippet.isbookmarked(@user) %>
-			<img src="/images/star.png"  id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
-		<% else %>
-			<img src="/images/star_empty.png" id="bookstar<%= snippet.id %>" onClick="toggleBookmark(<%= snippet.id %>);" />
-		<% end %>
-		(<%= snippet.numbookmarks %>) 
-		
 	<% end %>
 	<%= "<div><a class='snippet_url'  target='_blank' href='#{snippet.goodurl}'>#{trim_string(snippet.pagetitle,40)} - #{trim_url(snippet.url)} <img src='/images/application_go.png'/></a></div>" %>  
 

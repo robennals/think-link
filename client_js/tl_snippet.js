@@ -174,7 +174,7 @@ function tl_snippet_dialog(margin) {
 		frame.style.backgroundColor = "white";
 		var title = mk("div");
 		title.className = "tl_dialog_title";
-		title.textContent = "Save Snippet in Folder";
+		title.textContent = "What claim is this snippet making?";
 		title.addEventListener("mousedown",function(e){tl_dragStart(e,"tl_snippet_win","tl_snippet_frame");},false);
 		var win = mk("div");
 		win.className = "tl_dialog";
