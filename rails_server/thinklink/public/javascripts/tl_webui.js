@@ -881,6 +881,15 @@ function newThing(div,what){
 	input.setAttribute("type","text");
 	drageditdiv.appendChild(input);
 
+	var msg = mk("div");
+	msg.className = "minimessage";
+	if(what == "subtopic"){	
+		msg.textContent = "Enter text to create a new topic. Use drag and drop to connect an existing topic.";
+	}else{
+		msg.textContent = "Enter text to create a new claim. Use drag and drop to connect an existing claim.";	
+	}
+	holder.appendChild(msg);
+
 	titlenode.parentNode.insertBefore(holder,titlenode.nextSibling);
 
 	input.addEventListener("blur",function(){
@@ -929,7 +938,7 @@ function createFinished(container,input,id,what){
 		}else if(what == "oppose"){
 			phpurl = "new_point.php?opposeid="+id;
 		}
-		doAJAX("newfolder",phpurl+"&txt="+encodeURIComponent(nametxt),function(id){
+		doAJAX("newfolder",phpurl+"&txt="+encodeURIComponent(nametxt),function(id){			
 			refreshChildren(container);
 		});
 		input.done = true;

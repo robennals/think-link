@@ -81,7 +81,7 @@ function tl_point_browser() {
 		me.style.top = "50px";
 		me.style.left = "200px";
 //		me.style.width = (window.innerWidth * (2/3)) + "px";
-		me.style.width = (window.innerWidth - 250) + "px";
+		me.style.width = Math.min((window.innerWidth - 250),550) + "px";
 
 		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
 		var position = findPos(document.getElementById(this.divID));

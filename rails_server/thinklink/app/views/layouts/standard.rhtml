@@ -40,12 +40,14 @@
 		<div id="container">
 
 	<div id="header">
+	<% if @title %>
 	<h1><%= @title %>
 	
 	<% if @editlink %>
 			<a class="edit" href="<%= url_for(:action=>'edit') %>">(Edit <img src="/images/pencil.png" />)</a>
 	<% end %>
 	</h1>
+	<% end %>
 	</div>
 	<div id="content">
 	<%= yield -%>

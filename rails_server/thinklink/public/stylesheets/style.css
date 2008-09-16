@@ -76,6 +76,7 @@ a img {
 	border-bottom: 1px #000 solid;
 	font-size: 13px;
 	cursor: pointer;
+/*	max-width: 200px; */
 }
 .relationtitle:hover {
 /*	background-color: #ebf7fd; */
@@ -209,6 +210,7 @@ a img {
 }
 h2 {
 	padding: 1px 1px 1px 5px;
+  font-family: Helvetica, Geneva, Arial, sans-serif;
 	margin: 0px;
 /*	color: #C41200; */
 	font-size: 16px;
@@ -508,6 +510,7 @@ h1 {
 	height: 8px;
 	margin: 5px;
 	margin-right: 10px;
+	max-width: 500px;
 }
 
 .pointinput, .pointinput_empty {
@@ -701,4 +704,39 @@ h1 {
 	padding: 5px;
 	margin-left: 55px;
 	margin-right: 10px;
+	max-width: 500px;
+	margin: 10px;
+	font-size: 13px;
+}
+
+.minimessage {
+	font-size: 13px;
+	background-color: #ffffd3;
+	border: 1px solid black;
+	-moz-border-radius: 8px;	
+	padding: 5px;
+	margin-left: 55px;
+	margin-right: 10px;
+	max-width: 500px;
+	margin: 2px;
+}
+
+
+.snipholder {
+	font-size: 13px;
+
+}
+
+.sniptext {
+	font-size: 13px;
+}
+
+.snipbody {
+	padding: 5px;
+	margin: 5px;
+	margin-left:0px;
+	font-size: 13px;
+	border: 1px solid grey;
+	-moz-border-radius: 8px;
+	background-color: #EFEFEF;
 }

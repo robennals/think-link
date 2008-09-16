@@ -8,7 +8,7 @@ if focusitem.class == Topic
 	subpartial = "topics/subitems"
 elsif focusitem.class == Point
 	parpartial = "points/paritems"
-	subpartial = "points/subitems"
+	subpartial = "points/subitems"	
 elsif focusitem.class == Collection
 	parpartial = "main/empty"
 	subpartial = "collection/subitems"
@@ -28,5 +28,7 @@ end
 <div id="children-<%=idnum%>" class="item-children" tl_id="<%=itemid%>" tl_cls="<%=focusitem.class%>">
 		<%= render_partial subpartial, focusitem, :options => options %>
 </div>
+
+
 
  

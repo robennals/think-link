@@ -1,8 +1,14 @@
 
+<div class="helpmessage">
+Use <b>drag and drop</b> to create new connections between claims and topics.
+</div>
 
+
+<!--
 <table class="maintable">
 <tr>
 <td class="firstcolumn">
+-->
 
 <% 
 	browserid1 = 1#getUniq
@@ -36,21 +42,17 @@
 	recent = Collection.recent(@user)
 %>
 
-<%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid1, :options => options, :dragbar => true, :big => true %>
+<%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid1, :options => options, :dragbar => true %>
 
-<input type="button" value="Open Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
-<div id="second_browser" style="display:none;">
-<%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid2, :dragbar => true, :big => true %>
+<input type="button" value="Close Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
+<div id="second_browser">
+<%= render_partial 'topics/topicbrowser',recent, :idnum=>browserid2, :dragbar => true %>
 </div>
 	
 </div>
 
-<div class="helpmessage">
-To organize claims and topics, open the second browser and use drag and drop.
-<br/><br/>
-Drag the claim onto the claim it supports or opposes. Drag a claim into a topic it is part of.
-</div>
 
+<!--
 </td><td class="secondcolumn">
 
 <div>
@@ -67,3 +69,4 @@ Drag the claim onto the claim it supports or opposes. Drag a claim into a topic 
 </td></tr>
 </table>
 
+-->

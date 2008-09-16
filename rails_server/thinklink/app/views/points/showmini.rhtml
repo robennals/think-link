@@ -1,18 +1,24 @@
 
 
+<!--
 <table class="minitable">
 <tr>
 <td class="firstcolumn" style="width:50%">
 <div>
+-->
+
+<div style="padding-top: 5px">
 
 <%= render_partial 'topics/topicbrowser',@point, :options => {}, :dragbar => true, :big => true %>
 
-	
+</div>
+
+	<!--
 </div>
 
 </td><td class="secondcolumn" style="width:50%">
 
-<input style="margin-bottom:5px" type="button" value="Organize Points" onclick="openOrganizer()">
+<input style="margin-bottom:5px" type="button" value="Browse in New Window" onclick="openOrganizer()">
 
 <div>
 
@@ -29,3 +35,6 @@
 </td></tr>
 </table>
 
+-->
+
+<input style="margin-left: 60px; margin-bottom:5px" type="button" value="Browse in New Window" onclick="openOrganizer()">

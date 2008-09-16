@@ -5,7 +5,7 @@
  %>
 
 	<div class="relationtitle" tl_cls="Support" tl_id="<%=point.id%>"
-		onclick="selectItem(this, <%= point.id %>,null,'Support')">supported by  <img class="newthing" onclick="newThing(this,'support')" src="/images/add.png"/></div>
+		onclick="selectItem(this, <%= point.id %>,null,'Support')">supported by <img class="newthing" onclick="newThing(this,'support')" src="/images/add.png"/></div>
 	<% supports.each do |subpoint| %>
 		<%= render_partial 'main/draglabel', subpoint, :label => nil %>
 	<% end %>
@@ -14,10 +14,15 @@
 			<% end %>
 
 	<div class="relationtitle" tl_cls="Oppose" tl_id="<%=point.id%>"
-		onclick="selectItem(this, <%= point.id %>,null,'Oppose')">opposed by  <img class="newthing" onclick="newThing(this,'oppose')" src="/images/add.png"/></div>
+		onclick="selectItem(this, <%= point.id %>,null,'Oppose')">opposed by <img class="newthing" onclick="newThing(this,'oppose')" src="/images/add.png"/></div>
 	<% opposes.each do |subpoint| %>
 		<%= render_partial 'main/draglabel', subpoint, :label => nil %>
 	<% end %>
 			<% if opposes.empty? %>
 				<div class="empty">empty</div>
 			<% end %>
+
+	<div class="relationtitle" tl_cls="Oppose" tl_id="<%=point.id%>">snippets</div>
+	<div class="sub-snippets">
+		<%= render_partial "snippets/snippets", point.snippets, :options => {:nopoint => true} %>
+		</div>
