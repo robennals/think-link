@@ -284,78 +284,80 @@ We expect to have a public deployment available by the time of publication.
 We use icons from the free FamFamFam Silk~\cite{silkicons} collection.
 
 
-\section{Iterative Evaluation}
 
-We performed two user studies to guide and evaluate the development of Think Link. The aim of the first study was to talk to users about the way in which they gather knowledge on the web and see how they might try to use an initial prototype of Think Link. After the first study, we revised out implementation, guided by our observations from the first study. The aim of the second study was to validate that our new design was indeed useful and to look for areas for future improvement.
+\section{Investigative Study}
+
+We performed two ``think aloud'' studies to guide and evaluate the development of Think Link. The aim of the first study was to see how users normally browse the web and to see how they might try to use an initial prototype of Think Link to help them. 
 
 \subsection{Protocol for the First Study}
 
-For the first study, we recruited 13 paid participants. Five were female, eight were male. Their ages ranged from high school age to retired. 
+We recruited 12 paid participants. Five were female, seven were male. Their ages ranged from high school age to retired. Our intention was to recruit users who were not experts, but who regularly used the internet to find information. We recruited participants using a posting to the Craigslist~\cite{craigslist} classified adverts site. In our advert, we expressed an interest in people who use the internet to gather knowledge, rather than just for tasks such as email or shopping. We filtered participants based on their short answers to questions about how they found, organized, and shared information on the web. 
 
-Our user study participants were selected from a pool of respondents to a Craigslist posting in which we asked for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
-\begin{enumerate}
-	\item What topics or types of information do you usually look for on the internet?
-	\item How do usually go about finding information? (e.g. google, digg, friends, etc)
-	\item How do you organize the information you find? (e.g. text file, paper, wiki, etc)
-	\item How do you share information with others? (e.g. blog posts, comments, email, facebook, etc)
-\end{enumerate}
-We preferred individuals who search the internet for research and reading news rather than online shopping, as well as those interested in social and collaborative web activities like social networking web sites.  We were also interested in those who seemed to express a need for our application: people who copy-and-paste text from web pages into word processing documents, or who regularly email web page addresses to friends. 
+\subsection{Study Protocol}
 
-Each study session lasted between thirty to forty-five minutes, with the participant sitting at a desktop computer with the Firefox browser running the application plugin. The session was a Think-Aloud study in which the participant verbally describes his/her thoughts throughout the duration of the study. A video camera captured the audio/video and was focused on the monitor screen. Before the session began, we briefly demonstrated the features of the application: how to (1) select snippets, (2) write a snippet topic and point, (3) relate points, (4) show/hide the margin, and (5) browse recent activity.
+Study sessions took approximately 45 minutes. Participants were seated at a single-screen workstation with the Firefox browser, augmented with the Think Link plugin. We first demonstrated Think Link's interface, and then asked them to perform two tasks. In the first task, we asked them to use Think Link to gather information about a political topic that was of interest to them and currently in the news. For the second task, we asked them to browse the web in a way that would typically do so at home or at work, and see if they could use Think Link to help them do so.
 
-The study consisted of two tasks to collect snippets, each lasting ten to fifteen minutes. During both tasks, we asked participants to browse the web as they normally would. In the first task, the participant browses the web about a topic or issue of their choice from the domain of politics. The collection of snippets should help the participant either argue or form an opinion/perspective about the topic, and should be thought of being used to help him/her explain or discuss the topic with a friend.  We constrained the first task to politics to increase the likelihood that the study participants would encounter similar issues and news stories.
-
-For the second task, the participant was allowed to browse for any topic of their choosing. While the likelihood of topic overlap across participants was much lower, we were able to observe their behavior when searching for information in which each person had genuine interest.
-
-At the conclusion of the session, we asked the participant if the application is something that would be likely to use, and for what purposes they would find it most useful. Any confusing features or experiences were also noted.
-
-\subsection{Protocol for the Second Study}
+In the second task, we wanted to leave users relatively unconstrained so that we could see how users might try to use a tool like this during their normal browsing, rather than how well they could accomplish a pre-set task that they might never attempt in normal life. For the first task, we constrained the task to an a topic for which we had already marked up a number of claims, to increase the likelyhood that users would encounter existing claims.
 
 
+\subsection{Findings}
 
-Think link was developed using an iterative design process. During each iteration, we would talk to participants about the way they found and organized information on the web, and then perform a think aloud study where the participants would use the tool and tell us what they were thinking. After each iteration, we would study what we had learned from the participants and update our prototype accordingly. We went through a total of four iterations, with varying degrees of formality.
+All the participants were able to create new snippets. Participants had little difficulty identifying interesting claims being made by web pages, selecting appropriate sections of text, and either picking existing claims that were appropriate, or writing appropriate new claims. Most ($9/12$) stated that they found it easy to create new snippets and associate them with claims.
 
-\subsection{Investigatory Study}
+In the initial interface, snippets were only highlighted when the margin was open. This confused some participants ($5/12$) who were surprised to not see their snippets highlighted when they created them. This led us to change the interface so that snippets were always highlighted.
 
+In the initial interface, the button to open the margin was on the toolbar, next to the ``new snippet'' button, rather than 
 
+Two participants initially had dificulty summarising text with a claim that the text was actually making, rather than an claim it was associated with.
 
-\subsection{Evaluation Study}
+Many ($7/12$) participants also expressed a desire to organize snippets and claims during their session. Of these seven, we noticed that four would alternate between creating new snippets and organizing their claims in the claim browser (Section~\ref{claimbrowser}). With each new claim, users would create relationships between existing claims.
 
 
 
 
-We performed two user studies. In the first study, we asked participants about how they found and organized information on the web, and performed a think aloud study where they used the tool and told us what they were thinking. The learnings from the first study.
+\subsection{The Prototype Interface}
 
-In the first user study, we perf
+Participants were shown an earlier interface than that described in Section~\ref{interface}. 
 
-showed the participants an early version of the Think Link interface
-
-Think Link was developed using an iterative design process. 
-
-
-
-We performed two user studies. The aim of the first study was to determine 
-
-In the first of these studies, we recruited 12 paid subjects, aske
+\begin{figure}[ht]
+	\includegraphics[scale=0.35]{../screenshots/snippetdialog_sm.jpg}
+	\caption{First Prototype Snippet Creation Dialog}
+	\label{oldsnippetbox}
+\end{figure}
 
 
+\subsection{Successes}
+
+All the participants were able to create new snippets, succeeding in identifying appropriate sections of text that should be marked, and picking out either an appropriate existing claim, or creating a new claims that accurately summarized the snippet. Two participants initially had difficulty in correctly summarizing text with a claim that the text was actually making, but they eventually got used to it.
+
+Many ($7/12$) participants also expressed a desire to organize snippets and claims during their session. Of these seven, we noticed that four would alternate between creating new snippets and organizing their claims in the claim browser (Section~\ref{claimbrowser}). With each new claim, users would create relationships between existing claims.
+
+Most ($10/12$) either reused a topic that they had created themselves or that we had previously created. While the level of social activity was undoubtedly limited by the relatively small number of claims available in our database and the wide range of topics participants read about, three of the six people who browsed points in the 
+
+\subsection{Observations Motivating Design Changes}
+
+
+Many ($7/12$) participants also expressed the desire to organize snippets and points during their session. Of these seven, we noticed that four were alternating between creating snippets from new articles and organizing points in their {\it Recent Activity}: with each new snippet, users were creating relationships between points. When browsing web content about a particular topic or issue, most participants ($10/12$) either reused a topic that they created during their session or that someone else had created previously. Half of those ten used a topic that they {\it hadn't} created, demonstrating the ease of collaboration in our application. Both these organizational activities support connections inside the web of ideas. While the level of social activity was undoubtedly limited by the relatively small number of points (about $400$), three of the six people who browsed points in the main web interface looked at points created by other users. Two of the later study participants viewed someone else's point and either read the snippet text or viewed the originating document. As the number of points and topics increases, we expect to see more social behavior like this.
 
 
 
-\subsection{Interaction Techniques}
+\subsection{Browsing Claims}
+
+\subsection{Creating Snippets}
 
 
-The web has provided users with many pages that they can read. 
+\section{Evaluation Study}
 
-1p:  
-overview, 
-motivation,
-list of contributions,
-(briefly) describe application,
-(briefly) describe user studies,
-describe results,
+The purpose of the second study was to evaluate whether the interface changes we had made in reaction to the first study had made the tool usable. 
 
-%\studyresult{The best way to find answcuters is social - by learning from friends who understand the topic}
+\subsection{Recruitment}
+
+We recruited 6 paid participants. Four were female and two were male. Although we recruited participants using the same advert as the first study, the timing of our second advert around the beginning of the semester meant that five of the participants were students. Since the second group was different demographically to the first group, it is not possible to make a direct comparison between their behaviours. However we were still able to make interesting observations about how users used the new interface.
+
+\subsection{Study Protocol}
+
+For the second study, we changed the task to focus on how easy users found it to use the interface, rather than on how they might apply it to their normal browsing. We told users nothing about how to use the tool. Instead, we just gave them a brief introduction to what our tool was for, and then asked them to attempt two tasks. The first task was to look at a selection of web pages that already had highlights and tell them to explore the interface. The second task was to identify claims on a page that had not been marked up and connect them appropriately to existing claims.
+
 
 
 \section{Related Work}
@@ -457,6 +459,26 @@ Traditional argumentation graphs are designed to solve a specific, isolated issu
 
 \section{Observations Informing Design}
 
+
+\subsection{Recruitment}
+Our user study participants were selected from a pool of respondents to a Craigslist posting for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
+\begin{enumerate}
+	\item What topics or types of information do you usually look for on the internet?
+	\item How do usually go about finding information? (e.g. google, digg, friends, etc)
+	\item How do you organize the information you find? (e.g. text file, paper, wiki, etc)
+	\item How do you share information with others? (e.g. blog posts, comments, email, facebook, etc)
+\end{enumerate}
+We preferred individuals who search the internet for research and reading news rather than online shopping, as well as those interested in social and collaborative web activities like social networking web sites.  We were also interested in those who seemed to express a need for our application: people who copy-and-paste text from web pages into word processing documents, or who regularly email web page addresses to friends. Twelve people were selected to participate in this study.
+
+\subsection{Study Environment}
+Each study session lasted between thirty to forty-five minutes, with the participant sitting at a desktop computer with the Firefox browser running the application plugin. The session was a Think-Aloud study in which the participant verbally describes his/her thoughts throughout the duration of the study. A video camera captured the audio/video and was focused on the monitor screen. Before the session began, we briefly demonstrated the features of the application: how to (1) select snippets, (2) write a snippet topic and point, (3) relate points, (4) show/hide the margin, and (5) browse recent activity.
+
+\subsection{Study Tasks}
+The study consisted of two tasks to collect snippets, each lasting ten to fifteen minutes. During both tasks, we asked participants to browse the web as they normally would. In the first task, the participant browses the web about a topic or issue of their choice from the domain of politics. The collection of snippets should help the participant either argue or form an opinion/perspective about the topic, and should be thought of being used to help him/her explain or discuss the topic with a friend.  We constrained the first task to politics to increase the likelihood that the study participants would encounter similar issues and news stories.
+
+For the second task, the participant was allowed to browse for any topic of their choosing. While the likelihood of topic overlap across participants was much lower, we were able to observe their behavior when searching for information in which each person had genuine interest.
+
+At the conclusion of the session, we asked the participant if the application is something that would be likely to use, and for what purposes they would find it most useful. Any confusing features or experiences were also noted.
 
 \subsection{Observations and Discussion}
 % observed good and bad things
