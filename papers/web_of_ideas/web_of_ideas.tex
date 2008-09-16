@@ -44,17 +44,21 @@ breaklinks=true,
 \numberofauthors{2}
 
 \author{
-\alignauthor Beth Trushkowsky\\
-       \affaddr{Computer Science Division}\\
-       \affaddr{University of California at Berkeley}\\
-       \email{trush@berkeley.edu}
-\alignauthor Rob Ennals\\
-       \affaddr{Intel Research}\\
-       \affaddr{2150 Shattuck Avenue}\\
-       \affaddr{Penthouse Suite}\\
-       \affaddr{Berkeley, CA 94704, USA}\\
-       \email{robert.ennals@intel.com}
+	\alignauthor Authors anonymized for submission
 }
+
+%\author{
+%\alignauthor Beth Trushkowsky\\
+%       \affaddr{Computer Science Division}\\
+%       \affaddr{University of California at Berkeley}\\
+%       \email{trush@berkeley.edu}
+%\alignauthor Rob Ennals\\
+%       \affaddr{Intel Research}\\
+%       \affaddr{2150 Shattuck Avenue}\\
+%       \affaddr{Penthouse Suite}\\
+%       \affaddr{Berkeley, CA 94704, USA}\\
+%       \email{robert.ennals@intel.com}
+%}
 
 \sloppy 
 
@@ -97,7 +101,7 @@ We present Think Link, a tool that links pages to the factual claims that they m
 
 The web provides users with a huge number of pages they can read, but extracting useful factual information from these pages can be hard work. Not everything on the web is true. A web site may make claims that are contradicted by other web sites. If a user is to avoid incorrect claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, not everything on the web is interesting. If a user wants to find interesting factual claims about a topic then they may have to waste time reading claims that they have either read elsewhere or do not find interesting in order to find the claims that interest them.
 
-Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them.
+Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}.
 
 Part of the problem is that traditional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links to other pages, as chosen by the page author, it does not provide an easy way for a user to validate whether the claims made by a page are supported by evidence that may be available on other pages. Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
 
@@ -175,14 +179,59 @@ A user can also use the margin to provide a quick overview of a document. They c
 
 \subsection{Identifying new factual claims}
 
+\begin{figure}[t]
+	\includegraphics[width=8.5cm]{../screenshots/snipsave_full.png}
+	\caption{The claim selection window allows one to identify the claim a snippet is making}
+	\label{snipsavefull}
+\end{figure}
+
+\begin{figure}[t]
+	\includegraphics[width=8.5cm]{../screenshots/snipsave_crop.png}
+	\caption{Close up view of the claim selection window}
+	\label{snipsavecrop}
+\end{figure}
+
+
 If a user finds a snippet of text on a page that makes an interesting claim then they may want to enter it into Think Link. There are several reasons they may wish to do this. It may be that they find the snippet useful and may want to refer to it again in the future. It may be that they disagree with the claim, and want to alert other readers to the fact that there are opposing arguments, or it may be that they agree with the claim and want to provide easy access to evidence that backs it up. 
 
+To create a new snippet, the user selects the text to be included and then either clicks on the ``new snippet'' button on the browser toolbar, or selects the ``new snippet'' option from the context menu that appears when they click the right mouse button. This is a similar approach to that taken clipping tools such as Google Notebook~\cite{googlenotebook}.
+
+Once the user has identified the text in a snippet, they need to identify the claim that the snippet is making. To do this, Think Link presents the user with a ``claim selection'' window. This window contains a small version of the claim browser (Section~\ref{browseclaim}) that the user can use to select the claim that the snippet is making. At the bottom of the window, we show the phrase ``the snippet text {\it snippet} claims that {\it claim}''. We found that this helps users understand the nature of a claim and its relationship to a snippet (Section~\ref{study-claimmeaning}).
+
+Since much of Think Link's utility comes from linking snippets together, it is important that to encourage users to reuse existing claims rather than creating new ones, and that when users do create new claims they connect them to existing claims and existing topics. Motivated by this, we designed the claim selection window to make it easier to pick out an existing claim than to create a new one. Moreover, one cannot create a new claim without connecting it to an existing topic or an existing claim. To create a new claim, one navigates to a topic that the claim is about, or a claim that the new claim supports or opposes, and then clicks on the (\includegraphics[width=0.3cm]{../images/add.png}) button on the list that one wishes to add the new claim to. For example, if the new claim opposes an existing claim, then one clicks the (\includegraphics[width=0.3cm]{../images/add.png}) button on the ``opposed by'' heading for the existing claim.
+
+This is an intentionally different model to that used by ad-hoc tag-based~\cite{tags} systems such as Delicious~\cite{delicious} and Flickr~\cite{flickr}. This is because in bookmarking or image storing systems it is not so important that duplicates be avoided and that objects be well connected.
+
+In earlier revisions of the interface it was very easy for users to quickly create new claim texts and awkward to find and reuse existing ones. This led users to create many claims that were essentially equivalent and reduced the utility of Think Link as a tool for connection snippets together (Section~\ref{study-reuse}). 
 
 \todo{Make new snippet icon throb when something is selected}
 
-
 \subsection{Browsing factual claims}
 \label{browseclaim}
+
+\begin{figure}[ht]
+	\includegraphics[width=8.5cm]{../screenshots/claimbrowse.png}
+	\caption{The Claim Browser}
+	\label{fig:claimbrowser}
+\end{figure}
+
+Our users expressed an interest in using snippets to help them construct arguments that support a claim they agree with, to show them the arguments for and against a claim that they are unsure about, to collect evidence about a topic they are interested in, to share information with friends, and to see arguments against claims that they encountered on the web. We constructed the ``claim browser'' interface to help users do these things (Figure~\ref{fig:claimbrowser}).
+
+Claims and topics form a directed graph structure. A claim can have any number of claims that support or oppose it, and any number of claims that it supports or opposes.
+A topic can have any number of more specific topics (e.g. ``US Election 2008'' is more specific than ``US Elections'') and any number of more general topics. A topic can also have any number of claims about that topic.
+
+When designing an interface to this structure, we were faced with two opposing constraints. We needed to be able to clearly view a large number of claims and topics in a small screen space, and we needed an interface that made it clear that the data was a graph rather than a tree. Dynamically reorganizing graphs such as those used in Vizster~\cite{vizster} and Personal Brain~\cite{thebrain} made the graph structure very clear, but made it difficult to clearly view large numbers of claims. Tree-based outliners such as OmniOutliner~\cite{outliner} made it easy to view large numbers of related claims, but made it difficult to present an impression of the data being a graph rather than a tree.
+
+After several iterations, we settled on an interface that is a dynamically reorganizing graph layed out like an outliner. Like other dynamically reorganizing graphs, the interface is arranged around the currently selected node, and when a new node is selected the interface animates to surround the newly selected node with objects to relate to it. Like an outliner, the nodes that relate to the selected node are listed vertically below the selected node, each on their own line. Our users commented that they found it quite intuitive to navigate through a graph of claims and topics in this way. \studyresult{quote}.
+
+The placement of objects above and below is intended to emphasize the conventional structuring of an argument graph (Section~\ref{argumentgraph}), with topics going upwards and arguments for and against a claim going downwards. A user can navigate down to get to explore why a claim may or may not be true, or navigate up to find out about more general topics, or claims that the selected claim supports or opposes.
+
+\todo{Have I seen an interface like this elsewhere? Did PARC have something like this?}
+
+\todo{Is this interface a contribution in itself? Has an interface like this been presented before?}
+
+Animation is used throughout the interface to give users a sense of where they are and how the current interface state related to previous states. When a new item is selected, it grows in size and moves to the center. Other items that were already on the screen move from their current locations to their new locations. Other objects appear and disapper by smoothly sliding into or out of view. We found that this animation helps users retain a sense of where they are with respect to what they were looking at previously and helps users avoid getting lost (Section~\ref{gettinglost}).
+
 
 \subsection{Organizing factual claims}
 
@@ -282,10 +331,10 @@ The
 
 Memex
 Vannevar 
-Bush’s vision of Memex. Bush popularized the idea that 
+Bush's vision of Memex. Bush popularized the idea that 
 people can collaboratively organize and share knowledge: 
-“Wholly new forms of encyclopedias will appear, ready-made 
-with a mesh of associative trails running through them...” 
+``Wholly new forms of encyclopedias will appear, ready-made 
+with a mesh of associative trails running through them...'' 
 [5]. In many ways the vision has come to pass with large 
 amounts of hyper-linked information in the World Wide 
 Web, digital libraries, and online encyclopedias. However, 
@@ -297,6 +346,8 @@ mation spaces.
 \subsection{Identifying Ideas on the Web}
 
 \cite{quotations}, \cite{quotationdl} Overall aim is to identify and connect ideas. Do quotation matching as a partial solution.
+
+\cite{scenthighlights}
 
 \cite{ideanavigation}, \cite{citesense}
 
@@ -325,6 +376,7 @@ DrawHere
 
 Google Notebook
 Trailfire
+Zotero~\cite{zotero} is a citation mangament tool. Find and organise sources, while recording author, date etc by understanding pages. Can add notes to sources.
 
 \subsection{Semantic Linking}
 
