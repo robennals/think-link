@@ -103,7 +103,7 @@ function tl_point_browser() {
 
 			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
 			var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
-			var openButton = $("<input class='tl_openbutton' type='button' value='New Window'/>").appendTo(buttonBox);
+			var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);
 			
 			openButton.click(function(){
 				window.open(thinklink_mainhome);

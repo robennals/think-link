@@ -222,6 +222,8 @@ A topic can have any number of more specific topics (e.g. ``US Election 2008'' i
 
 When designing an interface to this structure, we were faced with two opposing constraints. We needed to be able to clearly view a large number of claims and topics in a small screen space, and we needed an interface that made it clear that the data was a graph rather than a tree. Dynamically reorganizing graphs such as those used in Vizster~\cite{vizster} and Personal Brain~\cite{thebrain} made the graph structure very clear, but made it difficult to clearly view large numbers of claims. Tree-based outliners such as OmniOutliner~\cite{outliner} made it easy to view large numbers of related claims, but made it difficult to present an impression of the data being a graph rather than a tree.
 
+\todo{This interface is actually closer to TheBrain than the text suggests}
+
 After several iterations, we settled on an interface that is a dynamically reorganizing graph layed out like an outliner. Like other dynamically reorganizing graphs, the interface is arranged around the currently selected node, and when a new node is selected the interface animates to surround the newly selected node with objects to relate to it. Like an outliner, the nodes that relate to the selected node are listed vertically below the selected node, each on their own line. Our users commented that they found it quite intuitive to navigate through a graph of claims and topics in this way. \studyresult{quote}.
 
 The placement of objects above and below is intended to emphasize the conventional structuring of an argument graph (Section~\ref{argumentgraph}), with topics going upwards and arguments for and against a claim going downwards. A user can navigate down to get to explore why a claim may or may not be true, or navigate up to find out about more general topics, or claims that the selected claim supports or opposes.
@@ -232,12 +234,25 @@ The placement of objects above and below is intended to emphasize the convention
 
 Animation is used throughout the interface to give users a sense of where they are and how the current interface state related to previous states. When a new item is selected, it grows in size and moves to the center. Other items that were already on the screen move from their current locations to their new locations. Other objects appear and disapper by smoothly sliding into or out of view. We found that this animation helps users retain a sense of where they are with respect to what they were looking at previously and helps users avoid getting lost (Section~\ref{gettinglost}).
 
+Users see a claim browser in three different places:
+\begin{itemize}
+\item {\bf The Main Organizer} shows two claim browsers, and allows users to use drag and drop to make new connections between claims in the two organizers. (Figure~\ref{fig:claimbrowser})
+\item {\bf The Popup Browser} shows one claim browser in a reduced-size window and is used to quickly investigate a claim found on a web page. (Figure~\ref{claimview})
+\item {\bf The Claim Selection Window} shows one claim browser, together with the text of a new snippet, and is used to identify the claim that a snippet is making. (Figure~\ref{snipsavefull}) 
+\end{itemize}
+
 
 \subsection{Organizing factual claims}
 
-Much of the value of Think Link comes from the connections between claims. It is thus important that it be easy to establish new connections between claims and topics.
+Much of the value of Think Link comes from the connections between claims. It is thus important that it be easy to establish new connections between claims and topics. 
 
+Think Link uses the familiar drag and drop interface for establishing new connections. To establish a connection between two claims, one need simply drag one claim onto the other. In the full interface, one can open two browsers and drag points from one browser onto points on the other.
 
+In our initial study, we found that many users did not realize that they could use drag and drop to create connections to existing claims. We rectify this, we added a notice at the top of the main organizer window (Figure~\ref{fig:claimbrowser}) telling users that they can use drag and drop.
+
+We found that creating new connections between existing claims was one of the things that users found most difficult.
+
+\todo{say more here}
 
 \section{Discussion}
 
@@ -268,7 +283,35 @@ We expect to have a public deployment available by the time of publication.
 
 We use icons from the free FamFamFam Silk~\cite{silkicons} collection.
 
+
 \section{Iterative Evaluation}
+
+We performed two user studies to guide and evaluate the development of Think Link. The aim of the first study was to talk to users about the way in which they gather knowledge on the web and see how they might try to use an initial prototype of Think Link. After the first study, we revised out implementation, guided by our observations from the first study. The aim of the second study was to validate that our new design was indeed useful and to look for areas for future improvement.
+
+\subsection{Protocol for the First Study}
+
+For the first study, we recruited 13 paid participants. Five were female, eight were male. Their ages ranged from high school age to retired. 
+
+Our user study participants were selected from a pool of respondents to a Craigslist posting in which we asked for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
+\begin{enumerate}
+	\item What topics or types of information do you usually look for on the internet?
+	\item How do usually go about finding information? (e.g. google, digg, friends, etc)
+	\item How do you organize the information you find? (e.g. text file, paper, wiki, etc)
+	\item How do you share information with others? (e.g. blog posts, comments, email, facebook, etc)
+\end{enumerate}
+We preferred individuals who search the internet for research and reading news rather than online shopping, as well as those interested in social and collaborative web activities like social networking web sites.  We were also interested in those who seemed to express a need for our application: people who copy-and-paste text from web pages into word processing documents, or who regularly email web page addresses to friends. 
+
+Each study session lasted between thirty to forty-five minutes, with the participant sitting at a desktop computer with the Firefox browser running the application plugin. The session was a Think-Aloud study in which the participant verbally describes his/her thoughts throughout the duration of the study. A video camera captured the audio/video and was focused on the monitor screen. Before the session began, we briefly demonstrated the features of the application: how to (1) select snippets, (2) write a snippet topic and point, (3) relate points, (4) show/hide the margin, and (5) browse recent activity.
+
+The study consisted of two tasks to collect snippets, each lasting ten to fifteen minutes. During both tasks, we asked participants to browse the web as they normally would. In the first task, the participant browses the web about a topic or issue of their choice from the domain of politics. The collection of snippets should help the participant either argue or form an opinion/perspective about the topic, and should be thought of being used to help him/her explain or discuss the topic with a friend.  We constrained the first task to politics to increase the likelihood that the study participants would encounter similar issues and news stories.
+
+For the second task, the participant was allowed to browse for any topic of their choosing. While the likelihood of topic overlap across participants was much lower, we were able to observe their behavior when searching for information in which each person had genuine interest.
+
+At the conclusion of the session, we asked the participant if the application is something that would be likely to use, and for what purposes they would find it most useful. Any confusing features or experiences were also noted.
+
+\subsection{Protocol for the Second Study}
+
+
 
 Think link was developed using an iterative design process. During each iteration, we would talk to participants about the way they found and organized information on the web, and then perform a think aloud study where the participants would use the tool and tell us what they were thinking. After each iteration, we would study what we had learned from the participants and update our prototype accordingly. We went through a total of four iterations, with varying degrees of formality.
 
@@ -323,6 +366,8 @@ describe results,
 
 \subsection{Sensemaking}
 
+\cite{scenthighlights}\cite{scenttrails}
+
 \subsection{Argumentation Theory}
 
 The 
@@ -357,6 +402,8 @@ mation spaces.
 
 \subsection{Web Annotation Systems}
 
+\cite{personalweb}
+
 Diigo lets you save, import, tag, highlight, mark up and share Web pages
 	select content on webpage
 	share bookmarked content; bookmark url and see what people have tagged on that page
@@ -380,6 +427,7 @@ DrawHere
 Google Notebook
 Trailfire
 Zotero~\cite{zotero} is a citation mangament tool. Find and organise sources, while recording author, date etc by understanding pages. Can add notes to sources.
+Scrapbook~\cite{scrapbook}
 
 \subsection{Semantic Linking}
 
@@ -409,26 +457,6 @@ Traditional argumentation graphs are designed to solve a specific, isolated issu
 
 \section{Observations Informing Design}
 
-
-\subsection{Recruitment}
-Our user study participants were selected from a pool of respondents to a Craigslist posting for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
-\begin{enumerate}
-	\item What topics or types of information do you usually look for on the internet?
-	\item How do usually go about finding information? (e.g. google, digg, friends, etc)
-	\item How do you organize the information you find? (e.g. text file, paper, wiki, etc)
-	\item How do you share information with others? (e.g. blog posts, comments, email, facebook, etc)
-\end{enumerate}
-We preferred individuals who search the internet for research and reading news rather than online shopping, as well as those interested in social and collaborative web activities like social networking web sites.  We were also interested in those who seemed to express a need for our application: people who copy-and-paste text from web pages into word processing documents, or who regularly email web page addresses to friends. Twelve people were selected to participate in this study.
-
-\subsection{Study Environment}
-Each study session lasted between thirty to forty-five minutes, with the participant sitting at a desktop computer with the Firefox browser running the application plugin. The session was a Think-Aloud study in which the participant verbally describes his/her thoughts throughout the duration of the study. A video camera captured the audio/video and was focused on the monitor screen. Before the session began, we briefly demonstrated the features of the application: how to (1) select snippets, (2) write a snippet topic and point, (3) relate points, (4) show/hide the margin, and (5) browse recent activity.
-
-\subsection{Study Tasks}
-The study consisted of two tasks to collect snippets, each lasting ten to fifteen minutes. During both tasks, we asked participants to browse the web as they normally would. In the first task, the participant browses the web about a topic or issue of their choice from the domain of politics. The collection of snippets should help the participant either argue or form an opinion/perspective about the topic, and should be thought of being used to help him/her explain or discuss the topic with a friend.  We constrained the first task to politics to increase the likelihood that the study participants would encounter similar issues and news stories.
-
-For the second task, the participant was allowed to browse for any topic of their choosing. While the likelihood of topic overlap across participants was much lower, we were able to observe their behavior when searching for information in which each person had genuine interest.
-
-At the conclusion of the session, we asked the participant if the application is something that would be likely to use, and for what purposes they would find it most useful. Any confusing features or experiences were also noted.
 
 \subsection{Observations and Discussion}
 % observed good and bad things
