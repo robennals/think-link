@@ -83,15 +83,7 @@ The web provides users with a huge number of pages that they can read, but extra
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/highlight_crop.png}
-	\caption{Key factual claims are highlighted}
-	\label{highlight}
-	\end{center}
-\end{figure}
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=8cm]{../screenshots/claim_popup_crop2.png}
+	\includegraphics[width=6cm]{../screenshots/claim_popup_crop2.png}
 	\caption{Click on a claim to investigate evidence for and against}
 	\label{claimview}
 	\end{center}
@@ -99,10 +91,66 @@ The web provides users with a huge number of pages that they can read, but extra
 
 The difficulty of finding correct information on the web has been discussed a lot recently. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}. Many people have also voiced concerns about how easily people can subvert Wikipedia to give peolpe false information~\cite{wikifalse}. Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them.  
 
-Part of the problem is that conventional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links provided by the author of the page, these typically only reference a small proportion of the other pages that discuss the topic and are unlikely to include sources that disagree with the author. If the user wants to find all the 
+Part of the problem is that conventional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links to other articles, these typically only reference a small proportial of the other pages that discuss the topic, and are unlikely to include sources that disagree with the author. The best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The root of the problem is that the web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it hard for users to collate all the knowledge available on a topic.
 
- Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
+In this paper we present Think Link (Figure~\ref{claimview}), a tool that overlays a new set of links over the existing web that connects passages of text that make related factual claims. As a user browses the web they will see factual claims highlighted, in yellow or red, with red meaning that there is evidence that the claim being made is false. A user can click on a highlighted claim and easily navigate to other pages on the web that make related factual claims.
 
+
+\section{Related Work}
+
+Think Link is influenced by previous work in a number of fields. Most notably, the idea of a collectively edited space in which people can create shared descriptions of topics is influenced by Wikis, the dynamic graph interface is influenced by mind mapping tools, the structuring of arguments as a graph is influenced by argumentation graphs, and the approach to gathering snippets from web pages is influenced by existing web clipping tools.
+
+\subsection{Wikis}
+
+Wikis like Wikipedia~\cite{wikipedia} allow many authors to collaborate together to build a single shared document about a topic. Wikis thus achieve Think Links's goal of putting all information about a particular factual claim in one place, rather than scattering knowledge across a number of pages, each authored by a different writer. Indeed one can Think of Think Link as being a bit like a wiki in which all content is transcluded~\cite{transclusion} from existing sources and implicit links are added back from those sources to the wiki page to allow readers of other pages to easily see how they relate to arguments elsewhere.
+
+Wikipedia's greatest strength is also its greatest weakness. Since anyone can edit Wikipedia, there is always the danger that the information one reads could be incorrect~\cite{wikifalse}. Several projects have attempted to address this problem by tracking sources of edits~\cite{wikicorrect}, but it is difficult to remove the problem entirely. While Think Link also allows anyone to edit its argument graph, all snippets come from known sources, making it easier to see where claims have come from and whether trustworthy sources agree with them.
+
+\subsection{Web Clipping and Annotation Systems}
+
+Web clipping tools such as Google Notebook~\cite{googlenotebook}, Scrapbook~\cite{scrapbook}, and Zotero~\cite{zotero} allow one to gather and organize interesting from web pages. Several of Several of these tools also allow one to share one's collection of snippets with other people that one may be collaborating with. 
+
+Many web clipping systems are also web annotation systems. Web annotation systems such as ShiftSpace~\cite{shiftspace}, Stickis~\cite{stickis}, DrawHere~\cite{drawhere}, SharedCopy~\cite{sharedcopy}, and Diigo~\cite{diigo} allow people to add annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relavent documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages. Perhaps the tool most similar to Think Link is SpinSpotter~\cite{spinspotter}, a tool that allows users to mark up newspaper articles to identify spin and factual inaccuracies.
+
+Think Link takes a different approach to other web clipping and annotation tools by allowing a user to identify the factual claim that a snippet is making within a shared graph of related claims, and using this information to connect snippets based on what they are claiming to be true. While this extra level of structure makes the process of collecting snippets more cumbersome, the extra structure potentially makes snippets more useful.
+
+
+\subsection{User Contributed Links}
+
+In Vannevir Bush's seminal MEMEX article~\cite{memex} he proposed an architecture in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Similar approaches have been taken by other hypertext systems including EQUIRE~\cite{enquire} and Everything2~\cite{everything2}. Think Link very much follows in this philosophy, the key difference being that Think Link structures its connections between documents using a graph of factual claims.
+
+\subsection{Browsing Ideas}
+
+One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations,quotationsdl} finds places where a passage is repeated in several documents (usually a quotation) and allows users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{scenthighlights} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{scenttrails} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
+
+%\cite{citesense}
+
+\subsection{Argumentation Theory}
+
+Argumentation Theory is a whole field in itself~\cite{argumentation,argmas} and much has been written about ways that one can represent arguments using a graph of connected claims. Popular argument representations include the Toulmin Model~\cite{toulmin}, and the Carneades Model~\cite{carneades}. Models used for argumentation theory are usually significantly more complex than our simple supports/opposes model as they typically want to represent more of the logic of the argument, and perhaps even be able to do reasoning. Early versions of Think Link used a more complex model and we cut things down in order to make it easier for users to assemble claim graphs.
+
+One feature found in some argumentation graphs~\cite{Korb97acognitive} that we may add in the future is the ability to attach a numberical weight (maybe from voting) asserting how much a claim supports or opposes another claim, or how reliable a claim is.
+
+
+%\subsection{Automated Reasoning}
+%
+%Case-Based reasoning
+%Sensemaking
+
+%\subsection{Argumentation Graphs}
+%Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework~\cite{zeno}, designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model~\cite{ibis}, example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
+%
+%Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
+
+\section{The Think Link System}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{../screenshots/highlight_crop.png}
+	\caption{Key factual claims are highlighted}
+	\label{highlight}
+	\end{center}
+\end{figure}
 
 
 \begin{figure}[tb]
@@ -113,11 +161,7 @@ Part of the problem is that conventional web browsing tools require the user to 
 	\end{center}
 \end{figure}
 
-
-
-\subsection{Browse the Web of Factual Claims}
-
-We have created a tool called Think Link that connects pages on the web to the factual claims being made on those pages, and allows a user to quickly find snippets of text on other web pages that make supporting or opposing claims. We hope that this tool will make it easier for users to identify incorrect claims in documents they read, and to quickly identify the best arguments for and against claims that they may be interested in.
+Think Link that connects pages on the web to the factual claims being made on those pages, and allows a user to quickly find snippets of text on other web pages that make supporting or opposing claims. We hope that this tool will make it easier for users to identify incorrect claims in documents they read, and to quickly identify the best arguments for and against claims that they may be interested in.
 
 As a user browses a web page Think Link will highlight snippets of text that make factual claims (Figure~\ref{highlight}). If a factual claim is contentious (meaning that other pages make opposing claims) then the highlight will be red. More information about highlighted claims can be found by either mousing over one of them, or opening the Think Link margin (Figure~\ref{margin}).
 
@@ -342,23 +386,74 @@ We use icons from the free FamFamFam Silk~\cite{silkicons} collection.
 
 
 
-\section{Investigative Study}
+\section{User Studies}
 
-We performed two ``think aloud'' studies to guide and evaluate the development of Think Link. The aim of the first study was to see how users normally browse the web and to see how they might try to use an initial prototype of Think Link to help them. 
+We performed two qualitative ``think aloud'' user studies to guide the development of Think Link. 
 
-We recruited 12 paid participants. Five were female, seven were male. Their ages ranged from high school age to retired. Our intention was to recruit users who were not experts, but who regularly used the internet to find information. We recruited participants using a posting to the Craigslist~\cite{craigslist} classified adverts site. In our advert, we expressed an interest in people who use the internet to gather knowledge, rather than just for tasks such as email or shopping. We filtered participants based on their short answers to questions about how they found, organized, and shared information on the web. 
+The aim of the first study was to see how users normally browse the web and how they might go about using Think Link to identify snippets in the pages they browse. The aim of the second study was to evaluate changes made to the interface as a result of the first study and see how people react to browsing pages that have interesting claims highlighted.
 
-\subsection{Protocol for the First Study}
+\subsection{Procedure for the First Study}
 
-Study sessions took approximately 45 minutes. Participants were seated at a single-screen workstation with the Firefox browser, augmented with the Think Link plugin. We first demonstrated Think Link's interface, and then asked them to perform two tasks. In the first task, we asked them to use Think Link to gather information about a political topic that was of interest to them and currently in the news. For the second task, we asked them to browse the web in a way that would typically do so at home or at work, and see if they could use Think Link to help them do so.
+For the first study we recruited 12 paid participants. Five were female, seven were male. Their ages ranged from high school age to retired. Our intention was to recruit users who were not experts, but who regularly used the internet to find information. We recruited participants using a posting to the Craigslist~\cite{craigslist} classified adverts site. In our advert, we expressed an interest in people who use the internet to gather knowledge, rather than just for tasks such as email or shopping. We filtered participants based on their short answers to questions about how they found, organized, and shared information on the web. 
 
-In the second task, we wanted to leave users relatively unconstrained so that we could see how users might try to use a tool like this during their normal browsing, rather than how well they could accomplish a pre-set task that they might never attempt in normal life. For the first task, we constrained the task to an a topic for which we had already marked up a number of claims, to increase the likelyhood that users would encounter existing claims.
+Study sessions took approximately 45 minutes. Participants were seated at a single-screen workstation with the Firefox browser augmented with the Think Link plugin. We first demonstrated Think Link's interface, and then asked them to browse normally and use Think Link to identify snippets that made claims they found interesting and connect those claims to the existing claim graph. For the first half of the study, we asked them to constrain their browsing to political news articles, to increase the likelyhood that there would be existing claims about the topic they were browsing.
 
-The focus of this study was on whether people would be able to gather snippets on the web and structure them into a coherent argument graph, rather than on how they would react when they browsed to a page where an argument had already been identified - which was one of the focusses of our second study.
+In this initial study, users were exposed to the prototype interface shown in Figures~\ref{oldsnippetbox} and \ref{oldbrowser}, rather than the final interface described in Section~\ref{interface}. We discuss some of the key differences in the findings section.
 
-In this initial study, users were exposed to the prototype interface shown in Figures~\ref{oldsnippetbox} and \ref{oldbrowser}, rather than the final interface described in Section~\ref{interface}.
+\subsection{Procedure for the Second Study}
+
+For the second study, we recruited 6 paid participants. Four were female and two were male. Although we recruited participants using the same advert as the first study, the timing of our second advert around the beginning of the semester meant that five of the participants were students. Since the second group was different demographically to the first group, it was not possible to make a direct comparison between their behaviours. 
+
+In the second study we were more confident about the usability of our tool and so we decided to tell them nothing about how to use it. We gave each user a brief introduction to the aims of the tool, similar to the introduction of this paper, and then asked them to perform two tasks with it. The first task was to look at a selection of web pages that already had highlights and explore the interface while thinking aloud about what they saw. The second task was to identify claims on a set of pages we gave them about global warming and connect them appropriately to existing claims that we had pre-populated our database with. Participants were shown an interface that is largely identical to that described in Section~\ref{interface}. 
 
 \subsection{Findings}
+
+In this section we present the findings from our two users studies. Findings from the two studies are presented together and clustered by topic.
+
+\subsubsection{High-Level Impressions}
+
+Response was generally positive, with some participants being very keen to use the tool soon. One partipant said ``I can see myself getting addicted to this'', and several participants asked as to notify them when it becomes publically available. Most of the participants expressed an interest in using the tool, with some wanting to use it now, and others wanting to use it ``when it is more mature''.
+
+Participants liked the ability to see when other pages disagreed with the claim they were looking at. One participant said ``The web needs to be taken with a grain of salt, and this gives you salt goggles''.
+
+
+\subsubsection{Usability}
+
+Several usability problems were identified with the first version of the tool, causing us to make design changes for the second version. None of these problems re-occured during the second study. 
+
+Most participants in the first study, and all participants in the second study were able to get competent with the tool. Participants in the second study were able to use Think Link compentently without it being demonstrated in advance and were able to correctly deduce what the different parts of the interface meant. 
+
+\idea{first study confused between claims and topic}
+\idea{felt disoreintated by the fact that the interface used for saving snippets was different from the interface used for browsing them}
+
+
+ere able to get competent with the tool.
+
+
+\subsubsection{Snippet Creation Strategies}
+
+\idea{selecting the first paragraph}
+
+\idea{selecting a table}
+
+\idea{wanted to have the same snippet make several claims}
+
+
+\subsubsection{Claim Creation Strategies}
+
+\idea{not sure how specific a claim should be}
+
+\idea{several wanted to be able to use the text they had selected as the claim, particularly when no relevant claims existed}
+
+\idea{Need for topics - Ronnie Wood}
+
+\subsubsection{Claim Connection Strategies}
+
+\idea{confused when needed to make an intermediate claim}
+\idea{wanted to say ``related'' and didn't realize this was what topics were for. When told them they agreed that this was what they wanted}
+\idea{connecting same event at different times}
+
+
 
 All the participants were able to create new snippets. Participants had little difficulty identifying interesting claims being made by web pages, selecting appropriate sections of text, and either picking existing claims that were appropriate, or writing appropriate new claims. Most ($9/12$) stated that they found it easy to create new snippets and associate them with claims.
 In the initial interface snippets were only highlighted when the margin was open. This confused some participants ($5/12$) who were surprised to not see their snippets highlighted when they created them. In the final interface, we addressed this problem by always highlighting snippets.
@@ -442,52 +537,6 @@ Many users \howmany uncovered a bug in our new snippet window. They would naviga
 One user said they wanted to be able to mark a claim on a web page as being wrong without having to find other snippets that argued against it. In future work we plan to offer such a feature by allowing users to say whether they believe a claim is true.
 
 \todo{quote collection}
-
-\section{Related Work}
-
-Think Link is influenced by previous work in a number of fields. Most notably, the idea of a collectively edited space in which people can create shared descriptions of topics is influenced by Wikis, the dynamic graph interface is influenced by mind mapping tools, the structuring of arguments as a graph is influenced by argumentation graphs, and the approach to gathering snippets from web pages is influenced by existing web clipping tools.
-
-\subsection{Wikis}
-
-Wikis like Wikipedia~\cite{wikipedia} allow many authors to collaborate together to build a single shared document about a topic. Wikis thus achieve Think Links's goal of putting all information about a particular factual claim in one place, rather than scattering knowledge across a number of pages, each authored by a different writer. Indeed one can Think of Think Link as being a bit like a wiki in which all content is transcluded~\cite{transclusion} from existing sources and implicit links are added back from those sources to the wiki page to allow readers of other pages to easily see how they relate to arguments elsewhere.
-
-Wikipedia's greatest strength is also its greatest weakness. Since anyone can edit Wikipedia, there is always the danger that the information one reads could be incorrect~\cite{wikifalse}. Several projects have attempted to address this problem by tracking sources of edits~\cite{wikicorrect}, but it is difficult to remove the problem entirely. While Think Link also allows anyone to edit its argument graph, all snippets come from known sources, making it easier to see where claims have come from and whether trustworthy sources agree with them.
-
-\subsection{Web Clipping and Annotation Systems}
-
-Web clipping tools such as Google Notebook~\cite{googlenotebook}, Scrapbook~\cite{scrapbook}, and Zotero~\cite{zotero} allow one to gather and organize interesting from web pages. Several of Several of these tools also allow one to share one's collection of snippets with other people that one may be collaborating with. 
-
-Many web clipping systems are also web annotation systems. Web annotation systems such as ShiftSpace~\cite{shiftspace}, Stickis~\cite{stickis}, DrawHere~\cite{drawhere}, SharedCopy~\cite{sharedcopy}, and Diigo~\cite{diigo} allow people to add annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relavent documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages. Perhaps the tool most similar to Think Link is SpinSpotter~\cite{spinspotter}, a tool that allows users to mark up newspaper articles to identify spin and factual inaccuracies.
-
-Think Link takes a different approach to other web clipping and annotation tools by allowing a user to identify the factual claim that a snippet is making within a shared graph of related claims, and using this information to connect snippets based on what they are claiming to be true. While this extra level of structure makes the process of collecting snippets more cumbersome, the extra structure potentially makes snippets more useful.
-
-
-\subsection{User Contributed Links}
-
-In Vannevir Bush's seminal MEMEX article~\cite{memex} he proposed an architecture in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Similar approaches have been taken by other hypertext systems including EQUIRE~\cite{enquire} and Everything2~\cite{everything2}. Think Link very much follows in this philosophy, the key difference being that Think Link structures its connections between documents using a graph of factual claims.
-
-\subsection{Browsing Ideas}
-
-One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations,quotationsdl} finds places where a passage is repeated in several documents (usually a quotation) and allows users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{scenthighlights} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{scenttrails} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
-
-%\cite{citesense}
-
-\subsection{Argumentation Theory}
-
-Argumentation Theory is a whole field in itself~\cite{argumentation,argmas} and much has been written about ways that one can represent arguments using a graph of connected claims. Popular argument representations include the Toulmin Model~\cite{toulmin}, and the Carneades Model~\cite{carneades}. Models used for argumentation theory are usually significantly more complex than our simple supports/opposes model as they typically want to represent more of the logic of the argument, and perhaps even be able to do reasoning. Early versions of Think Link used a more complex model and we cut things down in order to make it easier for users to assemble claim graphs.
-
-One feature found in some argumentation graphs~\cite{Korb97acognitive} that we may add in the future is the ability to attach a numberical weight (maybe from voting) asserting how much a claim supports or opposes another claim, or how reliable a claim is.
-
-
-%\subsection{Automated Reasoning}
-%
-%Case-Based reasoning
-%Sensemaking
-
-\subsection{Argumentation Graphs}
-Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework~\cite{zeno}, designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model~\cite{ibis}, example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
-
-Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
 
 
 \section{Limitations and Future Work}

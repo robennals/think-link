@@ -64,3 +64,8 @@ Have discussion rather than "limitations and future work".
 
 
 People like related work at the beginning, unless you have to.
+
+
+--- other thoughts ---
+
+When related work is put at the front, then it should only be related work that is addressing the problem we are discussing. Tangential related work such as argumentation graphs should be discussed while we are talking about it...
