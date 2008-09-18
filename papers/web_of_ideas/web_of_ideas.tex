@@ -67,9 +67,9 @@ breaklinks=true,
 
 \begin{abstract}
 
-Traditional web browsing consists of looking at pages and following links between pages; however when a user browses the web it is often not the pages themselves that they are looking for but the factual claims contained on those pages. A page may contain claims that are contradicted by other pages, or contain one interesting new claim, hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
+Conventional web browsing allows a user to look at pages and follow links between them; however when a user browses the web it is often not the pages themselves that they are looking for but  factual claims contained on those pages. A page may contain claims that are contradicted by other pages, or contain one interesting new claim hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
 
-We present Think Link, a tool that links pages to the factual claims that they make, and allows users to browse the web of factual claims, rather than the web of pages. 
+We present Think Link, a tool that overlays a web of factual claims on top of the web of pages. If a snippet of text on a web page makes a factual claim then a user can use Think Link to connect that snippet to other places on the web that make related claims. We argue that this makes it easier for users to determine the truth of claims made on the web.
 
 \end{abstract}
 
@@ -77,12 +77,9 @@ We present Think Link, a tool that links pages to the factual claims that they m
 
 \category{H.5.2}{Information Interfaces and Presentation}{User Interfaces}[Graphical User Interfaces]
 
-
-
-
 \section{Introduction}
 
-The web provides users with a huge number of pages they can read, but extracting useful factual information from these pages can be hard work. Not everything on the web is true. A web site may make claims that are contradicted by other web sites. If a user is to avoid incorrect claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, not everything on the web is interesting. If a user wants to find interesting factual claims about a topic then they may have to waste time reading claims that they have either read elsewhere or do not find interesting in order to find the claims that interest them.
+The web provides users with a huge number of pages that they can read, but extracting useful and correct information from these pages can be difficult. Not everything on the web is true~\cite{bbcwebwarning}. If a user is to avoid incorrect factual claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, a user will not find every claim on the web interesting. If a user is to locate claims that help them answer the questions they are interested in then they may have to spend considerable time reading claims that do not interest them in order to pick out those that do. Throughout this paper we will use the motivating example of a user who is worried about global warming and wants to find out what is going on and what they can do to help. Many web pages contain claims about global warming that are false, and many web pages repeat the same claims, making it difficult for a user to find interesting new facts that they were not previously aware of.
 
 \begin{figure}[tb]
 	\begin{center}
@@ -100,10 +97,11 @@ The web provides users with a huge number of pages they can read, but extracting
 	\end{center}
 \end{figure}
 
+The difficulty of finding correct information on the web has been discussed a lot recently. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}. Many people have also voiced concerns about how easily people can subvert Wikipedia to give peolpe false information~\cite{wikifalse}. Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them.  
 
-Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}.
+Part of the problem is that conventional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links provided by the author of the page, these typically only reference a small proportion of the other pages that discuss the topic and are unlikely to include sources that disagree with the author. If the user wants to find all the 
 
-Part of the problem is that traditional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links to other pages, as chosen by the page author, it does not provide an easy way for a user to validate whether the claims made by a page are supported by evidence that may be available on other pages. Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
+ Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
 
 
 
@@ -131,11 +129,11 @@ For example, if a user browsed a web page that claimed ``Global Warming does not
 
 Think Link shares a lot in common with Wikis like Wikipedia~\cite{wikipedia}. The claim graph is shared between all users and editable by anyone. Any user can identify a claim made on a web page by selecting the web snippet that makes this claim and clicking the ``new snippet'' button on the browser toolbar. Similarly, any user can establish new supporting and opposing relationships between claims by using drag and drop within the claim browser. One can think of Think Link as being rather like a Wiki in which all the content is clipped from existing sources and links are created from those sources back to the wiki.
 
-Think Link uses collaborative filtering~\cite{collaborativefilter} to highlight the most interesting claims that support and oppose another claim, and the most interesting snippets that make a claim. If a user finds a snippet or claim interesting then they can mark it as such. When Think Link lists claims or snippets, it will show first those that the user marked as interesting, and order the rest according to the number of other users who marked them interesting.
+Think Link uses collaborative filtering~\cite{collective} to highlight the most interesting claims that support and oppose another claim, and the most interesting snippets that make a claim. If a user finds a snippet or claim interesting then they can mark it as such. When Think Link lists claims or snippets, it will show first those that the user marked as interesting, and order the rest according to the number of other users who marked them interesting.
 
 \subsection{The Mental Model}
 
-Think Link presents users with three kinds of object, each associated with a different family of icons: 	
+Think Link presents users with three kinds of object, each associated with a different family of icons (Figure~\ref{bookmark_icons}): 	
 
 \begin{figure}[tb]
 	\begin{center}
@@ -193,7 +191,7 @@ There are two ways that a user can identify the claims being made by the highlig
 
 The Think Link Margin is designed to mimick the traditional margin notes that readers often write on physical documents they are reading~\cite{marginalia}. A margin space is added to the left of the page containing a margin note for each snippet. Each margin note is aligned vertically with the claim it is about and contains the text of the claim. To emphasise the connection between a margin note and its associated snippet, a snippet is highlighted more strongly when the user mouses over the associated margin note (Figure~\ref{margin}). 
 
-We found that when a participant sees a highlighted snippet, they will typically want to do one of four things: ignore it, remember it, delete it, or investigate it. If the user finds the snippet interesting and wants to use it later then they can bookmark it by clicking the bookmark icon that pops up when they mouse over the margin note. This will cause it to be displayed prominently in the claim browser (Section~\ref{browseclaims}). If the user believes the snippet to not be making the claim that it says it does or otherwise badly marked up then they can delete the snippet by clicking on the trash can icon on the margin note. If the user thinks the claim is interesting and wants to see how it relates to claims made by other snippets on the web then they can click on either the highlighted text or the margin note to open the claim browser (Section~\ref{browseclaims}).
+We found that when a participant sees a highlighted snippet, they will typically want to do one of four things: ignore it, remember it, delete it, or investigate it. If the user finds the snippet interesting and wants to use it later then they can bookmark it by clicking the bookmark icon that pops up when they mouse over the margin note. This will cause it to be displayed prominently in the claim browser (Section~\ref{claimbrowser}). If the user believes the snippet to not be making the claim that it says it does or otherwise badly marked up then they can delete the snippet by clicking on the trash can icon on the margin note. If the user thinks the claim is interesting and wants to see how it relates to claims made by other snippets on the web then they can click on either the highlighted text or the margin note to open the claim browser (Section~\ref{claimbrowser}).
 
 A user can also use the margin to provide a quick overview of a document. They can scroll quickly through the document and look to see what key claims other users have marked in the margins. Several users remarked on how useful it was when reading a long document to be able to quickly scan through it and see what other users have thought were the most interesting points. \studyresult{put in some quotes}
 
@@ -202,7 +200,7 @@ A user can also use the margin to provide a quick overview of a document. They c
 \todo{more nice zoomed-in screenshots showing the different interaction techniques}
 
 \subsection{Browsing factual claims}
-\label{browseclaim}
+\label{browseclaim}\label{claimbrowser}
 
 \begin{figure}[tb]
 	\includegraphics[width=8.5cm]{../screenshots/claimbrowse.png}
@@ -257,7 +255,7 @@ Users see a claim browser in three different places:
 \begin{itemize}
 \item {\bf The Main Organizer} shows two claim browsers, and allows users to use drag and drop to make new connections between claims in the two organizers. (Figure~\ref{fig:claimbrowser})
 \item {\bf The Popup Browser} shows one claim browser in a reduced-size window and is used to quickly investigate a claim found on a web page. (Figure~\ref{claimview})
-\item {\bf The Claim Selection Window} shows one claim browser, together with the text of a new snippet, and is used to identify the claim that a snippet is making. (Figure~\ref{snipsavefull}) 
+\item {\bf The Claim Selection Window} shows one claim browser, together with the text of a new snippet, and is used to identify the claim that a snippet is making. (Figure~\ref{snipsavecrop}) 
 \end{itemize}
 
 
@@ -268,7 +266,7 @@ Users see a claim browser in three different places:
 	\begin{center}
 	\includegraphics[width=16cm]{../screenshots/newsnip_all.png}
 	\caption{Process for creating a new snippet}
-	\label{snipsavecrop}
+	\label{createprocess}
 	\end{center}
 \end{figure*}
 
@@ -279,8 +277,8 @@ Users see a claim browser in three different places:
 %\end{figure}
 
 \begin{figure}[tb]
-	\includegraphics[width=8.5cm]{../screenshots/snipsave_crop.png}
-	\caption{Close up view of the claim selection window}
+	\includegraphics[width=8.5cm]{../screenshots/snipsave_diagram.png}
+	\caption{Selecting the claim made by a new snippet}
 	\label{snipsavecrop}
 \end{figure}
 
@@ -452,6 +450,8 @@ Think Link is influenced by previous work in a number of fields. Most notably, t
 \subsection{Wikis}
 
 Wikis like Wikipedia~\cite{wikipedia} allow many authors to collaborate together to build a single shared document about a topic. Wikis thus achieve Think Links's goal of putting all information about a particular factual claim in one place, rather than scattering knowledge across a number of pages, each authored by a different writer. Indeed one can Think of Think Link as being a bit like a wiki in which all content is transcluded~\cite{transclusion} from existing sources and implicit links are added back from those sources to the wiki page to allow readers of other pages to easily see how they relate to arguments elsewhere.
+
+Wikipedia's greatest strength is also its greatest weakness. Since anyone can edit Wikipedia, there is always the danger that the information one reads could be incorrect~\cite{wikifalse}. Several projects have attempted to address this problem by tracking sources of edits~\cite{wikicorrect}, but it is difficult to remove the problem entirely. While Think Link also allows anyone to edit its argument graph, all snippets come from known sources, making it easier to see where claims have come from and whether trustworthy sources agree with them.
 
 \subsection{Web Clipping and Annotation Systems}
 

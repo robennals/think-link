@@ -1,0 +1,66 @@
+Push ahead. Going in a plausible direction.
+Reasonable chance.
+
+Big comments:
+
+Study results:
+	Biggest content problem.
+	Not appropriate for chi.
+	
+	Don't want usability.
+	Need generalizable lessons.
+	
+	Cut out anything that is not a generalizable lesson.
+	
+	No forward references to the study.
+	
+	
+	Example of bad thing: didn't notice margin button, needs to be made bigger.
+		No bug fixes and niggles.
+		Could just say "saw problems and fixed them".
+		Can give examples.
+		
+	Desire to organize into connected arguments.
+		Info about what people are thinking.
+		
+	Table - lots of content that isn't text. Perhaps only interesting stuff...
+	
+	Talk to Ty
+	
+	INteresting things people did. Interesting ways people thing. Big ideas for major changes.
+	
+STructure:
+	Introduction should be one page. (first page) One para on new idea.	
+	Intro is just the front page.
+	
+System gets its own section.	
+
+Extra into moves in with interaction techniques and gets called "The thinklink system"
+	
+	
+	
+Non standard format:
+	
+Standard format:
+	
+Put related work at the beginning. - after the intro.
+
+	
+Quantative numbers. Dicey to give numbers.
+	Not really statistically significant.
+	Numbers not meaningful for think-aloud.
+	
+	Focus on interesting quotes and observations.
+		
+When chosing between disc vs conclusions and future work, put it in the discussion section.
+	People eval more heavily.
+		
+Have discussion rather than "limitations and future work".
+	Place to discuss interesting issues.
+	
+		
+		
+"Pop out prism"	
+
+
+People like related work at the beginning, unless you have to.
