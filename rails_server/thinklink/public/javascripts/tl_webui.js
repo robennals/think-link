@@ -943,11 +943,12 @@ function createFinished(container,input,id,what){
 			phpurl = "new_point.php?opposeid="+id;
 		}
 		doAJAX("newfolder",phpurl+"&txt="+encodeURIComponent(nametxt),function(id){			
-			gotoPoint(id);
-//			refreshChildren(container);
 			var cls = "Point";
 			if(what == "subtopic"){
-				cls = "Folder";							
+				cls = "Folder";				
+				refreshChildren(container);			
+			}else{
+				gotoPoint(id);
 			}
 			selectedCls = cls;
 			selectedId = id;
