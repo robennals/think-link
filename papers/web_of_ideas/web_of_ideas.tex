@@ -24,7 +24,7 @@ breaklinks=true,
 
 \newcommand{\idea}[1]{{\color{blue} IDEA: #1}\\}
 \newcommand{\studyresult}[1]{{\color{red} STUDY RESULT?: #1}\\}
-
+\newcommand{\howmany}{{\color{red} (HOW MANY?)}}
 
 \pagenumbering{arabic}  % Arabic page numbers for submission.  Remove this line to eliminate page numbers for the camera ready copy
 
@@ -178,6 +178,7 @@ A user can also use the margin to provide a quick overview of a document. They c
 \todo{more nice zoomed-in screenshots showing the different interaction techniques}
 
 \subsection{Identifying new factual claims}
+\label{newsnippet}
 
 \begin{figure}[t]
 	\includegraphics[width=8.5cm]{../screenshots/snipsave_full.png}
@@ -289,86 +290,137 @@ We use icons from the free FamFamFam Silk~\cite{silkicons} collection.
 
 We performed two ``think aloud'' studies to guide and evaluate the development of Think Link. The aim of the first study was to see how users normally browse the web and to see how they might try to use an initial prototype of Think Link to help them. 
 
-\subsection{Protocol for the First Study}
-
 We recruited 12 paid participants. Five were female, seven were male. Their ages ranged from high school age to retired. Our intention was to recruit users who were not experts, but who regularly used the internet to find information. We recruited participants using a posting to the Craigslist~\cite{craigslist} classified adverts site. In our advert, we expressed an interest in people who use the internet to gather knowledge, rather than just for tasks such as email or shopping. We filtered participants based on their short answers to questions about how they found, organized, and shared information on the web. 
 
-\subsection{Study Protocol}
+\subsection{Protocol for the First Study}
 
 Study sessions took approximately 45 minutes. Participants were seated at a single-screen workstation with the Firefox browser, augmented with the Think Link plugin. We first demonstrated Think Link's interface, and then asked them to perform two tasks. In the first task, we asked them to use Think Link to gather information about a political topic that was of interest to them and currently in the news. For the second task, we asked them to browse the web in a way that would typically do so at home or at work, and see if they could use Think Link to help them do so.
 
 In the second task, we wanted to leave users relatively unconstrained so that we could see how users might try to use a tool like this during their normal browsing, rather than how well they could accomplish a pre-set task that they might never attempt in normal life. For the first task, we constrained the task to an a topic for which we had already marked up a number of claims, to increase the likelyhood that users would encounter existing claims.
 
+The focus of this study was on whether people would be able to gather snippets on the web and structure them into a coherent argument graph, rather than on how they would react when they browsed to a page where an argument had already been identified - which was one of the focusses of our second study.
+
+In this initial study, users were exposed to the prototype interface shown in Figures~\ref{oldsnippetbox} and \ref{oldbrowser}, rather than the final interface described in Section~\ref{interface}.
 
 \subsection{Findings}
 
 All the participants were able to create new snippets. Participants had little difficulty identifying interesting claims being made by web pages, selecting appropriate sections of text, and either picking existing claims that were appropriate, or writing appropriate new claims. Most ($9/12$) stated that they found it easy to create new snippets and associate them with claims.
+In the initial interface snippets were only highlighted when the margin was open. This confused some participants ($5/12$) who were surprised to not see their snippets highlighted when they created them. In the final interface, we addressed this problem by always highlighting snippets.
 
-In the initial interface, snippets were only highlighted when the margin was open. This confused some participants ($5/12$) who were surprised to not see their snippets highlighted when they created them. This led us to change the interface so that snippets were always highlighted.
-
-In the initial interface, the button to open the margin was on the toolbar, next to the ``new snippet'' button, rather than 
-
-Two participants initially had dificulty summarising text with a claim that the text was actually making, rather than an claim it was associated with.
-
-Many ($7/12$) participants also expressed a desire to organize snippets and claims during their session. Of these seven, we noticed that four would alternate between creating new snippets and organizing their claims in the claim browser (Section~\ref{claimbrowser}). With each new claim, users would create relationships between existing claims.
-
-
-
-
-\subsection{The Prototype Interface}
-
-Participants were shown an earlier interface than that described in Section~\ref{interface}. 
+In the initial interface the button to open the margin was on the toolbar, next to the ``new snippet'' button. This led some participants ($4/12$) to get confused about which they should use in each case. In the final interface, we addressed this problem by putting the margin button on the side of the page, with a chevron to indicate that it will pull out a margin (Figure~\ref{marginpull}).
 
 \begin{figure}[ht]
-	\includegraphics[scale=0.35]{../screenshots/snippetdialog_sm.jpg}
+	\includegraphics[width=8.5cm]{../screenshots/snippetdialog_sm.jpg}
 	\caption{First Prototype Snippet Creation Dialog}
 	\label{oldsnippetbox}
 \end{figure}
 
+In the initial interface we used a simplified snippet creation window (Figure~\ref{oldsnippetbox}) that was intended to make the process of snippet creation very lightweight. This window contained two text boxes. The first of these boxes was for the topic (e.g. ``Global Warming'') and the second of the boxes was for the claim (e.g. ``Global Warming is Man Made''). Both of these boxes used an auto-complete drop-down list to suggest appropriate existing topics or snippets as the user typed, 
+biasing towards topics that were recent or hot. 
 
-\subsection{Successes}
+Most ($7/12$) users got confused between topics and claims at some point, either entering a topic as a claim, or entering a claim as a topic. We felt that this was partly because the snippet creation interface (Figure~\ref{oldsnippetbox}) gave the user little impression of how their snippet would appear in the claim browser. In the final interface we addressed this problem by giving the snippet creation interface the same core UI as the claim browser interface (Section~\ref{newsnippet}). We also decided to change our name for a factual claim from ``point'' to ``claim''.
 
-All the participants were able to create new snippets, succeeding in identifying appropriate sections of text that should be marked, and picking out either an appropriate existing claim, or creating a new claims that accurately summarized the snippet. Two participants initially had difficulty in correctly summarizing text with a claim that the text was actually making, but they eventually got used to it.
+While most ($10/12$) reused a topic that they had created or someone else had created, many ($6/12$) had a tendency to ignore the suggestion box and type new claims rather than looking for existing claims that might be a good match for their snippet. For the final interface, we tried to encourage users to reuse existing claims rather than writing new ones by making it easier to browse existing claims from the snippet creation window, and requiring users to click a \includegraphics[width=0.3cm]{../images/add.png} button in order to create a new claim (Section~\ref{newsnippet}). 
 
-Many ($7/12$) participants also expressed a desire to organize snippets and claims during their session. Of these seven, we noticed that four would alternate between creating new snippets and organizing their claims in the claim browser (Section~\ref{claimbrowser}). With each new claim, users would create relationships between existing claims.
+Our initial interface for claim browsing (Figure~\ref{oldbrowser}) caused several ($5/12$) to remark that they felt they were confused about where they were in the claim graph. This interface had a separate page for each claim or topic, rather than animating between them, making it easy to lose track of ones position in the graph of points. Several ($2/12$) remarked that part of the problem was that it wasn't obvious that the various boxes on the page were information about the claim in large text. For the final interface we addressed this problem by using animation to maintain a sense of where things were when the focus changed, and by placing information about a point around that point rather than in separate boxes (Section~\ref{claimbrowser}).
 
-Most ($10/12$) either reused a topic that they had created themselves or that we had previously created. While the level of social activity was undoubtedly limited by the relatively small number of claims available in our database and the wide range of topics participants read about, three of the six people who browsed points in the 
+All users had some difficulty connecting existing claims together. The first four participants were a different interface in which new connections were made by clicking on an ``add'' button, and then typing the name of the claim into an auto-complete box. Users found this approach difficult as it required them to remember the text of claims that they had seen recently. In light of this, after the first four participants we switched to a drag and drop interface (Figure~\ref{oldbrowser}).
 
-\subsection{Observations Motivating Design Changes}
-
-
-Many ($7/12$) participants also expressed the desire to organize snippets and points during their session. Of these seven, we noticed that four were alternating between creating snippets from new articles and organizing points in their {\it Recent Activity}: with each new snippet, users were creating relationships between points. When browsing web content about a particular topic or issue, most participants ($10/12$) either reused a topic that they created during their session or that someone else had created previously. Half of those ten used a topic that they {\it hadn't} created, demonstrating the ease of collaboration in our application. Both these organizational activities support connections inside the web of ideas. While the level of social activity was undoubtedly limited by the relatively small number of points (about $400$), three of the six people who browsed points in the main web interface looked at points created by other users. Two of the later study participants viewed someone else's point and either read the snippet text or viewed the originating document. As the number of points and topics increases, we expect to see more social behavior like this.
-
+The drag and drop interface worked better. Most ($7/8$) users were eventually able to use the new interface proficiently. However all users initially found the drag and drop interface confusing, and no users guessed that they could connect existing points using drag and drop. We identified this as an area needing improvement in the next interface revision.
 
 
-\subsection{Browsing Claims}
+\begin{figure}[ht]
+	\includegraphics[width=8.5cm]{../screenshots/oldpoint_search.png}
+	\caption{Initial Prototype Claim Browser}
+	\label{oldbrowser}
+\end{figure}
 
-\subsection{Creating Snippets}
+Many ($7/12$) participants also expressed a desire to organize claims into connected arguments during their session. Of these seven, we noticed that four would alternate between creating new snippets and organizing their claims in the claim browser (Section~\ref{claimbrowser}). With each new claim, users would create relationships between existing claims.
+
+Many ($6/12$) participants marked one claim as supporting another claim when in fact they should have both been marked as supporting a shared claim that needed to be created. For the final interface we tried to address this problem by making the graph structure of claims easier to visualize and making it easier to create new claims (Section~\ref{claimbrowser}).
+
+Two participants wanted to mark up a table as being a snippet and were unsure what claim they should say it made. In both cases, the table was a table of gold medals from the Beijing Olympics. We identified this as an area that we should investigate adding support for, since a table can provide evidence for the truth of many interesting claims.
+
+One participant falsely connected claims that were actually referring to similar events that took place at different times rather than really being the same event. We identified the need for Think Link to provide more support for identifying the point in time that a claim or snippet is discussing.
+
+Most ($9/12$) stated that they found the tool easy to use, and many ($5/12$) expressed an interest in using it during their normal browsing in its current state. When asked what they would want to use Think Link for, the most popular uses were helping them write a document ($5/12$), helping them form a personal opinion ($5/12$), or helping them argue a point to others ($5/12$). Many ($5/12$) were interested in seeing claims and snippets identified by their friends. Two said they were not interested in seeing what other people thought was interesting. Three users expressed an interest in using Think Link in ways that do not fit well with the current design, including gathering information about products they might buy, or finding cheap flights.
+
+Due to the nature of the task, few ($3/12$) participants browsed pages that contained claims highlighted by other people, and so we were not able to evaluate how people reacted to seeing such highlights. This was made a priority of the second study.
+
+\todo{mention people not being sure how broad a topic should be}
+\todo{mention people creating claim in one topic and not being found in other related topics}
 
 
 \section{Evaluation Study}
 
 The purpose of the second study was to evaluate whether the interface changes we had made in reaction to the first study had made the tool usable. 
 
-\subsection{Recruitment}
-
 We recruited 6 paid participants. Four were female and two were male. Although we recruited participants using the same advert as the first study, the timing of our second advert around the beginning of the semester meant that five of the participants were students. Since the second group was different demographically to the first group, it is not possible to make a direct comparison between their behaviours. However we were still able to make interesting observations about how users used the new interface.
 
 \subsection{Study Protocol}
 
-For the second study, we changed the task to focus on how easy users found it to use the interface, rather than on how they might apply it to their normal browsing. We told users nothing about how to use the tool. Instead, we just gave them a brief introduction to what our tool was for, and then asked them to attempt two tasks. The first task was to look at a selection of web pages that already had highlights and tell them to explore the interface. The second task was to identify claims on a page that had not been marked up and connect them appropriately to existing claims.
+In the second study we were more confident about the usability of our tool and so we decided to tell them nothing about how to use it. We gave each user a brief introduction to the aims of the tool, and then asked them to perform two tasks with it. The first task was to look at a selection of web pages that already had highlights and tell them to explore the interface. The second task was to identify claims on a page that had not been marked up and connect them appropriately to existing claims.
 
+Unlike the first study, we specified the pages that our users should look at. This was because we wanted to see how users would react to seeing pages in which core claims had been marked up as snippets, and wanted to be sure that new snippets people identified had related claims in our database.
 
+Participants were shown an interface that is largely identical to that described in Section~\ref{interface}. All changes are described in the text below.
+
+\subsection{Findings}
+
+All the participants were very enthusiastic about the new interface. Most \howmany participants expressed a strong interest in being able to use the tool now. One user commented ``I can see myself getting quite addicted to this''.
+
+When shown a page with highlighted text, all users noticed that text had been highlighted and all users were able to infer that red highlight meant that the point was contentious. All users worked out that they could get more information about a claim by clicking on it. Most \howmany users did not immediately notice the presence of the margin button or the fact that Think Link had a margin feature, suggesting that the icon may need to be animated or perhaps made bigger.
+
+Several \howmany users were very enthusiastic about the ability to see when other users thought a claim on a page was contentious, and the ability to quickly navigate to contradictory arguments. One user commented ``The web needs to be taken with a grain of salt, and this gives you salt goggles''.
+
+The problems we had identified with the prototype interface seemed to have been fixed --- though, given the different demographics, we cannot state this conclusively. Everybody found it easy to tell what the ``open margin'' and ``new snippet'' buttons did. Nobody got confused between topics and claims. 
+
+Users seemed to enjoy the process of browsing through the graph of claims, seeing what supporting and opposing arguments had been identified, and what snippets had been found about topics.
+
+Many ($4/6$) wanted to have a ``back'' button to help them navigate through the claim graph, but all users were comfortable navigating backwards once they noticed that the place they had come from was shown as a link at the top of the display.
+
+Most users \howmany still seemed to find the process of creating connections between existing claims confusing, at least at first. Several \howmany users tried to create a connection to an existing point by clicking on the \includegraphics[width=0.3cm]{../images/add.png} button, rather than by dragging the existing point over. This prompted us to display a message in this case (Figure~\ref{newdragmessage}). Most \howmany users did not not immediately realize that they could use drag and drop. This prompted us to add a prominent message at the top of the claim browser encouraging users to use drag and drop to organize claims and points. All users were able to successfully organize points and claims with drag and drop once they had realized that this is what they were supposed to do.
+
+Many users \howmany uncovered a bug in our new snippet window. They would navigate to an existing claim and then click the \includegraphics[width=0.3cm]{../images/add.png} button to create a new supporting or opposing claim. However they would then click ``Save'' before they had pressed return to create the new claim, with the result that their new snippet was attached to the selected claim rather than the new claim. This bug was easily fixed...
+
+One user said they wanted to be able to mark a claim on a web page as being wrong without having to find other snippets that argued against it. In future work we plan to offer such a feature by allowing users to say whether they believe a claim is true.
+
+\todo{quote collection}
 
 \section{Related Work}
 
+Think Link is influenced by previous work in a number of fields. Most notably, the idea of a collectively edited space in which people can create shared descriptions of topics is influenced by Wikis, the dynamic graph interface is influenced by mind mapping tools, the structuring of arguments as a graph is influenced by argumentation graphs, and the approach to gathering snippets from web pages is influenced by existing web clipping tools.
+
 \subsection{Wikis}
 
-\subsection{Web Annotation}
+Wikis like Wikipedia~\cite{wikipedia} allow many authors to collaborate together to build a single shared document about a topic. Wikis thus achieve Think Links's goal of putting all information about a particular factual claim in one place, rather than scattering knowledge across a number of pages, each authored by a different writer. Indeed one can Think of Think Link as being a bit like a wiki in which all content is transcluded~\cite{transclusion} from existing sources and implicit links are added back from those sources to the wiki page to allow readers of other pages to easily see how they relate to arguments elsewhere.
 
-\subsection{Sensemaking}
+\subsection{Web Clipping and Annotation Systems}
+
+Web clipping tools such as Google Notebook~\cite{googlenotebook}, Scrapbook~\cite{scrapbook}, and Zotero~\cite{zotero} allow one to gather and organize interesting from web pages. Several of Several of these tools also allow one to share one's collection of snippets with other people that one may be collaborating with. 
+
+Many web clipping systems are also web annotation systems. Web annotation systems such as ShiftSpace~\cite{shiftspace}, Stickis~\cite{stickis}, DrawHere~\cite{drawhere}, SharedCopy~\cite{sharedcopy}, and Diigo~\cite{diigo} allow people to add annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relavent documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages.
+
+Think Link takes a different approach to other web clipping and annotation tools by allowing a user to identify the factual claim that a snippet is making within a shared graph of related claims, and using this information to connect snippets based on what they are claiming to be true. While this extra level of structure makes the process of collecting snippets more cumbersome, the extra structure potentially makes snippets more useful.
+
+
+\subsection{User Contributed Links}
+
+In our existing web, links are created primarily by the authors of a document, rather than the readers. In Vannevir Bush's seminar MEMEX article~\cite{memex} he proposed a different architecture, in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Similar approaches have been taken by other hypertext systems including EQUIRE~\cite{enquire} and Everything2~\cite{everything2}.
+
+
+
+
+
+\subsection{Sensemaking Tools}
 
 \cite{scenthighlights}\cite{scenttrails}
+\cite{quotations}, \cite{quotationdl} Overall aim is to identify and connect ideas. Do quotation matching as a partial solution.
+
+\cite{scenthighlights}
+
+\cite{ideanavigation}, \cite{citesense}
+
 
 \subsection{Argumentation Theory}
 
@@ -393,57 +445,12 @@ those lacking domain expertise, struggle to navigate infor-
 mation spaces. 
 
 
-\subsection{Identifying Ideas on the Web}
-
-\cite{quotations}, \cite{quotationdl} Overall aim is to identify and connect ideas. Do quotation matching as a partial solution.
-
-\cite{scenthighlights}
-
-\cite{ideanavigation}, \cite{citesense}
-
-
-\subsection{Web Annotation Systems}
-
-\cite{personalweb}
-
-Diigo lets you save, import, tag, highlight, mark up and share Web pages
-	select content on webpage
-	share bookmarked content; bookmark url and see what people have tagged on that page
-	search over collection of selected content
-	tag selected content; social tagging
-	see friends activity; more social behavior than necessary (eg. msging)
-	meet people ``like'' me?
-Stickis
-Fleck
-Shiftspace
-SharedCopy
-JKN
-MyStickies
-DrawHere
-
-- UIs for highlighting
-- wikipedia highlighting not trustworthy stuff
-
-\subsection{Web Clippings}
-
-Google Notebook
-Trailfire
-Zotero~\cite{zotero} is a citation mangament tool. Find and organise sources, while recording author, date etc by understanding pages. Can add notes to sources.
-Scrapbook~\cite{scrapbook}
-
 \subsection{Semantic Linking}
 
 \subsection{Social Bookmarking}
 
 Shadows
 
-\subsection{User Contributed Links}
-
-Memex allowed users to describe their own paths between pages, rather than requiring the page authors to modify them.
-
-Everything2 creates soft-links between documents based on the browsing patterns of users.
-
-ENQUIRE contains bi-directional links that show who links to a document. TrackBack does the same.
 
 \subsection{Automated Reasoning}
 
@@ -455,125 +462,6 @@ Argumentation graphs express positions and arguments in a formal graph model as 
 
 Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
 
-
-
-\section{Observations Informing Design}
-
-
-\subsection{Recruitment}
-Our user study participants were selected from a pool of respondents to a Craigslist posting for people who use the internet as one of their primary sources of information, regularly gather and share this information, and are interested in a new application to facilitate that process. We chose participants based on their responses to the following questions:
-\begin{enumerate}
-	\item What topics or types of information do you usually look for on the internet?
-	\item How do usually go about finding information? (e.g. google, digg, friends, etc)
-	\item How do you organize the information you find? (e.g. text file, paper, wiki, etc)
-	\item How do you share information with others? (e.g. blog posts, comments, email, facebook, etc)
-\end{enumerate}
-We preferred individuals who search the internet for research and reading news rather than online shopping, as well as those interested in social and collaborative web activities like social networking web sites.  We were also interested in those who seemed to express a need for our application: people who copy-and-paste text from web pages into word processing documents, or who regularly email web page addresses to friends. Twelve people were selected to participate in this study.
-
-\subsection{Study Environment}
-Each study session lasted between thirty to forty-five minutes, with the participant sitting at a desktop computer with the Firefox browser running the application plugin. The session was a Think-Aloud study in which the participant verbally describes his/her thoughts throughout the duration of the study. A video camera captured the audio/video and was focused on the monitor screen. Before the session began, we briefly demonstrated the features of the application: how to (1) select snippets, (2) write a snippet topic and point, (3) relate points, (4) show/hide the margin, and (5) browse recent activity.
-
-\subsection{Study Tasks}
-The study consisted of two tasks to collect snippets, each lasting ten to fifteen minutes. During both tasks, we asked participants to browse the web as they normally would. In the first task, the participant browses the web about a topic or issue of their choice from the domain of politics. The collection of snippets should help the participant either argue or form an opinion/perspective about the topic, and should be thought of being used to help him/her explain or discuss the topic with a friend.  We constrained the first task to politics to increase the likelihood that the study participants would encounter similar issues and news stories.
-
-For the second task, the participant was allowed to browse for any topic of their choosing. While the likelihood of topic overlap across participants was much lower, we were able to observe their behavior when searching for information in which each person had genuine interest.
-
-At the conclusion of the session, we asked the participant if the application is something that would be likely to use, and for what purposes they would find it most useful. Any confusing features or experiences were also noted.
-
-\subsection{Observations and Discussion}
-% observed good and bad things
-% good things validate the application's usefulness and applicability
-% snippet selection super easy
-% organization part a little lacking
-% bad things we have ideas how to fix: UI redesign and smaller second study
-% not as much social stuff going on, but limited stuff in DB for overlap to happen (more social stuff towards end of study)
-
-
-{\it Note:} The first four study participants used a version of the web interface in which point relationships were constructed by navigating to one point page, searching for or typing the text of another point, and then expressing a directional relationship via a drop-down menu. We saw that participants found this process cumbersome and were less inclined to do it. Three of the four noted their confusion by the directional terms {\it supports} versus {\it is supported by}, and expressed a need for a more visual technique for constructing relationships. We modified the interface to allow users to drag and drop points on top of one another, with just the choice of {\it supports} and {\it opposes}. Half of the four participants were also confused by the Gmail-like labels alongside listed points that specified the topics each point belongs to.  The interface was modified to show topics listed with their related points beneath them. The remainder of the study used the modified interface. 
-
-%hopefully more social uses when have more stuff in database
-
-\subsubsection{Validating Observations?}
-In general, the user study demonstrated that our application successfully allows people to associate portions of web content with ideas, and to organize and share those ideas. All the study participants were able to create new snippets, and only a couple ($2/12$) had initial difficulty in correctly summarizing snippet text into a point. Most participants ($10/12$) were interested in viewing the margin as they were creating new snippets. These observations demonstrate that snippet creation is easy for most users.
-
-Many ($7/12$) participants also expressed the desire to organize snippets and points during their session. Of these seven, we noticed that four were alternating between creating snippets from new articles and organizing points in their {\it Recent Activity}: with each new snippet, users were creating relationships between points. When browsing web content about a particular topic or issue, most participants ($10/12$) either reused a topic that they created during their session or that someone else had created previously. Half of those ten used a topic that they {\it hadn't} created, demonstrating the ease of collaboration in our application. Both these organizational activities support connections inside the web of ideas. While the level of social activity was undoubtedly limited by the relatively small number of points (about $400$), three of the six people who browsed points in the main web interface looked at points created by other users. Two of the later study participants viewed someone else's point and either read the snippet text or viewed the originating document. As the number of points and topics increases, we expect to see more social behavior like this.
-
-% easy to create snippets and view margin
-% participants expressed desire to organize
-% saw social activity and browsing
-% (see more in usage types)
-% not as much social stuff going on, but limited stuff in DB for overlap to happen (more social stuff towards end of study)
-
-\subsubsection{Suggested Usage}
-Many of the study participants who said they would our application suggested uses that match those described in our motivation, validating our prescribed use cases.  We identified the following use types, based on participant responses. Note that these many people suggested multiple use types.
-
-\textbf{Blogging and writing:} Snippet collections are useful when gathering evidence and supporting material for a blog entry, report, or any kind of written composition. This use case necessitates the ability to organize, order, and rearrange snippets to best tell a story, generate a persuasive argument, or facilitate forming an opinion.
-
-\textbf{Self-Bookmarking:} Creating snippets can be a means of bookmarking web page content that a user will return to for his/her own needs. These bookmarks are more specific than the web address of the page itself, and was suggested by users who currently find themselves cutting and pasting web content into a word processing file. This use case is more for retaining factual information than constructing an argument, although the information could also be used for the writing usage type.
-
-\textbf{Social:} Sharing snippets with friends or targeted interest groups allows users to see what web content is interesting to people they follow. This use case is applicable both to those who wish to collaboratively generate a collection of information and to those who like sharing and browsing information from friends.
-
-% Not for everyone! 3/12 people used it "incorrectly"
-Several of the study participants suggested specific use cases that mirror our initial motivation for the application. One example was a user who would use snippets to as supporting evidence for asserting the incorrectness of someone else's claim on a web forum, as simple comments are not as effective. Our application, however, is not for everyone. Three of the twelve user study participants used (or wanted to use) our application ``incorrectly,'' e.g. to compare airline flight prices.
-
-
-\section{Interaction Techniques}
-
-\subsection{Features}
-descriptions and screenshots: margin, snippet creation, relationship creation, web UI, point browser
-\begin{figure}[ht]
-	\includegraphics[scale=0.35]{../screenshots/snippetdialog_sm.jpg}
-	\caption{Snippet creation dialog}
-	\label{snippetdialog}
-\end{figure}
-
-\begin{figure}[ht]
-	\includegraphics[scale=0.3]{../screenshots/topicpage_sm.jpg}
-	\caption{Example topic page}
-	\label{topicpage}
-\end{figure}
-
-\subsection{Implementation Decisions}
-
-\idea{Wiki model not appropriate for points since want to manipulate several points at once}
-\idea{Need to visualize relationships in web of ideas}
-
-
-% \section{Creating Knowledge}
-% 
-% \section{Sharing Knowledge}
-% 
-% Why do users g
-% 
-% \section{Using Knowledge}
-% 
-% \section{Querying Data}
-
-
-\section{Preliminary User Feedback}
-
-
-1.5pp: recruitment, environment, tasks, observations, smaller study
-
-\subsubsection{User Interface Redesign}
-The first user study demonstrated a few flaws in the application's user interface. These problems can be generalized as:
-\begin{itemize}
-	\item \textbf{People need to easily visualize the the hierarchy of points, topics, and relationships.} A significant portion of the participants ($5/12$) explicitly expressed confusion about not being able to view the entire hierarchy of topics and points, and felt lost when looking at the individual point or topic pages. In this view, each point and topic is visually separated from its related points and topics, and thus users did not understand the significance of these individual pages. Viewing related points as lists of {\it child} and {\it parent} points was confusing to three of the eight people who used the second version of the UI. This ``flattened'' perspective also makes it difficult to relate several points to another. Most of the users who linked points together ($5/7$) did not recognize the need to first create an intermediate point and then relate other points to that new point. An easier model for grouping and associating objects together is necessary.
-	\item \textbf{People need better organization capabilities at snippet creation time.} Only a few ($3/12$) users went back to their {\it Recent Activity} to create additional topics when organizing, which suggests that a majority of users prefer to place snippets within topics when they are first created. However, if users are only allowed to assign a snippet to one topic without context of a topic hierarchy, they may create a very specific topic that is unlikely to be used by another person. We observed this behavior with two participants who both created snippets regarding a politician's controversial affair, but whose snippets did not belong to related topics. Several participants ($4/12$) remarked that they were unsure how broad a topic should be. By allowing users to create and traverse the topic hierarchy, they would be able to more easily organize and specify new topics when creating a snippet.
-\end{itemize}
-
-Our solution to these problems was to redesign the user interface to resemble the traditional file browser. The left-hand side shows the expandable/collapsable hierarchy and shortcut paths, while the right-hand side shows a content preview of the selected item from the left. For example, when a point is selected, the preview shows its snippets and related points. Snippet creation will resemble a \texttt{save as...} dialog where users can easily traverse the topic/point hierarchy, and create new topics inside existing ones as deemed necessary.
-This solution was implemented and used in a smaller user study. See section \ref{secondstudy}.
-
-\idea{remove confusion about ``where i am'' with fisheye view of current claim}
-
-\subsubsection{Second User Study}
-\label{secondstudy}
-There were six study participants who used the redesigned web interface.
-\studyresult{we solved organization difficulties with this redesign}
-
-
-%\section{Evaluation}
 
 \section{Future Work}
 1p: social queries, NLP stuff
