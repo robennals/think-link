@@ -432,11 +432,30 @@ Argumentation graphs express positions and arguments in a formal graph model as 
 Traditional argumentation graphs are designed to solve a specific, isolated issue. Our application supports an ever-expanding set of topics, and arguments can form links between multiple topics. Users can consult the web of ideas directly to form an opinion about a particular issue, but they can also browse for new issues to explore. Opinions or decisions in our model don't have to be static: as the topic is expanded with more supporting and opposing evidence, users may alter previous viewpoints. Another advantage of our model is that the ability to explore claims' source-document evidence is built right into the navigation. Looking at an argument shows both its related argument as well as its supporting {\it snippets}, allowing the user to explore the evidence for himself. 
 
 
-\section{Future Work}
-1p: social queries, NLP stuff
+\section{Limitations and Future Work}
+
+There are a number of issues that a widely released tool would need to address. Firstly, our current implementation has privacy issues. Every time one navigates to a web page, the plugin contacts our server and gives it the current URL so that it can check if there are snippets on that page. This information is anonymous, cacheable, and not logged, but it is still likely that some people would object to this information being given to an external server. 
+
+At present, all claims have to be marked up by users who must not only identify the correct section of text to highlight, but also use a browsing interface to find the interesting claim that is being made. It would be interesting to see if natural language processing techniques could be used to either simplify the process of marking snippets, or even to detect snippets that make known claims without human intervention.
+
+While Think Link is influenced by Wikis, it does not currently have support for reverting bad edits made by previous users, or managing history in general. It will be interesting to see what interfaces work well for managing history, given that our data is a graph rather than a series of pages.
+
+Similarly, Think Link is designed to be used as a social tool in which large numbers of people collaborate to find large numbers of claims and snippets about interesting topics. Since our graph and user base are currently small we have not yet evaluated how Think Link works when data sets are huge, many users are concurrently editing data, and some users are malicious.
+
+We think it could be useful to use Think Link as a tool to suggest reading material. Just as tools like Digg suggest pages that you might like, Think Link could potentially suggest pages that contain claims that the user had not read and would be likely to find interesting.
+
 
 \section{Conclusions}
-$1/2$p
+
+We have introduced the concept of browsing the web of factual claims using Think Link. Think Link allows users to navigate between pages based on the factual claims made on pages, rather than being restricted to the links provided by authors. It allows users to identify contentious claims on web pages and connect them directly to the arguments that those claims are part of, and related claims on other web sites.
+
+On a practical level, Think Link works by allowing users to pick out snippets on pages that make claims that they think are interesting or contraversial, and then using a wiki model to allow users to collaborate together to structure claims into an argument graph.
+
+We hope that Think Link will make it easier for people to be informed about the world and be exposed to factual claims that they might not otherwise be exposed to.
+
+\section{Acknowledgements}
+
+We would like to think Allison Woodruff, Tye Rattenbury, and all our user study participants for all their help during the design of Think Link.
 
 
 \bibliographystyle{abbrv}
