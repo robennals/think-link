@@ -3,6 +3,7 @@
 \usepackage{url}
 \usepackage{graphics}
 \usepackage{color}
+\usepackage{wrapfig}
 \usepackage[pdftex]{hyperref}
 \hypersetup{%
 pdftitle={Browsing the Web of Factual Claims},
@@ -66,7 +67,7 @@ breaklinks=true,
 
 \begin{abstract}
 
-Traditional web browsing consists of looking at pages and following links between pages; however when a user browses the web it is often not the pages themselves that they are looking for but the factual claims contained within those documents. A page may contain claims that are contradicted by other pages, or contain one interesting new claim, hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
+Traditional web browsing consists of looking at pages and following links between pages; however when a user browses the web it is often not the pages themselves that they are looking for but the factual claims contained on those pages. A page may contain claims that are contradicted by other pages, or contain one interesting new claim, hidden in a sea of claims that the user has already read. A user must thus invest significant effort extracting the claims that are accurate and interesting from the pages that they look at.
 
 We present Think Link, a tool that links pages to the factual claims that they make, and allows users to browse the web of factual claims, rather than the web of pages. 
 
@@ -77,33 +78,43 @@ We present Think Link, a tool that links pages to the factual claims that they m
 \category{H.5.2}{Information Interfaces and Presentation}{User Interfaces}[Graphical User Interfaces]
 
 
-\begin{figure}[ht]
-	\includegraphics[width=8.5cm]{../screenshots/redhighlight.png}
-	\caption{Think Link highlights the key claims made by a page. Red means the claim is contentious.}
-	\label{highlight}
-\end{figure}
-
-\begin{figure}[ht]
-	\includegraphics[width=8.5cm]{../screenshots/sidebar3.png}
-	\caption{The margin shows a summary of the key claims made by the page}
-	\label{margin}
-\end{figure}
-
-\begin{figure}[ht]
-	\includegraphics[width=8.5cm]{../screenshots/claim_popup.png}
-	\caption{Click on a claim to see supporting or opposing evidence on other web pages}
-	\label{claimview}
-\end{figure}
-
 
 
 \section{Introduction}
 
 The web provides users with a huge number of pages they can read, but extracting useful factual information from these pages can be hard work. Not everything on the web is true. A web site may make claims that are contradicted by other web sites. If a user is to avoid incorrect claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, not everything on the web is interesting. If a user wants to find interesting factual claims about a topic then they may have to waste time reading claims that they have either read elsewhere or do not find interesting in order to find the claims that interest them.
 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{../screenshots/highlight_crop.png}
+	\caption{Key factual claims are highlighted}
+	\label{highlight}
+	\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/claim_popup_crop2.png}
+	\caption{Click on a claim to investigate evidence for and against}
+	\label{claimview}
+	\end{center}
+\end{figure}
+
+
 Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}.
 
 Part of the problem is that traditional web browsing tools require the user to browse by looking at pages, when it is often not the pages themselves that the user is interested in but the factual claims contained within them. While a web page will typically contain links to other pages, as chosen by the page author, it does not provide an easy way for a user to validate whether the claims made by a page are supported by evidence that may be available on other pages. Moreover the best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for add knowledge to the web, it makes it harder for users to extract factual claims from it.
+
+
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{../screenshots/sidebar_crop.png}
+	\caption{The margin summarizes the key claims on the page}
+	\label{margin}
+	\end{center}
+\end{figure}
+
 
 
 \subsection{Browse the Web of Factual Claims}
@@ -124,8 +135,21 @@ Think Link uses collaborative filtering~\cite{collaborativefilter} to highlight 
 
 \subsection{The Mental Model}
 
-Think Link presents users with three kinds of object, each associated with a different family of icons:
+Think Link presents users with three kinds of object, each associated with a different family of icons: 	
 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/bookmark_icons.png}
+	\caption{Icons used for Claims, Snippets, and Topics}
+	\label{bookmark_icons}
+	\end{center}
+\end{figure}
+
+%\begin{wrapfigure}{r}{4cm}
+%	\begin{center}
+%	\includegraphics[width=4cm]{../screenshots/bookmark_icons.png}
+%	\end{center}
+%\end{wrapfigure}
 \begin{itemize}
 \item {\bf a claim} (\includegraphics[width=0.3cm]{../images/lightbulb_off.png}) is a factual claim about the world that may be true or false. For example ``Global warming exists''. A claim may support or oppose other claims. Claims are written as raw English\footnote{though one can imagine supporting other languages in the future} text and are not understood logically by Think Link.
 \item {\bf a snippet} (\includegraphics[width=0.3cm]{../images/comment.png}) is a section of text on a particular web site that asserts or assumes the truth of a particular claim. Many snippets may assert the same claim and users are encouraged to re-use existing claims rather than creating new ones when creating new snippets.
@@ -159,7 +183,7 @@ We believe that this work makes the following key contributions:
 
 Users interact with Think Link in four key ways. Think Link will draw attention to interesting claims on pages that the user browses; it allows the user to identify new factual claims on pages they browse; it allows them to browse the graph of related claims and identify the strongest evidence supporting or opposing the claims they are looking at; and it allows them to organize the claim graph by making new connections between existing claims and topics.
 
-\subsection{Identifying factual claims on a page}
+\subsection{Exploring factual claims on a page}
 
 When a user browses a web page, we want to make them aware of claims being made on the page that they might find interesting, or that other sources disagree with. Think Link draws attention to the factual claims that other users have identified on a web page by highlighting them (Figure~\ref{highlight}). Snippets are highlighted in red if they are contenious (other sources disagree with the claim), or yellow otherwise. The highlight colors are chosen such as to be pale enough to not impede reading, but dark enough to be noticeable. The colors are chosen to fit with people's normal associations with colors, where red is commonly associated with danger (e.g. a traffic light) and yellow is the standard color used for highlighter pens.
 
@@ -177,43 +201,37 @@ A user can also use the margin to provide a quick overview of a document. They c
 \todo{give the margin consistent colors with the highlight sections}
 \todo{more nice zoomed-in screenshots showing the different interaction techniques}
 
-\subsection{Identifying new factual claims}
-\label{newsnippet}
-
-\begin{figure}[t]
-	\includegraphics[width=8.5cm]{../screenshots/snipsave_full.png}
-	\caption{The claim selection window allows one to identify the claim a snippet is making}
-	\label{snipsavefull}
-\end{figure}
-
-\begin{figure}[t]
-	\includegraphics[width=8.5cm]{../screenshots/snipsave_crop.png}
-	\caption{Close up view of the claim selection window}
-	\label{snipsavecrop}
-\end{figure}
-
-
-If a user finds a snippet of text on a page that makes an interesting claim then they may want to enter it into Think Link. There are several reasons they may wish to do this. It may be that they find the snippet useful and may want to refer to it again in the future. It may be that they disagree with the claim, and want to alert other readers to the fact that there are opposing arguments, or it may be that they agree with the claim and want to provide easy access to evidence that backs it up. 
-
-To create a new snippet, the user selects the text to be included and then either clicks on the ``new snippet'' button on the browser toolbar, or selects the ``new snippet'' option from the context menu that appears when they click the right mouse button. This is a similar approach to that taken clipping tools such as Google Notebook~\cite{googlenotebook}.
-
-Once the user has identified the text in a snippet, they need to identify the claim that the snippet is making. To do this, Think Link presents the user with a ``claim selection'' window. This window contains a small version of the claim browser (Section~\ref{browseclaim}) that the user can use to select the claim that the snippet is making. At the bottom of the window, we show the phrase ``the snippet text {\it snippet} claims that {\it claim}''. We found that this helps users understand the nature of a claim and its relationship to a snippet (Section~\ref{study-claimmeaning}).
-
-Since much of Think Link's utility comes from linking snippets together, it is important that to encourage users to reuse existing claims rather than creating new ones, and that when users do create new claims they connect them to existing claims and existing topics. Motivated by this, we designed the claim selection window to make it easier to pick out an existing claim than to create a new one. Moreover, one cannot create a new claim without connecting it to an existing topic or an existing claim. To create a new claim, one navigates to a topic that the claim is about, or a claim that the new claim supports or opposes, and then clicks on the (\includegraphics[width=0.3cm]{../images/add.png}) button on the list that one wishes to add the new claim to. For example, if the new claim opposes an existing claim, then one clicks the (\includegraphics[width=0.3cm]{../images/add.png}) button on the ``opposed by'' heading for the existing claim.
-
-This is an intentionally different model to that used by ad-hoc tag-based~\cite{tags} systems such as Delicious~\cite{delicious} and Flickr~\cite{flickr}. This is because in bookmarking or image storing systems it is not so important that duplicates be avoided and that objects be well connected.
-
-In earlier revisions of the interface it was very easy for users to quickly create new claim texts and awkward to find and reuse existing ones. This led users to create many claims that were essentially equivalent and reduced the utility of Think Link as a tool for connection snippets together (Section~\ref{study-reuse}). 
-
-\todo{Make new snippet icon throb when something is selected}
-
 \subsection{Browsing factual claims}
 \label{browseclaim}
 
-\begin{figure}[ht]
+\begin{figure}[tb]
 	\includegraphics[width=8.5cm]{../screenshots/claimbrowse.png}
-	\caption{The Claim Browser}
+	\caption{The Claim Organizer contains two claim browsers}
 	\label{fig:claimbrowser}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/claimbrowse_diagram.png}
+	\caption{The Claim Browser Allows one to browse the argument graph}
+	\label{claimbrowse_diagram}
+	\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/claimbrowse_zoom.png}
+	\caption{Close up of a list of supporting claims}
+	\label{claimbrowse_zoom}
+	\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/fullbrowser.png}
+	\caption{The Enhanced claim browser adds additional controls}
+	\label{enhancedbrowser}
+	\end{center}
 \end{figure}
 
 Our users expressed an interest in using snippets to help them construct arguments that support a claim they agree with, to show them the arguments for and against a claim that they are unsure about, to collect evidence about a topic they are interested in, to share information with friends, and to see arguments against claims that they encountered on the web. We constructed the ``claim browser'' interface to help users do these things (Figure~\ref{fig:claimbrowser}).
@@ -241,6 +259,46 @@ Users see a claim browser in three different places:
 \item {\bf The Popup Browser} shows one claim browser in a reduced-size window and is used to quickly investigate a claim found on a web page. (Figure~\ref{claimview})
 \item {\bf The Claim Selection Window} shows one claim browser, together with the text of a new snippet, and is used to identify the claim that a snippet is making. (Figure~\ref{snipsavefull}) 
 \end{itemize}
+
+
+\subsection{Identifying new factual claims}
+\label{newsnippet}
+
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=16cm]{../screenshots/newsnip_all.png}
+	\caption{Process for creating a new snippet}
+	\label{snipsavecrop}
+	\end{center}
+\end{figure*}
+
+%\begin{figure}[tb]
+%	\includegraphics[width=8.5cm]{../screenshots/snipsave_full.png}
+%	\caption{The claim selection window allows one to identify the claim a snippet is making}
+%	\label{snipsavefull}
+%\end{figure}
+
+\begin{figure}[tb]
+	\includegraphics[width=8.5cm]{../screenshots/snipsave_crop.png}
+	\caption{Close up view of the claim selection window}
+	\label{snipsavecrop}
+\end{figure}
+
+
+If a user finds a snippet of text on a page that makes an interesting claim then they may want to enter it into Think Link. There are several reasons they may wish to do this. It may be that they find the snippet useful and may want to refer to it again in the future. It may be that they disagree with the claim, and want to alert other readers to the fact that there are opposing arguments, or it may be that they agree with the claim and want to provide easy access to evidence that backs it up. 
+
+To create a new snippet, the user selects the text to be included and then either clicks on the ``new snippet'' button on the browser toolbar, or selects the ``new snippet'' option from the context menu that appears when they click the right mouse button. This is a similar approach to that taken clipping tools such as Google Notebook~\cite{googlenotebook}.
+
+Once the user has identified the text in a snippet, they need to identify the claim that the snippet is making. To do this, Think Link presents the user with a ``claim selection'' window. This window contains a small version of the claim browser (Section~\ref{browseclaim}) that the user can use to select the claim that the snippet is making. At the bottom of the window, we show the phrase ``the snippet text {\it snippet} claims that {\it claim}''. We found that this helps users understand the nature of a claim and its relationship to a snippet (Section~\ref{study-claimmeaning}).
+
+Since much of Think Link's utility comes from linking snippets together, it is important that to encourage users to reuse existing claims rather than creating new ones, and that when users do create new claims they connect them to existing claims and existing topics. Motivated by this, we designed the claim selection window to make it easier to pick out an existing claim than to create a new one. Moreover, one cannot create a new claim without connecting it to an existing topic or an existing claim. To create a new claim, one navigates to a topic that the claim is about, or a claim that the new claim supports or opposes, and then clicks on the (\includegraphics[width=0.3cm]{../images/add.png}) button on the list that one wishes to add the new claim to. For example, if the new claim opposes an existing claim, then one clicks the (\includegraphics[width=0.3cm]{../images/add.png}) button on the ``opposed by'' heading for the existing claim.
+
+This is an intentionally different model to that used by ad-hoc tag-based~\cite{tags} systems such as Delicious~\cite{delicious} and Flickr~\cite{flickr}. This is because in bookmarking or image storing systems it is not so important that duplicates be avoided and that objects be well connected.
+
+In earlier revisions of the interface it was very easy for users to quickly create new claim texts and awkward to find and reuse existing ones. This led users to create many claims that were essentially equivalent and reduced the utility of Think Link as a tool for connection snippets together (Section~\ref{study-reuse}). 
+
+\todo{Make new snippet icon throb when something is selected}
+
 
 
 \subsection{Organizing factual claims}
@@ -330,7 +388,7 @@ The drag and drop interface worked better. Most ($7/8$) users were eventually ab
 
 
 \begin{figure}[ht]
-	\includegraphics[width=8.5cm]{../screenshots/oldpoint_search.png}
+	\includegraphics[width=8.5cm]{../screenshots/oldpoint_diagram.png}
 	\caption{Initial Prototype Claim Browser}
 	\label{oldbrowser}
 \end{figure}
