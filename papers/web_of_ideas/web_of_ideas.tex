@@ -399,63 +399,32 @@ Wikis like Wikipedia~\cite{wikipedia} allow many authors to collaborate together
 
 Web clipping tools such as Google Notebook~\cite{googlenotebook}, Scrapbook~\cite{scrapbook}, and Zotero~\cite{zotero} allow one to gather and organize interesting from web pages. Several of Several of these tools also allow one to share one's collection of snippets with other people that one may be collaborating with. 
 
-Many web clipping systems are also web annotation systems. Web annotation systems such as ShiftSpace~\cite{shiftspace}, Stickis~\cite{stickis}, DrawHere~\cite{drawhere}, SharedCopy~\cite{sharedcopy}, and Diigo~\cite{diigo} allow people to add annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relavent documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages.
+Many web clipping systems are also web annotation systems. Web annotation systems such as ShiftSpace~\cite{shiftspace}, Stickis~\cite{stickis}, DrawHere~\cite{drawhere}, SharedCopy~\cite{sharedcopy}, and Diigo~\cite{diigo} allow people to add annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relavent documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages. Perhaps the tool most similar to Think Link is SpinSpotter~\cite{spinspotter}, a tool that allows users to mark up newspaper articles to identify spin and factual inaccuracies.
 
 Think Link takes a different approach to other web clipping and annotation tools by allowing a user to identify the factual claim that a snippet is making within a shared graph of related claims, and using this information to connect snippets based on what they are claiming to be true. While this extra level of structure makes the process of collecting snippets more cumbersome, the extra structure potentially makes snippets more useful.
 
 
 \subsection{User Contributed Links}
 
-In our existing web, links are created primarily by the authors of a document, rather than the readers. In Vannevir Bush's seminar MEMEX article~\cite{memex} he proposed a different architecture, in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Similar approaches have been taken by other hypertext systems including EQUIRE~\cite{enquire} and Everything2~\cite{everything2}.
+In Vannevir Bush's seminal MEMEX article~\cite{memex} he proposed an architecture in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Similar approaches have been taken by other hypertext systems including EQUIRE~\cite{enquire} and Everything2~\cite{everything2}. Think Link very much follows in this philosophy, the key difference being that Think Link structures its connections between documents using a graph of factual claims.
 
+\subsection{Browsing Ideas}
 
+One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations,quotationsdl} finds places where a passage is repeated in several documents (usually a quotation) and allows users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{scenthighlights} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{scenttrails} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
 
-
-
-\subsection{Sensemaking Tools}
-
-\cite{scenthighlights}\cite{scenttrails}
-\cite{quotations}, \cite{quotationdl} Overall aim is to identify and connect ideas. Do quotation matching as a partial solution.
-
-\cite{scenthighlights}
-
-\cite{ideanavigation}, \cite{citesense}
-
+%\cite{citesense}
 
 \subsection{Argumentation Theory}
 
-The 
-\cite{Korb97acognitive}
-\cite{toulmin}
-\cite{carneades}
-\cite{conceptmap}
-\cite{argmas}
+Argumentation Theory is a whole field in itself~\cite{argumentation,argmas} and much has been written about ways that one can represent arguments using a graph of connected claims. Popular argument representations include the Toulmin Model~\cite{toulmin}, and the Carneades Model~\cite{carneades}. Models used for argumentation theory are usually significantly more complex than our simple supports/opposes model as they typically want to represent more of the logic of the argument, and perhaps even be able to do reasoning. Early versions of Think Link used a more complex model and we cut things down in order to make it easier for users to assemble claim graphs.
 
-Memex
-Vannevar 
-Bush's vision of Memex. Bush popularized the idea that 
-people can collaboratively organize and share knowledge: 
-``Wholly new forms of encyclopedias will appear, ready-made 
-with a mesh of associative trails running through them...'' 
-[5]. In many ways the vision has come to pass with large 
-amounts of hyper-linked information in the World Wide 
-Web, digital libraries, and online encyclopedias. However, 
-researchers continue to point out that people, especially 
-those lacking domain expertise, struggle to navigate infor- 
-mation spaces. 
+One feature found in some argumentation graphs~\cite{Korb97acognitive} that we may add in the future is the ability to attach a numberical weight (maybe from voting) asserting how much a claim supports or opposes another claim, or how reliable a claim is.
 
 
-\subsection{Semantic Linking}
-
-\subsection{Social Bookmarking}
-
-Shadows
-
-
-\subsection{Automated Reasoning}
-
-Case-Based reasoning
-Sensemaking
+%\subsection{Automated Reasoning}
+%
+%Case-Based reasoning
+%Sensemaking
 
 \subsection{Argumentation Graphs}
 Argumentation graphs express positions and arguments in a formal graph model as nodes and edges, respectively, and are typically used to make a decision or draw a conclusion about some issue. One example implementation is the {\it Zeno} argumentation framework~\cite{zeno}, designed for collaborative use in mediation systems to debate the quality of alternative solutions for a problem. In their object model of argumentation elements, based on Rittel's IBIS model~\cite{ibis}, example nodes include pro/con arguments, positions, preferences, comments, and decisions. Importantly, arguments are connected via {\it consequent} and {\it antecedent} edges, which are used to inform {\it choices}. The decision-making power of the argumentation graph follows from the traversal of argument relationships to enhance the depth and breadth of understanding about an issue. Our application similarly links claims as {\it supporting} and {\it opposing} other claims to allow users to develop a cohesive understanding of arguments.
