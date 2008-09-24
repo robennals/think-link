@@ -73,7 +73,7 @@ private
 				
 	def load_tables
 		file = File.open($data_file)
-		data = YAML.load(file)
+		@data = YAML.load(file)
 		file.close
 	end
 
@@ -103,6 +103,7 @@ private
 
 	def replay_log(logfile)
 		logfile.each do |line|
+			line = line.gsub("\n","")
 			parts = line.split ":"
 			memory_put(parts[0],parts[1],parts[2],parts[3],parts[4])
 		end
