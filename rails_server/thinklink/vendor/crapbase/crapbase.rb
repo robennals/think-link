@@ -1,22 +1,8 @@
-
-# CrapBase is a really crap implementation of an API similar to that used by
-# Cassandra and BigTable
-
-# CrapBase makes no attempt at performance, scalability, or reliability
-# The intention of crapbase is to provide a straw man implementation of a SCADs
-# API to allow us to play with using it before having to go to the effort of
-# implementing it properly on something like Cassandra
-
 $root_path = "C:/users/rob/git/thinklink/"
-
 $log_file = $root_path+"store/log"
 $data_file = $root_path+"store/data"
 
 class CrapBase
-	def hello
-		puts "hello"
-	end
-
 	# TODO: batching of requests	
 	def put(table,key,columnfamily,column,value)
 		add_log_entry(table,key,columnfamily,column,value)
