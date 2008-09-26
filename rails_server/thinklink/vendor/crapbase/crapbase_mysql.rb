@@ -38,18 +38,23 @@ class CrapBase
 		batch_insert(table,key,valuemap)
 	end
 	
-	def add_trigger(table,policy,&callback)
-		@triggers[table] = callback
+	def add_trigger(options,&callback)
+		@triggers.push :options => options, :callback => callback
 	end
 	
 	def run_triggers(table,key,valuemap)
-		if @triggers.has_key?(table)
-			@triggers[table].call(table,key,valuemap)
+		@triggers.each do |trigger|
+			opts = trigger.opts
+			if opts[:table] == table && 
+				if !trigger[:opts].has_key?(opts[:family]) || valuemap.has_key?(opts[:family])
+					trigger[:callback].call(table,key,valuemap)
+				end
+			end
 		end
 	end
 	
 	def initialize
-		@triggers = {}
+		@triggers = []
 	end
 	
 private
