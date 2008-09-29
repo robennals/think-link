@@ -67,7 +67,7 @@ breaklinks=true,
 \maketitle
 
 \begin{abstract}
-Most mashups concern themselves with data that is fairly easy for a machine to understand: addresses, phone numbers, information available through APIs, or information that can be scraped from a small set of popular web sites.
+Most mashups concern themselves with data that machines can understand fairly easily: addresses, phone numbers, information available through APIs, or information that can be scraped from a small set of popular web sites.
 
 However much of the most interesting information on the web is not in a form that a computer can easily understand. It may be in natural language text, or it may be in the long tail of web sites that developers have not found it worthwhile to write scrapers for.
 
@@ -87,11 +87,11 @@ Much of the most interesting information on the web is in the form of unstructur
 
 Similarly, there is a lot of structured information stored in the ``long tail'' of web sites that are too small for it to be worth a mashup author writing a custom scraper or API interface for, but which may nonetheless be interesting. For example, tables of data that have been entered by hand, or one of the many tiny web sites that display data from a database backend using their own custom template that nobody has ever written a scraper for.
 
-In this paper we argue for ``participatory mashups'' as a way to open up access to this data. In a participatory mashup we blur the line between the users and creators of a mashup by allowing the users of a mashup to teach the mashup how to understand new information, and new connections between things. By teaching a participatory mashup the meaning of the data on a particular web page, the user helps themselves, since the mashup can now enhance that information for them, but they also help the wider community of users, since other users looking at the same page will be able to see an enhanced view, and the information on that page can now be used to enhance other pages on the web.
+In this paper we argue for ``participatory mashups'' as a way to open up access to this data. In a participatory mashup we blur the line between the users and creators of a mashup by allowing the users of a mashup to teach the mashup how to understand new information, and new connections between things. By teaching a participatory mashup the meaning of the data on a particular web page, the user helps themselves, since the mashup can now enhance that page for them, but they also help the wider community, since that information can now be used to produce mashups for others.
 
-We motivate this approach using two mashup tools that we have built. Think Link allows a user to identify factual claims on web pages, and uses this information to expose users to opposing points of view. Mash Maker allows users to teach it the meaning of structured data on arbitrary web sites, and then enhances these web sites to make them more useful, guided by example improvements provided by users.
+We motivate this approach using two mashup tools that we have built. Think Link allows a user to identify factual claims on web pages, and uses this information to expose users to opposing points of view. Mash Maker allows users to teach it the meaning of structured data on arbitrary web sites, and then enhances these web sites to make them more useful, guided by example enhancements provided by users.
 
-More generally, we consider a tool to be a ``participatory mashup'' if it relies on users to teach it how to interpret and connect information on the web. We argue that this is an approach that other applications could also use to help them understand the web.
+More generally, we consider a tool to be a ``participatory mashup'' if it relies on users to teach it how to interpret and connect information on the web. We argue that this is a useful technique for understanding the web.
 
 \section{Think Link}
 
@@ -105,7 +105,7 @@ More generally, we consider a tool to be a ``participatory mashup'' if it relies
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/claim_popup_crop2.png}
+	\includegraphics[width=6.5cm]{../screenshots/claim_popup_crop2.png}
 	\caption{Click on a claim to investigate evidence for and against it}
 	\label{claimview}
 	\end{center}
@@ -113,7 +113,7 @@ More generally, we consider a tool to be a ``participatory mashup'' if it relies
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7.7cm]{../screenshots/summary_graph.png}
+	\includegraphics[width=8.2cm]{../screenshots/summary_graph.png}
 	\caption{Think link connects claims to each other and to web snippets}
 	\label{summarygraph}
 	\end{center}
@@ -121,20 +121,20 @@ More generally, we consider a tool to be a ``participatory mashup'' if it relies
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{../screenshots/claimbrowse_diagram.png}
+	\includegraphics[width=8.4cm]{../screenshots/claimbrowse_diagram.png}
 	\caption{The claim browser visualizes the claim graph}
 	\label{claimbrowse_diagram}
 	\end{center}
 \end{figure}
 
 
-Much concern has been expressed recently about biased or inaccurate information on web sites~\cite{bbcwebwarning,wikifalse}, and the media echo chamber problem in which people read web sites that feed their own views back to them, rather than exposing people to the opposing opinions held by other groups~\cite{echochamber,echochamber2}. 
+Much concern has been expressed recently about biased or inaccurate information on web sites~\cite{bbcwebwarning,wikifalse}, and the tendency for people to get information from sources that feed their own views back to them, rather than exposing them to opposing opinions held by other groups~\cite{echochamber,echochamber2}. 
 
-Think Link~\cite{thinklink} is a Firefox extension that helps users evaluate the truth of statements they read exposes users to a range of ideas and opinions that they might not otherwise encounter.
+Think Link~\cite{thinklink} is a Firefox extension that helps users evaluate the truth of statements they read and exposes users to a range of ideas and opinions that they might not otherwise encounter.
 
-As a user browses the web, Think Link highlights snippets of text that other users have identified as making claims that are interesting or controversial (Figure~\ref{highlight}). Interesting claims are highlighted in yellow, and controversial claims are highlighted in red. If a user clicks on a highlighted snippet, Think Link will display an interface that allows a user to easily find snippets on other web pages that make related claims, including snippets that argue against the opinion put forward by the highlighted snippet (Figures~\ref{claimview} and \ref{claimbrowse_diagram}). Think Link allows a user to easily access the best arguments for and against a claim, including arguments they might not otherwise have come across because they would not have been voiced by the web sites that the reader normally reads.
+As a user browses the web, Think Link highlights snippets of text that other users have identified as making claims that are interesting or controversial (Figure~\ref{highlight}). Interesting claims are highlighted in yellow and controversial claims are highlighted in red. If a user clicks on a highlighted snippet, Think Link will display an interface that allows a user to easily find snippets on other web pages that make related claims, including snippets that argue against the opinion put forward by the highlighted snippet (Figures~\ref{claimview} and \ref{claimbrowse_diagram}). Think Link allows a user to easily access the best arguments for and against a claim, including arguments they might not otherwise have come across because they would not have been voiced by the web sites that the user normally reads. 
 
-Think Link maintains a graph of known factual claims, their relationship to each other, and the snippets that hold these claims (Figure~\ref{summarygraph}). This graph is built entirely by users of the tool. Users create claims, connect claims, and identify snippets making claims. Similarly, users vote for snippets, claims, or connections that they believe are particularly important.
+Think Link maintains a graph of known factual claims, their relationship to each other, and the snippets (Figure~\ref{summarygraph}). This graph is built entirely by users of the tool. Users create claims, connect claims, and identify snippets making claims. Similarly, users vote for snippets, claims, or connections that they believe are particularly important.
 
 This graph allows one to ask interesting questions such as ``Which snippets on this page make claims that are opposed by snippets elsewhere on them web?'', ``What is the most trustworthy news source that makes this claim?'', ``What do my friends think about this idea?'', ``What are the most interesting claims about this topic that I haven't read before'', or ``What is the best argument against this claim, and what would be the best counter-argument to that?''.
 
@@ -153,9 +153,9 @@ Our user study participants identified several reasons why they would want to id
 
 \section{Mash Maker}
 
-Mash Maker~\cite{mashmaker} is a browser extension that understands the meaning of the web pages that users browse and suggests ways that it can enhance the current page so as to be more useful to the user. Mash Maker relies on users to teach it both how to understand web pages, and also how particular kinds of web pages might be enhanced in interesting ways.
+Mash Maker~\cite{mashmaker} is a browser extension that understands the meaning of the web pages that users browse and suggests ways that it can enhance the current page to be more useful to the user. Mash Maker relies on users to teach it both how to understand web pages, and also how particular kinds of web pages might be enhanced in interesting ways.
 
-When a user views a web page, Mash Maker will suggest on its toolbar ways that it can enhance the web site to make it more useful. If the user clicks on the button for such an enhancement then Mash Maker will apply the enhancement to the current page, potentially using other web sites and remote APIs. An improvement can also use third-party widgets that produce new visualizations or compute new data (Figure~\ref{mapinsert}). Mash Maker suggests enhancement based on the meaning of the current page, the meaning of pages that the user has recently browsed, and the behavior of other users.
+When a user views a web page, Mash Maker will suggest on its toolbar ways that it can enhance the web page to make it more useful. If the user clicks on the button for such an enhancement then Mash Maker will apply the enhancement to the current page, potentially using information from other web sites and remote APIs. An enhancement can also use third-party widgets that produce new visualizations or compute new data (Figure~\ref{mapinsert}). When suggesting enhancements, Mash Maker considers the meaning of the current page, the meaning of the pages that the user has recently browsed, the enhancements the user liked in the past, and the enhancements chosen by other users in similar circumstances.
 
 Our intention is that users should be able to use Mash Maker to enhance arbitrary web sites in arbitrary ways. Unlike ``mashup creation tools'' like Yahoo Pipes~\cite{pipes} or Microsoft Popfly~\cite{popfly}, we see Mash Maker not a tool for creating special-case mashup sites, but as a generalized tool that understands what you are doing and infers new mashups that can enhance your current experience, based on what others have tried in the past. 
 
