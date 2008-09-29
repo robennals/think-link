@@ -60,7 +60,7 @@ breaklinks=true,
 \alignauthor Beth Trushkowsky\\
        \affaddr{Computer Science Division}\\
        \affaddr{University of California at Berkeley}\\
-       \email{trush@berkeley.edu}
+       \email{trush@cs.berkeley.edu}
 }
 \sloppy 
 
@@ -77,21 +77,21 @@ In this paper, we promote the approach of ``participatory mashups'' in which the
 
 \section{Introduction}
 
-If we understand what the information on a page means then we can do useful things with it. We can connect the information to information elsewhere that might be relevant, we can compute new information from the information we have, and we can present users with new interfaces that are more useful than that provided by any individual site. 
+If we understand what the information on a page means then we can do useful things with it. We can connect the information to information elsewhere that might be relevant, compute new information from the information we have, and present users with new interfaces that are more useful than that provided by any individual site. 
 
 Some kinds of information are easier to understand than others, and mashups have so far understandably focused on the low-hanging fruit. Addresses follow an easily recognized pattern, and have led to a large number of useful mashups which plot various things on maps or work out what things are near to other things. Similarly, many mashups have made use of data that is available from APIs, or that can be easily scraped from popular web pages that the mashup has been hard-coded to understand.
 
 But what about everything else? 
 
-Much of the most interesting information on the web is available as unstructured natural language text: arguments, ideas, opinions, factual claims, jokes. Much of this is information that could benefit a lot from being mashed up. For example ``which of these claims is likely to be wrong?'', ``what other sites disagree with this opinion?'', ``is there a more reliable source that backs up this claim?'', or ``what ideas on this site would I be likely to find most interesting?''. While natural language processing techniques have achieved a lot, understanding such information in a fully automated way is hard.
+Much of the most interesting information on the web is in the form of unstructured natural language text: arguments, ideas, opinions, factual claims, jokes. Much of this is information that could benefit a lot from being mashed up. For example ``which of these factual claims is likely to be wrong?'', ``what other sites disagree with this opinion?'', ``is there a more reliable source that backs up this assertion?'', or ``what ideas on this site would I be likely to find most interesting?''. While natural language processing techniques have achieved a lot, understanding such information in a fully automated way is hard.
 
-Similarly, there is a lot of structured information stored in the ``long tail'' of web sites that are too small for it to be worth a mashup author writing a custom scraper or API interface for, but which may nonetheless be very interesting. For example, tables of data that have been entered by hand, or one of the many tiny web sites that display data from a database backend using their own custom template that nobody has ever written a scraper for.
+Similarly, there is a lot of structured information stored in the ``long tail'' of web sites that are too small for it to be worth a mashup author writing a custom scraper or API interface for, but which may nonetheless be interesting. For example, tables of data that have been entered by hand, or one of the many tiny web sites that display data from a database backend using their own custom template that nobody has ever written a scraper for.
 
-In this paper we argue for ``participatory mashups'' as a way to open up access to this data. In a participatory mashup we blur the line between the users and creators of a mashup by allowing the users of a mashup to teach the mashup how to understand new information, and how to connect information in new ways. By teaching a participatory mashup the meaning of some data, the user helps themselves, since the new information becomes part of the mashup they are interacting with, but they also help the wider community of users, since all other users can now benefit from the system understanding this data.
+In this paper we argue for ``participatory mashups'' as a way to open up access to this data. In a participatory mashup we blur the line between the users and creators of a mashup by allowing the users of a mashup to teach the mashup how to understand new information, and new connections between things. By teaching a participatory mashup the meaning of the data on a particular web page, the user helps themselves, since the mashup can now enhance that information for them, but they also help the wider community of users, since other users looking at the same page will be able to see an enhanced view, and the information on that page can now be used to enhance other pages on the web.
 
 We motivate this approach using two mashup tools that we have built. Think Link allows a user to identify factual claims on web pages, and uses this information to expose users to opposing points of view. Mash Maker allows users to teach it the meaning of structured data on arbitrary web sites, and then enhances these web sites to make them more useful, guided by example improvements provided by users.
 
-More generally, we consider a tool to be a ``participatory mashup'' if it relies on users to teach it what information on the web means, and how that information is connected together. We argue that this is an approach that other applications could also use to help them understand the web.
+More generally, we consider a tool to be a ``participatory mashup'' if it relies on users to teach it how to interpret and connect information on the web. We argue that this is an approach that other applications could also use to help them understand the web.
 
 \section{Think Link}
 
@@ -128,13 +128,13 @@ More generally, we consider a tool to be a ``participatory mashup'' if it relies
 \end{figure}
 
 
-Much concern has been expressed recently about biased or inaccurate information on web sites~\cite{bbcwebwarning,wikifalse}, and the media echo chamber problem in which people read web sites that feed their own views back to them, rather than exposing them to the opposing opinions held by other groups~\cite{echochamber,echochamber2}. 
+Much concern has been expressed recently about biased or inaccurate information on web sites~\cite{bbcwebwarning,wikifalse}, and the media echo chamber problem in which people read web sites that feed their own views back to them, rather than exposing people to the opposing opinions held by other groups~\cite{echochamber,echochamber2}. 
 
-Think Link~\cite{thinklink} is a Firefox extension that helps users evaluate the truth of statements they read, helps users be more easily exposed to a range of ideas and opinions that they might not otherwise encounter.
+Think Link~\cite{thinklink} is a Firefox extension that helps users evaluate the truth of statements they read exposes users to a range of ideas and opinions that they might not otherwise encounter.
 
 As a user browses the web, Think Link highlights snippets of text that other users have identified as making claims that are interesting or controversial (Figure~\ref{highlight}). Interesting claims are highlighted in yellow, and controversial claims are highlighted in red. If a user clicks on a highlighted snippet, Think Link will display an interface that allows a user to easily find snippets on other web pages that make related claims, including snippets that argue against the opinion put forward by the highlighted snippet (Figures~\ref{claimview} and \ref{claimbrowse_diagram}). Think Link allows a user to easily access the best arguments for and against a claim, including arguments they might not otherwise have come across because they would not have been voiced by the web sites that the reader normally reads.
 
-Think Link maintains a graph of known factual claims, their relationship to each other, and the snippets that hold these claims (Figure~\ref{summarygraph}). This graph is built entirely by users of the tool. Users create claims, users connect claims, and users identify snippets making claims. Similarly, users vote for snippets, claims, or connections that they believe are particularly important.
+Think Link maintains a graph of known factual claims, their relationship to each other, and the snippets that hold these claims (Figure~\ref{summarygraph}). This graph is built entirely by users of the tool. Users create claims, connect claims, and identify snippets making claims. Similarly, users vote for snippets, claims, or connections that they believe are particularly important.
 
 This graph allows one to ask interesting questions such as ``Which snippets on this page make claims that are opposed by snippets elsewhere on them web?'', ``What is the most trustworthy news source that makes this claim?'', ``What do my friends think about this idea?'', ``What are the most interesting claims about this topic that I haven't read before'', or ``What is the best argument against this claim, and what would be the best counter-argument to that?''.
 
@@ -148,23 +148,20 @@ This graph allows one to ask interesting questions such as ``Which snippets on t
 
 Identifying factual claims and the connections between them automatically would be very difficult using the current generation of natural language processing and automated reasoning tools; however this is quite an easy task for humans.  To create a new snippet, a user selects the text that is making an interesting factual claim, and then uses a claim browser interface to identify the claim being made (Figure~\ref{createprocess}). Users can connect claims together using a simple drag and drop interface.
 
-Our user study participants identified several reasons why they would want to mark up factual claims in documents they found. The most common reason people gave for identifying and organizing factual claims was if the person was writing an article or researching a topic and wanted to keep track of the information they had found. One user (who is an active blogger) also expressed an interest in finding and marking up instances of claims that he disagreed with, so that readers would see the arguments highlighted in red and be directed to the counter-arguments. The same user also expressed an interest in marking up claims in documents he had made in his own articles so that readers could quickly see the evidence he had found in support of his claims. 
-
-Like the work of Luis von Ahn~\cite{vonahn,recaptcha} or the ``invisible hand'' or Adam Smith the intention is that people should be motivated by self interest to do something that benefits the wider community.
-
+Our user study participants identified several reasons why they would want to identify and connect factual claims in documents they found. The most common reason was to organize information they had found while researching a topic or writing a document. One user (who is an active blogger) also expressed an interest in finding and marking up statements that he disagreed with, so that readers would see the arguments highlighted in red and be directed to the counter-arguments. The same user also expressed an interest in marking up claims made in his own articles so that readers could quickly see the evidence he had found in support of his claims. 
 
 
 \section{Mash Maker}
 
-Mash Maker~\cite{mashmaker} is a browser extension that understands the meaning of the pages that users browse and suggests ways that it can improve the current page so as to be more useful to the user. Mash Maker relies on users to teach it both how to understand web pages, and also how particular kinds of web page might be improved in interesting ways.
+Mash Maker~\cite{mashmaker} is a browser extension that understands the meaning of the web pages that users browse and suggests ways that it can enhance the current page so as to be more useful to the user. Mash Maker relies on users to teach it both how to understand web pages, and also how particular kinds of web pages might be enhanced in interesting ways.
 
-As views a web page, Mash Maker will suggest ways that it can make the page more useful, and suggest these improvements on its tool bar. If the user clicks on the button for such an improvement then Mash Maker will apply it to the current page, potentially using other web sites and remote APIs, and potentially applying widgets that produce new visualizations or compute new data (Figure~\ref{mapinsert}). Mash Maker suggests improvements based on the meaning of the current page, the meaning of pages that the user has recently browsed, and the behavior of other users.
+When a user views a web page, Mash Maker will suggest on its toolbar ways that it can enhance the web site to make it more useful. If the user clicks on the button for such an enhancement then Mash Maker will apply the enhancement to the current page, potentially using other web sites and remote APIs. An improvement can also use third-party widgets that produce new visualizations or compute new data (Figure~\ref{mapinsert}). Mash Maker suggests enhancement based on the meaning of the current page, the meaning of pages that the user has recently browsed, and the behavior of other users.
 
 Our intention is that users should be able to use Mash Maker to enhance arbitrary web sites in arbitrary ways. Unlike ``mashup creation tools'' like Yahoo Pipes~\cite{pipes} or Microsoft Popfly~\cite{popfly}, we see Mash Maker not a tool for creating special-case mashup sites, but as a generalized tool that understands what you are doing and infers new mashups that can enhance your current experience, based on what others have tried in the past. 
 
-Users can contribute to Mash Maker in several different ways. They can teach Mash Maker how to understand new kinds of web site, they can write new widgets, and they can show Mash Maker new ways that it can improve web pages that contain particular kinds of data. A user teaches Mash Maker how to extract information from a particular kind of web page by opening the Mash Maker extractor editor (Figure~\ref{extractedit}) and picking out examples of things on the page that the user thinks is interesting. As more users give Mash Maker more examples, Mash Maker gets better at understanding what pages mean. Unlike tools like Dapper~\cite{dapper} extractors are not owned by particular users. Instead an extractor is built up from examples given by all users on the web. 
+Users can contribute to Mash Maker in several different ways. They can teach Mash Maker how to understand new kinds of web site, they can write new widgets, and they can show Mash Maker new ways that it can improve web pages that contain particular kinds of data. A user teaches Mash Maker how to extract information from a particular kind of web page by opening the Mash Maker extractor editor (Figure~\ref{extractedit}) and picking out examples of things on the page that the user thinks are interesting. As users give Mash Maker more examples, Mash Maker gets better at understanding what pages mean. Unlike tools like Dapper~\cite{dapper} extractors are not owned by particular users. Instead an extractor is built up from examples given by all users on the web. 
 
-Given the huge number of differently formatted web sites on the web, it would not be practical for Mash Maker to be able to understand such a large range of web sites without users participating to teach in what different sites mean. For the users, the benefit of teaching Mash Maker how to understand a web site is that they get to use an enhanced version of the web site that Mash Maker has improved for them.
+Given the huge number of differently formatted web sites on the web, it would not be practical for Mash Maker to be able to understand such a large range of web sites without users providing some form of guidance. For the users, the benefit of teaching Mash Maker how to understand a web site is that they get to use an enhanced version of the web site that Mash Maker has improved for them.
 
 
 \begin{figure}[tb]
@@ -195,16 +192,16 @@ Given the huge number of differently formatted web sites on the web, it would no
 
 \section{Patterns vs Instances}
 
-Users teach Mash Maker ``patterns'' that Mash Maker can use to understand a large number of similarly formatted web pages (e.g. how to understand a flight listing on Expedia). This differs from Think Link, in which users pick out individual instances of factual claims which are not generalized to automatically find more snippets.
+Users teach Mash Maker ``patterns'' that it can use to understand a large number of similarly formatted web pages (e.g. how to understand a flight listing on Expedia). This differs from Think Link, in which users pick out individual instances of factual claims which are not generalized to automatically find more snippets.
 
-In the future, we plan to extend Think Link with natural language processing technology so that Think Link can automatically find new snippets, based on the examples it has been given. For example, if many users have shown Think Link example snippets that make the claim ``global warming is man made'', then Think Link could use these examples to find other snippets that may also be making this claim. At the simplest level, this could be done using simple textual similarity, similar to that done by Google Book Quotations~\cite{quotations}.
+In the future, we plan to extend Think Link with natural language processing technology so that Think Link can automatically find new snippets, based on the examples it has been given. For example, if many users have shown Think Link example snippets that make the claim ``global warming is man made'', then Think Link could use these examples to find other snippets that may also be making this claim. At the simplest level, this could be done using textual similarity, similar to that done by Google Book Quotations~\cite{quotations}.
 
 
 \section{Related Work}
 
-The notion of a ``participatory mashup'' is somewhat fuzzy, and indeed some previous work can be considered to fit this description to some extent. To be a ``true'' participatory mashup, we believe a tool should not just allow users to contribute content, but allow users to teach it how to understand the meaning of content that already exists on the web, and use this knowledge to help other users of the tool.
+The notion of a ``participatory mashup'' is somewhat fuzzy, and some existing systems fit this description to some extent. To be a ``true'' participatory mashup, we believe a tool should not just allow users to contribute content, but allow users to teach it how to understand the meaning of content that already exists on the web, and use this knowledge to help other users of the tool.
 
-reCAPTCHA~\cite{recaptcha} gives users the task of correctly transcribing scanned books as a test to see if they are human. Users thus unintentionally help machines better understand this information. Luis von Ahn has also shown how users can be persuaded to teach a system what data means by making it fun~\cite{vonahn}. Our approach to persuading users to teach us what data means is to make this data immediately useful to them.
+reCAPTCHA~\cite{recaptcha} gives a user the task of correctly transcribing text from a scanned book as a test to see if the user is human. Users thus unintentionally help machines better understand the books. Luis von Ahn has also shown how users can be persuaded to help a machine understand things by making the process fun~\cite{vonahn}. We persuade users to show us how to understand things by using the information to help the user themselves.
 
 Online mashup creation tools such as Yahoo Pipes~\cite{pipes} or Microsoft Popfly~\cite{popfly} allow users to contribute new mashups. These tools treat each mashup as a separate entity and do not enable users to contribute knowledge about the web that can be used by other mashups.
 
@@ -213,7 +210,6 @@ Dapper~\cite{dapper} allows users to create new web scrapers, effectively creati
 Like Think Link, SpinSpotter~\cite{spinspotter} also uses a browser plugin to help users identify and share instances of media bias and misrepresentation. SpinSpotter allows users to annotate web pages with comments about the spin they think is present and suggest textual edits. This differs from Think Link, which attempts to understand what claims are being made and relate them to claims made elsewhere on the web.
 
 FreeBase~\cite{freebase} is an open database of knowledge that anyone can contribute to. While FreeBase does not understand the meaning of existing web sites, it does allow users to contribute knowledge that mashups can use.
-
 
 
 \section{Acknowledgments}
