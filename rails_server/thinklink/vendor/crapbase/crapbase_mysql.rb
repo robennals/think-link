@@ -8,23 +8,23 @@ require 'active_record'
 
 module CrapBase
 	def selectrows(table,key,family)
-		return "SELECT value FROM #{table}_#{family} WHERE keyname='#{key}' "
+		return "SELECT value FROM #{table}_#{family} WHERE keyname='#{esc key}' "
 	end
 
 	def get_column(table,key,family,column)
-		return sql_select_value(selectrows(table,key,family) + " AND columnname='#{column}'")
+		return sql_select_value(selectrows(table,key,family) + " AND columnname='#{esc column}'")
 	end
 	
 	def get_all(table,key,family)
-		return sql_select_all("SELECT column,value FROM #{table}_#{family} WHERE keyname='#{key}'")
+		return sql_select_all("SELECT column,value FROM #{table}_#{family} WHERE keyname='#{esc key}'")
 	end
 
 	def get_slice(table,key,family,start,count)
-		return sql_select_all("SELECT column,value FROM #{table}_#{family} WHERE keyname='#{key}' LIMIT #{start},#{count}")
+		return sql_select_all("SELECT column,value FROM #{table}_#{family} WHERE keyname='#{esc key}' LIMIT #{start},#{count}")
 	end
 
 	def get_column_count(table,key,family)
-		return sql_select_value("SELECT COUNT(column) FROM #{table}_#{family} WHERE keyname='#{key}'")
+		return sql_select_value("SELECT COUNT(column) FROM #{table}_#{family} WHERE keyname='#{esc key}'")
 	end
 	
 	def insert(table,key,family,column,value)
@@ -38,7 +38,7 @@ module CrapBase
 				if value.class == Hash
 					value = value.to_json
 				end
-				sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{key}','#{column}','#{value}')")
+				sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{esc key}','#{esc column}','#{esc value}')")
 			end
 		end
 	end
@@ -70,10 +70,18 @@ module CrapBase
 					CREATE TABLE IF NOT EXISTS #{table}_#{family} (
 						keyname VARCHAR( 2048 ) NOT NULL ,
 						columnname VARCHAR( 2048 ) NOT NULL ,
-						value VARCHAR ( 204 ),
+						value VARCHAR ( 4096 ),
 						INDEX ( keyname(64) ),
 						INDEX ( columnname(64) )
 						)")
+			end
+		end
+	end
+	
+	def delete_tables tables
+		tables.each do |table,families|
+			families.each do |family|
+				sql_execute "DROP TABLE #{table}_#{family}"
 			end
 		end
 	end
@@ -123,6 +131,10 @@ private
 	
 	def sql_execute(sql)
 		ActiveRecord::Base.connection.execute(sql)
+	end
+	
+	def esc(str)	
+		return Mysql::escape_string(str.to_s)
 	end
 	
 end

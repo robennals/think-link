@@ -1,6 +1,6 @@
 
 require 'crapbase/crapbase_mysql'
-require 'json'
+# require 'json'
 
 module DataStore
 	include CrapBase
@@ -76,12 +76,11 @@ private
 			:obj => [:info, :snipinfo, :userinfo, :linkinfo, :ratings, 
 									:links_from, :links_to, :avg_rating],
 			:url => [:snippets],
-			:compatmap => [:claim,:topic,:user]
+			:compatmap => [:claim,:topic,:user,:snippet]
 			)
 				
 		#url -> snippet info
 		add_trigger :table => :obj, :family => :snipinfo do |table,key,values|
-			debugger
 			info = values[:snipinfo]
 			insert :url, info[:url], :snippets, key, info
 		end
