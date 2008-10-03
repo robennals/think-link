@@ -6,7 +6,7 @@ require 'active_record'
 	#				- allowing arbitrary criteria
 
 
-class CrapBase
+module CrapBase
 	def selectrows(table,key,family)
 		return "SELECT value FROM #{table}_#{family} WHERE keyname='#{key}' "
 	end
@@ -38,7 +38,7 @@ class CrapBase
 				if value.class == Hash
 					value = value.to_json
 				end
-				return sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{key}','#{column}','#{value}')")
+				sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{key}','#{column}','#{value}')")
 			end
 		end
 	end
@@ -69,10 +69,10 @@ class CrapBase
 				sql_execute("
 					CREATE TABLE IF NOT EXISTS #{table}_#{family} (
 						keyname VARCHAR( 2048 ) NOT NULL ,
-						columname VARCHAR( 2048 ) NOT NULL ,
+						columnname VARCHAR( 2048 ) NOT NULL ,
 						value VARCHAR ( 204 ),
-						PRIMARY KEY ( keyname(64) ),
-						KEY ( columname(64) )
+						INDEX ( keyname(64) ),
+						INDEX ( columnname(64) )
 						)")
 			end
 		end
@@ -81,9 +81,9 @@ class CrapBase
 private	
 	def run_triggers(table,key,valuemap)
 		@triggers.each do |trigger|
-			opts = trigger.opts
+			opts = trigger[:options]
 			if opts[:table] == table 
-				if !trigger[:opts].has_key?(opts[:family]) || valuemap.has_key?(opts[:family])
+				if opts.has_key?(opts[:family]) || valuemap.has_key?(opts[:family])
 					if trigger[:keys]
 						trigger[:keys].push key
 						if !trigger[:thread]
@@ -104,7 +104,7 @@ private
 		end
   end
 		
-	def initialize
+	def initialize_crapbase
 		@triggers = []
 		@batch_triggers = []
 	end
