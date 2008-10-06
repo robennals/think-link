@@ -38,13 +38,21 @@ module CrapBase
 				if value.class == Hash
 					value = value.to_json
 				end
-				sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{esc key}','#{esc column}','#{esc value}')")
+				sql_insert("INSERT DELAYED INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{esc key}','#{esc column}','#{esc value}')")
 			end
 		end
 	end
 
 	def batch_insert_blocking(table,key,valuemap)
-		batch_insert(table,key,valuemap)
+		run_triggers(table,key,valuemap)
+		valuemap.each do |family, familymap|
+			familymap.each do |column, value|
+				if value.class == Hash
+					value = value.to_json
+				end
+				sql_insert("INSERT INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{esc key}','#{esc column}','#{esc value}')")
+			end
+		end
 	end
 	
 	def add_trigger(options,&callback)
@@ -73,7 +81,7 @@ module CrapBase
 						value VARCHAR ( 4096 ),
 						INDEX ( keyname(64) ),
 						INDEX ( columnname(64) )
-						)")
+						) ENGINE = MYISAM")
 			end
 		end
 	end
@@ -87,27 +95,36 @@ module CrapBase
 	end
 		
 private	
+	def matches(table,valuemap,opts)
+		if opts[:table] != table
+			return false
+		elsif opts[:family] && !valuemap.has_key?(opts[:family])
+			return false
+		elsif opts[:column] && !valuemap[opts[:family]].has_key?(opts[:column])
+			return false
+		else
+			return true
+		end		
+	end
+
 	def run_triggers(table,key,valuemap)
 		@triggers.each do |trigger|
-			opts = trigger[:options]
-			if opts[:table] == table 
-				if opts.has_key?(opts[:family]) || valuemap.has_key?(opts[:family])
-					if trigger[:keys]
-						trigger[:keys].push key
-						if !trigger[:thread]
-							trigger[:thread] = Thread.new do
-								if opts[:delay]
-									sleep opts[:delay]									
-								end
-								trigger[:callback].call(trigger[:keys])
-								trigger[:keys] = []
-								trigger[:thread] = nil
+			if matches(table,valuemap,trigger[:options])
+				if trigger[:keys]
+					trigger[:keys].push key
+					if !trigger[:thread]
+						trigger[:thread] = Thread.new do
+							if opts[:delay]
+								sleep opts[:delay]									
 							end
+							trigger[:callback].call(trigger[:keys])
+							trigger[:keys] = []
+							trigger[:thread] = nil
 						end
-					else
-						trigger[:callback].call(table,key,valuemap)
 					end
-				end				
+				else
+					trigger[:callback].call(table,key,valuemap)
+				end
 			end
 		end
   end

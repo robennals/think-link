@@ -31,14 +31,14 @@ module Migrate
 
 	def migrate_claims
 		(sql_select_all "SELECT * FROM points").each do |claim|
-			id = add_node point['txt'],:claim,get_newid(claim['user_id'], :user)
+			id = add_node claim['txt'],:claim,get_newid(claim['user_id'], :user)
 			set_newid claim['id'], id, :claim
 		end
 	end
 	
 	def migrate_topics
 		(sql_select_all "SELECT * FROM topics").each do |topic|
-			id = add_node topic['txt'],:claim,get_newid(topic['user_id'], :user)
+			id = add_node topic['txt'],:topic,get_newid(topic['user_id'], :user)
 			set_newid topic['id'], id, :topic
 		end
 	end
