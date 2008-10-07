@@ -5,13 +5,23 @@ module Migrate
 	include DataStore
 
 	def migrate_to_scads
+		puts "--users--"
 		migrate_users
+		puts "--snippets--"
 		migrate_snippets
+		puts "--claims--"
 		migrate_claims
+		puts "--topics--"
 		migrate_topics
+		puts "--flush--"
+		flush_tables
+		puts "--claim connections--"
 		migrate_claim_connections
+		puts "--snippet connections--"
 		migrate_snippet_connections
+		puts "--topic connections--"
 		migrate_topic_connections
+		puts "--claim topic connections--"
 		migrate_claim_topic_connections
 	end
 
@@ -57,7 +67,7 @@ module Migrate
 	
 	def migrate_topic_connections
 		(sql_select_all "SELECT * FROM topic_links").each do |link|
-			add_link get_newid(link['parent_id'],:topic),"subsumes",get_newid(link['child_id'],:topic)
+			add_link get_newid(link['child_id'],:topic),"refines",get_newid(link['parent_id'],:topic)
 		end
 	end
 		

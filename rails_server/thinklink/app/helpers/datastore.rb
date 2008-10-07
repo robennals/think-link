@@ -19,7 +19,7 @@ module DataStore
 	end
 			
 	def snippets_for_url(url)
-		return get_all("url",url,snippets)
+		return get_all(:url,url,:snippets)
 	end
 	
 	def add_node(text,type,user)  #claim or topic
@@ -34,13 +34,13 @@ module DataStore
 		return id
 	end
 	
-	def get_links(nodeid)
+	def get_links(id)
 		from = get_all :objgen,id,:links_from
 		to = get_all :objgen,id,:links_to
 		return {:links_from => from, :links_to => to}
 	end
 	
-	def add_node_rating(id,user,rating)
+	def add_rating(id,user,rating)
 		insert :obj,id,:ratings,user,rating
 	end
 	
@@ -64,7 +64,7 @@ private
 	def get_tables
 		return { 
 			:obj => [:info, :ratings],
-			:objgen => [:links_from, :links_to, :avg_rating, :props],
+			:objgen => [:links_from, :links_to, :props],
 			:url => [:snippets],
 			:email => [:user],
 			:compatmap => [:claim,:topic,:user,:snippet]
@@ -75,27 +75,29 @@ private
 		delete_tables(get_tables()) 
 	end
 
-	def update_link(key,info)
-		subjinfo = get_all :obj,info[:subject],:info
-		objinfo = get_all :obj,info[:object],:info
-		insert :objgen,info[:subject],:links_from,key,
-			{:verb => info[:verb], :object=>info[:object], :text => objinfo[:text]}
-		insert :objgen,info[:object],:links_to,key,info
-			{:verb => info[:verb], :subject=>info[:subject], :text => subjinfo[:text]}
-	end
-
 	def update_obj_links(key)
 		links_to = get_all :objgen,key,:links_to
 		links_to.each do |object,json|
-			link = JSON.parse json
-			update_link(key,{:object => object,:subject=>link[:subject],:verb => link[:verb]} 
+			link = ActiveSupport::JSON.decode json
+			update_link(key,{:object => object,:subject=>link[:subject],:verb => link[:verb]}) 
 		end
 		links_from = get_all :objgen,key,:links_from
 		links_from.each do |subject,json|
-			link = JSON.parse json
-			update_link(key,{:object => object,:subject=>link[:subject],:verb => link[:verb]} 
+			link = ActiveSupport::JSON.decode json
+			update_link(key,{:object => object,:subject=>link[:subject],:verb => link[:verb]}) 
 		end
+	end
 
+	def update_link(key,info)
+		subjinfo = get_all :obj,info[:subject],:info
+		subjprops = get_all :objgen,info[:subject],:props
+		objinfo = get_all :obj,info[:object],:info
+		objprops = get_all :objgen,info[:object],:props
+
+		insert :objgen,info[:subject],:links_from,key,
+			objprops.merge(:verb => info[:verb], :object=>info[:object], :text => objinfo['text'])
+		insert :objgen,info[:object],:links_to,key,
+			subjprops.merge(:verb => info[:verb], :subject=>info[:subject], :text => subjinfo['text'])
 	end
 
 	def initialize_datastore
@@ -116,26 +118,21 @@ private
 		end
 		
 		#link -> related objects for each linked object
+		#ISSUE: this updates the link immediately, and so we may see stale data
 		add_trigger :table => :obj, :family => :info, :column => :subject do |table,key,values|
-			info = values[:info]
-			subjinfo = get_all :obj,info[:subject],:info
-			objinfo = get_all :obj,info[:object],:info
-			insert :objgen,info[:subject],:links_from,key,
-				{:verb => info[:verb], :object=>info[:object], :text => objinfo[:text]}
-			insert :objgen,info[:object],:links_to,key,info
-				{:verb => info[:verb], :subject=>info[:subject], :text => subjinfo[:text]}
-
-#			update_link key,values[:info]
+			update_link key,values[:info]
 		end
 		
 		#link -> mark item as being supported or opposed when link created
 		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
 			info = values[:info]
 			if info[:verb] == 'opposes'
-				insert :objgen,values[:object],:props,:opposed,true
+				insert :objgen,info[:object],:props,:opposed,true
+				dirty_object :obj,key,:links
 			elsif 
 				info[:verb] == 'supports'
-				insert :objgen,values[:object],:props,:supported,true
+				insert :objgen,info[:object],:props,:supported,true
+				dirty_object :obj,key,:links
 			end
 		end
 		
@@ -145,15 +142,46 @@ private
 				ratings = get_all :obj,key,:ratings
 				sum = 0
 				count = 0
-				ratings.each do |rating|
+				ratings.each do |user,rating|
 					sum += rating
 					count += 1
 				end
-				insert :objgen,key,:avg_rating,:rating,sum/count
+				insert :objgen,key,:props,:avg_rating,sum/count
 			end
 		end		
-				
+	
+		# --- TEST API: for better derived indexes ---
+		
+		# dirty an object when there is a link to it   (full query language wouldn't require these)
+		#	add_dirty_link :obj, :info, :subject, :obj, :link
+		#	add_dirty_link :obj, :info, :object, :obj, :link
+
+		#update links to this object whenever it changes
+		add_batch_trigger :table => :obj, :family => :info, :column => :text, :delay => 5 do |keys|
+			keys.each do |key|
+				links_to = get_all :objgen,key,:links_to
+				links_to.each do |object,json|
+					link = ActiveSupport::JSON.decode json
+					update_link(key,{:object => object,:subject=>link['subject'],:verb => link['verb']}) 
+				end
+				links_from = get_all :objgen,key,:links_from
+				links_from.each do |subject,json|
+					link = ActiveSupport::JSON.decode json
+					update_link(key,{:object => link['object'],:subject => subject,:verb => link['verb']})
+				end
+			end			
+		end	
+#		
+#		#every few seconds, update 
+#		add_batch_trigger :table => :obj, :family => :info, :column => :verb, :delay => 5 do |keys|
+#			keys.each do |key|
+#				info = get_all :obj,key,:info
+#				update_link key,info
+#			end
+#		end
 	end
+
+
 	
 	#need: no be able to update different parts of the YAML for a single snippet
 	# with different queries
