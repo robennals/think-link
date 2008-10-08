@@ -69,7 +69,16 @@ module CrapBase
 	end	
 	
 	def get_column_json(table,key,family,column)
-		JSON.parse(get_column(table,key,family,column))
+		ActiveSupport::JSON.decode(get_column(table,key,family,column))
+	end
+	
+	def get_all_json(table,key,family)
+		hsh = get_all(table,key,family)
+		out = {}
+		hsh.each do |key,value|
+			out[key] = ActiveSupport::JSON.decode(value)
+		end
+		return out
 	end
 	
 	def new_guid

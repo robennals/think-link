@@ -80,67 +80,50 @@ function tl_point_browser() {
 		me.style.position = "fixed";
 		me.style.top = "50px";
 		me.style.left = "200px";
-//		me.style.width = (window.innerWidth * (2/3)) + "px";
 		me.style.width = Math.min((window.innerWidth - 250),550) + "px";
 
 		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
 		var position = findPos(document.getElementById(this.divID));
 		
-		var scriptID = "tl_point_ajax";
-		var thinklink_callback;
-		doAJAX("tl_get_point_info",this.pointsURL+"?id="+this.pointID,function(result){
-			that.resultsObj = result;
-			that.pointText = that.resultsObj['point_info'][0].txt;
+		var titleBar = $("<div/>").appendTo($("#"+that.divID))
+			.attr("id","tl_pb_title")
+			.css("margin-bottom","0px")
+			.css("cursor","move")
+			.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
 
-			var titleBar = $("<div/>").appendTo($("#"+that.divID))
-				.attr("id","tl_pb_title")
-				.css("margin-bottom","0px")
-				.css("cursor","move")
-				.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
+			//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
+			.addClass("tl_dialog_title");
 
-				//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
-				.addClass("tl_dialog_title");
-
-			var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-			var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
-			var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);
-			
-			openButton.click(function(){
-				window.open(thinklink_mainhome);
-			});
-
-
-			var defaultText ="";
-			if (that.resultsObj['point_info'][0].agree=="1") { defaultText="I agree"; }
-			else if (that.resultsObj['point_info'][0].agree=="0") {defaultText="I disagree"; }
-
-			var explainSpan = $("<span/>").css("padding-left","10px").text(defaultText);
-			explainSpan.appendTo(titleBox);	
-
-			var close = $("<img/>")
-				.css("padding-top","2px")
-				.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
-				.click(function(){
-					that.hideMe();
-				});
-			
-			// add actual content
-			var frameholder = document.createElement("div");
-			frameholder.style.height = (window.innerHeight * (2/3)) + "px";
-
-			var pointframe = document.createElement("iframe");
-			pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
-			pointframe.style.width="100%";
-			pointframe.style.height="100%";
-			pointframe.style.overflow = "auto";
-			pointframe.setAttribute("id","tl_point_frame");
-			frameholder.appendChild(pointframe);
-			frameholder.style.width="100%";
-//			frameholder.style.height="100%";
-			$("#"+that.divID).append($(frameholder));
-
-			that.showMe();	
+		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
+		var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
+		var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);	
+		openButton.click(function(){
+			window.open(thinklink_mainhome);
 		});
+
+		var close = $("<img/>")
+			.css("padding-top","2px")
+			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
+			.click(function(){
+				that.hideMe();
+			});
+		
+		// add actual content
+		var frameholder = document.createElement("div");
+		frameholder.style.height = (window.innerHeight * (2/3)) + "px";
+
+		var pointframe = document.createElement("iframe");
+		pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
+		pointframe.style.width="100%";
+		pointframe.style.height="100%";
+		pointframe.style.overflow = "auto";
+		pointframe.setAttribute("id","tl_point_frame");
+		frameholder.appendChild(pointframe);
+		frameholder.style.width="100%";
+//			frameholder.style.height="100%";
+		$("#"+that.divID).append($(frameholder));
+
+		that.showMe();	
 	}
 
 

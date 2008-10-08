@@ -2,7 +2,7 @@
 require 'datastore.rb'
 
 module Migrate
-	include DataStore
+	include Datastore
 
 	def migrate_to_scads
 		puts "--users--"

@@ -13,6 +13,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+class Store
+	include Datastore
+	def initialize
+		initialize_datastore
+	end
+end
+
+$store = Store.new
+
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 	def auth_correct?(email = cookies[:email], password = cookies[:password])
@@ -35,12 +44,23 @@ module ApplicationHelper
 		auth_correct? #will set up @user param
 	end
 	
+	
+	def api_emit(obj,opts = {})
+		respond_to do |format|
+			format.html {}
+			format.xml { render :xml => obj.to_xml(opts)}
+			format.json { render :text => obj.to_json(opts)}
+			format.js {render :text => "thinklink_callback(" + obj.to_json(opts) + ")"}
+		end
+	end
+	
+	
 	def emit(obj,opts = {})
 		respond_to do |format|
 			format.html {}
 			format.xml { render :xml => obj.to_xml(opts)}
 			format.json { render :text => obj.to_json(opts)}
-			format.js {render :text => "tl_callback(" + obj.to_json(opts) + ")"}
+			format.js {render :text => "thinklink_callback(" + obj.to_json(opts) + ")"}
 		end
 	end
 	
@@ -77,7 +97,7 @@ module ApplicationHelper
 	end
 
 	def initialize
-		@uniq = 0
+		@uniq = 0		
 	end
 
 	def getUniq

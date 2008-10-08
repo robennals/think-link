@@ -4,7 +4,7 @@
 require 'crapbase/crapbase_mysql'
 # require 'json'
 
-module DataStore
+module Datastore
 	include CrapBase
 
 	def get_url_snippets(url)
@@ -17,9 +17,26 @@ module DataStore
 				:info => {:type => :snippet, :text => text, :url => url, :realurl => realurl, :title => title} 
 		return id
 	end
+	
+	def claim_for_snippet(key)
+		links = get_all_json :objgen,key,:links_from
+		links.each do |key,value|
+			value['verb'] = 'states'
+			claim = value['object']
+			info = get_all :obj,claim,:info
+			props = get_all :objgen,claim,:props
+			return {:id => value['object'], :text => info['text']}.merge(props)
+		end
+		return nil
+	end
 			
-	def snippets_for_url(url)
-		return get_all(:url,url,:snippets)
+	def url_snippets(url)
+		snips = get_all_json :url,url,:snippets
+		out = []
+		snips.each do |key,data|		
+			out.push :text => data['text'], :id => key, :claim => claim_for_snippet(key)
+		end
+		return out
 	end
 	
 	def add_node(text,type,user)  #claim or topic
@@ -118,10 +135,16 @@ private
 		end
 		
 		#link -> related objects for each linked object
-		#ISSUE: this updates the link immediately, and so we may see stale data
-		add_trigger :table => :obj, :family => :info, :column => :subject do |table,key,values|
-			update_link key,values[:info]
+		#ISSUE: this updates the link immediately, and so we may see stale data		
+		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
+			info = values[:info]			
+			insert :objgen,info[:subject],:links_from,key,info
+			insert :objgen,info[:object],:links_to,key,info
 		end
+
+#		add_trigger :table => :obj, :family => :info, :column => :subject do |table,key,values|
+#			update_link key,values[:info]
+#		end
 		
 		#link -> mark item as being supported or opposed when link created
 		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
@@ -135,6 +158,14 @@ private
 				dirty_object :obj,key,:links
 			end
 		end
+
+#		add_batch_trigger :table => :obj, :family => :info, :column => :url, :delay => 1 do |keys|
+#			keys.each do |key|
+#				info = get_all :obj,key,:info
+#				links_to = get_all :objgen,key,:links_to
+#				
+#			end
+#		end
 		
 		#delayed rating aggregation
 		add_batch_trigger :table => :obj, :family => :ratings, :delay => 10 do |keys|
@@ -157,20 +188,20 @@ private
 		#	add_dirty_link :obj, :info, :object, :obj, :link
 
 		#update links to this object whenever it changes
-		add_batch_trigger :table => :obj, :family => :info, :column => :text, :delay => 5 do |keys|
-			keys.each do |key|
-				links_to = get_all :objgen,key,:links_to
-				links_to.each do |object,json|
-					link = ActiveSupport::JSON.decode json
-					update_link(key,{:object => object,:subject=>link['subject'],:verb => link['verb']}) 
-				end
-				links_from = get_all :objgen,key,:links_from
-				links_from.each do |subject,json|
-					link = ActiveSupport::JSON.decode json
-					update_link(key,{:object => link['object'],:subject => subject,:verb => link['verb']})
-				end
-			end			
-		end	
+#		add_batch_trigger :table => :obj, :family => :info, :column => :text, :delay => 5 do |keys|
+#			keys.each do |key|
+#				links_to = get_all :objgen,key,:links_to
+#				links_to.each do |object,json|
+#					link = ActiveSupport::JSON.decode json
+#					update_link(key,{:object => object,:subject=>link['subject'],:verb => link['verb']}) 
+#				end
+#				links_from = get_all :objgen,key,:links_from
+#				links_from.each do |subject,json|
+#					link = ActiveSupport::JSON.decode json
+#					update_link(key,{:object => link['object'],:subject => subject,:verb => link['verb']})
+#				end
+#			end			
+#		end	
 #		
 #		#every few seconds, update 
 #		add_batch_trigger :table => :obj, :family => :info, :column => :verb, :delay => 5 do |keys|

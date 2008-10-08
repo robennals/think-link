@@ -34,7 +34,7 @@ function tl_margin()
 	// default left margin of page
 	this.leftmargin = window.getComputedStyle(document.body,"").marginLeft; //$("body").css("margin-left");
 	// where to get snippets for this margin
-	this.snippetURL = "get_snippets.php";
+	this.snippetURL = "url_snippets.js";
 	// url normalization tool
 	this.normTool = new tl_normurl();
 	// let user set title and author
@@ -234,9 +234,9 @@ function tl_margin()
 					that.addItem(new tl_snippet(
 						result[item].id,
 						result[item].creator,
-						unescape(result[item].snipText),
-						unescape(result[item].pointText),
-						result[item].pointID,
+						unescape(result[item].text),
+						unescape(result[item].claim.text),
+						result[item].claim.id,
 						result[item].opposed,
 						result[item].date
 					),result[item].bookmark);
