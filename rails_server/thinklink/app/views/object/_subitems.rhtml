@@ -1,0 +1,32 @@
+
+<% 
+@itemtxt = itemtxt
+
+def invert(verb)
+	if verb=="about"
+		return "claims about "+@itemtxt
+	elsif verb=="refines"
+		return "more specific topics"
+	elsif verb=="opposes"
+		return "opposed by"
+	elsif verb=="supports"
+		return "supported by"
+	elsif verb=="states"
+		return "snippets making this claim"
+	elsif verb=="related"
+		return "related"
+	end
+end
+
+	verbs = subitems.keys
+%>	
+<% verbs.each do |verb| %>
+	<div class="relationtitle"><%=invert verb%><img class="newthing" onclick="newThing(this,'<%=verb%>')" src="/images/add.png"/></div>	
+	<% subitems[verb].each do |link| %>
+		<%= render_partial 'object/draglabel', link, :label => nil %>	
+	<% end %>
+	<% if subitems[verb].empty? %>
+		<div class="empty">empty</div>
+	<% end %>
+<% end %>
+

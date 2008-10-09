@@ -47,18 +47,6 @@ function findSiblings(node){
 		}
 	}
 	return siblings;
-	
-//	var parent = findParentHolder(holder);
-//	var children = findChildHolders(parent);
-//	var siblings = [];
-//	for(var i = 0; i < children.length; i++){
-//		var child = children[i];
-//		if((child.getAttribute("tl_id") != holder.getAttribute("tl_id")) || 
-//				(child.getAttribute("tl_cls") != holder.getAttribute("tl_cls"))){
-//			siblings.push(child);
-//		}
-//	}	
-	return siblings;
 }
 
 function expandItem(idnum){
@@ -257,11 +245,11 @@ function selectItem(div){
 		if(cls == "Oppose"){
 			disableInput("pointname","Select a claim from the claim browser");
 		}
-		if(cls == "Point"){
+		if(cls == "point"){
 			enableInput("pointname");
 			pointname.value = normalizeText(div.textContent);
 		}
-		if(cls == "Topic"){
+		if(cls == "topic"){
 			disableInput("pointname","Select a claim from the claim browser");
 		}
 	}
@@ -337,7 +325,7 @@ function selectItem(div){
 			current.className = "item-parents";
 		});				
 		
-		$(group).animate({marginLeft:"0px",paddingLeft:"0px"},500,function(){
+		$(group).animate({marginLeft:"0px",paddingLeft:"0px",borderLeft:""},500,function(){
 			group.className = "item-current";
 		});
 
@@ -391,15 +379,8 @@ function updateSnippetPanelTitle(cls){
 }
 
 function getHolderUrl(holder){
-	var cls = holder.getAttribute("tl_cls");
 	var id = holder.getAttribute("tl_id");
-	if(cls == "Topic"){
-		return "/topics/"+id+"/";
-	}else if(cls == "Point"){
-		return "/points/"+id+"/";
-	}else if(cls == "Collection"){
-		return null;  // TODO: work out what to do here...
-	}
+	return "/object/"+id+"/";
 }
 
 function adjustPreview(itemid,cls) {

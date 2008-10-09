@@ -23,6 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :topics, :collection => {:hot => :post, :toplevel => :post, :recent => :post, :list => :get, :search => :get, :mine => :get}, :member => {:snippets => :post, :parents => :post, :show => :get, :points => :get, :parents => :get, :children => :get, :expandfolder => :post, :expand => :post, :parents => :post, :summary=>:post, :showajax => :post, :pathajax => :post}
 
 	map.resources :api, :collection => {:url_snippets => :get}
+	map.resources :object, :member => {:expand => :post, :parents => :post, :showmini => :get}
 
   # The priority is based upon order of creation: first created -> highest priority.
 

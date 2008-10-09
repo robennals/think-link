@@ -16,31 +16,27 @@
 #  This controller is used for API functions that don't really make sense as
 #  operations on objects. Some of these should perhaps be somewhere else
 
-class ApiController < ApplicationController
+class ObjectController < ApplicationController
+	layout 'mini'
 
-	def url_snippets
-		urls = gather_urls
-		snips = []
-		urls.each do |url|
-			snips.concat $store.url_snippets(url)
-		end
-		api_emit snips
-	end
-	
-private
+  def showmini
+		id = params[:id]
+		$store.log_view id
+		
+		@object = $store.get_links id
+  end
 
-	def gather_urls
-		count = 1
-		urls = {}
-		while params.has_key? "url#{count}".intern
-			urls[params["url#{count}".intern]] = true
-			count += 1
-		end
-		if params.has_key? :url
-			urls[params[:url]] = true
-		end
-		return urls.keys
+	def parents		
+		paritems = $store.get_links_from(params[:id])
+		render :partial => "paritems", :object => paritems
 	end
-	
+  
+  def expand
+  	$store.log_view params[:id]
+  	info = $store.get_info params[:id]
+ 		subitems = $store.get_links_to params[:id]
+		render :partial => "subitems", :object => subitems, :locals => {:itemtxt => info['text']}
+  end  
+ 
 
 end

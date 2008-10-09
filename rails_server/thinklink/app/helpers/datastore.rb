@@ -1,5 +1,23 @@
+#  Copyright 2008 Intel Corporation
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# All data access must go in this file
+# Every server request should perform all it's data access by calling ONE of these functions
 
 #TODO track deletions
+#TODO use denormalization to make get_links and url_snippets faster
 
 require 'crapbase/crapbase_mysql'
 # require 'json'
@@ -29,7 +47,8 @@ module Datastore
 		end
 		return nil
 	end
-			
+	
+	# get all the snippets for a url, including the first claim for each snippet		
 	def url_snippets(url)
 		snips = get_all_json :url,url,:snippets
 		out = []
@@ -38,7 +57,11 @@ module Datastore
 		end
 		return out
 	end
-	
+		
+	def log_view(id)
+		#TODO: implement this
+	end
+		
 	def add_node(text,type,user)  #claim or topic
 		id = new_guid
 		batch_insert :obj,id,:info => {:text => text, :type => type}
@@ -51,11 +74,38 @@ module Datastore
 		return id
 	end
 	
-	def get_links(id)
-		from = get_all :objgen,id,:links_from
-		to = get_all :objgen,id,:links_to
-		return {:links_from => from, :links_to => to}
+	def get_info(id)
+		info = get_all :obj,id,:info
+		props = get_all :objgen,id,:props
+		return info.merge(props).merge('id' => id)
 	end
+	
+	# get all the links to and from a snippet, and all the info for each of them
+	def get_links(id)
+		out = get_info id
+		out['from'] = get_links_from id
+		out['to'] = get_links_to id		
+		return out
+	end
+	
+	def get_links_to(id)
+		to = get_all_json :objgen,id,:links_to
+		links_to = {}
+		to.each do |key,link|
+			keypush links_to, link['verb'], get_info(link['subject'])
+		end
+		return links_to
+	end
+	
+	def get_links_from(id)
+		from = get_all_json :objgen,id,:links_from
+		links_from = {}
+		from.each do |key,link|
+			keypush links_from, link['verb'], get_info(link['object'])
+		end
+		return links_from
+	end
+	
 	
 	def add_rating(id,user,rating)
 		insert :obj,id,:ratings,user,rating
@@ -78,6 +128,13 @@ module Datastore
 
 
 private	
+	def keypush(hsh,key,val)
+		if !hsh.has_key? key
+			hsh[key] = []
+		end
+		hsh[key].push val
+	end
+
 	def get_tables
 		return { 
 			:obj => [:info, :ratings],

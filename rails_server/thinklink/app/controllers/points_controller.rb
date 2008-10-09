@@ -20,6 +20,9 @@ class PointsController < ApplicationController
  
   layout 'standard'
  
+ 
+ 	# --- things below here aren't used ---
+ 
   def initialize
   end
   
@@ -77,20 +80,20 @@ class PointsController < ApplicationController
     render :partial => 'points/points', :object => @points, :locals => {:options => {}}
   end
   
-  def show
-    @point = Point.find(params[:id])
-    
-    render :template => 'news/index', :object => nil, :locals => {:point => @point}
-    
-#    @title = "Point: "+@point.txt
-#    if @point.ismine(@user)
-#      @editlink = true
-#    end
+#  def show
+#    @point = Point.find(params[:id])
 #    
+#    render :template => 'news/index', :object => nil, :locals => {:point => @point}
 #    
- 
-    emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
-  end
+##    @title = "Point: "+@point.txt
+##    if @point.ismine(@user)
+##      @editlink = true
+##    end
+##    
+##    
+# 
+#    emit(@point,{:only => [:txt], :include => :snippets, :methods => :avgrating})
+#  end
   
   def showold
      @point = Point.find(params[:id])

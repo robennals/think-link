@@ -17,7 +17,6 @@ class SnippetsController < ApplicationController
 	layout 'standard';
 	auto_complete_for :snippet, :url
 
-
 	def index		
 		@title = "Recent Snippets"
 		@snippets = Snippet.all(:order => "created_at DESC")
