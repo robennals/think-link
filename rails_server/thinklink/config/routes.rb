@@ -23,7 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :topics, :collection => {:hot => :post, :toplevel => :post, :recent => :post, :list => :get, :search => :get, :mine => :get}, :member => {:snippets => :post, :parents => :post, :show => :get, :points => :get, :parents => :get, :children => :get, :expandfolder => :post, :expand => :post, :parents => :post, :summary=>:post, :showajax => :post, :pathajax => :post}
 
 	map.resources :api, :collection => {:url_snippets => :get}
-	map.resources :object, :member => {:expand => :post, :parents => :post, :showmini => :get}
+	map.resources :object, :member => {:expand => :post, :parents => :post, :showmini => :get, :recent => :post, :hot => :post, :search => :post}
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -57,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
   #   end
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "news"
+  map.root :controller => "object"
 
   # See how all your routes lay out with "rake routes"
 

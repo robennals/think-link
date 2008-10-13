@@ -724,7 +724,7 @@ h1 {
 
 .snipholder {
 	font-size: 13px;
-
+	margin-top: 5px;
 }
 
 .sniptext {
@@ -733,7 +733,7 @@ h1 {
 
 .snipbody {
 	padding: 5px;
-	margin: 5px;
+/*	margin: 5px; */
 	margin-left:0px;
 	font-size: 13px;
 	border: 1px solid grey;

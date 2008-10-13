@@ -2,6 +2,16 @@
 <% 
 @itemtxt = itemtxt
 
+if itemtype=="claim"
+	verbs = ["supports","opposes","states"]
+elsif itemtype=="topic"
+  verbs = ["refines","about"]
+elsif itemtype=="snippet"
+	verbs = ["states"]
+elsif itemtype=="recent" || itemtype=="search" || itemtype=="hot"
+	verbs = ["colitem"]
+end
+
 def invert(verb)
 	if verb=="about"
 		return "claims about "+@itemtxt
@@ -15,18 +25,30 @@ def invert(verb)
 		return "snippets making this claim"
 	elsif verb=="related"
 		return "related"
+	elsif verb=="colitem"
+		return "colitem"
 	end
 end
 
-	verbs = subitems.keys
+#	verbs = subitems.keys
 %>	
 <% verbs.each do |verb| %>
-	<div class="relationtitle"><%=invert verb%><img class="newthing" onclick="newThing(this,'<%=verb%>')" src="/images/add.png"/></div>	
-	<% subitems[verb].each do |link| %>
-		<%= render_partial 'object/draglabel', link, :label => nil %>	
+	<% if verb != "colitem" %>
+		<div class="relationtitle"><%=invert verb%><img class="newthing" onclick="newThing(this,'<%=verb%>')" src="/images/add.png"/></div>	
 	<% end %>
-	<% if subitems[verb].empty? %>
-		<div class="empty">empty</div>
+	<% if subitems.has_key? verb %>
+		<% subitems[verb].each do |link| %>
+			<% if verb == "states" %>
+				<%= render_partial 'object/snippet', link, :label => nil %>
+			<% else %>
+				<%= render_partial 'object/draglabel', link, :label => nil %>	
+			<% end %>
+		<% end %>		
+		<% if subitems[verb].empty? %>
+			<div class="empty">empty</div>
+		<% end %>
+	<% else %>
+			<div class="empty">empty</div>
 	<% end %>
 <% end %>
 

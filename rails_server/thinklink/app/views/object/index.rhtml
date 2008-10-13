@@ -1,0 +1,39 @@
+
+<div class="helpmessage">
+Use <b>drag and drop</b> to create new connections between claims and topics.
+</div>
+
+<% 
+	browserid1 = 1#getUniq
+	browserid2 = getUniq
+	if !defined? options
+		options = {}
+	end
+%>
+
+<div>
+
+<script language="javascript">
+	setDefaultBrowser(<%= browserid1 %>);
+	
+	var shown = false;
+	function toggleSecondBrowser(button){
+		$("#second_browser").animate({height:'toggle'},500);
+		shown = !shown;
+		if(shown){
+			button.value = "Close Second Browser";
+		}else{
+			button.value = "Open Second Browser";
+		}
+	}
+</script>
+
+
+<%= render_partial 'object/browser',@object, :idnum=>browserid1, :dragbar => true %>
+
+<input type="button" value="Close Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
+<div id="second_browser">
+<%= render_partial 'object/browser',@object, :idnum=>browserid2, :dragbar => true %>
+</div>
+	
+</div>

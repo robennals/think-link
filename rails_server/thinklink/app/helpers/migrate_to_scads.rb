@@ -34,7 +34,8 @@ module Migrate
 	
 	def migrate_snippets
 		(sql_select_all "SELECT * FROM snippets").each do |snippet|
-			id = add_snippet snippet['txt'], snippet['url'], snippet['realurl'],snippet['pagetitle']
+			id = add_snippet snippet['txt'], snippet['url'], 
+				snippet['realurl'],snippet['pagetitle'],get_newid(snippet['user_id'],:user)
 			set_newid snippet['id'], id, :snippet
 		end
 	end

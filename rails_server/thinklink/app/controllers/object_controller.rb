@@ -18,10 +18,12 @@
 
 class ObjectController < ApplicationController
 	layout 'mini'
+	
+	before_filter :setup_auth
 
   def showmini
 		id = params[:id]
-		$store.log_view id
+		$store.log_view @user['id'],id
 		
 		@object = $store.get_links id
   end
@@ -32,11 +34,45 @@ class ObjectController < ApplicationController
 	end
   
   def expand
-  	$store.log_view params[:id]
-  	info = $store.get_info params[:id]
- 		subitems = $store.get_links_to params[:id]
-		render :partial => "subitems", :object => subitems, :locals => {:itemtxt => info['text']}
+  	id = params[:id]
+  	$store.log_view @user['id'],id
+  	info = $store.get_info id
+ 		subitems = $store.get_links_to id
+		render :partial => "subitems", :object => subitems, :locals => {:itemtxt => info['text'], :itemtype => info['type']}
   end  
  
+ 	def index
+ 		@object = recent_object
+	end
+
+	def recent
+		render :partial => 'object/focusitem', :object => recent_object  
+	end
+	
+	def search
+		render :partial => 'object/focusitem', :object => search_object
+	end
+	
+
+private
+	def setup_auth
+		@user = $store.get_user cookies[:email], cookies[:password]
+		if !@user
+			@user = {'id' => 0, 'name' => 'no user logged in'}
+		end
+	end
+
+	def recent_object
+		recent = $store.get_recent @user['id']
+ 		return {'id' => 0, 'text' => "Recent Claims and Folders", 'type' => "recent", 'from' => {}, 
+	 		'to' => {"colitem" => recent}}
+	end
+	
+	def search_object
+		query = params[:query]
+		results = $store.search query
+		return {'id' => 0, 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
+			'to' => {"colitem" => results}}
+	end
 
 end

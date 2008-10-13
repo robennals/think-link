@@ -18,9 +18,12 @@
 
 #TODO track deletions
 #TODO use denormalization to make get_links and url_snippets faster
+#TODO search should use steming
 
 require 'crapbase/crapbase_mysql'
 # require 'json'
+
+$bad_words = ["the","and","his","her","from","his","has","from","then","can","will","new","one","two","our"]
 
 module Datastore
 	include CrapBase
@@ -29,11 +32,25 @@ module Datastore
 		return get_all("url",url,"snippets")
 	end
 	
-	def add_snippet (text,url,realurl,title)
+	def add_snippet (text,url,realurl,title,user)
 		id = new_guid
 		batch_insert :obj, id,
-				:info => {:type => :snippet, :text => text, :url => url, :realurl => realurl, :title => title} 
+				:info => {:type => :snippet, :text => text, :url => url, :realurl => realurl, :title => title, :user => user} 
 		return id
+	end
+	
+	def get_user(email,password)		
+		users = get_slice_json :email, email, :user, 0, 1
+		if users.empty?
+			return nil
+		end
+		user = users[users.keys.first]
+		user['id'] = users.keys.first
+		if user['password'] == password
+			return user
+		else
+			return nil
+		end
 	end
 	
 	def claim_for_snippet(key)
@@ -58,13 +75,27 @@ module Datastore
 		return out
 	end
 		
-	def log_view(id)
-		#TODO: implement this
+	def log_view(userid,id)			
+		now = Time.now.to_f
+		insert :user,userid,:recent,(-now),id
+	end
+	
+	def get_recent(userid)
+		results = []
+		recentids = get_slice :user,userid,:recent,0,50
+		seen = {}
+		recentids.each do |time,id|
+			if !seen.has_key? id 
+				seen[id] = true
+				results.push get_info(id)
+			end
+		end
+		return results
 	end
 		
 	def add_node(text,type,user)  #claim or topic
 		id = new_guid
-		batch_insert :obj,id,:info => {:text => text, :type => type}
+		batch_insert :obj,id,:info => {:text => text, :type => type, :user => user}
 		return id
 	end
 	
@@ -106,6 +137,27 @@ module Datastore
 		return links_from
 	end
 	
+	def search(phrase)
+		words = phrase.split ' '
+		idscore = {}
+		words.each do |word|
+			if word.length > 2 && !$bad_words.include?(word)
+				hits = get_all :word, word, :objects
+				freq = hits.length
+				hits.keys.each do |id|
+					idscore[id] = (1.0/freq) + idscore.fetch(id,0)
+				end
+			end 
+		end	
+		results = []
+		sorted = idscore.sort {|a,b| b[1] <=> a[1]}	
+		sorted.each do |idrow|
+			id = idrow[0]
+			results.push get_info(id)
+		end
+		return results
+	end
+	
 	
 	def add_rating(id,user,rating)
 		insert :obj,id,:ratings,user,rating
@@ -138,9 +190,11 @@ private
 	def get_tables
 		return { 
 			:obj => [:info, :ratings],
+			:user => [:recent],				# in addition to stuff in :obj
 			:objgen => [:links_from, :links_to, :props],
 			:url => [:snippets],
 			:email => [:user],
+			:word => [:objects,:props],
 			:compatmap => [:claim,:topic,:user,:snippet]
 		}	
 	end
@@ -199,10 +253,7 @@ private
 			insert :objgen,info[:object],:links_to,key,info
 		end
 
-#		add_trigger :table => :obj, :family => :info, :column => :subject do |table,key,values|
-#			update_link key,values[:info]
-#		end
-		
+
 		#link -> mark item as being supported or opposed when link created
 		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
 			info = values[:info]
@@ -215,14 +266,26 @@ private
 				dirty_object :obj,key,:links
 			end
 		end
-
-#		add_batch_trigger :table => :obj, :family => :info, :column => :url, :delay => 1 do |keys|
-#			keys.each do |key|
-#				info = get_all :obj,key,:info
-#				links_to = get_all :objgen,key,:links_to
-#				
-#			end
-#		end
+		
+		#object -> index of words used in the name
+		add_trigger :table => :obj, :family => :info, :column => :text do |table,key,values|
+			if values[:info][:type] != :snippet			
+				text = values[:info][:text]
+				text.split(' ').each do |word|
+					if word.length > 2 && !$bad_words.include?(word)
+						insert :word,word,:objects,key,''
+					end
+				end
+			end
+		end
+		
+		#count number of uses of each word
+		add_batch_trigger :table => :word, :family => :objects, :delay => 10 do |keys|
+			keys.each do |key|
+				count = get_column_count :word, key, :objects
+				insert :word, key, :props, :frequency, count
+			end
+		end
 		
 		#delayed rating aggregation
 		add_batch_trigger :table => :obj, :family => :ratings, :delay => 10 do |keys|
@@ -237,36 +300,6 @@ private
 				insert :objgen,key,:props,:avg_rating,sum/count
 			end
 		end		
-	
-		# --- TEST API: for better derived indexes ---
-		
-		# dirty an object when there is a link to it   (full query language wouldn't require these)
-		#	add_dirty_link :obj, :info, :subject, :obj, :link
-		#	add_dirty_link :obj, :info, :object, :obj, :link
-
-		#update links to this object whenever it changes
-#		add_batch_trigger :table => :obj, :family => :info, :column => :text, :delay => 5 do |keys|
-#			keys.each do |key|
-#				links_to = get_all :objgen,key,:links_to
-#				links_to.each do |object,json|
-#					link = ActiveSupport::JSON.decode json
-#					update_link(key,{:object => object,:subject=>link['subject'],:verb => link['verb']}) 
-#				end
-#				links_from = get_all :objgen,key,:links_from
-#				links_from.each do |subject,json|
-#					link = ActiveSupport::JSON.decode json
-#					update_link(key,{:object => link['object'],:subject => subject,:verb => link['verb']})
-#				end
-#			end			
-#		end	
-#		
-#		#every few seconds, update 
-#		add_batch_trigger :table => :obj, :family => :info, :column => :verb, :delay => 5 do |keys|
-#			keys.each do |key|
-#				info = get_all :obj,key,:info
-#				update_link key,info
-#			end
-#		end
 	end
 
 

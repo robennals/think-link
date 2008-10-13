@@ -25,7 +25,12 @@ module CrapBase
 	end
 
 	def get_slice(table,key,family,start,count)
-		return sql_select_all("SELECT columnname,value FROM #{table}_#{family} WHERE keyname='#{esc key}' LIMIT #{start},#{count}")
+		rows =  sql_select_all("SELECT columnname,value FROM #{table}_#{family} WHERE keyname='#{esc key}' ORDER BY columnname ASC LIMIT #{start},#{count}")
+		hsh = {}
+		rows.each do |row|
+			hsh[row['columnname']] = row['value']
+		end
+		return hsh
 	end
 
 	def get_column_count(table,key,family)
@@ -74,6 +79,15 @@ module CrapBase
 	
 	def get_all_json(table,key,family)
 		hsh = get_all(table,key,family)
+		out = {}
+		hsh.each do |key,value|
+			out[key] = ActiveSupport::JSON.decode(value)
+		end
+		return out
+	end
+
+	def get_slice_json(table,key,family,start,count)
+		hsh = get_slice(table,key,family,start,count)
 		out = {}
 		hsh.each do |key,value|
 			out[key] = ActiveSupport::JSON.decode(value)
@@ -165,7 +179,7 @@ private
 			if trigger[:keys] && trigger[:keys].length != 0
 				keys = trigger[:keys]
 				trigger[:keys] = {}
-				trigger[:callback].call(keys)
+				trigger[:callback].call(keys.keys)
 			end
 		end
 	end		

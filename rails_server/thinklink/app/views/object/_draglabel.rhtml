@@ -3,10 +3,22 @@
 if (!defined? idnum) || !idnum
 	idnum = getUniq 
 end
+
 itemid = draglabel['id']
 dragitem = draglabel
-itemtxt = escape_single_quotes(draglabel['text'])
+itemtxt = draglabel['text']
 itemtype = draglabel['type']
+
+opposed = draglabel.has_key? 'opposed'
+supported = draglabel.has_key? 'supported'
+
+if opposed
+	postfix = "_red"
+elsif supported
+	postfix = "_green"
+else
+	postfix = ""
+end
 
 if itemtype=="topic"
 	icon = "folder"
@@ -14,10 +26,16 @@ elsif itemtype=="claim"
 	icon = "lightbulb"
 elsif itemtype=="snippet"
 	icon = "comment"
+elsif itemtype=="recent"
+	icon = "time"
+else
+	icon = ""
 end
 
+icon += postfix
+
 %>
-		
+	
 
 	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=itemtype%>">		
 		<table class="dragtable">

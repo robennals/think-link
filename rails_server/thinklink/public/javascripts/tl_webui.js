@@ -447,28 +447,19 @@ function searchMode(idnum){
 
 function searchDo(idnum){
 	var query = getel("searchbox-"+idnum).value;
-	ajaxReplace("/points/searchajax?query="+query+"&"+params,"body-"+idnum);	
+	ajaxReplace("/object/search?query="+query,"body-"+idnum);	
 }
 
 function recentMode(idnum){
-	// getel("title-"+idnum).textContent = "My Recent Folders";
 	clearSelect(idnum);
 	getel("recent-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/topics/recent?"+params,"body-"+idnum);
+	ajaxReplace("/object/recent?"+params,"body-"+idnum);
 }
 
 function hotMode(idnum){
-//	getel("title-"+idnum).textContent = "Hot Topics";
 	clearSelect(idnum);
 	getel("hot-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/topics/hot?"+params,"body-"+idnum);
-}
-
-function topMode(idnum){
-	clearSelect(idnum);
-//	getel("title-"+idnum).textContent = "All Folders";
-//	getel("all-"+idnum).className = "browsetab browsetab_selected";
-	ajaxReplace("/topics/toplevel?"+params,"body-"+idnum);
+	ajaxReplace("/object/hot?"+params,"body-"+idnum);
 }
 
 
