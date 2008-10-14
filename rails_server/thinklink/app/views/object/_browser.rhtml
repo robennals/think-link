@@ -11,48 +11,10 @@ end
 
 %>
 
-<script type="text/javascript">
-	setDefaultBrowser(<%=idnum%>);
-</script>
-
-
 <% if !options[:raw] %>
 
-<table class="browsetable" id="browser-<%=idnum%>">
-<colgroup>
-<col width="50px"/>
-<col/>
-</colgroup>
-<tr>
-<td>
 
-<div class="browestab_top"></div>
-
-<% if browser %>
-<div class="browsetab" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
-<% else %>
-<div class="browsetab browsetab_selected" id="recent-<%=idnum%>" onclick="recentMode(<%=idnum%>)">
-<% end %>
-Recent
-</div>
-<div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
-Hot
-</div>
-
-<% if defined? showsocial %>
-<div class="browsetab" id="hot-<%=idnum%>" onclick="hotMode(<%=idnum%>)">
-Hot
-</div>
-<div class="browsetab" id="friends-<%=idnum%>" onclick="friendsMode(<%=idnum%>)">
-Friends
-</div>
-<% end %>
-<div class="browsetab" onclick="searchMode(<%=idnum%>)" id="search-<%=idnum%>">
-Search
-</div>
-
-<td>
-
+<div class="browsetable" id="browser-<%=idnum%>" onmouseover="browseDragIn(event,this)" onmouseout="browseDragOut(event,this)">
 	<div class="topics" id="topics-<%=idnum%>">
 		<h2>
 			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
@@ -60,8 +22,14 @@ Search
 					Claim Browser
 				</span> 
 				</td><td class="browsefolderadd" style="text-align:right">
+				<nobr class="folder_add" onclick="searchMode(<%=idnum%>)">search</nobr>
+				<nobr class="folder_add" onclick="recentMode(<%=idnum%>)">history</nobr>
+				<nobr class="folder_add" onclick="hotMode(<%=idnum%>)">hot</nobr>
+				<nobr class="folder_add" onclick="snipMode(<%=idnum%>)">new</nobr>
+<!--
 				<nobr class="folder_add" onclick="actionEdit()"><img src="/images/pencil.png">rename</nobr>
 				<nobr class="folder_add" onclick="actionDelete()"><img src="/images/cross.png">delete</nobr>	
+				-->
 				</td>		
 				</tr>		
 			</table>
@@ -73,12 +41,7 @@ Search
 
 <% end %>		
 
-		<div class="browse_container" id="container-<%=idnum%>"
-		<% if (defined? big) && big %>
-			<% else %>
-			style="height:218px"
-			<%end %>
-		>
+		<div class="browse_container" id="container-<%=idnum%>" style="height:400px">
 			<div class="hidden" id="searchbar-<%=idnum%>">
 				<input class="searchbox inputbox" type="text" id="searchbox-<%=idnum%>" onkeypress="searchKeyPress(event,<%=idnum%>)"/>
 				<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
@@ -90,18 +53,5 @@ Search
 		</div>
 	</div>
 	
-<% if !options[:raw] %>	
-	
-	<% if (defined? dragbar) && (dragbar == true) %>
-	<div class="dragbar" id="dragbar-<%=idnum%>" onmousedown="dragBar(event,<%=idnum%>)">
-	</div>
-	<% end %>
-
-</td>
-</tr>
-</table>	
-
-<% else %>
 </div>
-<% end %>
 

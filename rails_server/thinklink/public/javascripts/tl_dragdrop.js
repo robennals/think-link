@@ -69,14 +69,12 @@ function dragStart(ev,id,divid,cls){
 }
 
 function dragOver(ev,id){
-//	ev.target.style.fontWeight = "bold";
 	if(id != dragId){
 		ev.target.style.backgroundColor = "#e2f5ff";
 	}
 }
 
 function dragOut(ev){
-//	ev.target.style.fontWeight = "normal";
 	ev.target.style.backgroundColor = "";
 }
 

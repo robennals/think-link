@@ -11,29 +11,17 @@ Use <b>drag and drop</b> to create new connections between claims and topics.
 	end
 %>
 
-<div>
-
-<script language="javascript">
-	setDefaultBrowser(<%= browserid1 %>);
-	
-	var shown = false;
-	function toggleSecondBrowser(button){
-		$("#second_browser").animate({height:'toggle'},500);
-		shown = !shown;
-		if(shown){
-			button.value = "Close Second Browser";
-		}else{
-			button.value = "Open Second Browser";
-		}
-	}
-</script>
-
-
+<table class='mastertable' id="mastertable">
+<tr>
+<td class="mastercolumn">
 <%= render_partial 'object/browser',@object, :idnum=>browserid1, :dragbar => true %>
-
-<input type="button" value="Close Second Browser" style="margin-left: 60px; margin-bottom: 5px;" onclick="toggleSecondBrowser(this)"/>
-<div id="second_browser">
+</td>
+<td class="mastercolumn">
 <%= render_partial 'object/browser',@object, :idnum=>browserid2, :dragbar => true %>
-</div>
-	
+</td>
+</tr>
+</table>
+
+
+<div class="dragbar" id="dragbar" onmousedown="dragBar(event)">
 </div>

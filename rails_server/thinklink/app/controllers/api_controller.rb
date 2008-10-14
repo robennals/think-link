@@ -27,6 +27,14 @@ class ApiController < ApplicationController
 		api_emit snips
 	end
 	
+	def info
+		api_emit $store.get_links(params[:id])
+	end
+	
+	def search
+		api_emit $store.search(params[:query])
+	end
+	
 private
 
 	def gather_urls

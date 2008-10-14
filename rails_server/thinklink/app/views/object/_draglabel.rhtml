@@ -37,7 +37,12 @@ icon += postfix
 %>
 	
 
-	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=itemtype%>">		
+	<div class="dragholder" id="holder-<%=idnum%>" tl_id="<%=itemid%>" tl_cls="<%=itemtype%>"
+					onmouseover="dragOver(event,this)" 
+					onmouseout="dragOut(event,this)" 
+					onmousedown="dragStart(event, this)"
+					onmouseup="dragCapture(event, this)"
+					onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=itemtype%>')" >		
 		<table class="dragtable">
 			<tr>
 				<td id="label-<%=idnum%>" class="draglabel">
@@ -52,12 +57,8 @@ icon += postfix
 				<div class="dragitem" id="<%=idnum%>"			
 					<% if (defined? expand) && expand %>
 						style="font-size: 20px;"
-					<% end %>			
-					onmouseover="dragOver(event,<%= itemid %>,<%= idnum %>)" 
-					onmouseout="dragOut(event,<%= itemid %>,<%= idnum %>)" 
-					onmousedown="dragStart(event, <%= itemid %>, <%= idnum %>, '<%=itemtype%>')"
-					onmouseup="dragCapture(event, <%= itemid %>, <%= idnum %>, '<%=itemtype%>')"
-					onclick="selectItem(this, <%= itemid %>,<%= idnum %>,'<%=itemtype%>')" >
+					<% end %>		
+				>
 				<%=itemtxt%>
 				</div>
 			</td>

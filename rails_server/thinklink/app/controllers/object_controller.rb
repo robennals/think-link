@@ -40,7 +40,7 @@ class ObjectController < ApplicationController
  		subitems = $store.get_links_to id
 		render :partial => "subitems", :object => subitems, :locals => {:itemtxt => info['text'], :itemtype => info['type']}
   end  
- 
+  
  	def index
  		@object = recent_object
 	end
