@@ -316,10 +316,10 @@ function thinklink_getLogin(){
 //    var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
 //    cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
 //    cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
-		thinklink_setCookieForUri("http://localhost:3000/",username,password);
+//		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
+//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
+//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
+//		thinklink_setCookieForUri("http://localhost:3000/",username,password);
 		
     thinklink_setScriptUrls(username);
 

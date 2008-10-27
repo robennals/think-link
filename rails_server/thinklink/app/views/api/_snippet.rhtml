@@ -1,0 +1,27 @@
+
+<%
+	id = snippet['id']
+	txt = snippet['text']
+	url = snippet['url']
+	realurl = snippet['realurl']
+	if !realurl || realurl == ""
+		realurl = url
+	end
+	title = snippet['title']
+%>
+
+	<div class="snipholder">		
+		<table class="dragtable">
+			<tr>
+				<td>
+						<img src="/images/comment.png" id="bookstar<%=id%>" onClick="toggleBookmark(<%=id%>);" />
+				</td>
+			<td>
+			<div class="snipbody">
+			<div class="sniptext">... <%= txt[0,200] %> ...</div>
+					<%= "<div><a class='snippet_url'  target='_blank' href='#{realurl}'>#{trim_string(title,40)} - #{trim_url(realurl)} <img src='/images/application_go.png'/></a></div>" %>  				
+			</div>
+			</td>
+			</tr>
+		</table>		
+	</div>

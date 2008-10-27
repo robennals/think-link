@@ -167,7 +167,7 @@ a img {
 .snippet_author img {
 	vertical-align: middle;
 }
-.snippets, .points, .topics, .actions, .listitems {
+.snippets, .points, .topics, .actions, .listitems, .browseborder {
 	border: 1px solid #666666;
 /*	padding: 10px;
 	margin: 20px; */
@@ -531,6 +531,10 @@ h1 {
  	font-style: italic;
 }
 
+.browser_body {
+	overflow: auto;
+}
+
 
 .dialogbuttons {
 	float: right;
@@ -552,7 +556,11 @@ h1 {
 /*	padding-left: 50px; */
 }
 
-.folder_add {
+.browsebuttons {
+	text-align: right;
+}
+
+.folder_add, .browsebutton {
 	font-size: 8pt;
 	background-color: #ececec;
 	-moz-border-radius: 3px;

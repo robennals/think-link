@@ -14,7 +14,7 @@ module Migrate
 		puts "--topics--"
 		migrate_topics
 		puts "--flush--"
-		flush_tables
+#		flush_tables
 		puts "--claim connections--"
 		migrate_claim_connections
 		puts "--snippet connections--"
@@ -42,14 +42,14 @@ module Migrate
 
 	def migrate_claims
 		(sql_select_all "SELECT * FROM points").each do |claim|
-			id = add_node claim['txt'],:claim,get_newid(claim['user_id'], :user)
+			id = add_node :claim,get_newid(claim['user_id'], :user),:text => claim['txt']
 			set_newid claim['id'], id, :claim
 		end
 	end
 	
 	def migrate_topics
 		(sql_select_all "SELECT * FROM topics").each do |topic|
-			id = add_node topic['txt'],:topic,get_newid(topic['user_id'], :user)
+			id = add_node :topic,get_newid(topic['user_id'], :user),:text => topic['txt']
 			set_newid topic['id'], id, :topic
 		end
 	end

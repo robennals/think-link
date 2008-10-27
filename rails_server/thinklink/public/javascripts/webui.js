@@ -60,6 +60,8 @@ function getIcon(obj){
 			return mk("comment");
 		case "recent":
 			return mk("time");
+		case "search":
+			return mk("magnifier");
 	}
 }
 
@@ -67,7 +69,78 @@ function makeSpacer(){
 	return $("<div class='dragtable'>spacer</div>");
 }
 
+function makeArgBrowseFrame(divid,obj,height){
+	var idnum = getId();
+	var browser = $("#"+divid)
+		.attr("class","browsetable")
+		.attr("id","browser-"+idnum)
+		.mouseover(function(ev){
+			browseDragIn(ev,this);
+		})
+		.mouseout(function(ev){
+			browseDragOut(ev,this);
+		});
+	var box = $("<div class='browseborder'/>")
+		.appendTo(browser);
+	var h2 = $("<h2/>").appendTo(box);
+	var table = $("<table class='browsetitle'/>")
+		.css("width","100%").appendTo(h2);
+	var row = $("<tr/>").appendTo(table);
+	$("<td class='browsetitle'>Claim Browser</td>").appendTo(row);
+	var buttons = $("<td class='browsebuttons'/>").appendTo(row);
+	$("<nobr class='browsebutton'>search</nobr>").appendTo(buttons)
+		.click(function(){searchMode(idnum)});
+	$("<nobr class='browsebutton'>history</nobr>").appendTo(buttons)
+		.click(function(){recentMode(idnum)});
+	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
+		.click(function(){hotMode(idnum)});
+	$("<nobr class='browsebutton'>new</nobr>").appendTo(buttons)
+		.click(function(){newMode(idnum)});
+		
+	makeInnerBrowser(idnum,box,obj,height);
+}
+
+function makeArgBrowser(divid,obj,height){
+	var idnum = getId();
+	var browser = $("#"+divid)
+		.attr("class","browsetable")
+		.attr("id","browser-"+idnum);
+	makeInnerBrowser(idnum,browser,obj,height);	
+}
+
+function makeInnerBrowser(idnum,browser,obj,height){
+	var searchbar = $("<div class='hidden'/>")
+		.attr("id","searchbar-"+idnum)
+		.appendTo(browser);
+	var searchbox = $("<input class='searchbox inputbox' type='text'/>")
+		.attr("id","searchbox-"+idnum)
+		.appendTo(searchbar)
+		.keypress(function(ev){
+			searchKeyPress(ev,idnum);
+		});
+	var searchbutton = $("<input class='searchbutton' type='button' value='Search'/>")
+		.appendTo(searchbar)
+		.click(function(){
+			searchDo(idnum);
+		});
+	var body = $("<div class='browser_body'/>")
+		.attr("id","body-"+idnum).appendTo(browser);
+
+	if(height){
+		body.css("height",height)
+	}
+
+	
+	loadObject(idnum,obj);		
+}
+
 function makeDragItem(obj,label){
+	if(!obj.type){
+		return $("<span/>");
+	}
+	if(obj.type == "snippet"){
+		return makeSnippet(obj,label);
+	}
 	var id = getId();
 	var icon = $("<img/>").attr("src",getIcon(obj));	
 	var holder = $("<div class='dragholder'/>")
@@ -123,7 +196,7 @@ function makeSnippet(snippet){
 	var holder = $("<div class='snipholder'>");
 	var table = $(
 		"<table class='dragtable'>"
-			+"<tr><td><img/></td><div class='snipbody'/><td></td></tr>"
+			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
 		+"</table>").appendTo(holder);	
 	var img = $("<img/>").attr("src","/images/application_go.png");
 	table.find("img").attr("src","/images/comment.png");
@@ -141,7 +214,7 @@ function getVerbsTo(type){
 	switch(type){
 		case "claim":	return ["supports","opposes","states"];
 		case "topic": return ["refines","about"];
-		case "snippet": return ["states"];
+		case "snippet": return [];
 		case "recent":
 		case "search":
 		case "hot":
@@ -153,7 +226,7 @@ function getVerbsFrom(type){
 	switch(type){
 		case "claim":	return ["supports","opposes","about"];
 		case "topic": return ["refines"];
-		case "snippet": return [];
+		case "snippet": return ["states"];
 		case "recent":
 		case "search":
 		case "hot":
@@ -179,9 +252,12 @@ function makeSubItems(div,obj){
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];		
 		var newicon = $("<img class='newthing' src='/images/add.png' onclick='newThing(this,\""+verb+"\")'/>");
-		var header = $("<div class='relationtitle'/>").text(invertVerb(verb,obj.text))
-			.append(newicon).appendTo(div);	
-			
+		if(verb != "colitem"){
+			$("<div class='relationtitle'/>")
+				.attr("tl_verb",verb)
+				.text(invertVerb(verb,obj.text))
+				.append(newicon).appendTo(div);	
+		}
 		var items = obj.to[verb];
 		if(items && items.length > 0){
 			for(var j = 0; j < items.length; j++){
@@ -209,6 +285,11 @@ function makeParentItems(div,obj){
 			}
 		}				
 	}
+}
+
+function makeCurrentItem(div,obj){
+	var item = makeDragItem(obj).appendTo(div);
+	$(item).find(".dragitem").css("fontSize","20px");
 }
 
 
@@ -295,7 +376,7 @@ function loadItemInfo(idnum,id){
 	var children = getel("children-"+idnum);
 	animateInitHide(parents);
 	animateInitHide(children);
-	$.getJSON(thinklink_urlbase + "info.json",{id: id},function(obj){
+	$.getJSON("/node/" + id,{},function(obj){
 		parents.innerHTML = "";
 		children.innerHTML = "";
 		makeParentItems(parents,obj);
@@ -420,7 +501,7 @@ var startHeight = 0;
 var startY = 0;
 function dragBar(ev){
 	resizeBar = getel("dragbar");
-	resizeBox = $(".browse_container");
+	resizeBox = $(".browser_body");
 	window.addEventListener("mousemove",resizeMove,false);
 	window.addEventListener("mouseup",resizeStop,false);
 	resizeBar.addEventListener("mouseup",resizeStop,false);
@@ -475,6 +556,17 @@ function searchKeyPress(ev,idnum){
 	}
 }
 
+function recentMode(idnum){
+//	var id = makeMainGroups(idnum);
+//	var children = getel("children-"+id);
+	$.getJSON("/node/recent",{},function(obj){
+			loadObject(idnum,obj);		
+//		for(var i = 0; i < results.length; i++){
+//			$(children).append(makeDragItem(results[i]));
+//		}	
+	});
+}
+
 function makeMainGroups(idnum){
 	var body = getel("body-"+idnum);
 	body.innerHTML = "";
@@ -483,18 +575,28 @@ function makeMainGroups(idnum){
 	$("<div class='item-current'/>").attr("id","current-"+id).appendTo(body);
 	$("<div class='item-children'/>").attr("id","children-"+id).appendTo(body);
 	$("<div class='item-propholder'/>").attr("id","propholder-"+id).appendTo(body);
-
 	return id;
 }
 
+function loadObject(idnum,obj){
+	var id = makeMainGroups(idnum);
+	makeParentItems(getel("parents-"+id),obj);
+	makeSubItems(getel("children-"+id),obj);
+	makeCurrentItem(getel("current-"+id),obj);
+}
+	
 function searchDo(idnum){
 	var query = getel("searchbox-"+idnum).value;
-	var id = makeMainGroups(idnum);
-	var children = getel("children-"+id);
-	$.getJSON("/api/search",{query:query},function(results){
-		for(var i = 0; i < results.length; i++){
-			$(children).append(makeDragItem(results[i]));
-		}
+	getel("searchbar-"+idnum).className = "hidden";
+	getel("body-"+idnum).innerHTML = "<div class='msg'>Searching...</div>";
+
+//	var id = makeMainGroups(idnum);
+//	var children = getel("children-"+id);
+	$.getJSON("/node/search",{query:query},function(obj){
+			loadObject(idnum,obj);
+//		for(var i = 0; i < results.length; i++){
+//			$(children).append(makeDragItem(results[i]));
+//		}
 	});
 }
 
@@ -543,6 +645,8 @@ function dragMove(ev){
 	}
 }
 
+// TODO: don't allow dragging to a parent position. Only to a child position
+
 function dragDone(ev,node){
 	if(dragInfo.dropNode && dragInfo.hoverBrowser){
 		tl_log("captured by "+dragInfo.dropNode.textContent+" after="+dragInfo.after);
@@ -555,9 +659,51 @@ function dragDone(ev,node){
 		if(dragInfo.hoverBrowser == dragInfo.browser || dragInfo.moveMode){
 			$(dragInfo.holder).remove();			
 		}
+		
+		makeFixedOrder(newitem);
+		var dragorder = getDragOrder(dragInfo.dropNode);
+		$.post("/node/"+dragInfo.id+"/order.json",{order:makeJSONString(dragorder)});
 	}
 	dragStop(ev,node);
 }
+
+function makeFixedOrder(node){
+	while(node && node.className != "relationtitle"){
+		if(node.setAttribute){
+			node.setAttribute("tl_pos","true");
+		}
+		node = node.prevSibling;		
+	}
+}
+
+// create a JSON order string describing the order of things
+// for this node. Split this by the verbs used in headers.
+function getDragOrder(node){
+	var siblings = findNodeGroup(node).childNodes;
+	var verb = null;
+	var ordermap = {};
+	var thisorder = [];
+	for(var i = 0; i < siblings.length; i++){
+		var child = siblings[i];
+		if(child.className == "relationtitle"){
+			if(thisorder.length > 0){
+				ordermap[verb] = thisorder;
+			}
+			ordermap = [];
+			verb = child.getAttribute("tl_verb");
+		}else{
+			var hasorder = child.getAttribute("tl_pos");
+			if(hasorder){
+				thisorder.push(child);
+			}			
+		}
+	}
+	if(thisorder.length > 0){
+		ordermap[verb] = thisorder;
+	}
+	return ordermap;	
+}
+
 
 function dragStop(ev,node){	
 	document.body.removeEventListener("mousemove",dragMove,false);
@@ -622,7 +768,6 @@ function dragOut(ev,node,id){
 
 function browseDragIn(ev,browser){
 	if(ev.target == browser || dragInfo.hoverBrowser != browser){
-		tl_log("dragIn");
 		dragInfo.hoverBrowser = browser;
 
 		if(dragInfo.holder && dragInfo.browser == browser){
@@ -638,9 +783,14 @@ function browseDragIn(ev,browser){
 }
 
 function isParent(node,parent){
-	while(node){
+	while(node && node != document){
 		if(node == parent) return true;
-		node = node.parentNode;
+		try{
+			node = node.parentNode;
+		}catch(e){
+			return false;
+			// we were passed a XUL object rather than a DOM element
+		}
 	}
 	return false;
 }
@@ -658,7 +808,6 @@ function browseDragOut(ev,browser){
 				}
 			}
 		}
-		tl_log("dragout");
 	}
 }
 

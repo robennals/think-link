@@ -1,0 +1,25 @@
+
+<div class="helpmessage">
+Use <b>drag and drop</b> to create new connections between claims and topics.
+</div>
+
+<table class='mastertable' id="mastertable">
+<tr>
+<td class="mastercolumn">
+<div id="browser1">
+</div>
+</td>
+<td class="mastercolumn">
+<div id="browser2">
+</div>
+</td>
+</tr>
+</table>
+
+<div class="dragbar" id="dragbar" onmousedown="dragBar(event)">
+</div>
+
+<script type="text/javascript">
+makeArgBrowseFrame("browser1",<%=@object.to_json%>,"400px");
+makeArgBrowseFrame("browser2",<%=@object.to_json%>,"400px");
+</script>

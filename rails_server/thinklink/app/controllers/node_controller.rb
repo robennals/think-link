@@ -16,21 +16,13 @@
 #  This controller is used for API functions that don't really make sense as
 #  operations on objects. Some of these should perhaps be somewhere else
 
-class ApiController < ApplicationController
+class NodeController < ApplicationController
 
 	layout 'mini'
 
-	def url_snippets
-		urls = gather_urls
-		snips = []
-		urls.each do |url|
-			snips.concat $store.url_snippets(url)
-		end
-		api_emit snips
-	end
-	
 	def show
 		user = get_user
+		@user = user
 		$store.log_view user['id'],params[:id]
 		info = $store.get_links params[:id]
 		info.delete 'password'
@@ -41,7 +33,7 @@ class ApiController < ApplicationController
 	
 	def create
 		type = params[:type]
-		info = params[:info]
+		info = json_decode(params[:info])
 		user = get_user
 		id = $store.add_node type,user['id'],info
 		redirect_to "/api/#{id}"
@@ -70,32 +62,22 @@ class ApiController < ApplicationController
 		$store.set_order id,user['id'],order
 		api_emit :result => 'success'
 	end
-	
-	def login
-		cookies[:email] = {:value => params[:email], :path => "/api"}
-		cookies[:password] = {:value => params[:password], :path => "/api"}
-		user = get_user 
-		if user['id'] != 0
-			api_emit :result => 'success', :id => 'id', 'login'
-		else
-			api_emit :error => 'bad login', 'badlogin'
-		end
-	end
-	
-	def search
-		@object = search_object
-		emit @object
-	end
-	
-	def setorder
-		user = get_user
-		$store.set_order params[:id], user['id'], params[:json]
-	end
 
+	def search
+		@user = get_user
+		@object = search_object
+		emit @object, 'object'
+	end
+	
 	def recent
 		@user = get_user
 		@object = recent_object
 		emit @object
+	end
+	
+	def index
+		@user = get_user
+		@object = recent_object
 	end
 	
 private

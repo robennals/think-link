@@ -34,7 +34,7 @@ function tl_margin()
 	// default left margin of page
 	this.leftmargin = window.getComputedStyle(document.body,"").marginLeft; //$("body").css("margin-left");
 	// where to get snippets for this margin
-	this.snippetURL = "url_snippets.js";
+	this.snippetURL = "apianon/search.js";
 	// url normalization tool
 	this.normTool = new tl_normurl();
 	// let user set title and author

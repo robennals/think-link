@@ -24,8 +24,12 @@ module CrapBase
 		return hsh
 	end
 
-	def get_slice(table,key,family,start,count)
-		rows =  sql_select_all("SELECT columnname,value FROM #{table}_#{family} WHERE keyname='#{esc key}' ORDER BY columnname ASC LIMIT #{start},#{count}")
+	def get_slice(table,key,family,start,count,reverse = false)
+		if reverse
+			rows =  sql_select_all("SELECT columnname,value FROM #{table}_#{family} WHERE keyname='#{esc key}' ORDER BY columnname DESC LIMIT #{start},#{count}")
+		else
+			rows =  sql_select_all("SELECT columnname,value FROM #{table}_#{family} WHERE keyname='#{esc key}' ORDER BY columnname ASC LIMIT #{start},#{count}")
+		end
 		hsh = {}
 		rows.each do |row|
 			hsh[row['columnname']] = row['value']

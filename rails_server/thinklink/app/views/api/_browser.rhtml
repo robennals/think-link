@@ -1,0 +1,57 @@
+
+<% 
+
+if !(defined? idnum) || idnum.nil?
+	idnum = getUniq 
+end
+
+if ! (defined? options) || !options
+	options = {}
+end
+
+%>
+
+<% if !options[:raw] %>
+
+
+<div class="browsetable" id="browser-<%=idnum%>" onmouseover="browseDragIn(event,this)" onmouseout="browseDragOut(event,this)">
+	<div class="topics" id="topics-<%=idnum%>">
+		<h2>
+			<table class="browsetitle" style="width:100%"><tr><td class="browestitle">
+				<span id="title-<%=idnum%>">
+					Claim Browser
+				</span> 
+				</td><td class="browsefolderadd" style="text-align:right">
+				<nobr class="folder_add" onclick="searchMode(<%=idnum%>)">search</nobr>
+				<nobr class="folder_add" onclick="recentMode(<%=idnum%>)">history</nobr>
+				<nobr class="folder_add" onclick="hotMode(<%=idnum%>)">hot</nobr>
+				<nobr class="folder_add" onclick="snipMode(<%=idnum%>)">new</nobr>
+<!--
+				<nobr class="folder_add" onclick="actionEdit()"><img src="/images/pencil.png">rename</nobr>
+				<nobr class="folder_add" onclick="actionDelete()"><img src="/images/cross.png">delete</nobr>	
+				-->
+				</td>		
+				</tr>		
+			</table>
+		</h2>
+
+<% else %>
+
+<div class="browsetable" id="browser-<%=idnum%>">
+
+<% end %>		
+
+		<div class="browse_container" id="container-<%=idnum%>" style="height:400px">
+			<div class="hidden" id="searchbar-<%=idnum%>">
+				<input class="searchbox inputbox" type="text" id="searchbox-<%=idnum%>" onkeypress="searchKeyPress(event,<%=idnum%>)"/>
+				<input class="searchbutton" type="button" value="Search" onclick="searchDo(<%=idnum%>)"/>			
+			</div>
+
+			<div id="body-<%=idnum%>" class="browser_body">			
+			<%= render_partial 'object/focusitem', browser, :options => options %>
+			</div>
+		</div>
+	</div>
+	
+</div>
+

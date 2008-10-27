@@ -28,6 +28,8 @@ $bad_words = ["the","and","his","her","from","his","has","from","then","can","wi
 module Datastore
 	include CrapBase
 
+# --- snippets ---
+
 	def get_url_snippets(url)
 		return get_all("url",url,"snippets")
 	end
@@ -38,21 +40,7 @@ module Datastore
 				:info => {:type => :snippet, :text => text, :url => url, :realurl => realurl, :title => title, :user => user} 
 		return id
 	end
-	
-	def get_user(email,password)		
-		users = get_slice_json :email, email, :user, 0, 1
-		if users.empty?
-			return nil
-		end
-		user = users[users.keys.first]
-		user['id'] = users.keys.first
-		if user['password'] == password
-			return user
-		else
-			return nil
-		end
-	end
-	
+
 	def claim_for_snippet(key)
 		links = get_all_json :objgen,key,:links_from
 		links.each do |key,value|
@@ -74,17 +62,45 @@ module Datastore
 		end
 		return out
 	end
+	
+	
+# --- users --- 
+	
+	def get_user(email,password)		
+		users = get_slice_json :email, email, :user, 0, 1
+		if users.empty?
+			return nil
+		end
+		user = users[users.keys.first]
+		user['id'] = users.keys.first
+		if user['password'] == password
+			return user
+		else
+			return nil
+		end
+	end
+
+	def add_user(email,name,password)
+		id = new_guid
+		batch_insert :obj, id, 
+				:info => {:type => "user", :email => email, :name => name, :password => password}
+		return id
+	end
+
+
+# --- history ---	
 		
 	def log_view(userid,id)			
-		now = Time.now.to_f
-		insert :user,userid,:recent,(-now),id
+		insert :user,userid,:recent,Time.now.xmlschema,id
 	end
 	
 	def get_recent(userid)
 		results = []
-		recentids = get_slice :user,userid,:recent,0,50
+		recentids = get_slice :user,userid,:recent,0,50,true
+		keys = recentids.keys.sort.reverse
 		seen = {}
-		recentids.each do |time,id|
+		keys.each do |time|
+			id = recentids[time]
 			if !seen.has_key? id 
 				seen[id] = true
 				results.push get_info(id)
@@ -92,10 +108,13 @@ module Datastore
 		end
 		return results
 	end
+
+
+# --- nodes and links ---
 		
-	def add_node(text,type,user)  #claim or topic
+	def add_node(type,user,info)  #claim or topic
 		id = new_guid
-		batch_insert :obj,id,:info => {:text => text, :type => type, :user => user}
+		batch_insert :obj,id,:info => info.merge(:type => type, :user => user)
 		return id
 	end
 	
@@ -137,6 +156,9 @@ module Datastore
 		return links_from
 	end
 	
+
+# --- search ---	
+	
 	def search(phrase)
 		words = phrase.split ' '
 		idscore = {}
@@ -159,16 +181,18 @@ module Datastore
 	end
 	
 	
-	def add_rating(id,user,rating)
+# -- ratings ---
+	
+	def set_order(id,userid,ordermap)
+		insert :obj,id,:orders,userid,ordermap
+	end
+	
+	def set_rating(id,user,rating)
 		insert :obj,id,:ratings,user,rating
 	end
 	
-	def add_user(email,name,password)
-		id = new_guid
-		batch_insert :obj, id, 
-				:info => {:type => "user", :email => email, :name => name, :password => password}
-		return id
-	end
+
+# --- migration ---
 	
 	def set_newid (oldid,newid,type)
 		batch_insert :compatmap,oldid,type => {:id => newid}
@@ -189,8 +213,8 @@ private
 
 	def get_tables
 		return { 
-			:obj => [:info, :ratings],
-			:user => [:recent],				# in addition to stuff in :obj
+			:obj => [:info, :ratings, :orders],
+			:user => [:recent, :orders],				# in addition to stuff in :obj
 			:objgen => [:links_from, :links_to, :props],
 			:url => [:snippets],
 			:email => [:user],
@@ -300,7 +324,32 @@ private
 				insert :objgen,key,:props,:avg_rating,sum/count
 			end
 		end		
+		
+		#user ordering aggregation
+		add_batch_trigger :table => :obj, :family => :orders, :delay => 10 do |keys|
+			keys.each do |key|
+				orders = get_all_json :obj,key,:orders
+				scores = {}
+				orders.each do |userid,ordermap|
+					ordermap.each do |verb,order|
+						pos = 1
+						order.each do |id|
+							scores.fetch(verb,{})[id] += 1.0/pos
+							pos += 1
+						end
+					end
+				end
+				results = {}
+				scores.each do |verb,scoremap|
+					sorted = scoremap.sort {|a,b| b[1] <=> a[1]}
+					results[verb] = sorted.map {a|a[0]}
+				end
+				insert :objgen,key,:props,:avg_order,results
+			end
+		end
 	end
+	
+	
 
 
 	
