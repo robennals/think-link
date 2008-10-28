@@ -37,10 +37,6 @@ class ApianonController < ApplicationController
 	
 private
 
-	def json_decode(json)
-		return ActiveSupport::JSON.decode json
-	end
-
 	def gather_urls
 		count = 1
 		urls = {}

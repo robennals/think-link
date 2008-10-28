@@ -17,60 +17,8 @@
 #  operations on objects. Some of these should perhaps be somewhere else
 
 class ApiController < ApplicationController
-
 	layout 'mini'
-
-	def url_snippets
-		urls = gather_urls
-		snips = []
-		urls.each do |url|
-			snips.concat $store.url_snippets(url)
-		end
-		api_emit snips
-	end
-	
-	def show
-		user = get_user
-		$store.log_view user['id'],params[:id]
-		info = $store.get_links params[:id]
-		info.delete 'password'
-		info.delete 'email'
-		@object = info
-		emit info, 'object'
-	end
-	
-	def create
-		type = params[:type]
-		info = params[:info]
-		user = get_user
-		id = $store.add_node type,user['id'],info
-		redirect_to "/api/#{id}"
-	end
-	
-	def add_node
-		user = get_user
-		type = params[:type]
-		info = json_decode(params[:info])
-		id = $store.add_node type, user['id'], info
-		api_emit id
-	end
-	
-	def rating
-		rating = params[:rating]
-		id = params[:id]
-		user = get_user
-		$store.set_rating id,user['id'],rating
-		api_emit :result => 'success'
-	end
-	
-	def order
-		order = params[:order]
-		id = params[:id]
-		user = get_user
-		$store.set_order id,user['id'],order
-		api_emit :result => 'success'
-	end
-	
+		
 	def login
 		cookies[:email] = {:value => params[:email], :path => "/api"}
 		cookies[:password] = {:value => params[:password], :path => "/api"}
@@ -82,37 +30,8 @@ class ApiController < ApplicationController
 		end
 	end
 	
-	def search
-		@object = search_object
-		emit @object
-	end
-	
-	def setorder
-		user = get_user
-		$store.set_order params[:id], user['id'], params[:json]
-	end
-
-	def recent
-		@user = get_user
-		@object = recent_object
-		emit @object
-	end
-	
 private
 
-	def gather_urls
-		count = 1
-		urls = {}
-		while params.has_key? "url#{count}".intern
-			urls[params["url#{count}".intern]] = true
-			count += 1
-		end
-		if params.has_key? :url
-			urls[params[:url]] = true
-		end
-		return urls.keys
-	end
-	
 	def get_user(email = cookies[:email], password=cookies[:password])
 		user = $store.get_user email, password
 		if !user
@@ -120,19 +39,5 @@ private
 		end
 		return user
 	end
-	
-	def recent_object
-		recent = $store.get_recent @user['id']
- 		return {'id' => 0, 'text' => "Recent Claims and Folders", 'type' => "recent", 'from' => {}, 
-	 		'to' => {"colitem" => recent}}
-	end
-	
-	def search_object
-		query = params[:query]
-		results = $store.search query
-		return {'id' => 0, 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
-			'to' => {"colitem" => results}}
-	end
-
-	
+		
 end

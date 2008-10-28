@@ -81,27 +81,6 @@ class NodeController < ApplicationController
 	end
 	
 private
-
-	def gather_urls
-		count = 1
-		urls = {}
-		while params.has_key? "url#{count}".intern
-			urls[params["url#{count}".intern]] = true
-			count += 1
-		end
-		if params.has_key? :url
-			urls[params[:url]] = true
-		end
-		return urls.keys
-	end
-	
-	def get_user(email = cookies[:email], password=cookies[:password])
-		user = $store.get_user email, password
-		if !user
-			user = {'id' => 0, 'name' => 'no user logged in'}
-		end
-		return user
-	end
 	
 	def recent_object
 		recent = $store.get_recent @user['id']
@@ -115,6 +94,5 @@ private
 		return {'id' => 0, 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
 			'to' => {"colitem" => results}}
 	end
-
 	
 end

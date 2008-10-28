@@ -1,9 +1,0 @@
-<%
-	items = subitems.items
- %>
-
-<% if !items.empty? %>
-	<% items.each do |item| %>
-			<%= render_partial 'main/draglabel', item, :label => nil %>
-	<% end %>
-<% end %>

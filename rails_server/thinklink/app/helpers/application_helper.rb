@@ -24,6 +24,14 @@ $store = Store.new
 
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+	def get_user(email = cookies[:email], password=cookies[:password])
+		user = $store.get_user email, password
+		if !user
+			user = {'id' => 0, 'name' => 'no user logged in'}
+		end
+		return user
+	end
+
 	def emit(obj,action = 'object', opts = {})
 		respond_to do |format|
 			format.html { render :action => action }
@@ -68,5 +76,4 @@ module ApplicationHelper
 #		@uniq = @uniq+1
 		return rand(100000000000)
 	end
-
 end

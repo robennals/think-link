@@ -1,9 +1,0 @@
-
-<% 
-	verbs = paritems.keys
-%>	
-<% verbs.each do |verb| %>
-	<% paritems[verb].each do |link| %>
-		<%= render_partial 'object/draglabel', link, :label => verb+":" %>	
-	<% end %>
-<% end %>
