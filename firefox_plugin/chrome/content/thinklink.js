@@ -130,6 +130,14 @@ var thinklink_winlistener = {
 	onStateChange: function(progress, request, flags, status){
 		try{
 	
+			try{
+				thinklink_msg("flags="+flags+" status="+status);
+				if(content.document && content.document.body && content.document.body.textContent){
+					thinklink_msg("text loaded");
+				}
+			}catch(e){
+			}
+	
 			var states = Components.interfaces.nsIWebProgressListener;
 
 			var doc = this.getDoc();	
@@ -141,6 +149,7 @@ var thinklink_winlistener = {
 
 			
 			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
+				thinklink_msg("fully loaded");
 //				document.getElementById("thinklink-button").checked = false;
 				if(!doc.thinklink_iconon){
 					thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
@@ -311,15 +320,15 @@ function thinklink_getLogin(){
     if(prefs.prefHasUserValue("extensions.thinklink.password")){
 			password = prefs.getCharPref("extensions.thinklink.password");
 		}	
-//    var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
-//    var cookieUri = ios.newURI("http://mashmaker.intel-research.net/", null, null);
-//    var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-//    cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
-//    cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
-//		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
-//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
-//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
-//		thinklink_setCookieForUri("http://localhost:3000/",username,password);
+    var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
+    var cookieUri = ios.newURI("http://mashmaker.intel-research.net/", null, null);
+    var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
+    cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
+    cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
+		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
+		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
+		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
+		thinklink_setCookieForUri("http://localhost:3000/",username,password);
 		
     thinklink_setScriptUrls(username);
 
