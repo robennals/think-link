@@ -32,7 +32,7 @@ class ApianonController < ApplicationController
 		urls.each do |url|
 			snips.concat $store.url_snippets(url)
 		end
-		api_emit snips
+		emit snips
 	end
 	
 private
@@ -48,5 +48,12 @@ private
 			urls[params[:url]] = true
 		end
 		return urls.keys
+	end
+	
+	def search_object
+		query = params[:query]
+		results = $store.search query
+		return {'id' => 0, 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
+			'to' => {"colitem" => results}}
 	end
 end

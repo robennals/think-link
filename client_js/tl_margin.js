@@ -231,13 +231,19 @@ function tl_margin()
 				// for each result item, make a new tl_snippet and add it to the margin's array
 				for (var item=0; item< result.length; item++) {
 					tl_log("addItem");
+					var claimid; var claimtxt; var opposed;
+					if(result[item].claim){
+						claimtxt = result[item].claim.text;
+						claimid = result[item].claim.id;
+						opposed = result[item].claim.opposed;
+					}
 					that.addItem(new tl_snippet(
 						result[item].id,
 						result[item].creator,
 						unescape(result[item].text),
-						unescape(result[item].claim.text),
-						result[item].claim.id,
-						result[item].opposed,
+						claimtxt,
+						claimid,
+						opposed,
 						result[item].date
 					),result[item].bookmark);
 					if (result[item].opposed != null) { that.haveOpposedPoint = true; }
@@ -310,13 +316,13 @@ function tl_margin()
 			var snipspans = this.items[index].spanList;
 			if(!snipspans) continue;
 			var position = findPos(snipspans[0]); // get position of the first span element
-			position[1] = this.getSafeItemPosition(position,this.items[index].id);
+			position[1] = this.getSafeItemPosition(position,this.items[index].id,index);
 			this.items[index].setPosition(position);
 			$("#margin"+this.items[index].id).css("top",position[1])
 		}
 	}
 
-	this.getSafeItemPosition = function(pos,snipID) {
+	this.getSafeItemPosition = function(pos,snipID,idx) {
 		var vertPos = pos[1];
 		
 		// check for interference with document info div
@@ -326,7 +332,7 @@ function tl_margin()
 			if (vertPos <= docInfoPos) { tl_log("adjustment made"); vertPos = docInfoPos+1; } // move downward
 		}
 		
-		for (var index=0; index<this.items.length; index++) {
+		for (var index=0; index<this.items.length && index < idx; index++) {
 			if (this.items[index].id==snipID) continue; // don't check against self
 			var itemPos = this.items[index].position[1];
 			var itemPosRange = itemPos + document.getElementById("margin"+this.items[index].id).offsetHeight;
@@ -439,7 +445,7 @@ function tl_margin()
 		this.addSnippetClickHandler(snippet);
 		var position = findPos(snippet.spanList[0]); // get position of the first span element
 //		removeSpans(snipspans);
-		position[1] = this.getSafeItemPosition(position,snippet.id); // make sure vertical position is kosher
+		position[1] = this.getSafeItemPosition(position,snippet.id,this.items.length); // make sure vertical position is kosher
 		snippet.setPosition(position);
 		var numItems = this.items.push(snippet); // add to margin's array
 		

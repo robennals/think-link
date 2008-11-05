@@ -32,6 +32,10 @@ module ApplicationHelper
 		return user
 	end
 
+	def api_emit(action,obj)
+		emit(obj,action)
+	end
+
 	def emit(obj,action = 'object', opts = {})
 		respond_to do |format|
 			format.html { render :action => action }

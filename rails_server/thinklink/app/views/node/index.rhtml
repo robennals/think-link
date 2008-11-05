@@ -1,8 +1,42 @@
-
-<div class="helpmessage">
-Use <b>drag and drop</b> to create new connections between claims and topics.
+<!-- <div>
+	<span class="helpmessage">
+	Use <b>drag and drop</b> to create new connections between claims and topics.
+	</span>
+	<span>
+	<% if @user['id'] == 0 %>
+		<a href="/api/login">login</a>
+	<% else %>
+		<form action="/api/logout" method="post">
+			Logged in as <%= @user['name'] %>. 
+	
+			<input type='submit' value="logout"/>
+		</form>
+	<% end %>
+	</span>
 </div>
+--> 
 
+<table style="margin:4px; width:100%"><tr><td>
+	<span class="helpmessage">
+	Use <b>drag and drop</b> to create new connections between claims and topics.
+	</span>
+	</td><td style="text-align:right; padding-right: 10px;">
+	<span>
+	<% if @user['id'] == 0 %>
+		<a href="/api/login">login</a>
+	<% else %>
+		<form action="/api/logout" method="post">
+			Logged in as <%= @user['name'] %>. 
+	
+			<input type='submit' value="logout"/>
+		</form>
+	<% end %>
+	</span>
+	</td></tr>
+</table>
+
+
+<div>
 <table class='mastertable' id="mastertable">
 <tr>
 <td class="mastercolumn">
@@ -15,6 +49,7 @@ Use <b>drag and drop</b> to create new connections between claims and topics.
 </td>
 </tr>
 </table>
+</div>
 
 <div class="dragbar" id="dragbar" onmousedown="dragBar(event)">
 </div>

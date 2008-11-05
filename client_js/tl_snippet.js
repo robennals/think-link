@@ -145,8 +145,97 @@ function tl_snippet_dialog(margin) {
 			that.permaLink = url;
 			that.gotPermaLink = true;
 		});
-		that.makeNewSnippetDialog(sourceSpans);
+		that.makeSimpleSnippetDialog(sourceSpans);
 	};
+	
+	this.makeSimpleSnippetDialog = function(sourceSpans){
+		var that = this;
+		var mk = function(tag) {return document.createElement(tag);};
+		
+		var url = this.margin.normTool.normalizeUrl(this.margin.url);
+		if (this.permaLink != null) { // use the determined perma link if available
+			tl_log("permalink is : "+this.permaLink);
+			url = this.margin.normTool.makeAbsoluteUrl(this.margin.url,this.permaLink);
+			url= this.margin.normTool.normalizeUrl(url);
+		} 
+		var url_real = this.margin.url;
+
+		var win = mk("div");
+		win.className = "tl_dialog";
+		win.setAttribute("id","tl_snippet_win");
+		win.style.position = "fixed";
+		win.style.left = "100px";
+		win.style.top = "0px";
+		
+  	var title = mk("div");
+		title.className = "tl_dialog_title";
+		title.textContent = "Create new snippet";
+		title.addEventListener("mousedown",function(e){tl_dragStart(e,"tl_snippet_win","tl_snippet_frame");},false);
+	
+		win.appendChild(title);
+		var box = $("<div>Summary (optional):</div>")
+				.css("margin",4)
+				.appendTo(win);
+		var inputdiv = $("<div/>").appendTo(box);
+		var input = $("<input type='text'/>")
+				.css("marginLeft",20).css("width",300).css("textAlign","right")
+				.css("textAlign","left")
+				.appendTo(inputdiv);
+				
+//		if(this.sourceText.length < 100){
+//			input.val(this.sourceText);
+//		}
+		
+		var butdiv = $("<div id='butdiv'/>")
+				.css("textAlign","right")
+				.appendTo(win);
+		var nobut = $("<input type='button' value='Cancel'/>").appendTo(butdiv);
+		var okbut = $("<input type='button' value='Create Snippet'/>").appendTo(butdiv);
+		
+		okbut.click(function(){
+			doAJAX("tl_new","scripthack/newsnippet.js"
+				+"?text="+encodeURIComponent(that.sourceText)
+				+"&summary="+encodeURIComponent(input.val())
+				+"&url="+encodeURIComponent(url)
+				+"&realurl="+encodeURIComponent(url_real)				
+				+"&title="+encodeURIComponent(document.title)
+			,function(result){
+				if(result.error){
+					window.open(thinklink_urlbase+"api/login");
+				}else{
+					that.close();
+				}
+			});
+		});
+				
+		nobut.click(function(){
+			that.close();
+		});
+		
+		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(title);
+		var openButton = $("<input class='tl_openbutton' type='button' value='Organize'/>")
+				.css("marginRight","18px")
+				.appendTo(buttonBox);	
+		openButton.click(function(){
+			window.open(thinklink_mainhome);
+		});
+
+		
+		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
+		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
+			.click(function(){
+				that.close();
+			});
+
+
+//		win.appendChild(frame);
+		thinklink_activeDivId = "tl_snippet_win";
+		document.body.appendChild(win);
+		
+		input.get(0).focus();
+	};	
+		
+	
 		
 	this.makeNewSnippetDialog = function(sourceSpans){
 		var that = this;
@@ -176,7 +265,15 @@ function tl_snippet_dialog(margin) {
 		title.className = "tl_dialog_title";
 		title.textContent = "What claim is this snippet making?";
 		title.addEventListener("mousedown",function(e){tl_dragStart(e,"tl_snippet_win","tl_snippet_frame");},false);
+
 		var win = mk("div");
+		
+		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
+		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
+			.click(function(){
+				that.close();
+			});
+
 		win.className = "tl_dialog";
 		win.setAttribute("id","tl_snippet_win");
 		win.style.position = "fixed";
@@ -188,6 +285,7 @@ function tl_snippet_dialog(margin) {
 		document.body.appendChild(win);
 	};	
 		
+	
 
 	
 }

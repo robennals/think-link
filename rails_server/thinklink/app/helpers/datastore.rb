@@ -44,11 +44,12 @@ module Datastore
 	def claim_for_snippet(key)
 		links = get_all_json :objgen,key,:links_from
 		links.each do |key,value|
-			value['verb'] = 'states'
-			claim = value['object']
-			info = get_all :obj,claim,:info
-			props = get_all :objgen,claim,:props
-			return {:id => value['object'], :text => info['text']}.merge(props)
+			if value['verb'] == 'states'
+				claim = value['object']
+				info = get_all :obj,claim,:info
+				props = get_all :objgen,claim,:props
+				return {:id => value['object'], :text => info['text']}.merge(props)
+			end
 		end
 		return nil
 	end

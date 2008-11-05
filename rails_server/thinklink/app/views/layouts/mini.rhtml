@@ -8,7 +8,7 @@
 	<title><%= @title %> - Think Link</title>
 	<%= stylesheet_link_tag "style" %>
 	<!-- <%= javascript_include_tag :all, :cache => true %> -->
-	<% if @user['email'].eql?("trush@eecs.berkeley.edu") %>
+	<% if (defined? @user) && @user['email'].eql?("trush@eecs.berkeley.edu") %>
 		<script type="text/javascript" src="/javascripts/tl_bethconfig.js"></script>
 	<% else %>
 		<script type="text/javascript" src="/javascripts/tl_robconfig.js"></script>

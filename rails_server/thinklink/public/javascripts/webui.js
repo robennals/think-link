@@ -62,6 +62,8 @@ function getIcon(obj){
 			return mk("time");
 		case "search":
 			return mk("magnifier");
+		case "user":
+			return mk("user");
 	}
 }
 
@@ -94,8 +96,8 @@ function makeArgBrowseFrame(divid,obj,height){
 		.click(function(){recentMode(idnum)});
 	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
 		.click(function(){hotMode(idnum)});
-	$("<nobr class='browsebutton'>new</nobr>").appendTo(buttons)
-		.click(function(){newMode(idnum)});
+	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
+		.click(function(){mineMode(idnum)});
 		
 	makeInnerBrowser(idnum,box,obj,height);
 }
@@ -141,10 +143,13 @@ function makeDragItem(obj,label){
 	if(obj.type == "snippet"){
 		return makeSnippet(obj,label);
 	}
+	if(obj.type == "user"){
+		obj.text = obj.name;
+	}
 	var id = getId();
 	var icon = $("<img/>").attr("src",getIcon(obj));	
 	var holder = $("<div class='dragholder'/>")
-		.attr("tl_id",obj.id).attr("tl_cls","obj.type")
+		.attr("tl_id",obj.id)
 		.attr("id","holder-"+id);	
 	var table = $("<table class='dragtable'>").appendTo(holder);
 	var tbody = $("<tbody/>").appendTo(table);
@@ -188,12 +193,16 @@ function trim_url(url){
 }
 
 function makeSnippet(snippet){
+	var id = getId();
+	
 	var url = snippet.url;
 	var realurl = snippet.realurl;
 	if(!realurl){
 		realurl = url;
 	}
-	var holder = $("<div class='snipholder'>");
+	var holder = $("<div class='dragholder'>")
+		.attr("id","holder-"+id)
+		.attr("tl_id",snippet.id);
 	var table = $(
 		"<table class='dragtable'>"
 			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
@@ -207,6 +216,13 @@ function makeSnippet(snippet){
 		.attr("href",realurl).attr("target","_blank")
 		.append(img)
 		.appendTo(table.find(".snipbody"));
+
+	holder.click(function(){selectItem(this,snippet.id)})
+		.mouseup(function(ev){dragCapture(ev,this)})
+		.mousedown(function(ev){dragStart(ev,this)})
+		.mouseover(function(ev){dragOver(ev,this,id)})
+		.mouseout(function(ev){dragOut(ev,this,id)});		
+		
 	return holder;
 }	
 
@@ -215,6 +231,7 @@ function getVerbsTo(type){
 		case "claim":	return ["supports","opposes","states"];
 		case "topic": return ["refines","about"];
 		case "snippet": return [];
+		case "user": return ["created by"];
 		case "recent":
 		case "search":
 		case "hot":
@@ -226,7 +243,8 @@ function getVerbsFrom(type){
 	switch(type){
 		case "claim":	return ["supports","opposes","about"];
 		case "topic": return ["refines"];
-		case "snippet": return ["states"];
+		case "snippet": return ["states","created by"];
+		case "user": return [];
 		case "recent":
 		case "search":
 		case "hot":
@@ -244,7 +262,10 @@ function invertVerb(verb,text){
 		case "states": return "snippets making this claim";
 		case "related": return "related";
 		case "colitem": return "colitem";
+		case "created": return "created by";
+		case "created by": return "created";
 	}	
+	return "";
 }
 
 function makeSubItems(div,obj){
@@ -253,10 +274,13 @@ function makeSubItems(div,obj){
 		var verb = verbs[i];		
 		var newicon = $("<img class='newthing' src='/images/add.png' onclick='newThing(this,\""+verb+"\")'/>");
 		if(verb != "colitem"){
-			$("<div class='relationtitle'/>")
+			var reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
 				.text(invertVerb(verb,obj.text))
-				.append(newicon).appendTo(div);	
+				.appendTo(div);	
+			if(verb != "created by"){
+				reltitle.append(newicon);
+			}
 		}
 		var items = obj.to[verb];
 		if(items && items.length > 0){
@@ -419,6 +443,9 @@ function selectItem(div,id){
 			current.className = "item-children";
 		});
 
+		if(dragitem.length == 0){
+			parents.className = "item-current";
+		}
 		$(dragitem).animate({fontSize:"20px"},500,function(){
 			parents.className = "item-current";
 		});				
@@ -446,6 +473,9 @@ function selectItem(div,id){
 			$(propholder.selectedDiv).animate({fontSize:"13px"},500);
 		}
 		hideSiblings(div);
+		if(dragitem.length == 0){
+			current.className = "item-parents";
+		}
 		$(dragitem).animate({fontSize:"20px"},500,function(){
 			current.className = "item-parents";
 		});				

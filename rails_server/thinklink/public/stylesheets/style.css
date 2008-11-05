@@ -570,9 +570,10 @@ h1 {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	cursor: pointer;
+	margin-left: 2px;
 }
 
-.folder_add:hover{
+.folder_add:hover, .browsebutton:hover{
 	background-color: #e2f5ff;	
 }
 
@@ -748,4 +749,9 @@ h1 {
 	border: 1px solid grey;
 	-moz-border-radius: 8px;
 	background-color: #EFEFEF;
+	cursor: pointer;
+}
+
+.snipbody:hover {
+	background-color: #ebf7fd;
 }

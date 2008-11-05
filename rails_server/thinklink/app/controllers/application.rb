@@ -24,10 +24,18 @@ class ApplicationController < ActionController::Base
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery # :secret => '6a2bfcac8927de12b6b0511cb48db6ea'
+  # protect_from_forgery # :secret => '6a2bfcac8927de12b6b0511cb48db6ea'
   
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
+  
+  before_filter :check_connect
+  
+  def check_connect
+  	if ! ActiveRecord::Base.connected?
+  		ActiveRecord::Base.connection.reconnect!
+  	end
+	end
 end

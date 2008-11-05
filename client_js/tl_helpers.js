@@ -82,7 +82,6 @@ function tl_hideTooltip(elem) {
 }
 
 function doAJAX(scriptID,url,callback) {
-	//if (typeof thinklink_callback !== "undefined") { tl_log("callback: "+thinklink_callback); }
 	var url = thinklink_urlbase + url;
 	var doc = document;
 	var scripttag = doc.createElement("script");
@@ -95,10 +94,11 @@ function doAJAX(scriptID,url,callback) {
 
 function mark_snippet(snippet,hilite_class) {
 	if (hilite_class==null){ hilite_class = "highlight"; }
+	snippet = normalizeString(snippet);
 	if(snippet[snippet.length-1] == " "){
 		snippet = snippet.substring(0,snippet.length-1);
 	}
-	var text = document.body.textContent.replace(/\s+/g," ");
+	var text = normalizeString(document.body.textContent);
 	var offset = text.indexOf(snippet);
 	if(offset == -1) return null;
 
@@ -109,7 +109,7 @@ function mark_snippet(snippet,hilite_class) {
 }
 
 function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_class) {
-	var nodeText = node.textContent.replace(/\s+/g," ");
+	var nodeText = normalizeString(node.textContent);
 	
 	if (start+length < nodeText.length) {
 		start = nodeText.indexOf(snipText);
@@ -159,11 +159,11 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 		for (var k=0; k<node.childNodes.length; k++) {
 			if(node.childNodes[k].nodeName != "#comment" ){//&& node.childNodes[k].nodeName != "SCRIPT"){
 				nodeList.push(node.childNodes[k]);
-				alltext += node.childNodes[k].textContent.replace(/\s+/g," ");
+				alltext += normalizeString(node.childNodes[k].textContent);
 			}
 		}
 		for (var i=0; i<nodeList.length;i++) {
-			var childText = nodeList[i].textContent.replace(/\s+/g," ");
+			var childText = normalizeString(nodeList[i].textContent);
 			if (childText[0] && childText[0].match(/^\s$/) && sawSpace) {start++;}
 			if (start < childText.length) {
 				var newLength = Math.min(childText.length,length);
@@ -262,65 +262,10 @@ function inDocument(element) {
 }
 
 function normalizeString(text) {
+	text = text.replace(/\\u\w\w\w\w/g,"");
+	text = text.replace(/[^\s\w\d,;\:\-+.\'\"]/g,"");
 	return text.replace(/\s+/g," ");
 }
-
-/*
-function setSpan(id, parentElem, firstIndex, firstOffset, lastIndex, lastOffset) {
-	//var foo = document.getElementById("foo");
-	
-	var oldbegin = parentElem.childNodes[firstIndex];
-	var oldend = parentElem.childNodes[lastIndex];
-	var child;
-
-	
-	// first part: text node
-	var first = document.createTextNode(parentElem.childNodes[firstIndex].nodeValue.substring(0,firstOffset));
-	
-	// second part, wrap in <span>
-	var second = document.createElement("span");
-	second.setAttribute("class","highlight");
-	second.setAttribute("id",id);
-	var secondText = document.createTextNode(parentElem.childNodes[firstIndex].nodeValue.substring(firstOffset));
-			
-	// third part: wrap in <span>
-	var third = document.createElement("span");
-	third.setAttribute("class","highlight");
-	var thirdText = document.createTextNode(parentElem.childNodes[lastIndex].nodeValue.substring(0,lastOffset));
-	
-	// fourth part: text node
-	var fourth = document.createTextNode(parentElem.childNodes[lastIndex].nodeValue.substring(lastOffset));
-	
-	// get middle part cloned and placed with span tag
-	var middle = document.createElement("span");
-	middle.setAttribute("class","highlight");
-	for(child=firstIndex+1; child< lastIndex; child++)
-	{
-		middle.appendChild(parentElem.childNodes[child].cloneNode(true));
-	}
-	
-	// add elements in first child node
-	parentElem.insertBefore(first,oldbegin);
-	parentElem.insertBefore(second,oldbegin);
-	second.appendChild(secondText);
-	parentElem.removeChild(oldbegin);
-	
-	// add elements in last child node
-	parentElem.insertBefore(third,oldend);
-	parentElem.insertBefore(fourth,oldend);
-	third.appendChild(thirdText);
-	parentElem.removeChild(oldend);
-	
-
-	// add span around entired middle nodes
-	for(child=firstIndex+2; child< lastIndex-1; child++)
-	{
-		parentElem.removeChild(parentElem.childNodes[child]);
-	}
-	parentElem.insertBefore(middle,third);
-
-}
-*/
 
 
 function setTextPos(currentElement, depth, text, id, annoteObj)
@@ -335,35 +280,17 @@ function setTextPos(currentElement, depth, text, id, annoteObj)
     	var currentElementChild=currentElement.childNodes[i];
     	while (currentElementChild)
     	{
-			/*
-			var elemText = normalizeString(currentElementChild.textContent);
-			if (inDocument(currentElementChild) && elemText!= null && elemText.indexOf(text,0) >=0) // have text and the text matches
-			{
-				var exists = document.getElementById(id);
-				//if (exists != null) return; // don't recreate the span!
-
-				var snipLocation = find_snippet(currentElementChild, text);
-				setSpan(id,currentElementChild,snipLocation.f,snipLocation.fi,snipLocation.l,snipLocation.li);
-
-				var position = findPos(document.getElementById(id));
-				annoteObj.setPosition(position); // set the position once we've found it
-			}
-      		// Recursively traverse the tree structure of the child node
-      		setTextPos(currentElementChild, depth+1,text,id,annoteObj);
-      		i++;
-      		currentElementChild=currentElement.childNodes[i];
-			*/
-			
-			if (inDocument(currentElementChild) && currentElementChild.nodeValue!= null && currentElementChild.nodeValue.indexOf(text,0) >=0) // have text and the text matches
-			{
-				var exists = document.getElementById(id);
-				if (exists != null) return; // don't recreate the span!
 				
-				var spanText = '<span id="' + id + '">'+ text +'</span>';
-				$(currentElementChild).replaceWith(currentElementChild.nodeValue.replace(text,spanText));
-				var position = findPos(document.getElementById(id));
-				annoteObj.setPosition(position); // set the position once we've found it
-			}
+				if (inDocument(currentElementChild) && currentElementChild.nodeValue!= null && currentElementChild.nodeValue.indexOf(text,0) >=0) // have text and the text matches
+				{
+					var exists = document.getElementById(id);
+					if (exists != null) return; // don't recreate the span!
+					
+					var spanText = '<span id="' + id + '">'+ text +'</span>';
+					$(currentElementChild).replaceWith(currentElementChild.nodeValue.replace(text,spanText));
+					var position = findPos(document.getElementById(id));
+					annoteObj.setPosition(position); // set the position once we've found it
+				}
       		// Recursively traverse the tree structure of the child node
       		setTextPos(currentElementChild, depth+1,text,id,annoteObj);
       		i++;
@@ -475,8 +402,10 @@ function tl_dragStart(event, id, hiderid) {
 
 	if(hiderid){
 		var hider = document.getElementById(hiderid);
-		hider.style.visibility = "hidden";
-		tl_dragElement.hider = hider;
+		if(hider){
+			hider.style.visibility = "hidden";
+			tl_dragElement.hider = hider;
+		}
 	}
 
   if (id)

@@ -20,19 +20,36 @@ class ApiController < ApplicationController
 	layout 'mini'
 		
 	def login
-		cookies[:email] = {:value => params[:email], :path => "/api"}
-		cookies[:password] = {:value => params[:password], :path => "/api"}
-		user = get_user 
-		if user['id'] != 0
-			api_emit :result => 'success', :id => 'id', 'login'
-		else
-			api_emit :error => 'bad login', 'badlogin'
+		if request.post?
+			cookies[:email] = {:value => params[:email], :path => "/api"}
+			cookies[:password] = {:value => params[:password], :path => "/api"}
+			cookies[:email] = {:value => params[:email], :path => "/scripthack"}
+			cookies[:password] = {:value => params[:password], :path => "/scripthack"}
+			cookies[:email] = {:value => params[:email], :path => "/node"}
+			cookies[:password] = {:value => params[:password], :path => "/node"}
+
+			user = get_user 
+			if user['id'] != 0
+				api_emit 'goodlogin',:result => 'success', :id => 'id'
+			else
+				api_emit 'badlogin',:error => 'bad login'
+			end
 		end
 	end
 	
+	def logout
+		if request.post?
+			cookies[:password] = ""
+			cookies[:email] = ""
+		end
+	end
+		
 private
 
 	def get_user(email = cookies[:email], password=cookies[:password])
+		if !email && cookies[:username]
+			email = cookies[:username]
+		end
 		user = $store.get_user email, password
 		if !user
 			user = {'id' => 0, 'name' => 'no user logged in'}

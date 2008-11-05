@@ -13,11 +13,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-var thinklink_urlbase = "http://localhost:3000/";
-//var thinklink_urlbase = "http://mashmaker.intel-research.net:3000/api/";
-//var thinklink_urlbase = "http://mashmaker.intel-research.net/rob/server/";
 thinklink_imagebase = "http://mashmaker.intel-research.net/rob/images/";
+
+//var thinklink_urlbase = "http://mashmaker.intel-research.net:3000/";
+//var thinklink_pointbase = "http://mashmaker.intel-research.net:3000/node/";
+//var thinklink_mainhome = "http://mashmaker.intel-research.net:3000/";
+
+var thinklink_urlbase = "http://localhost:3000/";
 var thinklink_pointbase = "http://localhost:3000/node/";
-//var thinklink_pointbase = "http://mashmaker.intel-research.net:3000/object/showmini/";
-var thinklink_mainhome = "http://mashmaker.intel-research.net:3000/";
-// var thinklink_mainhome = "http://localhost:3000/";
+var thinklink_mainhome = "http://localhost:3000/";
