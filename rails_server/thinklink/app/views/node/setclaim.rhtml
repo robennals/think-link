@@ -1,0 +1,27 @@
+
+
+
+<table style="width:100%; background-color: #eeeeee; padding-bottom: 5px; padding-top: 2px;"><tr><td class="helpmessage">
+Select a factual claim that this snippet is making
+</td><td style="text-align:right">
+<input type="button" value="Set Snippet Claim" onclick="setClaim(<%=@snippet['id']%>)"/>
+
+</td>
+</tr>
+</table>
+
+<div id="argbrowser">
+</div>
+
+
+<script type="text/javascript">
+
+var thinklink_user_id = <%=@user['id']%>;
+
+makeSnippet(<%=@snippet.to_json%>).appendTo("#snipspace");
+makeArgBrowser("argbrowser",<%=@object.to_json%>);
+<% if @view=="search" %>
+	searchMode(1)
+<% end %>
+</script>
+

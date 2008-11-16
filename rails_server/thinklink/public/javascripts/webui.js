@@ -7,6 +7,20 @@ function clone(obj){
 	return n;
 }
 
+function closePopupWindow(){
+  var evt = document.createEvent("Events");
+  evt.initEvent("thinklink-close", true, false);
+  document.body.dispatchEvent(evt);
+}
+
+function sendMessage(action,data){
+  var evt = document.createEvent("Events");
+  evt.initEvent("thinklink-action", true, false);
+  evt.tl_action = action;
+  evt.tl_data = data;
+  document.body.dispatchEvent(evt);	
+}
+
 function tl_log(msg){		
 	if(typeof console !== "undefined"){
 		console.log(msg);
@@ -71,7 +85,10 @@ function makeSpacer(){
 	return $("<div class='dragtable'>spacer</div>");
 }
 
-function makeArgBrowseFrame(divid,obj,height){
+function makeArgBrowseFrame(divid,obj,height,title){
+	if (!title){
+		title = "Claim Browser";
+	}
 	var idnum = getId();
 	var browser = $("#"+divid)
 		.attr("class","browsetable")
@@ -88,7 +105,7 @@ function makeArgBrowseFrame(divid,obj,height){
 	var table = $("<table class='browsetitle'/>")
 		.css("width","100%").appendTo(h2);
 	var row = $("<tr/>").appendTo(table);
-	$("<td class='browsetitle'>Claim Browser</td>").appendTo(row);
+	$("<td class='browsetitle'>"+title+"</td>").appendTo(row);
 	var buttons = $("<td class='browsebuttons'/>").appendTo(row);
 	$("<nobr class='browsebutton'>search</nobr>").appendTo(buttons)
 		.click(function(){searchMode(idnum)});
@@ -106,6 +123,7 @@ function makeArgBrowser(divid,obj,height){
 	var idnum = getId();
 	var browser = $("#"+divid)
 		.attr("class","browsetable")
+		.attr("tl_id",obj.id)
 		.attr("id","browser-"+idnum);
 	makeInnerBrowser(idnum,browser,obj,height);	
 }
@@ -149,7 +167,7 @@ function makeDragItem(obj,label){
 	var id = getId();
 	var icon = $("<img/>").attr("src",getIcon(obj));	
 	var holder = $("<div class='dragholder'/>")
-		.attr("tl_id",obj.id)
+		.attr("tl_id",obj.id).attr("tl_cls",obj.type)
 		.attr("id","holder-"+id);	
 	var table = $("<table class='dragtable'>").appendTo(holder);
 	var tbody = $("<tbody/>").appendTo(table);
@@ -164,15 +182,117 @@ function makeDragItem(obj,label){
 	var item = $("<div class='dragitem'/>").attr("id",id)
 		.attr("tl_id",obj.id).attr("tl_cls",obj.type)
 		.text(obj.text);
-		
+
+	var tditem = $("<td/>").append(item).appendTo(tr);
+
+	var breakicon = $("<img/>")
+		.css("display","none")
+		.css("cursor","pointer")
+		.attr("src","/images/link_break.png")
+		.css("margin-left","4px")
+		.attr("title","disconnect")
+		.attr("class","itembutton")
+		.appendTo(item)
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			deleteLink(ev,this,obj.id,label)});
+//	var tdbreak = $("<td/>").append(breakicon).appendTo(tr);
+
+	if(thinklink_user_id == obj.user){
+		var deleteicon = $("<img/>")
+			.css("display","none")
+			.css("cursor","pointer")
+			.attr("src","/images/cross.png")
+			.attr("title","delete")
+			.attr("class","itembutton")
+			.appendTo(item)
+			.click(function(ev){
+				ev.cancelBubble = true;
+				ev.stopPropagation();
+				deleteNode(ev,this,obj.id,label)});
+//		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
+	}
+			
 	holder.click(function(){selectItem(this,obj.id)})
 		.mouseup(function(ev){dragCapture(ev,this)})
 		.mousedown(function(ev){dragStart(ev,this)})
-		.mouseover(function(ev){dragOver(ev,this,id)})
-		.mouseout(function(ev){dragOut(ev,this,id)});
+		.mouseover(function(ev){
+			holder.tl_selected = true;
+			setTimeout(function(){
+				if(holder.tl_selected){
+					breakicon.css("display","");
+					if(deleteicon){
+						deleteicon.css("display","");						
+					}
+				}
+			},300);
+			dragOver(ev,this,id)}
+			)
+		.mouseout(function(ev){
+			if(isParent(ev.relatedTarget,holder.get(0))) return;
+			breakicon.css("display","none");
+			if(deleteicon){
+				deleteicon.css("display","none");						
+			}
+			holder.tl_selected = false;
+			dragOut(ev,this,id)});
 		
-	var tditem = $("<td/>").append(item).appendTo(tr);
+
+
 	return holder;
+}
+
+function newThing(node,id,verb){
+	var group = findNodeGroup(node);
+	var idnum = getNodeIdNum(group);
+	var reqId = getId();
+	var browser = findBrowser(node);
+	var id = browser.getAttribute("tl_id");
+	var typ = getVerbSubjectType(verb);
+	var icon = $("<img/>").attr("src",getIcon({type:typ}));	
+	var holder = $("<div class='dragholder'/>");
+	var table = $("<table class='dragtable'>").appendTo(holder);
+	var tbody = $("<tbody/>").appendTo(table);
+	var tr = $("<tr>").appendTo(tbody);
+	var tdicon = $("<td/>").append(icon).appendTo(tr);
+	var item = $("<div class='dragitem'/>").attr("id",id);
+	var input = $("<input type='text'/>").appendTo(item);
+	var tditem = $("<td/>").append(item).appendTo(tr);
+	var msg = $("<div class='minimessage'/>")
+			.text("Enter text to create a new "+typ+". Use drag and drop to connect an existing "+typ+".")
+			.appendTo(holder);
+	input.blur(function(){
+		createFinished(id,holder,input,typ,verb,reqId,idnum);
+	});	
+	input.keypress(function(ev){
+		ev.stopPropagation();
+		if(ev.keyCode == 13){
+			createFinished(id,holder,input,typ,verb,reqId,idnum);
+		}
+	});
+	holder.insertAfter(findRelationTitle(node));
+	input.get(0).focus();
+}
+
+var doneReqs = {}
+
+function createFinished(id,holder,input,typ,verb,reqId,idnum){
+	if(doneReqs[reqId]){
+		return;
+	}
+	doneReqs[reqId] = true;
+	var text = input.val();
+	if(!text || !normalizeText(text)){
+		holder.remove();
+		return;
+	}	
+	$.post("/node.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
+		$.post("/node.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
+			holder.remove();
+			loadItemInfo(idnum,id);
+		});
+	});
 }
 
 function trim_string(string,length){
@@ -262,23 +382,34 @@ function invertVerb(verb,text){
 		case "states": return "snippets making this claim";
 		case "related": return "related";
 		case "colitem": return "colitem";
-		case "created": return "created by";
 		case "created by": return "created";
 	}	
 	return "";
+}
+
+function getVerbSubjectType(verb){
+	switch(verb){
+		case "about": return "claim";
+		case "refines": return "topic";
+		case "opposes": return "claim";
+		case "supports": return "claim";
+		case "states": return "snippet";
+		case "related": return "claim";
+		case "created by": return "snippet";
+	}
 }
 
 function makeSubItems(div,obj){
 	var verbs = getVerbsTo(obj.type);
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];		
-		var newicon = $("<img class='newthing' src='/images/add.png' onclick='newThing(this,\""+verb+"\")'/>");
+		var newicon = $("<img class='newthing' src='/images/add.png' onclick='newThing(this,"+obj.id+",\""+verb+"\")'/>");
 		if(verb != "colitem"){
 			var reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
 				.text(invertVerb(verb,obj.text))
 				.appendTo(div);	
-			if(verb != "created by"){
+			if(verb != "created by" && verb != "states"){
 				reltitle.append(newicon);
 			}
 		}
@@ -342,6 +473,34 @@ function findHolder(node){
 		node = node.parentNode;
 	}
 	return null;	
+}
+
+function findSelectedHolder(node){
+  if(node){
+    var group = findNodeGroup(node);
+    var idnum = getNodeIdNum(group);
+    var propholder = getel("propholder-"+idnum);
+    if(!propholder.selectedDiv){
+      propholder.selectedDiv = getel(idnum);
+    }
+    return findHolder(propholder.selectedDiv);
+  }else{
+    if(selectedDivId && selectedId){
+      return findHolder(document.getElementById(selectedDivId));
+    }else{
+      return null;
+    }
+  }
+}
+
+function findRelationTitle(node){
+  while(node != null){
+    if(node.className == 'relationtitle'){
+      return node;
+    }
+    node = node.parentNode;
+  }
+  return null;  
 }
 
 function findNodeGroup(node){
@@ -420,6 +579,7 @@ function selectItem(div,id){
 	var holder = findHolder(div);
 	var browser = findBrowser(div);
 	var dragitem = $(div).find(".dragitem");
+	browser.setAttribute("tl_id",id);
 
 	clearSelect(getNodeIdNum(browser));
 	
@@ -587,13 +747,14 @@ function searchKeyPress(ev,idnum){
 }
 
 function recentMode(idnum){
-//	var id = makeMainGroups(idnum);
-//	var children = getel("children-"+id);
 	$.getJSON("/node/recent",{},function(obj){
 			loadObject(idnum,obj);		
-//		for(var i = 0; i < results.length; i++){
-//			$(children).append(makeDragItem(results[i]));
-//		}	
+	});
+}
+
+function mineMode(idnum){
+	$.getJSON("/node/me",{},function(obj){
+			loadObject(idnum,obj);
 	});
 }
 
@@ -841,3 +1002,9 @@ function browseDragOut(ev,browser){
 	}
 }
 
+function setClaim(snipid){
+	var claimid = $("#browser-1").attr("tl_id");
+	$.post("/node.json",{type:"link",info:makeJSONString({subject:snipid,verb:"states",object:claimid})},function(){
+		closePopupWindow();
+	});	
+}

@@ -33,11 +33,11 @@ module Datastore
 	def get_url_snippets(url)
 		return get_all("url",url,"snippets")
 	end
-	
+		
 	def add_snippet (text,url,realurl,title,user)
 		id = new_guid
 		batch_insert :obj, id,
-				:info => {:type => :snippet, :text => text, :url => url, :realurl => realurl, :title => title, :user => user} 
+				:info => {:type => :snippet, 'text' => text, 'url' => url, 'realurl' => realurl, 'title' => title, 'user' => user} 
 		return id
 	end
 
@@ -115,13 +115,13 @@ module Datastore
 		
 	def add_node(type,user,info)  #claim or topic
 		id = new_guid
-		batch_insert :obj,id,:info => info.merge(:type => type, :user => user)
+		batch_insert :obj,id,:info => info.merge(:type => type, 'user' => user)
 		return id
 	end
 	
 	def add_link(subject,verb,object)
 		id = new_guid
-		batch_insert :obj, id, :info => {:type => :link, :subject => subject, :verb => verb, :object => object}
+		batch_insert :obj, id, :info => {:type => :link, 'subject' => subject, 'verb' => verb, 'object' => object}
 		return id
 	end
 	
@@ -259,43 +259,43 @@ private
 		create_tables(get_tables())
 				
 		#url -> snippet info
-		add_trigger :table => :obj, :family => :info, :column => :url do |table,key,values|
+		add_trigger :table => :obj, :family => :info, :column => 'url' do |table,key,values|
 			info = values[:info]
-			insert :url, info[:url], :snippets, key, info
+			insert :url, info['url'], :snippets, key, info
 		end
 		
 		#email -> user
-		add_trigger :table => :obj, :family => :info, :column => :email do |table,key,values|
+		add_trigger :table => :obj, :family => :info, :column => 'email' do |table,key,values|
 			info = values[:info]
-			insert :email, info[:email], :user, key, info 
+			insert :email, info['email'], :user, key, info 
 		end
 		
 		#link -> related objects for each linked object
 		#ISSUE: this updates the link immediately, and so we may see stale data		
-		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
+		add_trigger :table => :obj, :family => :info, :column => 'verb' do |table,key,values|
 			info = values[:info]			
-			insert :objgen,info[:subject],:links_from,key,info
-			insert :objgen,info[:object],:links_to,key,info
+			insert :objgen,info['subject'],:links_from,key,info
+			insert :objgen,info['object'],:links_to,key,info
 		end
 
 
 		#link -> mark item as being supported or opposed when link created
-		add_trigger :table => :obj, :family => :info, :column => :verb do |table,key,values|
+		add_trigger :table => :obj, :family => :info, :column => 'verb' do |table,key,values|
 			info = values[:info]
-			if info[:verb] == 'opposes'
-				insert :objgen,info[:object],:props,:opposed,true
+			if info['verb'] == 'opposes'
+				insert :objgen,info['object'],:props,:opposed,true
 				dirty_object :obj,key,:links
 			elsif 
-				info[:verb] == 'supports'
-				insert :objgen,info[:object],:props,:supported,true
+				info['verb'] == 'supports'
+				insert :objgen,info['object'],:props,:supported,true
 				dirty_object :obj,key,:links
 			end
 		end
 		
 		#object -> index of words used in the name
-		add_trigger :table => :obj, :family => :info, :column => :text do |table,key,values|
+		add_trigger :table => :obj, :family => :info, :column => 'text' do |table,key,values|
 			if values[:info][:type] != :snippet			
-				text = values[:info][:text]
+				text = values[:info]['text']
 				text.split(' ').each do |word|
 					if word.length > 2 && !$bad_words.include?(word)
 						insert :word,word,:objects,key,''

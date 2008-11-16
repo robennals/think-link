@@ -314,10 +314,23 @@
 	cursor: pointer;
 }
 
-.highlight_bright {
+.highlight_bright, .highlight:hover {
 	background: #FFFF00;
 	cursor: pointer;	
 }
+
+.highlight_free {
+	background: #d3d3ff;
+	color: #000000;
+	cursor: pointer;		
+}
+
+.highlight_free_bright, .highlight_free:hover {
+	background: #3333ff;
+	color: #000000;
+	cursor: pointer;		
+}
+
 
 .highlight_con {
 	background: #ffd3d3;
@@ -325,7 +338,7 @@
 	cursor: pointer;	
 }
 
-.highlight_con_bright {
+.highlight_con_bright, .highlight_con:hover {
 	background: #FF3333;
 	color: #000000;
 	cursor: pointer;	

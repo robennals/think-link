@@ -41,14 +41,14 @@ function tl_point_browser() {
 	this.newPointLinkURL = "new_point_link.php";
 	
 	this.init = function() {
-		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
-		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
-		elem.style.zIndex="-1";
-		document.body.appendChild(elem);
-		tl_hideDiv(this.divID);
-		elem.style.zIndex="2147483647";
-		//$("#"+this.divID).hide();		// hide the dialog
-			
+//		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
+//		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
+//		elem.style.zIndex="-1";
+//		document.body.appendChild(elem);
+//		tl_hideDiv(this.divID);
+//		elem.style.zIndex="2147483647";
+//		//$("#"+this.divID).hide();		// hide the dialog
+//			
 	}
 
 	this.setHover = function(item,hovermsg,defaultText){		
@@ -62,28 +62,36 @@ function tl_point_browser() {
 		})
 		
 	}
-	
-	this.inProgress = false;
-	
-	this.viewFrame = function(pointID,snipID) {
-		this.pointID = pointID;
+		
+	this.viewFrame = function(snippet) {
+		var url;
+		if(snippet.claim){
+			title = "Investigate Claim";
+			url = thinklink_pointbase+snippet.claim.id+"?snippet="+snippet.id;
+		}else{
+			title = "Select a Claim";
+			url = thinklink_pointbase+snippet.id+"/setclaim";
+		}
+		
 		var that = this;
 		
-		if(this.inProgress) return; // HACK: avoid duplicate call back
-		this.inProgress = true;
+		if(document.getElementById("tl_point_browser")){
+			return;
+		}
+		
+		var win = $("<div/>")
+			.attr("id","tl_point_browser")
+			.addClass("tl_dialog")
+			.css("zIndex","214783647")
+			.appendTo("body");
+		
 
-		// remove any existing point browser content... this should be changed eventually to allow multiple browsers?
-		$("#"+this.divID).empty();
-
-		var me = document.getElementById(this.divID);
+		var me = win.get(0);
 		me.style.overflow = "hidden";
 		me.style.position = "fixed";
 		me.style.top = "50px";
 		me.style.left = "200px";
 		me.style.width = Math.min((window.innerWidth - 250),550) + "px";
-
-		// if mouse is not currently positioned inside of an open point browser, position point browser using mouse coords
-		var position = findPos(document.getElementById(this.divID));
 		
 		var titleBar = $("<div/>").appendTo($("#"+that.divID))
 			.attr("id","tl_pb_title")
@@ -95,7 +103,11 @@ function tl_point_browser() {
 			.addClass("tl_dialog_title");
 
 		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-		var titleBox = $("<nobr>").text("Investigate Claim").appendTo(titleBar);
+		var titleBox = $("<nobr>").text(title).appendTo(titleBar);
+		if(!snippet.claim){
+			var searchButton = $("<input class='tl_openbutton' type='button' value='search'/>").appendTo(buttonBox);	
+		}
+
 		var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);	
 		openButton.click(function(){
 			window.open(thinklink_mainhome);
@@ -113,7 +125,7 @@ function tl_point_browser() {
 		frameholder.style.height = (window.innerHeight * (2/3)) + "px";
 
 		var pointframe = document.createElement("iframe");
-		pointframe.src = thinklink_pointbase+pointID+"?snippet="+snipID;
+		pointframe.src = url;
 		pointframe.style.width="100%";
 		pointframe.style.height="100%";
 		pointframe.style.overflow = "auto";
@@ -121,7 +133,15 @@ function tl_point_browser() {
 		frameholder.appendChild(pointframe);
 		frameholder.style.width="100%";
 //			frameholder.style.height="100%";
-		$("#"+that.divID).append($(frameholder));
+		win.append(frameholder);
+//		document.body.appendChild(frameholder);
+//		$(document.body).append($(frameholder));
+
+		if(!snippet.claim){
+			searchButton.click(function(){
+				pointframe.src = url+"?view=search";
+			});
+	}
 
 		that.showMe();	
 	}
@@ -134,15 +154,13 @@ function tl_point_browser() {
 	}
 
 	this.hideMe = function(){
-		this.inProgress = false;
-		$("#"+this.divID).animate({ height: 'hide', opacity: 'hide' }, 'slow');
+		$("#tl_point_browser").remove();
 	}
 
 	this.showSnipHandler = function(e) { // add click event to each result item
 		var e=e? e : window.event;
 			var el=e.target? e.target : e.srcElement;
 			document.location.href=el.id; // navigate to page snippet is from
-	}
-	
+	}	
 }
 

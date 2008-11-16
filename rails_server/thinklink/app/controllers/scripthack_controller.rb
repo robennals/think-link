@@ -16,9 +16,10 @@
 #  This controlled is used for operations that need to use the scripthack trick to 
 #  perform an action with a GET request. Currently only needed for snippet creation.
 
+require 'ruby-debug'
+
 class ScripthackController < ApplicationController
 	def newsnippet
-		debugger
 		@user = get_user
 		if @user['id'] == 0
 			emit :error => 'not logged in'

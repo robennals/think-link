@@ -1,21 +1,3 @@
-<!-- <div>
-	<span class="helpmessage">
-	Use <b>drag and drop</b> to create new connections between claims and topics.
-	</span>
-	<span>
-	<% if @user['id'] == 0 %>
-		<a href="/api/login">login</a>
-	<% else %>
-		<form action="/api/logout" method="post">
-			Logged in as <%= @user['name'] %>. 
-	
-			<input type='submit' value="logout"/>
-		</form>
-	<% end %>
-	</span>
-</div>
---> 
-
 <table style="margin:4px; width:100%"><tr><td>
 	<span class="helpmessage">
 	Use <b>drag and drop</b> to create new connections between claims and topics.
@@ -55,6 +37,9 @@
 </div>
 
 <script type="text/javascript">
+
+var thinklink_user_id = <%=@user['id']%>;
+
 makeArgBrowseFrame("browser1",<%=@object.to_json%>,"400px");
 makeArgBrowseFrame("browser2",<%=@object.to_json%>,"400px");
 </script>

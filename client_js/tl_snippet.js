@@ -78,17 +78,23 @@ function tl_snippet_dialog(margin) {
 		//$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
 		tl_showDiv(this.divID);
 	}
-
 	this.close = function(){
 		tl_log("close");
-		$("#tl_snippet_win").animate({ height: 'hide', opacity: 'hide' }, 'slow');
-		var dialog = document.getElementById("tl_snippet_win");
-		if(dialog){
-			dialog.parentNode.removeChild(dialog)
+		if(document.getElementById("tl_snippet_win")){
+//			$("#tl_snippet_win").animate({ height: 'hide', opacity: 'hide' }, 'slow');
+			$("#tl_snippet_win").remove();
+			var dialog = document.getElementById("tl_snippet_win");
 			removeSpans(this.sourceSpans);
-			this.margin.itemsLoaded=false;
-			this.margin.refresh();
-		};
+		}else if(document.getElementById("tl_point_browser")){
+			$("#tl_point_browser").remove();
+//			$("#tl_point_browser").animate({ height: 'hide', opacity: 'hide' }, 'slow');
+			var dialog = document.getElementById("tl_point_frame");
+		}
+//		if(dialog){
+//			dialog.parentNode.removeChild(dialog)
+		this.margin.itemsLoaded=false;
+		this.margin.refresh();
+//		};
 	}
 
 	this.hideMe = function(){
@@ -160,12 +166,15 @@ function tl_snippet_dialog(margin) {
 		} 
 		var url_real = this.margin.url;
 
+		var ypos = findPos(sourceSpans[0])[1]; 
+
 		var win = mk("div");
 		win.className = "tl_dialog";
 		win.setAttribute("id","tl_snippet_win");
 		win.style.position = "fixed";
 		win.style.left = "100px";
 		win.style.top = "0px";
+//		win.style.top = Math.max(0,ypos)+"px";
 		
   	var title = mk("div");
 		title.className = "tl_dialog_title";

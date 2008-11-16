@@ -16,6 +16,8 @@
 #  This controller is used for API functions that don't really make sense as
 #  operations on objects. Some of these should perhaps be somewhere else
 
+require 'ruby-debug'
+
 class NodeController < ApplicationController
 
 	layout 'mini'
@@ -36,7 +38,12 @@ class NodeController < ApplicationController
 		info = json_decode(params[:info])
 		user = get_user
 		id = $store.add_node type,user['id'],info
-		redirect_to "/api/#{id}"
+		emit id
+	end
+	
+	def delete
+		@user = get_user
+		$store.delete params[:id]
 	end
 	
 	def add_node
@@ -44,7 +51,7 @@ class NodeController < ApplicationController
 		type = params[:type]
 		info = json_decode(params[:info])
 		id = $store.add_node type, user['id'], info
-		api_emit id
+		emit id
 	end
 	
 	def rating
@@ -52,7 +59,7 @@ class NodeController < ApplicationController
 		id = params[:id]
 		user = get_user
 		$store.set_rating id,user['id'],rating
-		api_emit :result => 'success'
+		emit :result => 'success'
 	end
 	
 	def order
@@ -60,7 +67,7 @@ class NodeController < ApplicationController
 		id = params[:id]
 		user = get_user
 		$store.set_order id,user['id'],order
-		api_emit :result => 'success'
+		emit :result => 'success'
 	end
 
 	def search
@@ -75,9 +82,22 @@ class NodeController < ApplicationController
 		emit @object
 	end
 	
+	def me
+		@user = get_user
+		@object = $store.get_links @user['id']
+		emit @object
+	end
+	
 	def index
 		@user = get_user
 		@object = recent_object
+	end
+	
+	def setclaim
+		@user = get_user
+		@object = recent_object		
+		@view = params[:view]
+		@snippet = $store.get_links params[:id]
 	end
 	
 private

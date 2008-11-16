@@ -231,22 +231,10 @@ function tl_margin()
 				// for each result item, make a new tl_snippet and add it to the margin's array
 				for (var item=0; item< result.length; item++) {
 					tl_log("addItem");
-					var claimid; var claimtxt; var opposed;
-					if(result[item].claim){
-						claimtxt = result[item].claim.text;
-						claimid = result[item].claim.id;
-						opposed = result[item].claim.opposed;
+					that.addItem(result[item]);
+					if (result[item].claim && result[item].claim.opposed) {
+						that.haveOpposedPoint = true; 
 					}
-					that.addItem(new tl_snippet(
-						result[item].id,
-						result[item].creator,
-						unescape(result[item].text),
-						claimtxt,
-						claimid,
-						opposed,
-						result[item].date
-					),result[item].bookmark);
-					if (result[item].opposed != null) { that.haveOpposedPoint = true; }
 				}
 				
 				if (that.haveOpposedPoint) {
@@ -317,7 +305,7 @@ function tl_margin()
 			if(!snipspans) continue;
 			var position = findPos(snipspans[0]); // get position of the first span element
 			position[1] = this.getSafeItemPosition(position,this.items[index].id,index);
-			this.items[index].setPosition(position);
+			this.items[index].position = position;
 			$("#margin"+this.items[index].id).css("top",position[1])
 		}
 	}
@@ -397,12 +385,15 @@ function tl_margin()
 			$(snippet.spanList[s]).
 			hover(
 				function(){ 					
-					if (snippet.opposed){
+					if (snippet.claim && snippet.claim.opposed){
 						var div = $("<div><span class='tl_claim_warn'>contentious claim: </span><span class='tl_claim_text'>"
-								+snippet.pointText+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
-					}else{
+								+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
+					}else if(snippet.claim){
 						var div = $("<div><span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
 							+snippet.pointText+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
+					}else{
+						var div = $("<div><span class='tl_claim_prefix'>this snippet has not been associated with a claim</span><span class='tl_claim_text'>"+
+							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span></div>").get(0);
 					}
 					tool=
 					tl_delayedShowTooltip(div,mouseX+10,mouseY-30); },
@@ -410,7 +401,7 @@ function tl_margin()
 			)
 			.click(function(){
 				if(!getText() || !getText().toString()){
-					myBrowser.viewFrame(snippet.pointID, snippet.id);
+					myBrowser.viewFrame(snippet);
 				}
 			});
 		}
@@ -422,6 +413,9 @@ function tl_margin()
 		if(snippet.opposed){
 			highlightclass += "_con";
 		}
+		if(!snippet.claim){
+			highlightclass += "_free";
+		}
 		if(enable){
 			highlightclass += "_bright";
 		}	
@@ -431,31 +425,47 @@ function tl_margin()
 	}
 	
 	
-	this.addItem = function(snippet,bookmarked){
+	this.addItem = function(snippet){
 		var that = this;
 		
 		var highlightclass;
-		if(snippet.opposed != null){
+		if(snippet.claim && snippet.claim.opposed != null){
 			highlightclass = "highlight_con";
+		}else if(!snippet.claim){
+			highlightclass = "highlight_free";
 		}else{
 			highlightclass = "highlight";
 		}
-		snippet.spanList = mark_snippet(snippet.sourceText,highlightclass);
+		snippet.spanList = mark_snippet(snippet.text,highlightclass);
 		if(!snippet.spanList) return;
 		this.addSnippetClickHandler(snippet);
 		var position = findPos(snippet.spanList[0]); // get position of the first span element
 //		removeSpans(snipspans);
 		position[1] = this.getSafeItemPosition(position,snippet.id,this.items.length); // make sure vertical position is kosher
-		snippet.setPosition(position);
+		snippet.position = position;
 		var numItems = this.items.push(snippet); // add to margin's array
 		
-		var margin_item = $("<div>"+snippet.displayText+"</div>")
+		var showtxt;
+		if(snippet.claim){
+			showtxt = snippet.claim.text;
+		}else{
+			showtxt = "no claim associated - click to pick a claim";
+		}
+		var opposed= false;
+		var claimid = null;
+		if(snippet.claim){
+			opposed = snippet.claim.opposed;		
+			claimid = snippet.claim.id;
+		}
+		snippet.opposed = opposed;
+		
+		var margin_item = $("<div>"+showtxt+"</div>")
 			.css("top",snippet.position[1])
 			.attr("id", "margin"+snippet.id)
 			.hover(function(){ // highlight source text when the annotation is hovered over
 				that.setHighlightClass(snippet,true);							
-				$(margin_item).text(snippet.pointText);
-				if(snippet.opposed){
+//				$(margin_item).text(snippet.pointText);
+				if(opposed){
 					$(margin_item).addClass("tl_margin_item_info_con");
 				}else{
 					$(margin_item).addClass("tl_margin_item_info");
@@ -463,15 +473,15 @@ function tl_margin()
 				$(margin_item).prepend(buttonBox);
 			}, function(){				
 				that.setHighlightClass(snippet,false);	
-				$(margin_item).text(snippet.displayText);
-				if(snippet.opposed){
+//				$(margin_item).text(snippet.displayText);
+				if(opposed){
 					$(margin_item).removeClass("tl_margin_item_info_con");
 				}else{
 					$(margin_item).removeClass("tl_margin_item_info");
 				}
 			})
 			.click(function(){ // open point browse
-				myBrowser.viewFrame(snippet.pointID, snippet.id);
+				myBrowser.viewFrame(snippet);
 			})
 			.appendTo($("#" + this.divID));
 		
@@ -510,10 +520,10 @@ function tl_margin()
 			
 			
 		// show fancy shmancy stuff if the snippet has been bookmarked
-		if (bookmarked == null) { 
+		if (snippet.bookmarked == null) { 
 			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png"); 
 			margin_item.addClass("tl_margin_item");
-			if (snippet.opposed){
+			if (opposed){
 				margin_item.addClass("tl_margin_item_con");
 			}else{
 				margin_item.addClass("tl_margin_item");
@@ -521,7 +531,7 @@ function tl_margin()
 		}
 		else { 
 			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png"); 
-			if (snippet.opposed){
+			if (opposed){
 				margin_item.addClass("tl_margin_item_con");
 			}else{
 				margin_item.addClass("tl_margin_item_bookmarked");

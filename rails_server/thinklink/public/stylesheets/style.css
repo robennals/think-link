@@ -755,3 +755,13 @@ h1 {
 .snipbody:hover {
 	background-color: #ebf7fd;
 }
+
+.dragholder {
+	max-width: 500px;
+}
+
+.itembutton {
+	margin: 0px;
+	padding: 0px;
+	vertical-align: bottom;
+}
