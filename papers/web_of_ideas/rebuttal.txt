@@ -1,40 +1,42 @@
 
-We would like to thank the reviewers for their comments. We believe that we should have little difficulty making the suggested changes.
+We would like to thank the reviewers for their comments. We believe that we should have little difficulty making the requested changes.
 
-The reviewers focussed on two related concerns: the simple nature of our claim graph, and the relationship of Think Link to prior work on argumentation in hypermedia systems.
+The reviewers focused on two related concerns: the simple nature of our claim graph, and the relationship of Think Link to prior work on argumentation in hypermedia systems.
 
 
 -- simple claim graph --
 
-The AC is correct that the simple "supports/opposes" model that we use does not thoroughly model the semantic relation between claims; indeed it is not intended to. There is a trade-off between making a system rich enough to model complex relations, and making it simple enough that it does not confuse users. 
-
-The intention of our claim graph is not to provide a rigorous graph of a logical argument, but give a user a list of things that they can use to assemble such an argument in their head. For example, if we look at Toulmin's standard example of asserting British Citizenship, Toulmin would say:
-
+There is a trade-off between making the claim graph rich enough to be useful, while making it simple enough that users are able to easy construct it. As the AC observes, our "supports/opposes" model ignores some of the details of argument structure. For example, if we look at Toulmin's standard example of asserting British citizenship, Toulmin would say:
+  
   claim: Harry is a British Citizen
   grounds: Harry was born in Bermuda 
   warrant: A man born in Bermuda will be a British Citizen
 
-We consider the grounds and warrant to be supporting claims and leave it to the user to understand how to form a logical argument from them.
+Think Link considers the grounds and warrant to both be supporting claims. Toulmin puts more information in his graph, at the cost of requiring users to understand how to put arguments into this form. Think Link makes it easier to create the graph, but the graph contains less information and a user reading the graph needs to infer the logical connections between claims themselves. 
 
-Our claim graph is a simplification of that of IBIS. IBIS arguments and positions turn into claims, IBIS issues turn into topics, and all links from issues to positions or arguments become "about". Thus, while it is possible to map any IBIS graph into a Think Link graph, some type information will be lost. Like SynView, we extend IBIS by allowing users to rate the links they believe to be important. We also extend IBIS by linking to evidence in the form of snippets. Note that the "because" weakness we raised in our paper also applies to IBIS. 
+Our intention is that Think Link allow users to identify things that are relevant to an argument for or against a claim, without requiring users to structure arguments an a rigorous logical way.
+
+Our claim graph is a simplification of that of IBIS. IBIS distinguishes between "issues" (e.g. "what should we buy?"), "positions" (e.g. "we should buy a porsche") and arguments (e.g. "a porsche is fast"). We model both positions and arguments as claims. An IBIS issue can be either open (e.g. "what should we buy?"), or closed (e.g. "we should buy a porsche?"). We model an open issue as a topic, and a closed issue as a claim. Similarly all IBIS link types can be meaningfully mapped onto Think Link link types. Thus, while one can map any IBIS graph into a Think Link graph, some type information will be lost. Like SynView, we extend IBIS by allowing users to rate the links they believe to be important. We also extend IBIS by linking to evidence in the form of snippets. Note that the "because" weakness raised in our paper also applies to IBIS. 
 
 
-The focus of the paper is the idea of allowing users to overlay such a structure over the existing web. We do not claim that our graph structure is optimal, or even necessarily better than IBIS. We have informally experimented with a number of other graph structures and it is likely that our graph structure will evolve as we learn from use in the field.
+The focus of the paper is the idea of allowing users to overlay an argument structure over the existing web. We do not claim that our graph structure is optimal, or even necessarily better than IBIS. We have informally experimented with a number of other graph structures and it is likely that our graph structure will evolve as we learn from use in the field. 
 
 
 -- relation to past work in hypermedia --
 
 We agree with the AC that the paper should include a discussion of ZENO; indeed an earlier draft of the paper included a paragraph on ZENO and IBIS which was mistakenly cut during a late compression pass.
 
-As the reviewers note, that has been a lot of past work on using hypermedia systems to model arguments, and we agree that our paper would benefit from a more through commentary on its relation to this work. We are more than happy to add such a discussion.
+As the reviewers note, there has been a lot of work on using hypermedia systems to model arguments, and we agree that our paper would benefit from a more through discussion of the relation of Think Link to this work - which we are happy to add.
 
-Many of the early hypermedia systems (e.g. NoteCards, Xanadu, Intermedia, gIBIS, TextNet, and Augment) included typed links that could be used to model arguments. TextNet in particular provided a rich vocabulary of link types for such things as "refutes" and "supports".
+Many of the early hypermedia systems (e.g. NoteCards, Xanadu, Intermedia, gIBIS, TextNet, and Augment) included typed links that could be used to model arguments. TextNet in particular provided a rich vocabulary of link types for such things as "refutes" and "supports". Several hypermedia systems were explicitly designed for argumentation (e.g. gIBIS, Belvedere, Aquanet, and TRELLIS).
 
-Several hypermedia systems were explicitly designed to allow users to create structured arguments. For example gIBIS presented a graphical view of arguments created in the IBIS model,  *** TODO: read more about how these differ ***
-
-Unlike the web, many of these hypermedia systems assumed that a linkable object would be a small snippet of text (around 100 words for NoteCards) rather than a large scrollable page. Indeed one can see Think Link's snippets as being an attempt to move the web back to this model.
-
-Many early hypermedia systems also allowed a user to visually browse the graph of connected nodes (e.g. NoteCards, Intermedia, PlaneText, gIBIS, Belvedere, and Aquanet). Again, this is a concept that Think Link reintroduces to the web. When one clicks on a Think Link snippet one is shown a claim graph that bears some similarity to the graph browsers from these early hypertext systems.
+Think Link's browsable claim graph and small snippets of text both hark back to earlier hypermedia systems. In many early hypermedia systems (e.g NoteCards) a linkable object is a small piece of text, rather than a large scrollable page. Similarly, many early hypermedia systems allow a user to visually browse the graph of connected nodes (e.g. NoteCards, Intermedia, PlaneText, gIBIS, Belvedere).
 
 
-The key contribution that Think Link has over this past work is that we are retrofitting a collaborative argument tool on top of the existing web, rather than creating a clean-slate system. This involves retrofitting a number of ideas from these early hypermedia systems onto the existing web, such as small snippets of text that can be linked into a graph, typed links, and browsable graphs of linked nodes. Think Link thus has one hypermedia system layered on top of another. At the bottom, we have the existing web, in which pages are linked together according to the desires of the author, and above that we have a second graph in which snippets from these pages are linked in a graph with claims and topics. 
+The key contribution that Think Link has over this past work is that we are layering a collaborative argument tool on top of the existing web, rather than creating a clean-slate argumentation tool. Think Link layers a new hypermedia system on top of an existing one. At the bottom, we have the existing web, in which scrollable pages are linked together according to the desires of the author. Above that we have a second hypermedia system in which snippets from the web pages are linked into a graph with claims and topics. Think Link thus provides users with a new, argument-focussed way to browse the web. 
+
+
+We would like to thank the AC and reviewers again for their help.
+
+
+
