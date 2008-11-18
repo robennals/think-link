@@ -58,7 +58,7 @@ function getIcon(obj){
 	if(obj.icon){
 		return obj.icon;
 	}
-	var mk = function(icon){return "/images/"+icon+".png";};
+	var mk = function(icon){return urlbase+"/images/"+icon+".png";};
 	switch(obj.type){
 		case "claim":
 			if(obj.opposed){
@@ -188,7 +188,7 @@ function makeDragItem(obj,label){
 	var breakicon = $("<img/>")
 		.css("display","none")
 		.css("cursor","pointer")
-		.attr("src","/images/link_break.png")
+		.attr("src",urlbase+"/images/link_break.png")
 		.css("margin-left","4px")
 		.attr("title","disconnect")
 		.attr("class","itembutton")
@@ -203,7 +203,7 @@ function makeDragItem(obj,label){
 		var deleteicon = $("<img/>")
 			.css("display","none")
 			.css("cursor","pointer")
-			.attr("src","/images/cross.png")
+			.attr("src",urlbase+"/images/cross.png")
 			.attr("title","delete")
 			.attr("class","itembutton")
 			.appendTo(item)
@@ -287,8 +287,8 @@ function createFinished(id,holder,input,typ,verb,reqId,idnum){
 		holder.remove();
 		return;
 	}	
-	$.post("/node.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
-		$.post("/node.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
+	$.post(urlbase+"/node.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
+		$.post(urlbase+"/node.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
 			holder.remove();
 			loadItemInfo(idnum,id);
 		});
@@ -327,8 +327,8 @@ function makeSnippet(snippet){
 		"<table class='dragtable'>"
 			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
 		+"</table>").appendTo(holder);	
-	var img = $("<img/>").attr("src","/images/application_go.png");
-	table.find("img").attr("src","/images/comment.png");
+	var img = $("<img/>").attr("src",urlbase+"/images/application_go.png");
+	table.find("img").attr("src",urlbase+"/images/comment.png");
 	$("<div class='sniptext'/>")
 		.text("... "+snippet.text.substring(0,200)+" ...")
 		.appendTo(table.find(".snipbody"));
@@ -403,7 +403,7 @@ function makeSubItems(div,obj){
 	var verbs = getVerbsTo(obj.type);
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];		
-		var newicon = $("<img class='newthing' src='/images/add.png' onclick='newThing(this,"+obj.id+",\""+verb+"\")'/>");
+		var newicon = $("<img class='newthing' src='"+urlbase+"/images/add.png' onclick='newThing(this,"+obj.id+",\""+verb+"\")'/>");
 		if(verb != "colitem"){
 			var reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
@@ -559,7 +559,7 @@ function loadItemInfo(idnum,id){
 	var children = getel("children-"+idnum);
 	animateInitHide(parents);
 	animateInitHide(children);
-	$.getJSON("/node/" + id,{},function(obj){
+	$.getJSON(urlbase+"/node/" + id,{},function(obj){
 		parents.innerHTML = "";
 		children.innerHTML = "";
 		makeParentItems(parents,obj);
@@ -747,13 +747,13 @@ function searchKeyPress(ev,idnum){
 }
 
 function recentMode(idnum){
-	$.getJSON("/node/recent",{},function(obj){
+	$.getJSON(urlbase+"/node/recent",{},function(obj){
 			loadObject(idnum,obj);		
 	});
 }
 
 function mineMode(idnum){
-	$.getJSON("/node/me",{},function(obj){
+	$.getJSON(urlbase+"/node/me",{},function(obj){
 			loadObject(idnum,obj);
 	});
 }
@@ -783,7 +783,7 @@ function searchDo(idnum){
 
 //	var id = makeMainGroups(idnum);
 //	var children = getel("children-"+id);
-	$.getJSON("/node/search",{query:query},function(obj){
+	$.getJSON(urlbase+"/node/search",{query:query},function(obj){
 			loadObject(idnum,obj);
 //		for(var i = 0; i < results.length; i++){
 //			$(children).append(makeDragItem(results[i]));
@@ -853,7 +853,7 @@ function dragDone(ev,node){
 		
 		makeFixedOrder(newitem);
 		var dragorder = getDragOrder(dragInfo.dropNode);
-		$.post("/node/"+dragInfo.id+"/order.json",{order:makeJSONString(dragorder)});
+		$.post(urlbase+"/node/"+dragInfo.id+"/order.json",{order:makeJSONString(dragorder)});
 	}
 	dragStop(ev,node);
 }
@@ -1004,7 +1004,7 @@ function browseDragOut(ev,browser){
 
 function setClaim(snipid){
 	var claimid = $("#browser-1").attr("tl_id");
-	$.post("/node.json",{type:"link",info:makeJSONString({subject:snipid,verb:"states",object:claimid})},function(){
+	$.post(urlbase+"/node.json",{type:"link",info:makeJSONString({subject:snipid,verb:"states",object:claimid})},function(){
 		closePopupWindow();
 	});	
 }

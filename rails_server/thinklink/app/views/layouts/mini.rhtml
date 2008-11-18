@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html;.
 	charset=iso-8859-1" />
 	<meta http-equiv="Content-Language" content="en-us" />
-	<title><%= @title %> - Think Link</title>
+	<title>Think Link - <%= Socket.gethostname %> </title>
 	<%= stylesheet_link_tag "style" %>
 	<!-- <%= javascript_include_tag :all, :cache => true %> -->
 	<% if (defined? @user) && @user['email'].eql?("trush@eecs.berkeley.edu") %>
@@ -13,10 +13,22 @@
 	<% else %>
 		<script type="text/javascript" src="/javascripts/tl_robconfig.js"></script>
 	<% end %>
+	
+	<%
+		hostname = Socket.gethostname
+		if hostname == "rob"
+			base = ""
+			configfile = "localconfig.js"
+		else
+			base = "/tl"
+			configfile = "serverconfig.js"
+		end
+	%>
 
-	<script type="text/javascript" src="/javascripts/jquery-1.2.3.js"></script>
-	<script type="text/javascript" src="/javascripts/robjson.js"></script>
-	<script type="text/javascript" src="/javascripts/webui.js"></script>
+	<script type="text/javascript" src="<%=base%>/javascripts/jquery-1.2.3.js"></script>
+	<script type="text/javascript" src="<%=base%>/javascripts/robjson.js"></script>
+	<script type="text/javascript" src="<%=base%>/javascripts/webui.js"></script>
+	<script type="text/javascript" src="<%=base%>/javascripts/<%=configfile%>"></script>
 	
 </head>
 <body id="body" onkeypress="keyPressHandler(event)" onkeydown="keyDownHandler(event)" onkeyup="keyUpHandler(event)">
