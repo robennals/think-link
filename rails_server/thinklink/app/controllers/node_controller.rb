@@ -70,6 +70,11 @@ class NodeController < ApplicationController
 		emit :result => 'success'
 	end
 
+	def keywords
+		keywords = $store.get_keywords params[:id]
+		emit keywords
+	end
+
 	def search
 		@user = get_user
 		@object = search_object

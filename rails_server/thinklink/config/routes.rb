@@ -18,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
 		:collection => {:login => :any, :logout => :any}
 	map.resources :node, 
 		:collection => {:search => :get, :recent => :get, :me => :get},
-		:member => {:order => :post, :rating => :post, :setclaim => :any} 
+		:member => {:order => :post, :rating => :post, :setclaim => :any, :keywords => :get} 
 	map.resources :apianon,
 		:collection => {:search => :get}	
 	map.resources :scripthack,

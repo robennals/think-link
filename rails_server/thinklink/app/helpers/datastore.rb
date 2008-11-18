@@ -181,6 +181,16 @@ module Datastore
 		return results
 	end
 	
+	def get_keywords(nodeid)
+		node = get_info nodeid
+		words = node['text'].split ' '
+		keywords = {}
+		words.each do |word|
+			freq = get_column_count :word, word, :objects			
+			keywords[word] = freq
+		end
+		return keywords
+	end
 	
 # -- ratings ---
 	
