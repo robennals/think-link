@@ -24,7 +24,7 @@ class ScripthackController < ApplicationController
 		if @user['id'] == 0
 			emit :error => 'not logged in'
 		else
-			snipid = $store.add_snippet params[:text],params[:url],params[:realurl],params[:title],@user['id']
+			snipid = $store.add_snippet params[:text],params[:url],params[:realurl],params[:title],@user['id'],params[:summary]
 			$store.add_link snipid, 'created by', @user['id']		
 			emit :id => snipid
 		end 

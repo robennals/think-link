@@ -34,10 +34,11 @@ module Datastore
 		return get_all("url",url,"snippets")
 	end
 		
-	def add_snippet (text,url,realurl,title,user)
+	def add_snippet (text,url,realurl,title,user,summary='')
 		id = new_guid
 		batch_insert :obj, id,
-				:info => {:type => :snippet, 'text' => text, 'url' => url, 'realurl' => realurl, 'title' => title, 'user' => user} 
+				:info => {:type => :snippet, 'text' => text, 'url' => url, 
+						'realurl' => realurl, 'title' => title, 'user' => user, 'summary' => summary} 
 		return id
 	end
 
@@ -128,14 +129,19 @@ module Datastore
 	def get_info(id)
 		info = get_all :obj,id,:info
 		props = get_all :objgen,id,:props
-		return info.merge(props).merge('id' => id)
+		return props.merge(info).merge('id' => id)
+
+#		return props.merge('info' => info).merge('id' => id)
 	end
 	
 	# get all the links to and from a snippet, and all the info for each of them
-	def get_links(id)
+	def get_links(id,userid = nil)
 		out = get_info id
 		out['from'] = get_links_from id
-		out['to'] = get_links_to id		
+		out['to'] = get_links_to id
+		if userid 			
+			out['userorder'] = get_column :obj,id,:orders,userid
+		end		
 		return out
 	end
 	
@@ -143,7 +149,7 @@ module Datastore
 		to = get_all_json :objgen,id,:links_to
 		links_to = {}
 		to.each do |key,link|
-			keypush links_to, link['verb'], get_info(link['subject'])
+			keypush links_to, link['verb'], get_info(link['subject']).merge('linkid'=>key)
 		end
 		return links_to
 	end
@@ -152,7 +158,7 @@ module Datastore
 		from = get_all_json :objgen,id,:links_from
 		links_from = {}
 		from.each do |key,link|
-			keypush links_from, link['verb'], get_info(link['object'])
+			keypush links_from, link['verb'], get_info(link['object']).merge('linkid'=>key)
 		end
 		return links_from
 	end
@@ -202,6 +208,15 @@ module Datastore
 		insert :obj,id,:ratings,user,rating
 	end
 	
+	def delete(id,userid)
+		insert :obj,id,:deletes,user,get_time
+	end
+	
+	# HACK: do this more nicely - should be deleting the link object
+#	def delete_link(subject,object,verb)
+#		insert :obj,subject,:deletes,"#{subject}-#{verb}-#{object}",
+#	end
+		
 
 # --- migration ---
 	
@@ -361,7 +376,9 @@ private
 	end
 	
 	
-
+	def get_time
+		return Time.now.iso8601
+	end
 
 	
 	#need: no be able to update different parts of the YAML for a single snippet

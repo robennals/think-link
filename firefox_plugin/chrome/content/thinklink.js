@@ -329,6 +329,7 @@ function thinklink_getLogin(){
 		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
 		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
 		thinklink_setCookieForUri("http://localhost:3000/",username,password);
+		thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
 		
     thinklink_setScriptUrls(username);
 

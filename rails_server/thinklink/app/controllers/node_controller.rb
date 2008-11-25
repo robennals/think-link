@@ -26,7 +26,7 @@ class NodeController < ApplicationController
 		user = get_user
 		@user = user
 		$store.log_view user['id'],params[:id]
-		info = $store.get_links params[:id]
+		info = $store.get_links params[:id],@user['id']
 		info.delete 'password'
 		info.delete 'email'
 		@object = info
@@ -43,7 +43,12 @@ class NodeController < ApplicationController
 	
 	def delete
 		@user = get_user
-		$store.delete params[:id]
+		$store.delete params[:id],user
+	end
+	
+	def deletelink
+		@user = get_user
+		$store.delete_link params[:subject],params[:object],verb,user
 	end
 	
 	def add_node

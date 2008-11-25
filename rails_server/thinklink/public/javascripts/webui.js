@@ -82,7 +82,7 @@ function getIcon(obj){
 }
 
 function makeSpacer(){
-	return $("<div class='dragtable'>spacer</div>");
+	return $("<div class='dragspacer'>spacer</div>");
 }
 
 function makeArgBrowseFrame(divid,obj,height,title){
@@ -173,14 +173,23 @@ function makeDragItem(obj,label){
 	var tbody = $("<tbody/>").appendTo(table);
 	var tr = $("<tr>").appendTo(tbody);
 	
+	if(obj.linkid){
+		holder.attr("tl_linkid",obj.linkid);
+	}
+	
 	if(label){
 		$("<td class='draglabel'><nobr>"+label+": </nobr></td>")
 			.attr("id","label-"+id)
 			.appendTo(tr);
 	}
 	var tdicon = $("<td/>").append(icon).appendTo(tr);
-	var item = $("<div class='dragitem'/>").attr("id",id)
+	var item = $("<a class='dragitem'/>")
+		.attr("id",id)
+		.attr("href",urlbase+"/node/"+obj.id)
 		.attr("tl_id",obj.id).attr("tl_cls",obj.type)
+		.click(function(ev){
+			ev.preventDefault();
+		})
 		.text(obj.text);
 
 	var tditem = $("<td/>").append(item).appendTo(tr);
@@ -229,6 +238,7 @@ function makeDragItem(obj,label){
 			},300);
 			dragOver(ev,this,id)}
 			)
+		.mousemove(function(ev){dragOver(ev,this,id)})
 		.mouseout(function(ev){
 			if(isParent(ev.relatedTarget,holder.get(0))) return;
 			breakicon.css("display","none");
@@ -322,13 +332,20 @@ function makeSnippet(snippet){
 	}
 	var holder = $("<div class='dragholder'>")
 		.attr("id","holder-"+id)
-		.attr("tl_id",snippet.id);
+		.attr("tl_id",snippet.id)
+		.attr("tl_title",snippet.title)
+		.attr("tl_url",snippet.url)
+		.attr("tl_realurl",snippet.realurl)
+		.attr("tl_text",snippet.text)
+		.attr("tl_cls","snippet");
+	;
 	var table = $(
 		"<table class='dragtable'>"
 			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
 		+"</table>").appendTo(holder);	
 	var img = $("<img/>").attr("src",urlbase+"/images/application_go.png");
 	table.find("img").attr("src",urlbase+"/images/comment.png");
+	var snipbody = table.find(".snipbody");
 	$("<div class='sniptext'/>")
 		.text("... "+snippet.text.substring(0,200)+" ...")
 		.appendTo(table.find(".snipbody"));
@@ -337,11 +354,60 @@ function makeSnippet(snippet){
 		.append(img)
 		.appendTo(table.find(".snipbody"));
 
+	
+	var breakicon = $("<img/>")
+		.css("display","none")
+		.css("cursor","pointer")
+		.attr("src",urlbase+"/images/link_break.png")
+		.css("margin-left","4px")
+		.attr("title","disconnect")
+		.attr("class","itembutton")
+		.appendTo(snipbody)
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			deleteLink(ev,this,snippet.linkid)});
+
+	if(thinklink_user_id == snippet.user){
+		var deleteicon = $("<img/>")
+			.css("display","none")
+			.css("cursor","pointer")
+			.attr("src",urlbase+"/images/cross.png")
+			.attr("title","delete")
+			.attr("class","itembutton")
+			.appendTo(snipbody)
+			.click(function(ev){
+				ev.cancelBubble = true;
+				ev.stopPropagation();
+				deleteNode(ev,this,snippet.id,label)});
+	}
+
 	holder.click(function(){selectItem(this,snippet.id)})
 		.mouseup(function(ev){dragCapture(ev,this)})
 		.mousedown(function(ev){dragStart(ev,this)})
-		.mouseover(function(ev){dragOver(ev,this,id)})
-		.mouseout(function(ev){dragOut(ev,this,id)});		
+		.mouseover(function(ev){
+			holder.tl_selected = true;
+			setTimeout(function(){
+				if(holder.tl_selected){
+					breakicon.css("display","");
+					if(deleteicon){
+						deleteicon.css("display","");
+					}
+				}
+			},300);
+			dragOver(ev,this,id)
+		})
+		.mousemove(function(ev){dragOver(ev,this,id)})
+		.mouseout(function(ev){
+			if(isParent(ev.relatedTarget,holder.get(0))) return;
+			breakicon.css("display","none");
+			if(deleteicon){
+				deleteicon.css("display","none");
+			}
+			holder.tl_selected = false;
+			dragOut(ev,this,id)
+		});		
+		
 		
 	return holder;
 }	
@@ -401,6 +467,12 @@ function getVerbSubjectType(verb){
 
 function makeSubItems(div,obj){
 	var verbs = getVerbsTo(obj.type);
+	if(obj.userorder){
+		var userorder = parseJSON(obj.userorder);
+	}else{
+		var userorder = null;
+	}
+	
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];		
 		var newicon = $("<img class='newthing' src='"+urlbase+"/images/add.png' onclick='newThing(this,"+obj.id+",\""+verb+"\")'/>");
@@ -414,16 +486,37 @@ function makeSubItems(div,obj){
 			}
 		}
 		var items = obj.to[verb];
+		var byid = {};
 		if(items && items.length > 0){
 			for(var j = 0; j < items.length; j++){
-				if(verb == "states"){
-					$(div).append(makeSnippet(items[j]));
-				}else{			
-					$(div).append(makeDragItem(items[j]));
+				byid[items[j].id] = items[j];
+			}
+			if(userorder && userorder[verb]){
+				for(var j = 0; j < userorder[verb].length; j++){
+					var orderid = userorder[verb][j];
+					if(byid[orderid]){
+						$(div).append(makeDragItem(byid[orderid]));
+						byid[orderid].done = true;
+					}
 				}
 			}
+			for(var j = 0; j < items.length; j++){
+				if(items[j].done) continue;
+				$(div).append(makeDragItem(items[j]));
+//				if(verb == "states"){
+//					$(div).append(makeSnippet(items[j]));
+//				}else{			
+//					$(div).append(makeDragItem(items[j]));
+//				}
+			}
 		}else{
-			$(div).append($("<div class='empty'>empty</div>"));
+			var empty = $("<div class='empty'>empty</div>")
+				.attr("tl_verb",verb)
+				.mouseover(function(ev){dragEmptyOver(ev,this,obj.id)})
+				.mouseout(function(ev){dragEmptyOut(ev,this,obj.id)})
+				.mouseup(function(ev){dragEmptyCapture(ev,this,obj.id)});
+				
+			$(div).append(empty);
 		}				
 	}
 }
@@ -580,6 +673,8 @@ function selectItem(div,id){
 	var browser = findBrowser(div);
 	var dragitem = $(div).find(".dragitem");
 	browser.setAttribute("tl_id",id);
+	
+	document.location.hash = id;
 
 	clearSelect(getNodeIdNum(browser));
 	
@@ -813,6 +908,13 @@ function dragStart(ev,node){
 	dragInfo.startX = ev.clientX;
 	dragInfo.startY = ev.clientY;
 	dragInfo.icon = $(holder).find("img").attr("src");
+	
+	if(dragInfo.type == "snippet"){
+		dragInfo.title = holder.getAttribute("tl_title");
+		dragInfo.url = holder.getAttribute("tl_url");
+		dragInfo.realurl = holder.getAttribute("tl_realurl");
+		dragInfo.text = holder.getAttribute("tl_text");
+	}
 
 	document.body.addEventListener("mousemove",dragMove,false);
 	document.body.addEventListener("mouseup",dragDone,false);
@@ -839,7 +941,7 @@ function dragMove(ev){
 // TODO: don't allow dragging to a parent position. Only to a child position
 
 function dragDone(ev,node){
-	if(dragInfo.dropNode && dragInfo.hoverBrowser){
+	if(dragInfo.dropNode){
 		tl_log("captured by "+dragInfo.dropNode.textContent+" after="+dragInfo.after);
 		var newitem = makeDragItem(dragInfo);
 		if(dragInfo.after){
@@ -847,13 +949,25 @@ function dragDone(ev,node){
 		}else{
 			newitem.insertBefore(dragInfo.dropNode);
 		}
-		if(dragInfo.hoverBrowser == dragInfo.browser || dragInfo.moveMode){
+		if(!dragInfo.hoverBrowser || dragInfo.hoverBrowser == dragInfo.browser || dragInfo.moveMode){
 			$(dragInfo.holder).remove();			
 		}
 		
-		makeFixedOrder(newitem);
+		makeFixedOrder(newitem.get(0));
 		var dragorder = getDragOrder(dragInfo.dropNode);
-		$.post(urlbase+"/node/"+dragInfo.id+"/order.json",{order:makeJSONString(dragorder)});
+		var browser = findBrowser(dragInfo.dropNode);
+		var topid = browser.getAttribute("tl_id");
+
+		$.post(urlbase+"/node/"+topid+"/order.json",{order:makeJSONString(dragorder)});
+	}else if(dragInfo.empty){
+		tl_log("captured by empty");
+		var newitem = makeDragItem(dragInfo);
+		newitem.insertAfter(dragInfo.empty);
+		$(dragInfo.empty).remove();
+		$.post(urlbase+"/node.json",{type:"link",info:makeJSONString(
+					{subject:dragInfo.id,verb:dragInfo.verb,object:dragInfo.eid})},function(){
+					tl_log("created new link");
+			});
 	}
 	dragStop(ev,node);
 }
@@ -877,20 +991,15 @@ function getDragOrder(node){
 	for(var i = 0; i < siblings.length; i++){
 		var child = siblings[i];
 		if(child.className == "relationtitle"){
-			if(thisorder.length > 0){
-				ordermap[verb] = thisorder;
-			}
-			ordermap = [];
+			thisorder = [];						
 			verb = child.getAttribute("tl_verb");
+			ordermap[verb] = thisorder;
 		}else{
 			var hasorder = child.getAttribute("tl_pos");
 			if(hasorder){
-				thisorder.push(child);
+				thisorder.push(child.getAttribute("tl_id"));
 			}			
 		}
-	}
-	if(thisorder.length > 0){
-		ordermap[verb] = thisorder;
 	}
 	return ordermap;	
 }
@@ -916,18 +1025,49 @@ function dragStop(ev,node){
 function dragCapture(ev,node){
 }
 
+function dragEmptyOver(ev,node,id){
+	if(!dragInfo.id) return;
+	var verb = node.getAttribute("tl_verb");
+	
+	node.style.display = "none";
+	var spacer = makeSpacer();
+	spacer.insertAfter(node);
+	
+	if(dragInfo.spacer){
+		var oldspacer = dragInfo.spacer;
+			oldspacer.remove();
+	}
+	if(dragInfo.empty){
+		dragInfo.empty.style.display = "";
+	}
+	dragInfo.spacer = spacer;
+	dragInfo.dropNode = null;
+	dragInfo.empty = node;
+	dragInfo.verb = verb;
+	dragInfo.eid = id;
+}
+
+function dragEmptyOut(ev,node,id){
+//	node.style.display = "";
+}
+
 function dragOver(ev,node,id){
-	if(isParent(ev.relatedTarget,dragInfo.logo)) return;
+	if(node == dragInfo.logo) return;
+	if(ev.relatedTarget && isParent(ev.relatedTarget,dragInfo.logo)) return;
 	var holder = findHolder(node);
-	if(holder == dragInfo.spacer || node == dragInfo.node) return;
-	if(dragInfo.id && dragInfo.id != id && (dragInfo.dropNode != node || dragInfo.fromPreview) && dragInfo.logo){	
+	if(holder == dragInfo.spacer /* || node == dragInfo.node */) return;
+
+	if(dragInfo.id && dragInfo.id != id && dragInfo.logo){
 		var spacer = makeSpacer();
-		spacer.css("opacity","0");
+		// spacer.css("opacity","0");
+
+//		tl_log("dragOver - "+id);
 
 		var cinfo = clone(dragInfo);
 		var noff = node.offsetTop;
+		var top = getPos(holder).top;
 
-		if(dragInfo.spacer && dragInfo.spacer.get(0).offsetTop < holder.offsetTop){
+		if(ev.clientY > (top + (holder.offsetHeight / 2))){
 			spacer.insertAfter(holder);
 			dragInfo.after = true;
 		}else{
@@ -939,20 +1079,19 @@ function dragOver(ev,node,id){
 			var oldspacer = dragInfo.spacer;
 				oldspacer.remove();
 		}
+		if(dragInfo.empty){
+			dragInfo.empty.style.display = "";
+		}
+
 		dragInfo.spacer = spacer;
 		var browser = findBrowser(node);
 		dragInfo.dropNode = node;
-		dragInfo.fromPreview = false;
+		dragInfo.empty = false;
 	}
 }
 
 function dragOut(ev,node,id){
-	if(isParent(ev.relatedTarget,dragInfo.logo)) return;
-	var holder = findHolder(node);
-	if(holder == dragInfo.spacer || node == dragInfo.node || node == dragInfo.dropNode){
-		dragInfo.fromPreview = true;
-		return;
-	}
+	// nothing right now
 }
 
 
@@ -1008,3 +1147,16 @@ function setClaim(snipid){
 		closePopupWindow();
 	});	
 }
+
+function deleteLink(ev,node,
+
+//function deleteLink(ev,node,id,verb){
+//	var group = findNodeGroup(node);
+//	var idnum = getNodeIdNum(group);
+//	var current = getel("current-"+idnum);
+//	var objectid = current.getAttribute("tl_id");
+//	$.post(urlbase+"/node/deletelink.json",{subject:id,object:objectid,verb:verb},function(){
+//		tl_msg("deleted link");
+//	});
+//	
+//}
