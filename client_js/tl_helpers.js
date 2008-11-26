@@ -54,7 +54,7 @@ function tl_delayedShowTooltip(innerdiv,x,y){
 			box.style.top = (mouseY - 30) + "px";
 			box.style.left = (mouseX + 10) + "px";
 		}
-	},1000);
+	},300);
 	
 	return box;
 }

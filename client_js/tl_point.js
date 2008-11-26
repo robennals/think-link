@@ -69,7 +69,7 @@ function tl_point_browser() {
 			title = "Investigate Claim";
 			url = thinklink_pointbase+snippet.claim.id+"?snippet="+snippet.id;
 		}else{
-			title = "Select a Claim";
+			title = "What does this Claim?";
 			url = thinklink_pointbase+snippet.id+"/setclaim";
 		}
 		

@@ -390,7 +390,7 @@ function tl_margin()
 								+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
 					}else if(snippet.claim){
 						var div = $("<div><span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
-							+snippet.pointText+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
+							+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
 					}else{
 						var div = $("<div><span class='tl_claim_prefix'>this snippet has not been associated with a claim</span><span class='tl_claim_text'>"+
 							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span></div>").get(0);

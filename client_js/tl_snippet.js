@@ -151,8 +151,34 @@ function tl_snippet_dialog(margin) {
 			that.permaLink = url;
 			that.gotPermaLink = true;
 		});
-		that.makeSimpleSnippetDialog(sourceSpans);
+		that.makeReallySimpleSnippet(sourceSpans);
+//		that.makeSimpleSnippetDialog(sourceSpans);
 	};
+	
+	this.makeReallySimpleSnippet = function(sourceSpans){
+		var that = this;
+		var url = this.margin.normTool.normalizeUrl(this.margin.url);
+		if (this.permaLink != null) { // use the determined perma link if available
+			tl_log("permalink is : "+this.permaLink);
+			url = this.margin.normTool.makeAbsoluteUrl(this.margin.url,this.permaLink);
+			url= this.margin.normTool.normalizeUrl(url);
+		} 
+		var url_real = this.margin.url;
+		
+		doAJAX("tl_new","scripthack/newsnippet.js"
+			+"?text="+encodeURIComponent(that.sourceText)
+			+"&url="+encodeURIComponent(url)
+			+"&realurl="+encodeURIComponent(url_real)				
+			+"&title="+encodeURIComponent(document.title)
+		,function(result){
+			if(result.error){
+				window.open(thinklink_urlbase+"api/login");
+			}else{
+				this.margin.itemsLoaded=false;
+				this.margin.refresh();  // TODO: remove the need for this
+			}
+		});		
+	}
 	
 	this.makeSimpleSnippetDialog = function(sourceSpans){
 		var that = this;
