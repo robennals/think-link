@@ -4,5 +4,6 @@
 
 <script type="text/javascript">
 var thinklink_user_id = <%=@user['id']%>;
+var thinklink_deletes = process_deletes(<%=($store.user_deletes @user['id']).to_json%>);
 makeArgBrowser("argbrowser",<%=@object.to_json%>);
 </script>

@@ -29,7 +29,8 @@ class NodeController < ApplicationController
 		info = $store.get_links params[:id],@user['id']
 		info.delete 'password'
 		info.delete 'email'
-		@object = info
+		@object = info		
+		
 		emit info, 'object'
 	end
 	
@@ -43,7 +44,22 @@ class NodeController < ApplicationController
 	
 	def delete
 		@user = get_user
-		$store.delete params[:id],user
+		$store.delete params[:id],@user['id']
+		emit params[:id]
+	end
+	
+	def user_deletes
+		emit $store.user_deletes params[:id]
+	end
+	
+	def rename
+		@user = get_user
+		name = params[:name]
+		info = $store.get_info params[:id]
+		if info['user'] == @user['id']
+			$store.set_text params[:id], name
+		end
+		emit params[:name]
 	end
 	
 	def deletelink

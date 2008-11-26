@@ -205,10 +205,11 @@ function makeDragItem(obj,label){
 		.click(function(ev){
 			ev.cancelBubble = true;
 			ev.stopPropagation();
-			deleteLink(ev,this,obj.id,label)});
+			ev.preventDefault();
+			deleteLink(ev,holder,obj.id)});
 //	var tdbreak = $("<td/>").append(breakicon).appendTo(tr);
 
-	if(thinklink_user_id == obj.user){
+//	if(thinklink_user_id == obj.user){
 		var deleteicon = $("<img/>")
 			.css("display","none")
 			.css("cursor","pointer")
@@ -219,8 +220,24 @@ function makeDragItem(obj,label){
 			.click(function(ev){
 				ev.cancelBubble = true;
 				ev.stopPropagation();
-				deleteNode(ev,this,obj.id,label)});
+				ev.preventDefault();
+				deleteNode(ev,holder,obj.id)});
 //		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
+//	}
+
+	if(thinklink_user_id == obj.user){
+		var renameicon = $("<img/>")
+				.css("display","none")
+				.css("cursor","pointer")
+				.attr("src",urlbase+"/images/pencil.png")
+				.attr("title","rename")
+				.attr("class","itembutton")
+				.appendTo(item)
+				.click(function(ev){
+					ev.cancelBubble = true;
+					ev.stopPropagation();
+					ev.preventDefault();
+					renameNode(ev,item,obj.id)});
 	}
 			
 	holder.click(function(){selectItem(this,obj.id)})
@@ -234,6 +251,10 @@ function makeDragItem(obj,label){
 					if(deleteicon){
 						deleteicon.css("display","");						
 					}
+					if(renameicon){
+						renameicon.css("display","");						
+					}
+
 				}
 			},300);
 			dragOver(ev,this,id)}
@@ -245,6 +266,10 @@ function makeDragItem(obj,label){
 			if(deleteicon){
 				deleteicon.css("display","none");						
 			}
+			if(renameicon){
+				renameicon.css("display","none");						
+			}
+
 			holder.tl_selected = false;
 			dragOut(ev,this,id)});
 		
@@ -366,7 +391,7 @@ function makeSnippet(snippet){
 		.click(function(ev){
 			ev.cancelBubble = true;
 			ev.stopPropagation();
-			deleteLink(ev,this,snippet.linkid)});
+			deleteLink(ev,holder,snippet.linkid)});
 
 	if(thinklink_user_id == snippet.user){
 		var deleteicon = $("<img/>")
@@ -379,7 +404,7 @@ function makeSnippet(snippet){
 			.click(function(ev){
 				ev.cancelBubble = true;
 				ev.stopPropagation();
-				deleteNode(ev,this,snippet.id,label)});
+				deleteNode(ev,holder,snippet.id)});
 	}
 
 	holder.click(function(){selectItem(this,snippet.id)})
@@ -494,20 +519,15 @@ function makeSubItems(div,obj){
 			if(userorder && userorder[verb]){
 				for(var j = 0; j < userorder[verb].length; j++){
 					var orderid = userorder[verb][j];
-					if(byid[orderid]){
+					if(byid[orderid] && !is_deleted(byid[orderid])){
 						$(div).append(makeDragItem(byid[orderid]));
 						byid[orderid].done = true;
 					}
 				}
 			}
 			for(var j = 0; j < items.length; j++){
-				if(items[j].done) continue;
+				if(items[j].done || is_deleted(items[j])) continue;
 				$(div).append(makeDragItem(items[j]));
-//				if(verb == "states"){
-//					$(div).append(makeSnippet(items[j]));
-//				}else{			
-//					$(div).append(makeDragItem(items[j]));
-//				}
 			}
 		}else{
 			var empty = $("<div class='empty'>empty</div>")
@@ -519,6 +539,11 @@ function makeSubItems(div,obj){
 			$(div).append(empty);
 		}				
 	}
+}
+
+function is_deleted(obj){
+	if(thinklink_deletes[obj.id] || thinklink_deletes[obj.linkid]) return true;
+	return false;
 }
 
 function makeParentItems(div,obj){
@@ -1148,7 +1173,45 @@ function setClaim(snipid){
 	});	
 }
 
-function deleteLink(ev,node,
+// This is only a delete request, not a full delete, so it is a post rather than an HTTP DELETE
+// the result is to knock down the score and hide it from us unless we have "show deleted" turned on
+function deleteLink(ev,node,id){
+	$.post(urlbase+"/node/"+id+"/delete.json",{},function(){
+		thinklink_deletes[id] = true;
+		tl_log("deleted link");
+		$(node).remove();
+	});
+}
+
+function deleteNode(ev,node,id){
+	if(confirm("Are you sure you want to completely delete this claim?\n"
+		+"If you just want to disconnect the claim then click 'Cancel' and"
+		|"then click the disconnect button")){
+		$.post(urlbase+"/node/"+id+"/delete.json",{},function(){
+			thinklink_deletes[id] = true;
+			tl_log("deleted node");
+			$(node).remove();
+		});
+	}
+}
+
+function renameNode(ev,item,id){
+	var newname = prompt("New name:",item.text());
+	if(newname){
+		$.post(urlbase+"/node/"+id+"/rename.json",{name:newname},function(){
+			item.text(newname);
+			tl_log("renamed node");
+		});
+	}
+}
+
+function process_deletes(deletes){
+	var hsh = {};
+	for(var i = 0; i < deletes.length; i++){
+		hsh[deletes[i]] = true;
+	}
+	return hsh;
+}
 
 //function deleteLink(ev,node,id,verb){
 //	var group = findNodeGroup(node);

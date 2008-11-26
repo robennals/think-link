@@ -19,6 +19,7 @@
 #TODO track deletions
 #TODO use denormalization to make get_links and url_snippets faster
 #TODO search should use steming
+#TODO use a memcache to avoid the cost of checking delete etc status for everything
 
 require 'crapbase/crapbase_mysql'
 # require 'json'
@@ -89,6 +90,10 @@ module Datastore
 		return id
 	end
 
+	def user_deletes(userid)
+		return (get_all :obj,userid,:deleted).keys
+	end
+
 
 # --- history ---	
 		
@@ -120,6 +125,11 @@ module Datastore
 		return id
 	end
 	
+	def set_text(id,name)
+		insert :obj,id,:info,'text',name		
+	end
+
+	
 	def add_link(subject,verb,object)
 		id = new_guid
 		batch_insert :obj, id, :info => {:type => :link, 'subject' => subject, 'verb' => verb, 'object' => object}
@@ -133,7 +143,7 @@ module Datastore
 
 #		return props.merge('info' => info).merge('id' => id)
 	end
-	
+		
 	# get all the links to and from a snippet, and all the info for each of them
 	def get_links(id,userid = nil)
 		out = get_info id
@@ -141,6 +151,16 @@ module Datastore
 		out['to'] = get_links_to id
 		if userid 			
 			out['userorder'] = get_column :obj,id,:orders,userid
+#			out['from'].each do |verb,list|
+#				list.each do |link|
+#					link['deleted'] = get_column :obj,link['id'],:deletes,userid				
+#				end
+#			end
+#			out['to'].each do |verb,list|
+#				list.each do |link|
+#					link['deleted'] = get_column :obj,link['id'],:deletes,userid			
+#				end	
+#			end
 		end		
 		return out
 	end
@@ -209,7 +229,8 @@ module Datastore
 	end
 	
 	def delete(id,userid)
-		insert :obj,id,:deletes,user,get_time
+#		insert :obj,id,:deletedby,userid,get_time
+		insert :obj,userid,:deleted,id,get_time  # what did the user want to delete
 	end
 	
 	# HACK: do this more nicely - should be deleting the link object
@@ -239,9 +260,9 @@ private
 
 	def get_tables
 		return { 
-			:obj => [:info, :ratings, :orders],
+			:obj => [:info, :ratings, :orders, :deleted],
 			:user => [:recent, :orders],				# in addition to stuff in :obj
-			:objgen => [:links_from, :links_to, :props],
+			:objgen => [:links_from, :links_to, :props, :deletedby],
 			:url => [:snippets],
 			:email => [:user],
 			:word => [:objects,:props],
@@ -293,6 +314,14 @@ private
 		add_trigger :table => :obj, :family => :info, :column => 'email' do |table,key,values|
 			info = values[:info]
 			insert :email, info['email'], :user, key, info 
+		end
+		
+		#id -> who deleted it. Used in batch processing of item scores.
+		add_trigger :table => :obj, :family => :deleted do |table,key,values|
+			user = key
+			values.each do |id,date|				
+				insert :objgen,id,:deletedby,user,date
+			end
 		end
 		
 		#link -> related objects for each linked object

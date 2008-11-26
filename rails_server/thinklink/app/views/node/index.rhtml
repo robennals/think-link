@@ -39,6 +39,7 @@
 <script type="text/javascript">
 
 var thinklink_user_id = <%=@user['id']%>;
+var thinklink_deletes = process_deletes(<%=($store.user_deletes @user['id']).to_json%>);
 
 makeArgBrowseFrame("browser1",<%=@object.to_json%>,"400px");
 makeArgBrowseFrame("browser2",<%=@object.to_json%>,"400px");
