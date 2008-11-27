@@ -33,14 +33,30 @@
 </table>
 </div>
 
-<div class="dragbar" id="dragbar" onmousedown="dragBar(event)">
+<!-- <div class="dragbar" id="dragbar" onmousedown="dragBar(event)">
 </div>
+-->
 
 <script type="text/javascript">
-
+function doResize(){
+	var nowheight = document.body.offsetHeight;
+	var wantheight = window.innerHeight;
+	var resizeBox = $(".browser_body");
+	var bodyheight = resizeBox.get(0).offsetHeight;
+	var pad = 20;
+	
+	resizeBox.css("height",bodyheight + wantheight - nowheight - pad);
+	
+//	topheight = $(".helpmessage").get(0).offsetHeight + $(".browsetitle").get(0).offsetHeight;
+//	resizeBox.css("height",window.innerHeight - topheight);
+}
 var thinklink_user_id = <%=@user['id']%>;
 var thinklink_deletes = process_deletes(<%=($store.user_deletes @user['id']).to_json%>);
 
 makeArgBrowseFrame("browser1",<%=@object.to_json%>,"400px");
-makeArgBrowseFrame("browser2",<%=@object.to_json%>,"400px");
+makeArgBrowseFrame("browser2",<%=@object2.to_json%>,"400px");
+
+doResize();
+window.addEventListener("resize",doResize,true);
+
 </script>

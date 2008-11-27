@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
 	map.resources :api, 
 		:collection => {:login => :any, :logout => :any}
 	map.resources :node, 
-		:collection => {:search => :get, :recent => :get, :me => :get},
+		:collection => {:search => :get, :recent => :get, :me => :get, :newsnips => :get},
 		:member => {:order => :post, :rating => :post, :setclaim => :any, 
 				:keywords => :get, :delete => :post, :user_deletes => :get, :rename => :post} 
 	map.resources :apianon,

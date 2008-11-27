@@ -25,19 +25,25 @@ class NodeController < ApplicationController
 	def show
 		user = get_user
 		@user = user
-		$store.log_view user['id'],params[:id]
 		info = $store.get_links params[:id],@user['id']
 		info.delete 'password'
 		info.delete 'email'
+		if info['type'] != "snippet"
+			$store.log_view user['id'],params[:id]
+		end
+
 		@object = info		
 		
 		emit info, 'object'
 	end
 	
 	def create
-		type = params[:type]
-		info = json_decode(params[:info])
 		user = get_user
+		type = params[:type]
+		if type=="user" && !user['admin']
+			emit :result => "not authorized"
+		end
+		info = json_decode(params[:info])
 		id = $store.add_node type,user['id'],info
 		emit id
 	end
@@ -114,9 +120,16 @@ class NodeController < ApplicationController
 		emit @object
 	end
 	
+	def newsnips
+		@user = get_user
+		@object = newsnips_object
+		emit @object
+	end
+	
 	def index
 		@user = get_user
 		@object = recent_object
+		@object2 = newsnips_object
 	end
 	
 	def setclaim
@@ -128,9 +141,15 @@ class NodeController < ApplicationController
 	
 private
 	
+	def newsnips_object
+		newsnips = $store.get_newsnips @user['id']
+		return {'id' => 0, 'text' => "Unattached Claims", 'type' => "newsnips", 'from' => {},
+			'to' => {"colitem" => newsnips}}
+	end
+	
 	def recent_object
 		recent = $store.get_recent @user['id']
- 		return {'id' => 0, 'text' => "Recent Claims and Folders", 'type' => "recent", 'from' => {}, 
+ 		return {'id' => 0, 'text' => "History of recent browsing", 'type' => "recent", 'from' => {}, 
 	 		'to' => {"colitem" => recent}}
 	end
 	

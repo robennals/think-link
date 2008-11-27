@@ -93,7 +93,7 @@ function tl_margin()
 			var args = "?url="+encodeURIComponent(url)+"&title="+encodeURIComponent(that.docTitle)+"&author="+encodeURIComponent(that.docAuthor);
 			doAJAX(scriptID,that.docInfoURL+args,function(result){
 				tl_log("sent: "+ args+ ", "+result);
-				that.refresh();
+//				that.refresh();
 			});
 		}, false);
 		titleForm.appendChild(titleInput);
@@ -109,7 +109,7 @@ function tl_margin()
 			var args = "?url="+encodeURIComponent(url)+"&title="+encodeURIComponent(that.docTitle)+"&author="+encodeURIComponent(that.docAuthor);
 			doAJAX(scriptID,that.docInfoURL+args,function(result){
 				tl_log("sent: "+ args+ ", "+result);
-				that.refresh();
+//				that.refresh();
 			});
 		}, false);
 		authorForm.appendChild(authorInput);

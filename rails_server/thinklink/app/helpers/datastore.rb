@@ -26,6 +26,47 @@ require 'crapbase/crapbase_mysql'
 
 $bad_words = ["the","and","his","her","from","his","has","from","then","can","will","new","one","two","our"]
 
+def printobjs(objs)
+	keys = {}
+	objs.each do |obj|
+		obj.keys.each do |key|
+			keys[key]=true
+		end
+	end
+	keys.keys.each do |key|
+		print key[0,10].ljust 10
+		print " "
+	end			
+	print "\n"
+	objs.each do |obj|
+		keys.keys.each do |key|
+			val = obj[key]
+			if !val 
+				val = ""
+			end
+			print val.to_s[0,10].ljust 10
+			print " "
+		end
+		print "\n"
+	end
+	return nil		
+end
+
+def printlinks(obj)
+	print "-- to --\n"
+	obj['to'].each do |verb|
+		print "#{verb}:\n"
+		printobjs obj['to'][verb]
+	end
+	print "-- from --\n"
+	obj['from'].each do |verb|
+		print "#{verb}:\n"
+		printobjs obj['to'][verb]
+	end
+
+end
+
+
 module Datastore
 	include CrapBase
 
@@ -85,13 +126,18 @@ module Datastore
 
 	def add_user(email,name,password)
 		id = new_guid
-		batch_insert :obj, id, 
+		batch_insert :objgen, id, 
 				:info => {:type => "user", :email => email, :name => name, :password => password}
 		return id
 	end
 
 	def user_deletes(userid)
 		return (get_all :obj,userid,:deleted).keys
+	end
+
+	def get_newsnips(userid)
+#		newsnips = get_all :objgen,userid,:newsnips
+		return (info_for_ids(get_all(:objgen,userid,:newsnips))).sort {|a,b| b['id'] <=> a['id']}
 	end
 
 
@@ -101,9 +147,24 @@ module Datastore
 		insert :user,userid,:recent,Time.now.xmlschema,id
 	end
 	
+	def info_for_ids(ids,limit = 100)
+		seen = {}
+		results = []
+		ids.each do |id,data|
+			if !seen.has_key? id
+				seen[id] = true
+				results.push get_info(id)
+			end
+			if results.length > limit
+				return results
+			end
+		end		
+		return results
+	end
+	
 	def get_recent(userid)
 		results = []
-		recentids = get_slice :user,userid,:recent,0,50,true
+		recentids = get_slice :user,userid,:recent,0,200,true
 		keys = recentids.keys.sort.reverse
 		seen = {}
 		keys.each do |time|
@@ -111,6 +172,9 @@ module Datastore
 			if !seen.has_key? id 
 				seen[id] = true
 				results.push get_info(id)
+			end
+			if results.length > 100
+				return results
 			end
 		end
 		return results
@@ -140,10 +204,17 @@ module Datastore
 		info = get_all :obj,id,:info
 		props = get_all :objgen,id,:props
 		return props.merge(info).merge('id' => id)
-
-#		return props.merge('info' => info).merge('id' => id)
 	end
-		
+	
+	def get_for_type(type,limit=10,offset=0)
+		results = []
+		rows = sql_select_all("SELECT * FROM obj_info WHERE columnname = 'type' AND value = '#{type}' LIMIT #{limit} OFFSET #{offset}")
+		rows.each do |row|
+			results.push(get_info(row['keyname']))
+		end	
+		return results
+	end	
+				
 	# get all the links to and from a snippet, and all the info for each of them
 	def get_links(id,userid = nil)
 		out = get_info id
@@ -262,7 +333,7 @@ private
 		return { 
 			:obj => [:info, :ratings, :orders, :deleted],
 			:user => [:recent, :orders],				# in addition to stuff in :obj
-			:objgen => [:links_from, :links_to, :props, :deletedby],
+			:objgen => [:links_from, :links_to, :props, :deletedby, :newsnips],
 			:url => [:snippets],
 			:email => [:user],
 			:word => [:objects,:props],
@@ -313,8 +384,24 @@ private
 		#email -> user
 		add_trigger :table => :obj, :family => :info, :column => 'email' do |table,key,values|
 			info = values[:info]
-			insert :email, info['email'], :user, key, info 
+			insert :email, info['email'], :user,key,info 
 		end
+		
+		#user -> newly created snippets 
+		add_trigger :table => :obj, :family => :info, :column => 'url' do |table,key,values|
+			info = values[:info]
+			insert :objgen,info['user'],:newsnips,key,info			
+		end
+		
+		#remove newsnips if this is a snippet
+		add_trigger :table => :obj, :family => :info, :column => 'verb' do |table,key,values|
+			info = values[:info]
+			if info['verb'] == 'states'
+				subjectuser = (get_info info['subject'])['user']
+				remove :objgen,subjectuser,:newsnips,info['subject']
+			end
+		end
+				
 		
 		#id -> who deleted it. Used in batch processing of item scores.
 		add_trigger :table => :obj, :family => :deleted do |table,key,values|

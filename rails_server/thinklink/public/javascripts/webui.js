@@ -76,6 +76,8 @@ function getIcon(obj){
 			return mk("time");
 		case "search":
 			return mk("magnifier");
+		case "newsnips":
+			return mk("script");
 		case "user":
 			return mk("user");
 	}
@@ -111,10 +113,13 @@ function makeArgBrowseFrame(divid,obj,height,title){
 		.click(function(){searchMode(idnum)});
 	$("<nobr class='browsebutton'>history</nobr>").appendTo(buttons)
 		.click(function(){recentMode(idnum)});
-	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
-		.click(function(){hotMode(idnum)});
-	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
-		.click(function(){mineMode(idnum)});
+//	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
+//		.click(function(){hotMode(idnum)});
+	$("<nobr class='browsebutton'>unattached</nobr>").appendTo(buttons)
+		.click(function(){unattachedMode(idnum)});
+
+//	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
+//		.click(function(){mineMode(idnum)});
 		
 	makeInnerBrowser(idnum,box,obj,height);
 }
@@ -292,7 +297,7 @@ function newThing(node,id,verb){
 	var tr = $("<tr>").appendTo(tbody);
 	var tdicon = $("<td/>").append(icon).appendTo(tr);
 	var item = $("<div class='dragitem'/>").attr("id",id);
-	var input = $("<input type='text'/>").appendTo(item);
+	var input = $("<input type='text'/>").css("width",300).appendTo(item);
 	var tditem = $("<td/>").append(item).appendTo(tr);
 	var msg = $("<div class='minimessage'/>")
 			.text("Enter text to create a new "+typ+". Use drag and drop to connect an existing "+typ+".")
@@ -439,11 +444,12 @@ function makeSnippet(snippet){
 
 function getVerbsTo(type){	
 	switch(type){
-		case "claim":	return ["supports","opposes","states"];
-		case "topic": return ["refines","about"];
+		case "claim":	return ["supports","opposes","relates to","states"];
+		case "topic": return ["refines","about","relates to","states"];
 		case "snippet": return [];
 		case "user": return ["created by"];
 		case "recent":
+		case "newsnips":
 		case "search":
 		case "hot":
 			return ["colitem"];			
@@ -457,6 +463,7 @@ function getVerbsFrom(type){
 		case "snippet": return ["states","created by"];
 		case "user": return [];
 		case "recent":
+		case "newsnips":
 		case "search":
 		case "hot":
 			return ["colitem"];			
@@ -464,13 +471,19 @@ function getVerbsFrom(type){
 }
 
 
-function invertVerb(verb,text){
+function invertVerb(verb,text,type){
 	switch(verb){
 		case "about": return "claims about "+text;
 		case "refines": return "more specific topics";
 		case "opposes": return "opposed by";
 		case "supports": return "supported by";
-		case "states": return "snippets making this claim";
+		case "relates to": return "relates to";
+		case "states": 
+			if(type == "claim"){
+				return "snippets making this claim";
+			}else{
+				return "snippets about this topic";
+			}
 		case "related": return "related";
 		case "colitem": return "colitem";
 		case "created by": return "created";
@@ -487,6 +500,7 @@ function getVerbSubjectType(verb){
 		case "states": return "snippet";
 		case "related": return "claim";
 		case "created by": return "snippet";
+		case "relates to": return "claim";
 	}
 }
 
@@ -504,7 +518,7 @@ function makeSubItems(div,obj){
 		if(verb != "colitem"){
 			var reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
-				.text(invertVerb(verb,obj.text))
+				.text(invertVerb(verb,obj.text,obj.type))
 				.appendTo(div);	
 			if(verb != "created by" && verb != "states"){
 				reltitle.append(newicon);
@@ -512,6 +526,7 @@ function makeSubItems(div,obj){
 		}
 		var items = obj.to[verb];
 		var byid = {};
+		var empty = true;
 		if(items && items.length > 0){
 			for(var j = 0; j < items.length; j++){
 				byid[items[j].id] = items[j];
@@ -522,14 +537,18 @@ function makeSubItems(div,obj){
 					if(byid[orderid] && !is_deleted(byid[orderid])){
 						$(div).append(makeDragItem(byid[orderid]));
 						byid[orderid].done = true;
+						empty = false;
 					}
 				}
 			}
 			for(var j = 0; j < items.length; j++){
 				if(items[j].done || is_deleted(items[j])) continue;
 				$(div).append(makeDragItem(items[j]));
+				empty = false;
 			}
-		}else{
+		}
+		
+		if(empty){
 			var empty = $("<div class='empty'>empty</div>")
 				.attr("tl_verb",verb)
 				.mouseover(function(ev){dragEmptyOver(ev,this,obj.id)})
@@ -542,12 +561,21 @@ function makeSubItems(div,obj){
 }
 
 function is_deleted(obj){
-	if(thinklink_deletes[obj.id] || thinklink_deletes[obj.linkid]) return true;
+	if(thinklink_deletes[obj.id] || (obj.linkid && thinklink_deletes[obj.linkid])) return true;
 	return false;
 }
 
+function get_hash_keys(hsh){
+	var keys = [];
+	for(key in hsh){
+		keys.push(key);
+	}
+	return keys;
+}
+
 function makeParentItems(div,obj){
-	var verbs = getVerbsFrom(obj.type);
+	var verbs = get_hash_keys(obj.from);
+	//getVerbsFrom(obj.type);
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];					
 		var items = obj.from[verb];
@@ -678,6 +706,7 @@ function loadItemInfo(idnum,id){
 	animateInitHide(parents);
 	animateInitHide(children);
 	$.getJSON(urlbase+"/node/" + id,{},function(obj){
+		combineRelates(obj);
 		parents.innerHTML = "";
 		children.innerHTML = "";
 		makeParentItems(parents,obj);
@@ -878,6 +907,13 @@ function mineMode(idnum){
 	});
 }
 
+function unattachedMode(idnum){
+	$.getJSON(urlbase+"/node/newsnips",{},function(obj){
+			loadObject(idnum,obj);
+	});
+}
+
+
 function makeMainGroups(idnum){
 	var body = getel("body-"+idnum);
 	body.innerHTML = "";
@@ -889,7 +925,21 @@ function makeMainGroups(idnum){
 	return id;
 }
 
+function combineRelates(obj){
+	var fromrel = obj.from['relates to'];
+	obj.from['relates to'] = [];
+	if(fromrel){
+		if(!obj.to['relates to']){
+			obj.to['relates to'] = [];
+		}
+		for(var i = 0; i < fromrel.length; i++){
+			obj.to['relates to'].push(fromrel[i]);
+		}
+	}
+}
+
 function loadObject(idnum,obj){
+	combineRelates(obj);
 	var id = makeMainGroups(idnum);
 	makeParentItems(getel("parents-"+id),obj);
 	makeSubItems(getel("children-"+id),obj);

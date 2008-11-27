@@ -82,19 +82,20 @@ function tl_snippet_dialog(margin) {
 		tl_log("close");
 		if(document.getElementById("tl_snippet_win")){
 //			$("#tl_snippet_win").animate({ height: 'hide', opacity: 'hide' }, 'slow');
-			$("#tl_snippet_win").remove();
 			var dialog = document.getElementById("tl_snippet_win");
+			$("#tl_snippet_win").remove();
 			removeSpans(this.sourceSpans);
 		}else if(document.getElementById("tl_point_browser")){
+			var dialog = document.getElementById("tl_point_frame");
 			$("#tl_point_browser").remove();
 //			$("#tl_point_browser").animate({ height: 'hide', opacity: 'hide' }, 'slow');
-			var dialog = document.getElementById("tl_point_frame");
 		}
-//		if(dialog){
+		if(dialog){
+//			$(dialog).remove();
 //			dialog.parentNode.removeChild(dialog)
-		this.margin.itemsLoaded=false;
-		this.margin.refresh();
-//		};
+			this.margin.itemsLoaded=false;
+			this.margin.refresh();
+		};
 	}
 
 	this.hideMe = function(){
@@ -140,7 +141,7 @@ function tl_snippet_dialog(margin) {
 		this.sourceText = sourceText;
 		
 		// determine last dom node to aid in finding associated permalink
-		var sourceSpans = mark_snippet(this.sourceText);
+		var sourceSpans = mark_snippet(this.sourceText,"highlight_free");
 		if(!sourceSpans) return;
 		this.sourceSpans = sourceSpans;
 		
@@ -174,8 +175,11 @@ function tl_snippet_dialog(margin) {
 			if(result.error){
 				window.open(thinklink_urlbase+"api/login");
 			}else{
-				this.margin.itemsLoaded=false;
-				this.margin.refresh();  // TODO: remove the need for this
+				that.margin.itemsLoaded=false;
+				removeSpans(that.sourceSpans);
+
+				that.margin.addItem({text:that.sourceText,id:result.id,claim:null});
+//				this.margin.refresh();  // TODO: remove the need for this
 			}
 		});		
 	}

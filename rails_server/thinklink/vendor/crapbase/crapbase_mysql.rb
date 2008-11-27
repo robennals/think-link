@@ -56,7 +56,7 @@ module CrapBase
 			end
 		end
 	end
-
+	
 	def batch_insert_blocking(table,key,valuemap)
 		run_triggers(table,key,valuemap)
 		valuemap.each do |family, familymap|
@@ -67,6 +67,11 @@ module CrapBase
 				sql_insert("REPLACE INTO #{table}_#{family} (keyname,columnname,value) VALUES ('#{esc key}','#{esc column}','#{esc value}')")
 			end
 		end
+	end
+	
+	# should only be applied to generated indexes - not original data
+	def remove(table,key,family,column)
+		sql_execute "DELETE FROM #{table}_#{family} WHERE keyname = '#{key}' AND columnname = '#{column}'"  
 	end
 	
 	def add_trigger(options,&callback)
