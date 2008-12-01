@@ -7,12 +7,6 @@
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title>MindMix</title>
 	<%= stylesheet_link_tag "style" %>
-	<!-- <%= javascript_include_tag :all, :cache => true %> -->
-	<% if (defined? @user) && @user['email'].eql?("trush@eecs.berkeley.edu") %>
-		<script type="text/javascript" src="/javascripts/tl_bethconfig.js"></script>
-	<% else %>
-		<script type="text/javascript" src="/javascripts/tl_robconfig.js"></script>
-	<% end %>
 	
 	<%
 		hostname = Socket.gethostname

@@ -14,50 +14,63 @@
 //  limitations under the License.
 
 
+// these are the scripts that we inject into every page we load
+thinklink_scriptUrls = [
+	"jquery-1.2.3.js",
+	"ui.core.js",
+	"ui.draggable.js",
+	"ui.resizable.js",
+	"tl_margin.js",
+	"tl_snippet.js",
+	"tl_point.js",
+	"tl_helpers.js",
+	"tl_suggest.js",
+	"tl_url.js",
+	"tl_config.js",
+	"thinklink.js"
+];
+
 // this is the script that we inject into every page we load
+//
+//var thinklink_base_rob = 
+//"http://mashmaker.intel-research.net/rob/scripts/";
+//
+//var thinklink_base = 
+//"http://mashmaker.intel-research.net/beth/scripts/";
+//
+//var thinklink_open = false;
+//
+//var thinklink_scriptUrls;
 
-var thinklink_base_rob = 
-"http://mashmaker.intel-research.net/rob/scripts/";
-
-var thinklink_base = 
-"http://mashmaker.intel-research.net/beth/scripts/";
-
-var thinklink_open = false;
-
-var thinklink_scriptUrls;
-
-var thinklink_styleUrl;
-
-function thinklink_setScriptUrls(username){
-	if(username != "trush@eecs.berkeley.edu"){
-	 	thinklink_base = thinklink_base_rob;
-	}
-	
-	thinklink_scriptUrls = 
-		[thinklink_base+"jquery-1.2.3.js",
-		thinklink_base+"ui.core.js",
-		thinklink_base+"ui.draggable.js",
-		thinklink_base+"ui.resizable.js",
-		thinklink_base+"tl_margin.js",
-		thinklink_base+"tl_snippet.js",
-		thinklink_base+"tl_point.js",
-		thinklink_base+"tl_helpers.js",
-		thinklink_base+"tl_suggest.js",
-		thinklink_base+"tl_url.js"];
-		
-	if(username != "trush@eecs.berkeley.edu"){
-		thinklink_scriptUrls.push(thinklink_base+"tl_robconfig.js");	
-		thinklink_styleUrl = "http://mashmaker.intel-research.net/rob/css/style.css";
-	}else{
-		thinklink_scriptUrls.push(thinklink_base+"tl_bethconfig.js");
-		thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
-	}
-	
-	thinklink_scriptUrls.push(thinklink_base+"thinklink.js");
-}
-
-// var thinklink_scriptUrl = "http://berkeley.intel-research.net/rennals/thinklink.js";
-// var thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
+//var thinklink_styleUrl;
+//
+//function thinklink_setScriptUrls(username){
+//	if(username != "trush@eecs.berkeley.edu"){
+//	 	thinklink_base = thinklink_base_rob;
+//	}
+//	
+//	thinklink_scriptUrls = 
+//		[thinklink_base+"jquery-1.2.3.js",
+//		thinklink_base+"ui.core.js",
+//		thinklink_base+"ui.draggable.js",
+//		thinklink_base+"ui.resizable.js",
+//		thinklink_base+"tl_margin.js",
+//		thinklink_base+"tl_snippet.js",
+//		thinklink_base+"tl_point.js",
+//		thinklink_base+"tl_helpers.js",
+//		thinklink_base+"tl_suggest.js",
+//		thinklink_base+"tl_url.js"];
+//		
+//	if(username != "trush@eecs.berkeley.edu"){
+//		thinklink_scriptUrls.push(thinklink_base+"tl_robconfig.js");	
+//		thinklink_styleUrl = "http://mashmaker.intel-research.net/rob/css/style.css";
+//	}else{
+//		thinklink_scriptUrls.push(thinklink_base+"tl_bethconfig.js");
+//		thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
+//	}
+//	
+//	thinklink_scriptUrls.push(thinklink_base+"thinklink.js");
+//}
 
 var thinklink_name = "ThinkLink";
 
@@ -87,24 +100,6 @@ function thinklink_show(button){
 	button.checked = !button.checked;
 	doc.thinklink_checked = button.checked;
 	thinklink_open = button.checked;
-}
-
-function thinklink_updateMarginVisibility(){
-	return; // decided against this approach
-	
-	var doc = thinklink_winlistener.getDoc();
-	if(!doc.scriptloaded) return;
-	if(thinklink_open){
-				doc.location.href = "javascript:myMargin.showMargin()";
-	}else{
-				doc.location.href = "javascript:myMargin.hideMargin()";
-	}
-}
-
-function thinklink_setIcon(image,doc){
-//	var doc = thinklink_winlistener.getDoc();
-//	document.getElementById("thinklink-button").setAttribute("image",image);
-//	doc.thinklink_icon = image;
 }
 
 var thinklink_winlistener = {
@@ -149,38 +144,9 @@ var thinklink_winlistener = {
 
 			
 			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-				thinklink_msg("fully loaded");
-//				document.getElementById("thinklink-button").checked = false;
-				if(!doc.thinklink_iconon){
-					thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
-				}
-       doc.addEventListener("thinklink-showicon", function(e){
-	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb.png",doc);
-	      		doc.thinklink_iconon = true;
-		      	doc.scriptloaded = true;
-	      },false);
- 	      doc.addEventListener("thinklink-hideicon", function(e){
-	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
-	      		doc.thinklink_iconon = false;
-		      	doc.scriptloaded = true;
-	      },false);
-
 	 			this.injectScripts();
-			}else if((flags & states.STATE_START) && (flags & states.STATE_IS_WINDOW)){
-				if(doc && doc.thinklink_injected) return;
-				thinklink_setIcon("chrome://thinklink/skin/lightbulb_wait.png",doc);
-//			}else{  // This doesn't seem to work
-//				try{
-//					if(content.document && content.document.body){
-//						this.injectScripts();
-//					}
-//				}catch(e){
-//					thinklink_error("Early-adding thinklink script",e);
-//				}
 			}
-			
-			thinklink_updateMarginVisibility();
-	 
+							 
 	 	}catch(e){
 	 		thinklink_error("onStateChange",e);
 	 	}
@@ -197,36 +163,9 @@ var thinklink_winlistener = {
 	  	this.registerFrameEventHandlers(progress.DOMWindow.document);
 	  	return;
 	  }
-	  if(doc.thinklink_icon){
-	  	thinklink_setIcon(doc.thinklink_icon,doc); 	
-	  }else{
-//  		document.getElementById("thinklink-button").setAttribute("image","chrome://thinklink/skin/lightbulb_wait.png");
-	  }
 	  if(!doc.thinklink_injected){
-	      doc.addEventListener("thinklink-showicon", function(e){
-	      	doc.thinklink_icon = "chrome://thinklink/skin/lightbulb.png";
-	      	doc.scriptloaded = true;
-      		doc.thinklink_iconon = true;
-	      	if(doc == content.document){
-	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb.png",doc);
-	      	}
-	      },false);
- 	      doc.addEventListener("thinklink-hideicon", function(e){
-	      	doc.thinklink_icon = "chrome://thinklink/skin/lightbulb_off.png";
-	      	doc.scriptloaded = true;
-      		doc.thinklink_iconon = false;
-	      	if(doc == content.document){
-	      		thinklink_setIcon("chrome://thinklink/skin/lightbulb_off.png",doc);
-	      	}
-	      },false);
-
-
 	  	this.injectScripts();
 	  }
-//  	document.getElementById("thinklink-button").checked = doc.thinklink_checked;
-
-			thinklink_updateMarginVisibility();
-
 	},
 	onProgressChange: function(){return 0;},
 	onStatusChange: function(){return 0;},
@@ -234,13 +173,29 @@ var thinklink_winlistener = {
 	onLinkIconAvailable: function(){return 0;},
 	
 	injectScripts: function(){		
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+		var apipath = "http://durandal.cs.berkeley.edu/tl";
+		var scriptpath = "http://durandal.cs.berkeley.edu/tlbits";
+		if(prefs.prefHasUserValue("extensions.thinklink.javascript")){
+			scriptpath = prefs.getCharPref("extensions.thinklink.javascript");
+		}
+    if(prefs.prefHasUserValue("extensions.thinklink.api")){
+			apipath = prefs.getCharPref("extensions.thinklink.api");
+		}	
+
 		var doc = this.getDoc();
+		
+		this.injectLiteralScript(
+			"var thinklink_scriptpath = '"+scriptpath+"'\n"+
+			"var thinklink_apipath = '"+apipath+"'\n",doc);
 
 		for(var i in thinklink_scriptUrls){
 			var scripturl = thinklink_scriptUrls[i];
-			this.injectScript(scripturl,doc);
+			this.injectScript(scriptpath+"/client_js/"+scripturl,doc);
 		}
-		this.injectStyle(thinklink_styleUrl,doc);
+		this.injectStyle(scriptpath+"/css/style.css",doc);
+
+		
 		doc.thinklink_injected = true;
 	
 		try{			
@@ -256,7 +211,6 @@ var thinklink_winlistener = {
 	},
 
 	getDoc: function(){
-//		return content.document;
 		if(content.document.body && content.document.body.tagName != "FRAMESET"){
 			return content.document;
 		}else if(content.frames.length > 0){
@@ -296,7 +250,18 @@ var thinklink_winlistener = {
 		}catch(e){
 			thinklink_error("could not insert script tag",e);
 		}
-	}
+	},
+	
+	injectLiteralScript: function(text,doc){
+		var scripttag = doc.createElement("script");
+		scripttag.text = text;
+		scripttag.type = "text/javascript";
+		try{
+			doc.getElementsByTagName("head")[0].appendChild(scripttag);
+		}catch(e){
+			thinklink_error("could not insert script tag",e);
+		}		
+	}	
 };
 
 
@@ -330,9 +295,6 @@ function thinklink_getLogin(){
 		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
 		thinklink_setCookieForUri("http://localhost:3000/",username,password);
 		thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
-		
-    thinklink_setScriptUrls(username);
-
 }
 
 function thinklink_init(){
