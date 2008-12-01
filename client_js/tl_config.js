@@ -15,6 +15,6 @@
 
 thinklink_imagebase = thinklink_scriptpath+"/images/";
 
-var thinklink_urlbase = thinklink_apipath;
+var thinklink_urlbase = thinklink_apipath+"/";
 var thinklink_pointbase = thinklink_apipath+"/node/";
 var thinklink_mainhome = thinklink_apipath;

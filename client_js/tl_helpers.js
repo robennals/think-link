@@ -507,6 +507,8 @@ function tl_dragStop(event) {
     window.removeEventListener("mousemove", tl_dragGo,   true);
     window.removeEventListener("mouseup",   tl_dragStop, true);
   }
-  tl_dragElement.hider.style.visibility = "";
+  if(tl_dragElement.hider){
+	  tl_dragElement.hider.style.visibility = "";
+	}
 }
 
