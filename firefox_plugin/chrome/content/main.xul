@@ -13,30 +13,4 @@
 		<menuseparator/>
 		<menuitem label="New Snippet" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet()"/>
 	</popup>
-	
-<!--	<script type="application/x-javascript">
-		 try {
-	   var firefoxnav = document.getElementById("nav-bar");
-	   var curSet = firefoxnav.currentSet;
-	   if (curSet.indexOf("thinklink-snipbutton") == -1)
-	   {
-	     var set;
-	     // Place the button before the urlbar
-	     if (curSet.indexOf("urlbar-container") != -1)
-	       set = curSet.replace(/urlbar-container/, "thinklink-snipbutton,urlbar-container");
-	     else  // at the end
-	       set = firefoxnav.currentSet + ",thinklink-snipbutton";
-	     firefoxnav.setAttribute("currentset", set);
-	     firefoxnav.currentSet = set;
-	     document.persist("nav-bar", "currentset");
-	     // If you don't do the following call, funny things happen
-	     try {
-	       BrowserToolboxCustomizeDone(true);
-	     }
-	     catch (e) { }
-	   }
-	 }
-	 catch(e) { }
-	</script>
-	-->
 </overlay>

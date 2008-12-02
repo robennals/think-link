@@ -173,7 +173,9 @@ function tl_snippet_dialog(margin) {
 			+"&title="+encodeURIComponent(document.title)
 		,function(result){
 			if(result.error){
-				window.open(thinklink_urlbase+"api/login");
+				removeSpans(that.sourceSpans);
+					alert("Login incorrect - set password in Tools/Options/Thinklink");
+//				window.open(thinklink_urlbase+"api/login");
 			}else{
 				that.margin.itemsLoaded=false;
 				removeSpans(that.sourceSpans);

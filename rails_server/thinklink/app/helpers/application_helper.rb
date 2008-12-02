@@ -28,6 +28,9 @@ module ApplicationHelper
 		user = $store.get_user email, password
 		if !user
 			user = {'id' => 0, 'name' => 'no user logged in'}
+			if email
+				user['error'] = "login failed"
+			end
 		end
 		return user
 	end

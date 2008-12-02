@@ -5,6 +5,9 @@
 	</td><td style="text-align:right; padding-right: 10px;">
 	<span>
 	<% if @user['id'] == 0 %>
+		<% if @user['error'] %>
+		 	<%= @user['error'] %> - 
+		<% end %>
 		<a href="/api/login">login</a>
 	<% else %>
 		<form action="<%=@base%>/api/logout" method="post">

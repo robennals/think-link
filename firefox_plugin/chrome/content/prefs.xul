@@ -4,6 +4,9 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 			   xmlns:html="http://www.w3.org/1999/xhtml"
 
+  <script type="application/x-javascript" 
+	      src="chrome://thinklink/content/thinklink.js" />
+
   <prefwindow id="BrowserPreferences">
 
     <prefpane id="ThinkLink-Prefs" label="Think Link" 
@@ -25,17 +28,25 @@
 	      		<columns><column/><column flex="1"/></columns>
 	      		<rows>
 		      		<row align="center">
-				        <label value="User Name:"/>
+				        <label value="Email:"/>
 		    		    <textbox id="thinklink-username" preference="ThinkLink-pref-username" class="padded" flex="1" type="string"/>
 		    		  </row>
 			        <row align="center">
 		        		<label value="Password:"/>
 		        		<textbox id="thinklink-password" preference="ThinkLink-pref-password" class="padded" flex="1" type="password"/>
 							</row>
+							<row>
+								<spacer/>
+								<hbox>
+									<spacer flex="1"/>
+									<button id="thinklink-login" label="Login" oncommand="thinklink_login()"/>
+								</hbox>
+							</row>
 						</rows>
+
     			</grid>
       </groupbox>
-              
+                           
           <hbox align="center">
               <label value="Don't have an account yet?"/>
               <button label="Sign Up for a Think Link Account" oncommand="window.open('http://mashmaker.intel-research.net/thinklink/signup.html')"/>

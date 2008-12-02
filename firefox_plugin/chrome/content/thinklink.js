@@ -278,11 +278,18 @@ function thinklink_setCookieForUri(uri,username,password){
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"username",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"email",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"password",password);
-//  cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
-//  cookieSvc.setCookieString(cookieUri, null, "email="+username, null);
-//  cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
 }
 
+function thinklink_setCookies(username,password){
+	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
+	var cookieUri = ios.newURI("http://mashmaker.intel-research.net/", null, null);
+	var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
+	cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
+	cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
+	thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
+	thinklink_setCookieForUri("http://localhost:3000/",username,password);
+	thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
+}
 
 function thinklink_getLogin(){
     var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
@@ -294,22 +301,19 @@ function thinklink_getLogin(){
     if(prefs.prefHasUserValue("extensions.thinklink.password")){
 			password = prefs.getCharPref("extensions.thinklink.password");
 		}	
-    var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
-    var cookieUri = ios.newURI("http://mashmaker.intel-research.net/", null, null);
-    var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-    cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
-    cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
-//		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
-//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
-		thinklink_setCookieForUri("http://localhost:3000/",username,password);
-		thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
+	thinklink_setCookies(username,password); 
 }
 
 function thinklink_init(){
 	gBrowser.addProgressListener(thinklink_winlistener,
 	  	Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
 	thinklink_getLogin();
+}
+
+function thinklink_login(){
+	var username = document.getElementById("thinklink-username").value;
+	var password = document.getElementById("thinklink-password").value;
+	thinklink_setCookies(username,password);
 }
 
 window.addEventListener("load", function(){

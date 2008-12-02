@@ -38,7 +38,12 @@ class ApiController < ApplicationController
 	end
 	
 	def index
-		redirect_to "/node/"
+		hostname = Socket.gethostname
+		if hostname == "rob"
+			redirect_to "/node"
+		else
+			redirect_to "/tl/node"
+		end
 	end
 	
 	def logout
