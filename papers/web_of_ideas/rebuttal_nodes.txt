@@ -1,0 +1,97 @@
+Topic Maps
+
+Answer Garden
+
+
+-- References --
+
+Says Zeno has support for "Multiparty, multigoal, descision making".
+		- read ZENO paper more closely to see if that is the case...
+		
+		
+-- Survey papers --
+
+Argumentation: "Logical Models of Argument"
+
+Hypermedia: 
+
+-- key related work --
+
+EUCLID: Hypertext with argumentation
+NLS system of Engelbert
+ClaimMaker breaks "supports" down into 'proves, isEvidenceFor, agreesWith, isConsisentWith'.
+		also has "addresses", "sharesIssueWith", "improvesOn".
+			- e.g. "Global warming is a problem" is addressed by "cutting emmisions could reduce global warming"
+		Current approach is that all non "supports/opposes" links are done by sharing a topic.
+		E.g. "global warming" topic will contain both the above.
+		Over time have been alternating between having an additional "relates" relationship, and believing
+				that it's best to do this by sharing topics. This is an easily changed thing that we expect to
+				evolve over time.
+		"having a relatively simple ontology makes the system more robust to imperfect modelling"
+Work on visualizing argumentation
+TRELLIS
+Semantic web.
+Typed links - present in Xanadu, Notecards, Hyperwriter, IBIS, etc
+IBIS: We use essentially a simplified IBIS with only positions and no issues. 
+				 
+JANUS:
+EUCLID:
+AQUANET:
+BELVEDERE: (from CHI'95) - stimulating students critical discussion
+gIBIS: graphical IBIS, Adds "other" link type.
+
+read more about graphical systems...
+
+KnowledgeWeasal?
+
+-- NoteCards --
+
+What are the link types?
+	NoteCard allows the user to chose their set of link types.
+			A model that we have experimented with.
+
+	graph: support, source (we have both)
+		
+		
+		
+-- IBIS --
+
+Original IBIS is very informal. ZENO formalizes it logically. Defines what argument, issue, etc are.
+
+IBIS has topics.
+
+IBIS has topics, positions, arguments, and issues.
+
+arguments "support/oppose" a position.
+positions "respond" to issues.
+
+we conflate "topic" and "issue".
+	e.g. "solutions to global warming", "who will win the world cup"
+	
+
+issues can be "successors of"
+
+
+we conflate arguments and positions.
+
+
+
+
+
+
+-- IBIS --
+
+Questions, ideas, and arguments.
+
+Hypertext environment for structured discussion of design ideas.
+
+node types: issue, position, argument
+link types: responds-to, questions, supports, objects-to, specializes, generalizes, refers-to, replaces.
+
+We share the simple "supports/opposes" nodes.
+We only have positions - not arguments or issues - but considering adding issues - as "questions".
+
+Model similar to IBIS with issues removed.
+
+
+Our 

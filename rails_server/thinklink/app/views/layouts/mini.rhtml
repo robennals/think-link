@@ -11,18 +11,18 @@
 	<%
 		hostname = Socket.gethostname
 		if hostname == "rob"
-			base = ""
+			@base = ""
 			configfile = "localconfig.js"
 		else
-			base = "/tl"
+			@base = "/tl"
 			configfile = "serverconfig.js"
 		end
 	%>
 
-	<script type="text/javascript" src="<%=base%>/javascripts/jquery-1.2.3.js"></script>
-	<script type="text/javascript" src="<%=base%>/javascripts/robjson.js"></script>
-	<script type="text/javascript" src="<%=base%>/javascripts/webui.js"></script>
-	<script type="text/javascript" src="<%=base%>/javascripts/<%=configfile%>"></script>
+	<script type="text/javascript" src="<%=@base%>/javascripts/jquery-1.2.3.js"></script>
+	<script type="text/javascript" src="<%=@base%>/javascripts/robjson.js"></script>
+	<script type="text/javascript" src="<%=@base%>/javascripts/webui.js"></script>
+	<script type="text/javascript" src="<%=@base%>/javascripts/<%=configfile%>"></script>
 	
 </head>
 <body id="body" onkeypress="keyPressHandler(event)" onkeydown="keyDownHandler(event)" onkeyup="keyUpHandler(event)">

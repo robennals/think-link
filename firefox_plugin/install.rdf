@@ -22,5 +22,6 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
         <em:description>Explore the web of ideas</em:description>
         <em:creator>Rob Ennals and Beth Trushkowski</em:creator>
         <em:homepageURL>http://intel-research.net</em:homepageURL>
+        <em:iconURL>chrome://thinklink/skin/lightbulb.png</em:iconURL>
     </Description>
 </RDF>

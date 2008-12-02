@@ -7,7 +7,7 @@
 	<% if @user['id'] == 0 %>
 		<a href="/api/login">login</a>
 	<% else %>
-		<form action="/api/logout" method="post">
+		<form action="<%=@base%>/api/logout" method="post">
 			Logged in as <%= @user['name'] %>. 
 	
 			<input type='submit' value="logout"/>

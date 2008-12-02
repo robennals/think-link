@@ -5,9 +5,6 @@
 	      src="chrome://thinklink/content/thinklink.js" />
 
 	<toolbarpalette id="BrowserToolbarPalette">
-<!--			<toolbarbutton class="toolbarbutton-1" label="Show Think Link Margin" id="thinklink-button" position="2" 
-	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_show(this)" tooltiptext="Open Think Link Margin"/>
--->
 			<toolbarbutton class="toolbarbutton-1" label="New Think Link Snippet" id="thinklink-snipbutton" position="2" 
 	image="chrome://thinklink/skin/comment_add.png" oncommand="thinklink_new_snippet()" tooltiptext="New Think Link Snippet"/>
 	</toolbarpalette>
@@ -16,21 +13,30 @@
 		<menuseparator/>
 		<menuitem label="New Snippet" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet()"/>
 	</popup>
-
-<!--
-	<menubar id="main-menubar">
-		<menu label="Think" accesskey="i" insertafter="tools-menu"> 
-					<menupopup>
-				<menuitem label="Edit Extractor for Page..." accesskey="E" tooltiptext="Show and interpret the structure of the page" oncommand="mashmaker_toolbar.openExtractEdit()"/>
-				<menuitem label="Edit Arg Extractor for URL..." accesskey="A" tooltiptext="Tell Mash Maker how to understand urls like this" oncommand="mashmaker_toolbar.editArgHandler()"/>
-				<menuitem label="Browse Properties..." accesskey="P" tooltiptext="Browse and edit the Mash Maker property names" oncommand="mashmaker_toolbar.browseProperties()"/>
-                <menuitem label="Test Mode" type="checkbox" id="MashMaker-testmode" oncommand="mashmaker_toolbar.toggleTestMode()"/>
-
-				<menuseparator/>
-				<menuitem label="Show Mashup URL" tooltiptext="Get a URL for this Mashup that you can email or put on a web page" oncommand="mashmaker_toolbar.showMashUrl()"/>
-				<menuitem label="Bookmark This Mashup..." insertbefore="subscribeToPageMenuitem" oncommand="mashmaker_toolbar.bookmarkMashup()"/>
-				</menupopup>
-		</menu>
-	</menubar>
--->
+	
+<!--	<script type="application/x-javascript">
+		 try {
+	   var firefoxnav = document.getElementById("nav-bar");
+	   var curSet = firefoxnav.currentSet;
+	   if (curSet.indexOf("thinklink-snipbutton") == -1)
+	   {
+	     var set;
+	     // Place the button before the urlbar
+	     if (curSet.indexOf("urlbar-container") != -1)
+	       set = curSet.replace(/urlbar-container/, "thinklink-snipbutton,urlbar-container");
+	     else  // at the end
+	       set = firefoxnav.currentSet + ",thinklink-snipbutton";
+	     firefoxnav.setAttribute("currentset", set);
+	     firefoxnav.currentSet = set;
+	     document.persist("nav-bar", "currentset");
+	     // If you don't do the following call, funny things happen
+	     try {
+	       BrowserToolboxCustomizeDone(true);
+	     }
+	     catch (e) { }
+	   }
+	 }
+	 catch(e) { }
+	</script>
+	-->
 </overlay>

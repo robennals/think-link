@@ -15,7 +15,7 @@
 
 ActionController::Routing::Routes.draw do |map|
 	map.resources :api, 
-		:collection => {:login => :any, :logout => :any}
+		:collection => {:login => :any, :logout => :any, :index => :get}
 	map.resources :node, 
 		:collection => {:search => :get, :recent => :get, :me => :get, :newsnips => :get},
 		:member => {:order => :post, :rating => :post, :setclaim => :any, 
@@ -57,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
   #   end
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "node"
+  map.root :controller => "api"
 
   # See how all your routes lay out with "rake routes"
 

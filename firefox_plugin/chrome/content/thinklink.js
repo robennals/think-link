@@ -265,13 +265,22 @@ var thinklink_winlistener = {
 };
 
 
+function thinklink_setCookieWithPaths(cookieSvc,cookieUri,name,value,path){
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/node", null);
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/scripthack", null);
+}
+
+
 function thinklink_setCookieForUri(uri,username,password){
   var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
   var cookieUri = ios.newURI(uri, null, null);
   var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-  cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
-  cookieSvc.setCookieString(cookieUri, null, "email="+username, null);
-  cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
+  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"username",username);
+  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"email",username);
+  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"password",password);
+//  cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
+//  cookieSvc.setCookieString(cookieUri, null, "email="+username, null);
+//  cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
 }
 
 
@@ -290,9 +299,9 @@ function thinklink_getLogin(){
     var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
     cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
     cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
+//		thinklink_setCookieForUri("http://mashmaker.intel-research.net/",username,password);
 		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
-		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
+//		thinklink_setCookieForUri("http://mashmaker.intel-research.net:3001/",username,password);
 		thinklink_setCookieForUri("http://localhost:3000/",username,password);
 		thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
 }

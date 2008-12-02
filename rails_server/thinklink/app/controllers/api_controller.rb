@@ -37,6 +37,10 @@ class ApiController < ApplicationController
 		end
 	end
 	
+	def index
+		redirect_to "/node/"
+	end
+	
 	def logout
 		if request.post?
 			cookies[:password] = ""
