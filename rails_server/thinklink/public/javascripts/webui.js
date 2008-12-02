@@ -134,6 +134,10 @@ function makeArgBrowser(divid,obj,height){
 }
 
 function makeInnerBrowser(idnum,browser,obj,height){
+	document.addEventListener("keydown",function(ev){
+		keyDownHandler(ev);
+	},true);
+	
 	var searchbar = $("<div class='hidden'/>")
 		.attr("id","searchbar-"+idnum)
 		.appendTo(browser);
@@ -211,7 +215,7 @@ function makeDragItem(obj,label){
 			ev.cancelBubble = true;
 			ev.stopPropagation();
 			ev.preventDefault();
-			deleteLink(ev,holder,obj.id)});
+			deleteLink(ev,holder,obj.linkid)});
 //	var tdbreak = $("<td/>").append(breakicon).appendTo(tr);
 
 //	if(thinklink_user_id == obj.user){
@@ -610,6 +614,31 @@ function findBrowser(node){
 	return null;
 }
 
+function findHolderRelation(holder){
+	while(holder != null){
+		if(holder.className == "relationtitle"){
+			return holder;
+		}
+		holder = holder.previousSibling;	
+	}
+	return null;
+}
+
+function findLinkInfo(holder){
+	var group = findNodeGroup(holder);
+	var idnum = getNodeIdNum(group);
+	var reltitle = findHolderRelation(holder);
+
+	if(group.className == "item-children" && reltitle){
+		var verb = reltitle.getAttribute("tl_verb");
+		var browser = findBrowser(holder);
+		var objectid = browser.getAttribute("tl_id");	
+		return {verb: reltitle.getAttribute("tl_verb"), objectid: objectid}
+	}else{
+		return null;
+	}
+}
+
 function findHolder(node){
 	while(node != null && node.getAttribute){
 		var node_tl_id = node.getAttribute("tl_id");
@@ -812,6 +841,7 @@ function selectItem(div,id){
 }
 
 function keyDownHandler(ev){
+	tl_log("keydown");
 	if(dragInfo.logo){
 		if(ev.keyCode == 27){
 			dragStop();
@@ -977,6 +1007,7 @@ function dragStart(ev,node){
 	dragInfo.node = node;
 	dragInfo.holder = holder;
 	dragInfo.browser = findBrowser(node);
+	dragInfo.reltitle = findHolderRelation(holder);
 	dragInfo.id = holder.getAttribute("tl_id");
 	dragInfo.type = holder.getAttribute("tl_cls");
 	dragInfo.text = normalizeText(node.textContent);	
@@ -1018,14 +1049,22 @@ function dragMove(ev){
 function dragDone(ev,node){
 	if(dragInfo.dropNode){
 		tl_log("captured by "+dragInfo.dropNode.textContent+" after="+dragInfo.after);
+		
+		var draglink = findLinkInfo(dragInfo.holder);
+		var droplink = findLinkInfo(findHolder(dragInfo.dropNode));
+		
+		var subjectid = dragInfo.id;
+		
 		var newitem = makeDragItem(dragInfo);
 		if(dragInfo.after){
 			newitem.insertAfter(dragInfo.dropNode);
 		}else{
 			newitem.insertBefore(dragInfo.dropNode);
 		}
-		if(!dragInfo.hoverBrowser || dragInfo.hoverBrowser == dragInfo.browser || dragInfo.moveMode){
+		if(dragInfo.droptitle && dragInfo.droptitle == dragInfo.reltitle){
 			$(dragInfo.holder).remove();			
+		}else{
+			dragInfo.holder.style.display = "";
 		}
 		
 		makeFixedOrder(newitem.get(0));
@@ -1033,14 +1072,25 @@ function dragDone(ev,node){
 		var browser = findBrowser(dragInfo.dropNode);
 		var topid = browser.getAttribute("tl_id");
 
-		$.post(urlbase+"/node/"+topid+"/order.json",{order:makeJSONString(dragorder)});
+		$.post(urlbase+"/node/"+topid+"/order.json",{order:makeJSONString(dragorder)},function(){
+			if(draglink && droplink && draglink.objectid == droplink.objectid && draglink.verb == droplink.verb){
+				return;
+			}else{
+				$.post(urlbase+"/node.json",{type:"link",info:makeJSONString(
+					{subject:subjectid,verb:droplink.verb,object:droplink.objectid})},function(){
+						tl_log("created new link");
+					});
+			}			
+		});
 	}else if(dragInfo.empty){
 		tl_log("captured by empty");
 		var newitem = makeDragItem(dragInfo);
 		newitem.insertAfter(dragInfo.empty);
+		var subjectid = dragInfo.id;
+		var objectid = dragInfo.eid;
 		$(dragInfo.empty).remove();
 		$.post(urlbase+"/node.json",{type:"link",info:makeJSONString(
-					{subject:dragInfo.id,verb:dragInfo.verb,object:dragInfo.eid})},function(){
+					{subject:subjectid,verb:dragInfo.verb,object:objectid})},function(){
 					tl_log("created new link");
 			});
 	}
@@ -1120,6 +1170,8 @@ function dragEmptyOver(ev,node,id){
 	dragInfo.empty = node;
 	dragInfo.verb = verb;
 	dragInfo.eid = id;
+	dragInfo.droptitle = findHolderRelation(node);
+	dragInfo.holder.style.display = "";
 }
 
 function dragEmptyOut(ev,node,id){
@@ -1131,6 +1183,9 @@ function dragOver(ev,node,id){
 	if(ev.relatedTarget && isParent(ev.relatedTarget,dragInfo.logo)) return;
 	var holder = findHolder(node);
 	if(holder == dragInfo.spacer /* || node == dragInfo.node */) return;
+
+	var droptitle = findHolderRelation(holder);
+	if(!droptitle) return;
 
 	if(dragInfo.id && dragInfo.id != id && dragInfo.logo){
 		var spacer = makeSpacer();
@@ -1162,29 +1217,46 @@ function dragOver(ev,node,id){
 		var browser = findBrowser(node);
 		dragInfo.dropNode = node;
 		dragInfo.empty = false;
-	}
-}
-
-function dragOut(ev,node,id){
-	// nothing right now
-}
-
-
-
-function browseDragIn(ev,browser){
-	if(ev.target == browser || dragInfo.hoverBrowser != browser){
-		dragInfo.hoverBrowser = browser;
-
-		if(dragInfo.holder && dragInfo.browser == browser){
+		dragInfo.droptitle = droptitle;
+		
+		if(dragInfo.droptitle && dragInfo.droptitle == dragInfo.reltitle){
+			tl_log("same verb section");
 			dragInfo.holder.style.display = "none";
-		}else if(dragInfo.holder){
+		}else{
+			tl_log("different section");
 			dragInfo.holder.style.display = "";
-			if(dragInfo.spacer){
-				dragInfo.spacer.remove();
-				dragInfo.spacer = null;
-			}
 		}
 	}
+}
+
+// nothing right now
+function dragOut(ev,node,id){
+//	if(dragInfo.dropNode == node && dragInfo.spacer){
+//		dragInfo.spacer.remove();
+//		dragInfo.spacer = null;		
+//		dragInfo.dropNode = null;
+//	}
+}
+
+
+// nothing right now
+function browseDragIn(ev,browser){
+	return;
+	
+//	
+//	if(ev.target == browser || dragInfo.hoverBrowser != browser){
+//		dragInfo.hoverBrowser = browser;
+//
+//		if(dragInfo.holder && dragInfo.browser == browser){
+//			dragInfo.holder.style.display = "none";
+//		}else if(dragInfo.holder){
+//			dragInfo.holder.style.display = "";
+//			if(dragInfo.spacer){
+//				dragInfo.spacer.remove();
+//				dragInfo.spacer = null;
+//			}
+//		}
+//	}
 }
 
 function isParent(node,parent){
@@ -1200,20 +1272,22 @@ function isParent(node,parent){
 	return false;
 }
 
+// nothing right now
 function browseDragOut(ev,browser){
-	if(!isParent(ev.relatedTarget,browser)){
-		if(isParent(ev.relatedTarget,dragInfo.logo) || isParent(ev.target,dragInfo.logo)) return;
-		if(dragInfo.hoverBrowser == browser){
-			dragInfo.hoverBrowser = null;
-			if(dragInfo.holder){
-				dragInfo.holder.style.display = "";
-				if(dragInfo.spacer){
-					dragInfo.spacer.remove();
-					dragInfo.spacer = null;
-				}
-			}
-		}
-	}
+	return;
+//	if(!isParent(ev.relatedTarget,browser)){
+//		if(isParent(ev.relatedTarget,dragInfo.logo) || isParent(ev.target,dragInfo.logo)) return;
+//		if(dragInfo.hoverBrowser == browser){
+//			dragInfo.hoverBrowser = null;
+//			if(dragInfo.holder){
+//				dragInfo.holder.style.display = "";
+//				if(dragInfo.spacer){
+//					dragInfo.spacer.remove();
+//					dragInfo.spacer = null;
+//				}
+//			}
+//		}
+//	}
 }
 
 function setClaim(snipid){
@@ -1236,7 +1310,7 @@ function deleteLink(ev,node,id){
 function deleteNode(ev,node,id){
 	if(confirm("Are you sure you want to completely delete this claim?\n"
 		+"If you just want to disconnect the claim then click 'Cancel' and"
-		|"then click the disconnect button")){
+		+"then click the disconnect button")){
 		$.post(urlbase+"/node/"+id+"/delete.json",{},function(){
 			thinklink_deletes[id] = true;
 			tl_log("deleted node");
