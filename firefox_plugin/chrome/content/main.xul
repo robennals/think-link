@@ -5,8 +5,8 @@
 	      src="chrome://thinklink/content/thinklink.js" />
 
 	<toolbarpalette id="BrowserToolbarPalette">
-			<toolbarbutton class="toolbarbutton-1" label="New Think Link Snippet" id="thinklink-snipbutton" position="2" 
-	image="chrome://thinklink/skin/comment_add.png" oncommand="thinklink_new_snippet()" tooltiptext="New Think Link Snippet"/>
+			<toolbarbutton class="toolbarbutton-1" label="New Mind Mix Snippet" id="thinklink-snipbutton" position="2" 
+	image="chrome://thinklink/skin/comment_add.png" oncommand="thinklink_new_snippet()" tooltiptext="New Mind Mix Snippet"/>
 	</toolbarpalette>
 
 	<popup id="contentAreaContextMenu" insertafter="context-searchselect">

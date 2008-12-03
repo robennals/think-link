@@ -7,21 +7,19 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
         <em:version>0.1</em:version>
         <em:type>2</em:type>
         
-        <!-- Target Application this extension can install into,
-        with minimum and maximum supported versions. -->
         <em:targetApplication>
 	        <Description>
 	        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-	        <em:minVersion>1.5.*</em:minVersion>
-	        <em:maxVersion>3.1.*</em:maxVersion>
+	        <em:minVersion>1.5</em:minVersion>
+	        <em:maxVersion>3.1b2</em:maxVersion>
 	        </Description>
         </em:targetApplication>
         
         <!-- Front End MetaData -->
-        <em:name>Think Link</em:name>
+        <em:name>Mind Mix</em:name>
         <em:description>Explore the web of ideas</em:description>
         <em:creator>Rob Ennals and Beth Trushkowski</em:creator>
-        <em:homepageURL>http://intel-research.net</em:homepageURL>
+        <em:homepageURL>http://mindmix.org</em:homepageURL>
         <em:iconURL>chrome://thinklink/skin/lightbulb.png</em:iconURL>
     </Description>
 </RDF>

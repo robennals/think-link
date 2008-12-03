@@ -268,6 +268,9 @@ var thinklink_winlistener = {
 function thinklink_setCookieWithPaths(cookieSvc,cookieUri,name,value,path){
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/node", null);
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/scripthack", null);
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/node", null);
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/scripthack", null);
+
 }
 
 

@@ -331,8 +331,8 @@ function createFinished(id,holder,input,typ,verb,reqId,idnum){
 		holder.remove();
 		return;
 	}	
-	$.post(urlbase+"/node.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
-		$.post(urlbase+"/node.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
+	$.post(urlbase+"/node/create.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
+		$.post(urlbase+"/node/create.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
 			holder.remove();
 			loadItemInfo(idnum,id);
 		});
@@ -1076,7 +1076,7 @@ function dragDone(ev,node){
 			if(draglink && droplink && draglink.objectid == droplink.objectid && draglink.verb == droplink.verb){
 				return;
 			}else{
-				$.post(urlbase+"/node.json",{type:"link",info:makeJSONString(
+				$.post(urlbase+"/node/create.json",{type:"link",info:makeJSONString(
 					{subject:subjectid,verb:droplink.verb,object:droplink.objectid})},function(){
 						tl_log("created new link");
 					});
@@ -1089,7 +1089,7 @@ function dragDone(ev,node){
 		var subjectid = dragInfo.id;
 		var objectid = dragInfo.eid;
 		$(dragInfo.empty).remove();
-		$.post(urlbase+"/node.json",{type:"link",info:makeJSONString(
+		$.post(urlbase+"/node/create.json",{type:"link",info:makeJSONString(
 					{subject:subjectid,verb:dragInfo.verb,object:objectid})},function(){
 					tl_log("created new link");
 			});
@@ -1292,7 +1292,7 @@ function browseDragOut(ev,browser){
 
 function setClaim(snipid){
 	var claimid = $("#browser-1").attr("tl_id");
-	$.post(urlbase+"/node.json",{type:"link",info:makeJSONString({subject:snipid,verb:"states",object:claimid})},function(){
+	$.post(urlbase+"/node/create.json",{type:"link",info:makeJSONString({subject:snipid,verb:"states",object:claimid})},function(){
 		closePopupWindow();
 	});	
 }
