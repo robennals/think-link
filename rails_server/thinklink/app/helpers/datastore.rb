@@ -127,7 +127,7 @@ module Datastore
 	def add_user(email,name,password)
 		id = new_guid
 		batch_insert :obj, id, 
-				:info => {:type => "user", :email => email, :name => name, :password => password}
+				:info => {:type => "user", 'email' => email, 'name' => name, 'password' => password}
 		return id
 	end
 

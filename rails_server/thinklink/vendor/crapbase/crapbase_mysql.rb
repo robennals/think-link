@@ -1,4 +1,5 @@
 require 'active_record'
+require 'ruby-debug'
 
 	#TODO: allow multiple triggers to be attached to the same table
 	#TODO: allow a trigger to be attached just to a particular column family?
@@ -145,6 +146,11 @@ module CrapBase
 	def dirty_object table,key,mode
 		run_triggers table,key,{},mode
 	end			
+		
+	def rerun_triggers(table,key,family)	
+		valuemap = {family => get_all(table,key,family)}
+		run_triggers table,key,valuemap
+	end
 		
 private	
 	def matches(table,valuemap,mode,opts)
