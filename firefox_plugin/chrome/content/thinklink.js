@@ -16,10 +16,10 @@
 
 // these are the scripts that we inject into every page we load
 thinklink_scriptUrls = [
-	"jquery-1.2.3.js",
-	"ui.core.js",
-	"ui.draggable.js",
-	"ui.resizable.js",
+//	"jquery-1.2.3.js",
+//	"ui.core.js",
+//	"ui.draggable.js",
+//	"ui.resizable.js",
 	"tl_margin.js",
 	"tl_snippet.js",
 	"tl_point.js",

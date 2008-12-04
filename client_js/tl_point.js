@@ -41,26 +41,6 @@ function tl_point_browser() {
 	this.newPointLinkURL = "new_point_link.php";
 	
 	this.init = function() {
-//		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
-//		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
-//		elem.style.zIndex="-1";
-//		document.body.appendChild(elem);
-//		tl_hideDiv(this.divID);
-//		elem.style.zIndex="2147483647";
-//		//$("#"+this.divID).hide();		// hide the dialog
-//			
-	}
-
-	this.setHover = function(item,hovermsg,defaultText){		
-		var explainSpan = $("<span></span>").css("padding",10);
-		item.hover(function(){ 
-				$(this).addClass("highlight");
-				$(explainSpan).text(hovermsg);
-				}, function(){ 
-				$(this).removeClass("highlight");
-				$(explainSpan).text(defaultText); 
-		})
-		
 	}
 		
 	this.viewFrame = function(snippet) {
@@ -79,46 +59,93 @@ function tl_point_browser() {
 			return;
 		}
 		
-		var win = $("<div/>")
-			.attr("id","tl_point_browser")
-			.addClass("tl_dialog")
-			.css("zIndex","214783647")
-			.appendTo("body");
+		var win = document.createElement("div");
+		win.setAttribute("id","tl_point_browser");
+		win.className = "tl_dialog";
+		win.style.zIndex = "214783647";
+		document.body.appendChild(win);
+//		
+//		var win = $("<div/>")
+//			.attr("id","tl_point_browser")
+//			.addClass("tl_dialog")
+//			.css("zIndex","214783647")
+//			.appendTo("body");
 		
-
-		var me = win.get(0);
-		me.style.overflow = "hidden";
-		me.style.position = "fixed";
-		me.style.top = "50px";
-		me.style.left = "200px";
-		me.style.width = Math.min((window.innerWidth - 250),550) + "px";
+		win.style.overflow = "hidden";
+		win.style.position = "fixed";
+		win.style.top = "50px";
+		win.style.left = "200px";
+		win.style.width = Math.min((window.innerWidth - 250),550) + "px";
 		
-		var titleBar = $("<div/>").appendTo($("#"+that.divID))
-			.attr("id","tl_pb_title")
-			.css("margin-bottom","0px")
-			.css("cursor","move")
-			.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
+		var titleBar = document.createElement("div");
+		win.appendChild(titleBar);
+		titleBar.setAttribute("id","tl_pb_title");
+		titleBar.style.marginBottom = "0px";
+		titleBar.style.cursor = "move";
+		titleBar.addEventListener("mousedown",function(ev){
+			tl_dragStart(ev,that.divID,"tl_point_frame");
+		},true);
+		titleBar.className = "tl_dialog_title";
+		
+//		var titleBar = $("<div/>").appendTo($("#"+that.divID))
+//			.attr("id","tl_pb_title")
+//			.css("margin-bottom","0px")
+//			.css("cursor","move")
+//			.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
+//
+//			.addClass("tl_dialog_title");
 
-			//.mousedown(function(e) { tl_dragStart(e,that.divID) }) // use title bar to drag browser
-			.addClass("tl_dialog_title");
-
-		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-		var titleBox = $("<nobr>").text(title).appendTo(titleBar);
-		if(!snippet.claim){
-			var searchButton = $("<input class='tl_openbutton' type='button' value='search'/>").appendTo(buttonBox);	
+		var buttonBox = document.createElement("span");
+		buttonBox.style.position = "absolute";
+		buttonBox.style.right = "4px";
+		titleBar.appendChild(buttonBox);
+		
+		var titleBox = document.createElement("nobr");
+		titleBox.textContent = title;
+		titleBar.appendChild(titleBox);
+		
+		if(!snippet.clam){
+			var searchButton = document.createElement("input");
+			searchButton.className = "tl_openbutton";
+			searchButton.setAttribute("type","button");
+			searchButton.setAttribute("value","search");
+			buttonBox.appendChild(searchButton);
 		}
 
-		var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);	
-		openButton.click(function(){
-			window.open(thinklink_mainhome);
-		});
+//		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
+//		var titleBox = $("<nobr>").text(title).appendTo(titleBar);
+//		if(!snippet.claim){
+//			var searchButton = $("<input class='tl_openbutton' type='button' value='search'/>").appendTo(buttonBox);	
+//		}
 
-		var close = $("<img/>")
-			.css("padding-top","2px")
-			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
-			.click(function(){
-				that.hideMe();
-			});
+		var openButton = document.createElement("input");
+		openButton.className = "tl_openbutton";
+		openButton.setAttribute("type","button");
+		openButton.setAttribute("value","Open Organizer");
+		buttonBox.appendChild(openButton);
+		openButton.addEventListener("click",function(){
+			window.open(thinklink_mainhome);
+		},true);
+		
+//		var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);	
+//		openButton.click(function(){
+//			window.open(thinklink_mainhome);
+//		});
+
+		var close = document.createElement("img");
+		close.style.paddingTop = "2px";
+		close.setAttribute("src",thinklink_imagebase+"cancel.png");
+		buttonBox.appendChild(close);
+		close.addEventListener("click",function(){
+			that.hideMe();
+		},true);
+
+//		var close = $("<img/>")
+//			.css("padding-top","2px")
+//			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
+//			.click(function(){
+//				that.hideMe();
+//			});
 		
 		// add actual content
 		var frameholder = document.createElement("div");
@@ -132,15 +159,12 @@ function tl_point_browser() {
 		pointframe.setAttribute("id","tl_point_frame");
 		frameholder.appendChild(pointframe);
 		frameholder.style.width="100%";
-//			frameholder.style.height="100%";
-		win.append(frameholder);
-//		document.body.appendChild(frameholder);
-//		$(document.body).append($(frameholder));
+		win.appendChild(frameholder);
 
 		if(!snippet.claim){
-			searchButton.click(function(){
+			searchButton.addEventListener("click",function(){
 				pointframe.src = url+"?view=search";
-			});
+			},true);
 	}
 
 		that.showMe();	
@@ -150,11 +174,12 @@ function tl_point_browser() {
 	
 	this.showMe = function(){
 		tl_showDiv(this.divID);
-		//$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
 	}
 
 	this.hideMe = function(){
-		$("#tl_point_browser").remove();
+		var node = document.getElementById("tl_point_browser");
+		node.parentNode.removeChild(node);
+//		$("#tl_point_browser").remove();
 	}
 
 	this.showSnipHandler = function(e) { // add click event to each result item

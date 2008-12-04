@@ -65,11 +65,19 @@ function tl_margin()
 		
 		var topfixed = document.createElement("div");
 		topfixed.id = "tl_snippet_activate";
-		$("#" + this.divID).append($(topfixed));
+		document.getElementById("tl_margin").appendChild(topfixed);
+//		$("#" + this.divID).append($(topfixed));
 		
-		$('<input type="button" value="Browse Think Link"/>').appendTo($(topfixed)).click(function(){
+		var button = document.createElement("input");
+		button.setAttribute("type","button");
+		button.setAttribute("value","Browse Mind Mix");
+		topfixed.appendChild(button);
+		button.addEventListener("click",function(){
 			window.open(thinklink_mainhome);
-		});
+		},true);
+//		$('<input type="button" value="Browse Think Link"/>').appendTo($(topfixed)).click(function(){
+//			window.open(thinklink_mainhome);
+//		});
 				
 		this.setHeight(); 		// match margin height to document height
 		tl_hideDiv(this.divID);
@@ -162,14 +170,24 @@ function tl_margin()
 		},false);
 		
 		var tooltip = null;
-		$(pull).hover(function(){
+		pull.addEventListener("mouseover",function(){
 			var msg;
 			if (that.haveOpposedPoint) {msg = "There are \"controversial\" points on this page!"; }
 			else { msg= "There are points on this page!"; }
 			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",mouseX+20,mouseY+20); 
-		}, function(){
+		},true);
+		pull.addEventListener("mouseout",function(){
 			tl_hideTooltip(tooltip);
-		});
+		},true);
+		
+//		$(pull).hover(function(){
+//			var msg;
+//			if (that.haveOpposedPoint) {msg = "There are \"controversial\" points on this page!"; }
+//			else { msg= "There are points on this page!"; }
+//			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",mouseX+20,mouseY+20); 
+//		}, function(){
+//			tl_hideTooltip(tooltip);
+//		});
 		
 	}
 	
@@ -277,7 +295,9 @@ function tl_margin()
 		var docHeight = this.findMaxHeight(document.body,document.body.offsetHeight); //$("body").height();//$("#tl_document").height();
 		//$("#" + this.divID).show();
 		
-		$("#" + this.divID).height(docHeight);
+		document.getElementById(this.divID).style.height = docHeight + "px";
+		
+//		$("#" + this.divID).height(docHeight);
 		this.setItemPositions();
 
 	}
@@ -306,7 +326,8 @@ function tl_margin()
 			var position = findPos(snipspans[0]); // get position of the first span element
 			position[1] = this.getSafeItemPosition(position,this.items[index].id,index);
 			this.items[index].position = position;
-			$("#margin"+this.items[index].id).css("top",position[1])
+			document.getElementById("margin"+this.items[index].id).style.top = position[1]+"px";
+//			$("#margin"+this.items[index].id).css("top",position[1])
 		}
 	}
 
@@ -356,8 +377,10 @@ function tl_margin()
 	this.showMargin = function(){
 		var that = this;
 		tl_showDiv(this.divID);
-		$("#" + this.divID).animate({ width: 'fast', opacity: 'show' }, 'slow');
-		$("body").css("padding-left",215); // scoot the main document to the right
+		document.body.style.paddingLeft = "215px";
+		
+//		$("#" + this.divID).animate({ width: 'fast', opacity: 'show' }, 'slow');
+//		$("body").css("padding-left",215); // scoot the main document to the right
 
 		setTimeout(function(){
 			that.setHeight();
@@ -365,8 +388,10 @@ function tl_margin()
 	}
 
 	this.hideMargin = function(){
-		$("body").css("padding-left",this.leftmargin); // scoot the main document back to the left
-		$("#" + this.divID).animate({ width: 'hide', opacity: 'hide' }, 'slow');
+		document.body.style.paddingLeft = this.leftmargin;
+		tl_hideDiv(this.divID);
+//		$("body").css("padding-left",this.leftmargin); // scoot the main document back to the left
+//		$("#" + this.divID).animate({ width: 'hide', opacity: 'hide' }, 'slow');
 	}
 		
 	this.removeAllHighlights = function() {
@@ -381,29 +406,34 @@ function tl_margin()
 		var that = this;
 		var tool;
 		for (var s=0; s <snippet.spanList.length; s++) {
-//			snippet.spanList[s].id = i; // match each span to the index in snippets array that it belongs to
-			$(snippet.spanList[s]).
-			hover(
-				function(){ 					
+			var span = snippet.spanList[s];
+			span.addEventListener("mouseover",function(){
+					that.setHighlightClass(snippet,true);
+					var div = document.createElement("div");
 					if (snippet.claim && snippet.claim.opposed){
-						var div = $("<div><span class='tl_claim_warn'>contentious claim: </span><span class='tl_claim_text'>"
-								+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
+						div.innerHTML = "<span class='tl_claim_warn'>contentious claim: "+
+								"</span><span class='tl_claim_text'>"+
+								snippet.claim.text+"</span><span class='tl_claim_click'>"+
+								"(click snippet for more info)</span>";
 					}else if(snippet.claim){
-						var div = $("<div><span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
-							+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span></div>").get(0);
+						div.innerHTML = "<span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
+							+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span>";
 					}else{
-						var div = $("<div><span class='tl_claim_prefix'>this snippet has not been associated with a claim</span><span class='tl_claim_text'>"+
-							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span></div>").get(0);
+						div.innerHTML = "<span class='tl_claim_prefix'>this snippet has not been associated with a claim</span><span class='tl_claim_text'>"+
+							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span>";
 					}
 					tool=
-					tl_delayedShowTooltip(div,mouseX+10,mouseY-30); },
-				function(){ tl_hideTooltip(tool); }
-			)
-			.click(function(){
+					tl_delayedShowTooltip(div,mouseX+10,mouseY-30);
+			},true);
+			span.addEventListener("mouseout",function(){
+				that.setHighlightClass(snippet,false);
+				tl_hideTooltip(tool);
+			},true);
+			span.addEventListener("click",function(){
 				if(!getText() || !getText().toString()){
 					myBrowser.viewFrame(snippet);
-				}
-			});
+				}				
+			},true);
 		}
 	}
 	
@@ -459,31 +489,56 @@ function tl_margin()
 		}
 		snippet.opposed = opposed;
 		
-		var margin_item = $("<div>"+showtxt+"</div>")
-			.css("top",snippet.position[1])
-			.attr("id", "margin"+snippet.id)
-			.hover(function(){ // highlight source text when the annotation is hovered over
-				that.setHighlightClass(snippet,true);							
-//				$(margin_item).text(snippet.pointText);
-				if(opposed){
-					$(margin_item).addClass("tl_margin_item_info_con");
-				}else{
-					$(margin_item).addClass("tl_margin_item_info");
-				}
-				$(margin_item).prepend(buttonBox);
-			}, function(){				
-				that.setHighlightClass(snippet,false);	
-//				$(margin_item).text(snippet.displayText);
-				if(opposed){
-					$(margin_item).removeClass("tl_margin_item_info_con");
-				}else{
-					$(margin_item).removeClass("tl_margin_item_info");
-				}
-			})
-			.click(function(){ // open point browse
-				myBrowser.viewFrame(snippet);
-			})
-			.appendTo($("#" + this.divID));
+		var margin_item = document.createElement("div");
+		margin_item.textContent = showtxt;
+		margin_item.style.top = snippet.position[1] + "px";
+		margin_item.setAttribute("id","margin"+snippet.id);
+		margin_item.addEventListener("mouseover",function(){
+			that.setHighlightClass(snippet,true);
+			if(opposed){
+				margin_item.className = "tl_margin_item tl_margin_item_con tl_margin_item_info_con";
+			}else{
+				margin_item.className = "tl_margin_item tl_margin_item_info";
+			}
+		},true);
+		margin_item.addEventListener("mouseout",function(){
+			that.setHighlightClass(snippet,false);
+			if(opposed){
+				margin_item.className = "tl_margin_item tl_margin_item_con";
+			}else{
+				margin_item.className = "tl_margin_item";
+			}
+		},true);
+		margin_item.addEventListener("click",function(){
+			myBrowser.viewFrame(snippet);
+		},true);
+		document.getElementById(this.divID).appendChild(margin_item);
+		
+//		var margin_item = $("<div>"+showtxt+"</div>")
+//			.css("top",snippet.position[1])
+//			.attr("id", "margin"+snippet.id)
+//			.hover(function(){ // highlight source text when the annotation is hovered over
+//				that.setHighlightClass(snippet,true);							
+////				$(margin_item).text(snippet.pointText);
+//				if(opposed){
+//					$(margin_item).addClass("tl_margin_item_info_con");
+//				}else{
+//					$(margin_item).addClass("tl_margin_item_info");
+//				}
+//				$(margin_item).prepend(buttonBox);
+//			}, function(){				
+//				that.setHighlightClass(snippet,false);	
+////				$(margin_item).text(snippet.displayText);
+//				if(opposed){
+//					$(margin_item).removeClass("tl_margin_item_info_con");
+//				}else{
+//					$(margin_item).removeClass("tl_margin_item_info");
+//				}
+//			})
+//			.click(function(){ // open point browse
+//				myBrowser.viewFrame(snippet);
+//			})
+//			.appendTo($("#" + this.divID));
 		
 		// make the margin item header
 		var deleteButton = document.createElement("img"); deleteButton.setAttribute("src",thinklink_imagebase+"bin_closed.png");
@@ -522,24 +577,28 @@ function tl_margin()
 		// show fancy shmancy stuff if the snippet has been bookmarked
 		if (snippet.bookmarked == null) { 
 			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png"); 
-			margin_item.addClass("tl_margin_item");
+//			margin_item.addClass("tl_margin_item");
 			if (opposed){
-				margin_item.addClass("tl_margin_item_con");
+				margin_item.className = "tl_margin_item_con";
 			}else{
-				margin_item.addClass("tl_margin_item");
+				margin_item.className = "tl_margin_item";
 			}
 		}
 		else { 
 			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png"); 
 			if (opposed){
-				margin_item.addClass("tl_margin_item_con");
+				margin_item.className = "tl_margin_item_con";
 			}else{
-				margin_item.addClass("tl_margin_item_bookmarked");
+				margin_item.className = "tl_margin_item_bookmarked";
 			}
 		}
-		var buttonBox = $("<span/>").css("float","right").css("margin-left","2px");
-		buttonBox.append($(saveButton)); buttonBox.append($(deleteButton));
-
+		var buttonBox = document.createElement("span");
+		buttonBox.style.float = "right";
+		buttonBox.style.marginLeft = "2px";
+//		var buttonBox = $("<span/>").css("float","right").css("margin-left","2px");
+		buttonBox.appendChild(saveButton);
+		buttonBox.appendChild(deleteButton);
+//		buttonBox.append($(saveButton)); buttonBox.append($(deleteButton));
 	}
 
 }

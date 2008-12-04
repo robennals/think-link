@@ -253,12 +253,23 @@ function getText()
 	else { return null; }
 }
 
+function hasParent(node,parent){
+	while(node){
+		if(node == parent) return true;
+		node = node.parentNode;
+	}
+	return false;
+}
+
 function inDocument(element) {
+	// TODO: put this back
+	return true;
+	
 	// check if this element is within the margin or annotation dialog
-	var num = $(element).parents().filter("#tl_snippet_dialog").length;
-	num += $(element).parents().filter("#tl_margin").length;
-	if (num < 1) return true; // this element is within the main document
-	else return false; // this element is in one of the thinklink dialogs
+//	var num = $(element).parents().filter("#tl_snippet_dialog").length;
+//	num += $(element).parents().filter("#tl_margin").length;
+//	if (num < 1) return true; // this element is within the main document
+//	else return false; // this element is in one of the thinklink dialogs
 }
 
 function normalizeString(text) {
@@ -268,38 +279,38 @@ function normalizeString(text) {
 }
 
 
-function setTextPos(currentElement, depth, text, id, annoteObj)
-{
-	if (currentElement)
-	{
-    	var j;
-    	var tagName=currentElement.tagName;
-
-    	// Traverse the tree
-    	var i=0;
-    	var currentElementChild=currentElement.childNodes[i];
-    	while (currentElementChild)
-    	{
-				
-				if (inDocument(currentElementChild) && currentElementChild.nodeValue!= null && currentElementChild.nodeValue.indexOf(text,0) >=0) // have text and the text matches
-				{
-					var exists = document.getElementById(id);
-					if (exists != null) return; // don't recreate the span!
-					
-					var spanText = '<span id="' + id + '">'+ text +'</span>';
-					$(currentElementChild).replaceWith(currentElementChild.nodeValue.replace(text,spanText));
-					var position = findPos(document.getElementById(id));
-					annoteObj.setPosition(position); // set the position once we've found it
-				}
-      		// Recursively traverse the tree structure of the child node
-      		setTextPos(currentElementChild, depth+1,text,id,annoteObj);
-      		i++;
-      		currentElementChild=currentElement.childNodes[i];
-			
-    	}
-
-  	}
-}
+//function setTextPos(currentElement, depth, text, id, annoteObj)
+//{
+//	if (currentElement)
+//	{
+//    	var j;
+//    	var tagName=currentElement.tagName;
+//
+//    	// Traverse the tree
+//    	var i=0;
+//    	var currentElementChild=currentElement.childNodes[i];
+//    	while (currentElementChild)
+//    	{
+//				
+//				if (inDocument(currentElementChild) && currentElementChild.nodeValue!= null && currentElementChild.nodeValue.indexOf(text,0) >=0) // have text and the text matches
+//				{
+//					var exists = document.getElementById(id);
+//					if (exists != null) return; // don't recreate the span!
+//					
+//					var spanText = '<span id="' + id + '">'+ text +'</span>';
+//					$(currentElementChild).replaceWith(currentElementChild.nodeValue.replace(text,spanText));
+//					var position = findPos(document.getElementById(id));
+//					annoteObj.setPosition(position); // set the position once we've found it
+//				}
+//      		// Recursively traverse the tree structure of the child node
+//      		setTextPos(currentElementChild, depth+1,text,id,annoteObj);
+//      		i++;
+//      		currentElementChild=currentElement.childNodes[i];
+//			
+//    	}
+//
+//  	}
+//}
 
 function findPos(element) {
 	var curleft = curtop = 0;
