@@ -133,7 +133,7 @@ function makeArgBrowseFrame(divid,obj,height,title){
 function updateButton(idnum,name,id){
 	var button = getel(name+"-"+idnum);
 	if(!button) return;
-	if(name == id.substring(0,name.length)){
+	if(name == (id+"").substring(0,name.length)){
 		button.className = "browsebutton_selected";
 	}else{
 		button.className = "browsebutton";
