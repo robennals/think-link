@@ -143,20 +143,20 @@ private
 	
 	def newsnips_object
 		newsnips = $store.get_newsnips @user['id']
-		return {'id' => 0, 'text' => "Unattached Claims", 'type' => "newsnips", 'from' => {},
+		return {'id' => "newsnips", 'text' => "Unattached Claims", 'type' => "newsnips", 'from' => {},
 			'to' => {"colitem" => newsnips}}
 	end
 	
 	def recent_object
 		recent = $store.get_recent @user['id']
- 		return {'id' => 0, 'text' => "History of recent browsing", 'type' => "recent", 'from' => {}, 
+ 		return {'id' => "recent", 'text' => "History of recent browsing", 'type' => "recent", 'from' => {}, 
 	 		'to' => {"colitem" => recent}}
 	end
 	
 	def search_object
 		query = params[:query]
 		results = $store.search query
-		return {'id' => 0, 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
+		return {'id' => "search?query="+CGI::escape(params[:query]), 'text' => "Search results for '#{query}'", 'type' => "search", 'from' => {},
 			'to' => {"colitem" => results}}
 	end
 	

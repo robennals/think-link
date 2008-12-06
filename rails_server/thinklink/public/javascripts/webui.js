@@ -107,21 +107,44 @@ function makeArgBrowseFrame(divid,obj,height,title){
 	var table = $("<table class='browsetitle'/>")
 		.css("width","100%").appendTo(h2);
 	var row = $("<tr/>").appendTo(table);
+//	$("<img src='"+urlbase+"/images/resultset_previous.png'/>").appendTo(row);
 	$("<td class='browsetitle'>"+title+"</td>").appendTo(row);
 	var buttons = $("<td class='browsebuttons'/>").appendTo(row);
+	$("<nobr class='browsebutton'>back</nobr>").appendTo(buttons)
+		.click(function(){goBack(idnum)});
 	$("<nobr class='browsebutton'>search</nobr>").appendTo(buttons)
+		.attr("id","search-"+idnum)
 		.click(function(){searchMode(idnum)});
 	$("<nobr class='browsebutton'>history</nobr>").appendTo(buttons)
+		.attr("id","recent-"+idnum)
 		.click(function(){recentMode(idnum)});
 //	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
 //		.click(function(){hotMode(idnum)});
 	$("<nobr class='browsebutton'>unattached</nobr>").appendTo(buttons)
+		.attr("id","newsnips-"+idnum)
 		.click(function(){unattachedMode(idnum)});
 
 //	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
 //		.click(function(){mineMode(idnum)});
 		
 	makeInnerBrowser(idnum,box,obj,height);
+}
+
+function updateButton(idnum,name,id){
+	var button = getel(name+"-"+idnum);
+	if(!button) return;
+	if(name == id.substring(0,name.length)){
+		button.className = "browsebutton_selected";
+	}else{
+		button.className = "browsebutton";
+	}
+}
+
+function updateButtons(idnum,id){
+	updateButton(idnum,"recent",id);
+	updateButton(idnum,"history",id);
+	updateButton(idnum,"newsnips",id);
+	updateButton(idnum,"search",id);
 }
 
 function makeArgBrowser(divid,obj,height){
@@ -158,7 +181,6 @@ function makeInnerBrowser(idnum,browser,obj,height){
 	if(height){
 		body.css("height",height)
 	}
-
 	
 	loadObject(idnum,obj);		
 }
@@ -313,6 +335,9 @@ function newThing(node,id,verb){
 		ev.stopPropagation();
 		if(ev.keyCode == 13){
 			createFinished(id,holder,input,typ,verb,reqId,idnum);
+		}else if(ev.keyCode == 27){
+			input.value = "";
+			holder.remove();
 		}
 	});
 	holder.insertAfter(findRelationTitle(node));
@@ -745,6 +770,55 @@ function loadItemInfo(idnum,id){
 	});
 }
 
+function getBrowseHistory(idnum){
+	var browser = getel("browser-"+idnum);
+	if(!browser.tl_browsehistory){
+		browser.tl_browsehistory = [];
+	}
+	return browser.tl_browsehistory;
+}
+
+function pushHistory(idnum,place){
+	var history = getBrowseHistory(idnum);
+	history.push(place);
+	tl_log(history);
+	updateButtons(idnum,place);
+}
+
+function findDivWithId(idnum,id){
+	var parents = getel("parents-"+idnum);
+	for(var i = 0; i < parents.childNodes.length; i++){
+		var node = parents.childNodes[i];
+		if(node.getAttribute && node.getAttribute("tl_id") == id){
+			return node;
+		}
+	}
+	var parents = getel("children-"+idnum);
+	for(var i = 0; i < parents.childNodes.length; i++){
+		var node = parents.childNodes[i];
+		if(node.getAttribute && node.getAttribute("tl_id") == id){
+			return node;
+		}
+	}
+}
+
+function goBack(idnum){
+	var history = getBrowseHistory(idnum);
+	history.pop();
+	var last = history.pop();	
+	tl_log(history);
+	if(last){
+		var div = findDivWithId(idnum,last);
+		if(div){
+			selectItem(div,last);
+		}else{		
+			$.getJSON(urlbase+"/node/"+last,{},function(obj){
+				loadObject(idnum,obj);
+			})
+		}
+	}
+}
+
 function selectItem(div,id){
 	var group = findNodeGroup(div);
 	var idnum = getNodeIdNum(group);
@@ -758,6 +832,8 @@ function selectItem(div,id){
 	browser.setAttribute("tl_id",id);
 	
 	document.location.hash = id;
+	
+	pushHistory(idnum,id);
 
 	clearSelect(getNodeIdNum(browser));
 	
@@ -891,27 +967,13 @@ function resizeStop(ev){
 	resizeBar.removeEventListener("mouseup",resizeStop,false);
 }
 
-function clearButton(what,idnum){
-	var but = getel(what+"-"+idnum);
-	if(but){
-		but.className = "browsetab";
-	}
-}
-
 function clearSelect(idnum){
-	clearButton("all",idnum);
-	clearButton("recent",idnum);
-	clearButton("scratch",idnum);
-	clearButton("hot",idnum);
-	clearButton("friends",idnum);
-	clearButton("search",idnum);
-	clearButton("hot",idnum);
 	getel("searchbar-"+idnum).className = "hidden";
 }
 
-
 function searchMode(idnum){
 	clearSelect(idnum);
+	updateButtons(idnum,"search");
 	getel("searchbar-"+idnum).className = "searchbar";
 //	getel("search-"+idnum).className = "browsetab browsetab_selected";
 	getel("body-"+idnum).innerHTML = "<div class='msg'>Enter search terms above</div>";
@@ -943,11 +1005,11 @@ function unattachedMode(idnum){
 	});
 }
 
-
 function makeMainGroups(idnum){
 	var body = getel("body-"+idnum);
 	body.innerHTML = "";
-	var id = getId();
+//	var id = getId();
+	var id = idnum;
 	$("<div class='item-parents'/>").attr("id","parents-"+id).appendTo(body);
 	$("<div class='item-current'/>").attr("id","current-"+id).appendTo(body);
 	$("<div class='item-children'/>").attr("id","children-"+id).appendTo(body);
@@ -974,6 +1036,7 @@ function loadObject(idnum,obj){
 	makeParentItems(getel("parents-"+id),obj);
 	makeSubItems(getel("children-"+id),obj);
 	makeCurrentItem(getel("current-"+id),obj);
+	pushHistory(idnum,obj.id);
 }
 	
 function searchDo(idnum){

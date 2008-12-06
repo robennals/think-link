@@ -16,10 +16,6 @@
 
 // these are the scripts that we inject into every page we load
 thinklink_scriptUrls = [
-//	"jquery-1.2.3.js",
-//	"ui.core.js",
-//	"ui.draggable.js",
-//	"ui.resizable.js",
 	"tl_margin.js",
 	"tl_snippet.js",
 	"tl_point.js",
@@ -29,48 +25,6 @@ thinklink_scriptUrls = [
 	"tl_config.js",
 	"thinklink.js"
 ];
-
-// this is the script that we inject into every page we load
-//
-//var thinklink_base_rob = 
-//"http://mashmaker.intel-research.net/rob/scripts/";
-//
-//var thinklink_base = 
-//"http://mashmaker.intel-research.net/beth/scripts/";
-//
-//var thinklink_open = false;
-//
-//var thinklink_scriptUrls;
-
-//var thinklink_styleUrl;
-//
-//function thinklink_setScriptUrls(username){
-//	if(username != "trush@eecs.berkeley.edu"){
-//	 	thinklink_base = thinklink_base_rob;
-//	}
-//	
-//	thinklink_scriptUrls = 
-//		[thinklink_base+"jquery-1.2.3.js",
-//		thinklink_base+"ui.core.js",
-//		thinklink_base+"ui.draggable.js",
-//		thinklink_base+"ui.resizable.js",
-//		thinklink_base+"tl_margin.js",
-//		thinklink_base+"tl_snippet.js",
-//		thinklink_base+"tl_point.js",
-//		thinklink_base+"tl_helpers.js",
-//		thinklink_base+"tl_suggest.js",
-//		thinklink_base+"tl_url.js"];
-//		
-//	if(username != "trush@eecs.berkeley.edu"){
-//		thinklink_scriptUrls.push(thinklink_base+"tl_robconfig.js");	
-//		thinklink_styleUrl = "http://mashmaker.intel-research.net/rob/css/style.css";
-//	}else{
-//		thinklink_scriptUrls.push(thinklink_base+"tl_bethconfig.js");
-//		thinklink_styleUrl = "http://mashmaker.intel-research.net/beth/css/style.css";
-//	}
-//	
-//	thinklink_scriptUrls.push(thinklink_base+"thinklink.js");
-//}
 
 var thinklink_name = "ThinkLink";
 
@@ -281,6 +235,7 @@ function thinklink_setCookieForUri(uri,username,password){
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"username",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"email",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"password",password);
+  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"pluginversion","firefox-1");
 }
 
 function thinklink_setCookies(username,password){

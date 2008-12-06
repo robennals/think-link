@@ -32,6 +32,10 @@ module ApplicationHelper
 				user['error'] = "login failed"
 			end
 		end
+		if cookies[:pluginversion]
+			user['pluginlogin'] = true
+		end
+			
 		return user
 	end
 

@@ -560,7 +560,7 @@ h1 {
 	text-align: right;
 }
 
-.folder_add, .browsebutton {
+.folder_add, .browsebutton, .browsebutton_selected {
 	font-size: 8pt;
 	background-color: #ececec;
 	-moz-border-radius: 3px;
@@ -571,6 +571,11 @@ h1 {
 	padding-bottom: 2px;
 	cursor: pointer;
 	margin-left: 2px;
+}
+
+.browsebutton_selected {
+	background-color: #d6effc;
+	border-color: #99defd;
 }
 
 .folder_add:hover, .browsebutton:hover{
