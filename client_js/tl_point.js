@@ -64,12 +64,6 @@ function tl_point_browser() {
 		win.className = "tl_dialog";
 		win.style.zIndex = "214783647";
 		document.body.appendChild(win);
-//		
-//		var win = $("<div/>")
-//			.attr("id","tl_point_browser")
-//			.addClass("tl_dialog")
-//			.css("zIndex","214783647")
-//			.appendTo("body");
 		
 		win.style.overflow = "hidden";
 		win.style.position = "fixed";
@@ -87,14 +81,6 @@ function tl_point_browser() {
 		},true);
 		titleBar.className = "tl_dialog_title";
 		
-//		var titleBar = $("<div/>").appendTo($("#"+that.divID))
-//			.attr("id","tl_pb_title")
-//			.css("margin-bottom","0px")
-//			.css("cursor","move")
-//			.mousedown(function(e){tl_dragStart(e,that.divID,"tl_point_frame");})
-//
-//			.addClass("tl_dialog_title");
-
 		var buttonBox = document.createElement("span");
 		buttonBox.style.position = "absolute";
 		buttonBox.style.right = "4px";
@@ -112,12 +98,6 @@ function tl_point_browser() {
 			buttonBox.appendChild(searchButton);
 		}
 
-//		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(titleBar);
-//		var titleBox = $("<nobr>").text(title).appendTo(titleBar);
-//		if(!snippet.claim){
-//			var searchButton = $("<input class='tl_openbutton' type='button' value='search'/>").appendTo(buttonBox);	
-//		}
-
 		var openButton = document.createElement("input");
 		openButton.className = "tl_openbutton";
 		openButton.setAttribute("type","button");
@@ -126,11 +106,6 @@ function tl_point_browser() {
 		openButton.addEventListener("click",function(){
 			window.open(thinklink_mainhome);
 		},true);
-		
-//		var openButton = $("<input class='tl_openbutton' type='button' value='Open Full Interface'/>").appendTo(buttonBox);	
-//		openButton.click(function(){
-//			window.open(thinklink_mainhome);
-//		});
 
 		var close = document.createElement("img");
 		close.style.paddingTop = "2px";
@@ -139,13 +114,6 @@ function tl_point_browser() {
 		close.addEventListener("click",function(){
 			that.hideMe();
 		},true);
-
-//		var close = $("<img/>")
-//			.css("padding-top","2px")
-//			.attr("src",thinklink_imagebase+"cancel.png").appendTo(buttonBox)
-//			.click(function(){
-//				that.hideMe();
-//			});
 		
 		// add actual content
 		var frameholder = document.createElement("div");
@@ -165,12 +133,10 @@ function tl_point_browser() {
 			searchButton.addEventListener("click",function(){
 				pointframe.src = url+"?view=search";
 			},true);
-	}
-
+		}
+		
 		that.showMe();	
 	}
-
-
 	
 	this.showMe = function(){
 		tl_showDiv(this.divID);
@@ -179,7 +145,6 @@ function tl_point_browser() {
 	this.hideMe = function(){
 		var node = document.getElementById("tl_point_browser");
 		node.parentNode.removeChild(node);
-//		$("#tl_point_browser").remove();
 	}
 
 	this.showSnipHandler = function(e) { // add click event to each result item

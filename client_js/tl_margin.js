@@ -14,7 +14,7 @@
 //  limitations under the License.
 
 function thinklink_newSnippet(){
-	var hilite = getText();			
+	var hilite = tl_getText();			
 	mySnip.new(hilite.toString().replace(/\s+/g," "));
 }
 
@@ -99,7 +99,7 @@ function tl_margin()
 			that.docTitle = titleInput.value;
 			document.body.removeChild(titleForm);
 			var args = "?url="+encodeURIComponent(url)+"&title="+encodeURIComponent(that.docTitle)+"&author="+encodeURIComponent(that.docAuthor);
-			doAJAX(scriptID,that.docInfoURL+args,function(result){
+			tl_doAJAX(scriptID,that.docInfoURL+args,function(result){
 				tl_log("sent: "+ args+ ", "+result);
 //				that.refresh();
 			});
@@ -115,7 +115,7 @@ function tl_margin()
 			that.docAuthor = authorInput.value;
 			document.body.removeChild(authorForm);
 			var args = "?url="+encodeURIComponent(url)+"&title="+encodeURIComponent(that.docTitle)+"&author="+encodeURIComponent(that.docAuthor);
-			doAJAX(scriptID,that.docInfoURL+args,function(result){
+			tl_doAJAX(scriptID,that.docInfoURL+args,function(result){
 				tl_log("sent: "+ args+ ", "+result);
 //				that.refresh();
 			});
@@ -125,18 +125,16 @@ function tl_margin()
 		
 		var title = document.createElement("input");
 		title.setAttribute("type","button"); title.setAttribute("value","set title"); 
-		//title.className = "tl_fixed_button"; title.setAttribute("style","top:30px");
 		title.addEventListener('click', function(e){
-			titleInput.value = getText();
+			titleInput.value = tl_getText();
 			document.body.appendChild(titleForm);
 		},false);
 		infoDiv.appendChild(title);
 		
 		var author = document.createElement("input");
 		author.setAttribute("type","button"); author.setAttribute("value","set author"); 
-		//author.className = "tl_fixed_button"; author.setAttribute("style","top:50px");
 		author.addEventListener('click', function(e){
-			authorInput.value = getText();
+			authorInput.value = tl_getText();
 			document.body.appendChild(authorForm);
 		},false);
 		infoDiv.appendChild(author);
@@ -170,25 +168,15 @@ function tl_margin()
 		},false);
 		
 		var tooltip = null;
-		pull.addEventListener("mouseover",function(){
+		pull.addEventListener("mouseover",function(ev){
 			var msg;
 			if (that.haveOpposedPoint) {msg = "There are \"controversial\" points on this page!"; }
 			else { msg= "There are points on this page!"; }
-			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",mouseX+20,mouseY+20); 
+			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",ev.clientX+20,ev.clientY+20); 
 		},true);
 		pull.addEventListener("mouseout",function(){
 			tl_hideTooltip(tooltip);
-		},true);
-		
-//		$(pull).hover(function(){
-//			var msg;
-//			if (that.haveOpposedPoint) {msg = "There are \"controversial\" points on this page!"; }
-//			else { msg= "There are points on this page!"; }
-//			tooltip = tl_showTooltip(msg+" Click here to show/hide the margin!",mouseX+20,mouseY+20); 
-//		}, function(){
-//			tl_hideTooltip(tooltip);
-//		});
-		
+		},true);		
 	}
 	
 	this.showMarginPull = function(){
@@ -242,8 +230,7 @@ function tl_margin()
 			}
 			urls = urls.substring(1); // trim preceding ampersand
 			
-			tl_log("doAjax");
-			doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
+			tl_doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
 				tl_log("doAjax callback");
 				
 				// for each result item, make a new tl_snippet and add it to the margin's array
@@ -274,7 +261,7 @@ function tl_margin()
 				if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
 					scriptID = "tl_get_doc";
 					var shorturl = that.url.substring(0,that.url.lastIndexOf("/")+1); // shortened url
-					doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
+					tl_doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
 						tl_log(result);
 						if (result.length >0) {
 							that.docTitle = result[0]['title'];
@@ -323,7 +310,7 @@ function tl_margin()
 		for (var index=0; index<this.items.length; index++) {			// set the positions of the annotations within the margin
 			var snipspans = this.items[index].spanList;
 			if(!snipspans) continue;
-			var position = findPos(snipspans[0]); // get position of the first span element
+			var position = tl_findPos(snipspans[0]); // get position of the first span element
 			position[1] = this.getSafeItemPosition(position,this.items[index].id,index);
 			this.items[index].position = position;
 			document.getElementById("margin"+this.items[index].id).style.top = position[1]+"px";
@@ -398,7 +385,7 @@ function tl_margin()
 		for (var i=0; i<this.items.length; i++){
 			var snippet = this.items[i];
 			if (snippet.spanList == null) { continue; }
-			removeSpans(snippet.spanList);
+			tl_removeSpans(snippet.spanList);
 		}
 	}
 	
@@ -407,7 +394,7 @@ function tl_margin()
 		var tool;
 		for (var s=0; s <snippet.spanList.length; s++) {
 			var span = snippet.spanList[s];
-			span.addEventListener("mouseover",function(){
+			span.addEventListener("mouseover",function(ev){
 					that.setHighlightClass(snippet,true);
 					var div = document.createElement("div");
 					if (snippet.claim && snippet.claim.opposed){
@@ -423,14 +410,14 @@ function tl_margin()
 							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span>";
 					}
 					tool=
-					tl_delayedShowTooltip(div,mouseX+10,mouseY-30);
+					tl_delayedShowTooltip(div,ev.clientX+10,ev.clientY-30);
 			},true);
 			span.addEventListener("mouseout",function(){
 				that.setHighlightClass(snippet,false);
 				tl_hideTooltip(tool);
 			},true);
 			span.addEventListener("click",function(){
-				if(!getText() || !getText().toString()){
+				if(!tl_getText() || !tl_getText().toString()){
 					myBrowser.viewFrame(snippet);
 				}				
 			},true);
@@ -439,7 +426,7 @@ function tl_margin()
 	
 	this.setHighlightClass = function(snippet,enable){
 		if(!snippet.spanList) return;
-		highlightclass = "highlight";
+		highlightclass = "tl_highlight";
 		if(snippet.opposed){
 			highlightclass += "_con";
 		}
@@ -460,17 +447,16 @@ function tl_margin()
 		
 		var highlightclass;
 		if(snippet.claim && snippet.claim.opposed != null){
-			highlightclass = "highlight_con";
+			highlightclass = "tl_highlight_con";
 		}else if(!snippet.claim){
-			highlightclass = "highlight_free";
+			highlightclass = "tl_highlight_free";
 		}else{
-			highlightclass = "highlight";
+			highlightclass = "tl_highlight";
 		}
-		snippet.spanList = mark_snippet(snippet.text,highlightclass);
+		snippet.spanList = tl_mark_snippet(snippet.text,highlightclass);
 		if(!snippet.spanList) return;
 		this.addSnippetClickHandler(snippet);
-		var position = findPos(snippet.spanList[0]); // get position of the first span element
-//		removeSpans(snipspans);
+		var position = tl_findPos(snippet.spanList[0]); // get position of the first span element
 		position[1] = this.getSafeItemPosition(position,snippet.id,this.items.length); // make sure vertical position is kosher
 		snippet.position = position;
 		var numItems = this.items.push(snippet); // add to margin's array
@@ -513,40 +499,14 @@ function tl_margin()
 			myBrowser.viewFrame(snippet);
 		},true);
 		document.getElementById(this.divID).appendChild(margin_item);
-		
-//		var margin_item = $("<div>"+showtxt+"</div>")
-//			.css("top",snippet.position[1])
-//			.attr("id", "margin"+snippet.id)
-//			.hover(function(){ // highlight source text when the annotation is hovered over
-//				that.setHighlightClass(snippet,true);							
-////				$(margin_item).text(snippet.pointText);
-//				if(opposed){
-//					$(margin_item).addClass("tl_margin_item_info_con");
-//				}else{
-//					$(margin_item).addClass("tl_margin_item_info");
-//				}
-//				$(margin_item).prepend(buttonBox);
-//			}, function(){				
-//				that.setHighlightClass(snippet,false);	
-////				$(margin_item).text(snippet.displayText);
-//				if(opposed){
-//					$(margin_item).removeClass("tl_margin_item_info_con");
-//				}else{
-//					$(margin_item).removeClass("tl_margin_item_info");
-//				}
-//			})
-//			.click(function(){ // open point browse
-//				myBrowser.viewFrame(snippet);
-//			})
-//			.appendTo($("#" + this.divID));
-		
+				
 		// make the margin item header
 		var deleteButton = document.createElement("img"); deleteButton.setAttribute("src",thinklink_imagebase+"bin_closed.png");
 		deleteButton.addEventListener('click', function(e){ 
 			e.cancelBubble=true;
-			doAJAX("tl_delete",that.deleteURL+"?snippet="+snippet.id,function(result){
+			tl_doAJAX("tl_delete",that.deleteURL+"?snippet="+snippet.id,function(result){
 				tl_log("mark deleted: "+ snippet.id+ ", "+result);
-				removeSpans(snippet.spanList);
+				tl_removeSpans(snippet.spanList);
 				snippet.spanList = null;
 				document.getElementById(that.divID).removeChild(document.getElementById("margin"+snippet.id));
 			});
@@ -556,7 +516,7 @@ function tl_margin()
 		saveButton.addEventListener('click', function(e){ 
 			e.cancelBubble=true;
 			if (bookmarked==null) {
-				doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
+				tl_doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
 					tl_log("bookmarked: "+ snippet.id+ ", "+result);
 					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png");
 					margin_item.addClass("tl_margin_item_bookmarked").removeClass("tl_margin_item");
@@ -564,7 +524,7 @@ function tl_margin()
 				});
 			}
 			else {
-				doAJAX("tl_bookmark",that.unbookmarkURL+"?snippet="+snippet.id,function(result){
+				tl_doAJAX("tl_bookmark",that.unbookmarkURL+"?snippet="+snippet.id,function(result){
 					tl_log("unbookmarked: "+ snippet.id+ ", "+result);
 					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png");
 					margin_item.addClass("tl_margin_item").removeClass("tl_margin_item_bookmarked");

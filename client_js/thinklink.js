@@ -35,7 +35,7 @@ if (document.getElementById("tl_margin") == null) {
 	// set some global vars for mouse coordinates
 	var mouseX;
 	var mouseY;
-	document.addEventListener('mousemove',getMouseXY,true);
+	document.addEventListener('mousemove',tl_getMouseXY,true);
 	
 	// set some global vars for creating draggable divs
 	var tl_browserInfo = new getBrowserInfo();

@@ -64,9 +64,6 @@ function tl_snippet_dialog(margin) {
 	this.sourceSpans = [];	
 		
 	this.init = function() {
-		//$("<div></div>").attr("id",this.divID).addClass("tl_dialog").appendTo($("body")); // add dialog element to DOM
-		//$("#"+this.divID).draggable();
-		//$("#"+this.divID).hide();		// hide the dialog
 		var elem = document.createElement("div"); elem.id = this.divID;  elem.className = "tl_dialog";
 		elem.style.zIndex="-1";
 		document.body.appendChild(elem);
@@ -81,26 +78,19 @@ function tl_snippet_dialog(margin) {
 	}
 	
 	this.showMe = function(){
-		//$("#"+this.divID).animate({ width: 'show', opacity: 'show' }, 'fast');
 		tl_showDiv(this.divID);
 	}
 	this.close = function(){
 		tl_log("close");
 		if(document.getElementById("tl_snippet_win")){
-//			$("#tl_snippet_win").animate({ height: 'hide', opacity: 'hide' }, 'slow');
 			var dialog = document.getElementById("tl_snippet_win");
 			this.removeNode(document.getElementById("tl_snippet_win"));
-//			$("#tl_snippet_win").remove();
-			removeSpans(this.sourceSpans);
+			tl_removeSpans(this.sourceSpans);
 		}else if(document.getElementById("tl_point_browser")){
 			var dialog = document.getElementById("tl_point_frame");
 			this.removeNode(document.getElementById("tl_point_browser"));
-//			$("#tl_point_browser").remove();
-//			$("#tl_point_browser").animate({ height: 'hide', opacity: 'hide' }, 'slow');
 		}
 		if(dialog){
-//			$(dialog).remove();
-//			dialog.parentNode.removeChild(dialog)
 			this.margin.itemsLoaded=false;
 			this.margin.refresh();
 		};
@@ -110,34 +100,7 @@ function tl_snippet_dialog(margin) {
 		if(confirm("You don't have any text selected and so cannot create a new snippet.\n"
 			+"Would you like to open the Mind Mix claim browser?")){
 				window.open(thinklink_mainhome);
-		}
-		
-//		var dialog = $("<div/>").addClass("tl_dialog").attr("id","reldialog")
-//			.css("left",100).css("top",100).css("position","fixed").css("width","300px")
-//			.appendTo(document.body);
-//		var title = $("<div>").addClass("tl_dialog_title")
-//			.text("Think Link")
-//			.mousedown(function(e) { tl_dragStart(e,"reldialog") }) // use title bar to drag browser;
-//			.appendTo(dialog);	
-//		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
-//		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
-//			.click(function(){
-//				$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
-//				dialog.remove();
-//			});
-//		var body = $("<form/>").addClass("tl_dialog_body").appendTo(dialog);
-//		
-//		var first = $("<div>").addClass("point_text")
-//			.text("You don't have any text selected and so cannot create a new snippet. Would you like to browse Think Link?")
-//			.appendTo(body);
-//
-//		var open = $("<input type='button'/>").attr("value","Browse Think Link")
-//		.appendTo(body).css("margin-left","75px")
-//		.click(function(){
-//			window.open(thinklink_mainhome);
-//			$(dialog).animate({ height: 'hide', opacity: 'hide' }, 'slow');
-//			dialog.parentNode.removeChild(dialog);			
-//		});
+		}		
 	}
 	
 	this.new = function(sourceText){
@@ -148,7 +111,7 @@ function tl_snippet_dialog(margin) {
 		this.sourceText = sourceText;
 		
 		// determine last dom node to aid in finding associated permalink
-		var sourceSpans = mark_snippet(this.sourceText,"highlight_free");
+		var sourceSpans = tl_mark_snippet(this.sourceText,"highlight_free");
 		if(!sourceSpans) return;
 		this.sourceSpans = sourceSpans;
 		
@@ -160,7 +123,6 @@ function tl_snippet_dialog(margin) {
 			that.gotPermaLink = true;
 		});
 		that.makeReallySimpleSnippet(sourceSpans);
-//		that.makeSimpleSnippetDialog(sourceSpans);
 	};
 	
 	this.makeReallySimpleSnippet = function(sourceSpans){
@@ -173,167 +135,20 @@ function tl_snippet_dialog(margin) {
 		} 
 		var url_real = this.margin.url;
 		
-		doAJAX("tl_new","scripthack/newsnippet.js"
+		tl_doAJAX("tl_new","scripthack/newsnippet.js"
 			+"?text="+encodeURIComponent(that.sourceText)
 			+"&url="+encodeURIComponent(url)
 			+"&realurl="+encodeURIComponent(url_real)				
 			+"&title="+encodeURIComponent(document.title)
 		,function(result){
 			if(result.error){
-				removeSpans(that.sourceSpans);
+				tl_removeSpans(that.sourceSpans);
 					alert("Login incorrect - set password in Tools/Options/Thinklink");
-//				window.open(thinklink_urlbase+"api/login");
 			}else{
 				that.margin.itemsLoaded=false;
-				removeSpans(that.sourceSpans);
-
+				tl_removeSpans(that.sourceSpans);
 				that.margin.addItem({text:that.sourceText,id:result.id,claim:null});
-//				this.margin.refresh();  // TODO: remove the need for this
 			}
 		});		
 	}
-	
-//	this.makeSimpleSnippetDialog = function(sourceSpans){
-//		var that = this;
-//		var mk = function(tag) {return document.createElement(tag);};
-//		
-//		var url = this.margin.normTool.normalizeUrl(this.margin.url);
-//		if (this.permaLink != null) { // use the determined perma link if available
-//			tl_log("permalink is : "+this.permaLink);
-//			url = this.margin.normTool.makeAbsoluteUrl(this.margin.url,this.permaLink);
-//			url= this.margin.normTool.normalizeUrl(url);
-//		} 
-//		var url_real = this.margin.url;
-//
-//		var ypos = findPos(sourceSpans[0])[1]; 
-//
-//		var win = mk("div");
-//		win.className = "tl_dialog";
-//		win.setAttribute("id","tl_snippet_win");
-//		win.style.position = "fixed";
-//		win.style.left = "100px";
-//		win.style.top = "0px";
-////		win.style.top = Math.max(0,ypos)+"px";
-//		
-//  	var title = mk("div");
-//		title.className = "tl_dialog_title";
-//		title.textContent = "Create new snippet";
-//		title.addEventListener("mousedown",function(e){tl_dragStart(e,"tl_snippet_win","tl_snippet_frame");},false);
-//	
-//		win.appendChild(title);
-//		var box = $("<div>Summary (optional):</div>")
-//				.css("margin",4)
-//				.appendTo(win);
-//		var inputdiv = $("<div/>").appendTo(box);
-//		var input = $("<input type='text'/>")
-//				.css("marginLeft",20).css("width",300).css("textAlign","right")
-//				.css("textAlign","left")
-//				.appendTo(inputdiv);
-//				
-////		if(this.sourceText.length < 100){
-////			input.val(this.sourceText);
-////		}
-//		
-//		var butdiv = $("<div id='butdiv'/>")
-//				.css("textAlign","right")
-//				.appendTo(win);
-//		var nobut = $("<input type='button' value='Cancel'/>").appendTo(butdiv);
-//		var okbut = $("<input type='button' value='Create Snippet'/>").appendTo(butdiv);
-//		
-//		okbut.click(function(){
-//			doAJAX("tl_new","scripthack/newsnippet.js"
-//				+"?text="+encodeURIComponent(that.sourceText)
-//				+"&summary="+encodeURIComponent(input.val())
-//				+"&url="+encodeURIComponent(url)
-//				+"&realurl="+encodeURIComponent(url_real)				
-//				+"&title="+encodeURIComponent(document.title)
-//			,function(result){
-//				if(result.error){
-//					window.open(thinklink_urlbase+"api/login");
-//				}else{
-//					that.close();
-//				}
-//			});
-//		});
-//			
-//		nobut.click(function(){
-//			that.close();
-//		});
-//		
-//		var buttonBox = $("<span/>").css("position","absolute").css("right","4px").appendTo(title);
-//		var openButton = $("<input class='tl_openbutton' type='button' value='Organize'/>")
-//				.css("marginRight","18px")
-//				.appendTo(buttonBox);	
-//		openButton.click(function(){
-//			window.open(thinklink_mainhome);
-//		});
-//
-//		
-//		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
-//		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
-//			.click(function(){
-//				that.close();
-//			});
-//
-//
-////		win.appendChild(frame);
-//		thinklink_activeDivId = "tl_snippet_win";
-//		document.body.appendChild(win);
-//		
-//		input.get(0).focus();
-//	};	
-		
-	
-		
-//	this.makeNewSnippetDialog = function(sourceSpans){
-//		var that = this;
-//		var mk = function(tag) {return document.createElement(tag);};
-//		
-//		var url = this.margin.normTool.normalizeUrl(this.margin.url);
-//		if (this.permaLink != null) { // use the determined perma link if available
-//			tl_log("permalink is : "+this.permaLink);
-//			url = this.margin.normTool.makeAbsoluteUrl(this.margin.url,this.permaLink);
-//			url= this.margin.normTool.normalizeUrl(url);
-//		} 
-//		var url_real = this.margin.url;
-//		
-//		var frame = mk("iframe");
-//		frame.setAttribute("src",thinklink_mainhome+
-//			"snippets/newsnippet?txt="+encodeURIComponent(this.sourceText)
-//			+"&url="+encodeURIComponent(url)+"&realurl="+encodeURIComponent(url_real)
-//			+"&title="+encodeURIComponent(document.title));
-//		frame.className = "tl_snippet_frame";
-//		frame.setAttribute("id","tl_snippet_frame");
-//		frame.style.width = "500px";
-//		frame.style.height = "400px";
-//		frame.style.overflow = "hidden";
-////		frame.style.padding = "6px";
-//		frame.style.backgroundColor = "white";
-//		var title = mk("div");
-//		title.className = "tl_dialog_title";
-//		title.textContent = "What claim is this snippet making?";
-//		title.addEventListener("mousedown",function(e){tl_dragStart(e,"tl_snippet_win","tl_snippet_frame");},false);
-//
-//		var win = mk("div");
-//		
-//		var cancel = $("<span style='position: absolute; right: 4px'/>").appendTo(title);
-//		var cancelbut = $("<img src='"+thinklink_imagebase+"cancel.png'/>").appendTo(cancel)
-//			.click(function(){
-//				that.close();
-//			});
-//
-//		win.className = "tl_dialog";
-//		win.setAttribute("id","tl_snippet_win");
-//		win.style.position = "fixed";
-//		win.style.left = "100px";
-//		win.style.top = "0px";
-//		win.appendChild(title);
-//		win.appendChild(frame);
-//		thinklink_activeDivId = "tl_snippet_win";
-//		document.body.appendChild(win);
-//	};	
-//		
-//	
-
-	
 }

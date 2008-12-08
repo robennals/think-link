@@ -40,7 +40,7 @@ function tl_delayedShowTooltip(innerdiv,x,y){
 		tl_tooltip = document.createElement("div");
 	}
 	var box = tl_tooltip;
-	box.className = "hidden";
+	box.className = "tl_hidden";
 	box.style.top = y+"px";
 	box.style.left = x+"px";
 	box.innerHTML = "";
@@ -51,8 +51,8 @@ function tl_delayedShowTooltip(innerdiv,x,y){
 	setTimeout(function(){
 		if(box.parentNode){
 			box.className = "help_box";
-			box.style.top = (mouseY - 30) + "px";
-			box.style.left = (mouseX + 10) + "px";
+//			box.style.top = (mouseY - 30) + "px";
+//			box.style.left = (mouseX + 10) + "px";
 		}
 	},300);
 	
@@ -74,14 +74,14 @@ function tl_showTooltip(text,x,y) {
 
 function tl_hideTooltip(elem) {
 	if(tl_tooltip && tl_tooltip.parentnode){
-		tl_tooltip.className = "hidden";
+		tl_tooltip.className = "tl_hidden";
 		tl_tooltip.parentNode.removeChild(tl_tooltip);
 	}else{
 		document.body.removeChild(elem);
 	}
 }
 
-function doAJAX(scriptID,url,callback) {
+function tl_doAJAX(scriptID,url,callback) {
 	var url = thinklink_urlbase + url;
 	var doc = document;
 	var scripttag = doc.createElement("script");
@@ -92,24 +92,24 @@ function doAJAX(scriptID,url,callback) {
     doc.getElementsByTagName("head")[0].appendChild(scripttag);
 }
 
-function mark_snippet(snippet,hilite_class) {
+function tl_mark_snippet(snippet,hilite_class) {
 	if (hilite_class==null){ hilite_class = "highlight"; }
-	snippet = normalizeString(snippet);
+	snippet = tl_normalizeString(snippet);
 	if(snippet[snippet.length-1] == " "){
 		snippet = snippet.substring(0,snippet.length-1);
 	}
-	var text = normalizeString(document.body.textContent);
+	var text = tl_normalizeString(document.body.textContent);
 	var offset = text.indexOf(snippet);
 	if(offset == -1) return null;
 
 	var snipspans = [];
 	
-	addspans(document.body,offset,snippet.length,snippet,snipspans,false,false,hilite_class);
+	tl_addspans(document.body,offset,snippet.length,snippet,snipspans,false,false,hilite_class);
 	return snipspans;
 }
 
-function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_class) {
-	var nodeText = normalizeString(node.textContent);
+function tl_addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_class) {
+	var nodeText = tl_normalizeString(node.textContent);
 	
 	if (start+length < nodeText.length) {
 		start = nodeText.indexOf(snipText);
@@ -120,14 +120,14 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 	}
 	if (node.nodeName == "#text") {
 		if(ispre){
-			var white = identify_whitespace(node.textContent);
+			var white = tl_identify_whitespace(node.textContent);
 			nodeText = white.txt;
 			start = nodeText.indexOf(snipText);			
 		}
 		// before snippet
 		if (start != 0) {
 			var beforeTxt = nodeText.substring(0,start);
-			if(ispre){ beforeTxt = expand_whitespace(beforeTxt,0,white.white); }
+			if(ispre){ beforeTxt = tl_expand_whitespace(beforeTxt,0,white.white); }
 			var beforeNode = document.createTextNode(beforeTxt);
 			node.parentNode.insertBefore(beforeNode,node);
 		}
@@ -136,7 +136,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 		newSpan.className =hilite_class;
 		
 		var middleTxt = nodeText.substring(start,start+length);
-		if(ispre) {middleTxt = expand_whitespace(middleTxt,start,white.white);	}	
+		if(ispre) {middleTxt = tl_expand_whitespace(middleTxt,start,white.white);	}	
 		var middleNode = document.createTextNode(middleTxt);
 		node.parentNode.insertBefore(newSpan,node);
 		newSpan.appendChild(middleNode);
@@ -146,7 +146,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 		// after snippet
 		if (start+length < nodeText.length) {
 			var afterTxt = nodeText.substring(start+length);
-			if(ispre) {afterTxt = expand_whitespace(afterTxt,start+length,white.white);}
+			if(ispre) {afterTxt = tl_expand_whitespace(afterTxt,start+length,white.white);}
 			var afterNode = document.createTextNode(afterTxt);
 			node.parentNode.insertBefore(afterNode,node);
 		}
@@ -159,15 +159,15 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 		for (var k=0; k<node.childNodes.length; k++) {
 			if(node.childNodes[k].nodeName != "#comment" ){//&& node.childNodes[k].nodeName != "SCRIPT"){
 				nodeList.push(node.childNodes[k]);
-				alltext += normalizeString(node.childNodes[k].textContent);
+				alltext += tl_normalizeString(node.childNodes[k].textContent);
 			}
 		}
 		for (var i=0; i<nodeList.length;i++) {
-			var childText = normalizeString(nodeList[i].textContent);
+			var childText = tl_normalizeString(nodeList[i].textContent);
 			if (childText[0] && childText[0].match(/^\s$/) && sawSpace) {start++;}
 			if (start < childText.length) {
 				var newLength = Math.min(childText.length,length);
-				addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false,ispre,hilite_class);
+				tl_addspans(nodeList[i], start,newLength,snipText.substring(0,newLength),snipspans,false,ispre,hilite_class);
 				length -= childText.length - start;
 				snipText = snipText.substring(newLength);
 			}
@@ -180,7 +180,7 @@ function addspans(node,start,length,snipText,snipspans,sawSpace,ispre,hilite_cla
 	}
 }
 
-function identify_whitespace(rawtxt){
+function tl_identify_whitespace(rawtxt){
 	var whitespace = [];
 	var simptxt = "";
 	var whitechars = [" \t\n\r\f"];
@@ -208,7 +208,7 @@ function identify_whitespace(rawtxt){
 	return {txt:simptxt,white:whitespace};
 }
 
-function expand_whitespace(text,off,spaces){
+function tl_expand_whitespace(text,off,spaces){
 	var bigtext = "";
 	for(var i = 0; i < text.length; i++){
 		if(spaces[i+off] !== undefined){			
@@ -220,7 +220,7 @@ function expand_whitespace(text,off,spaces){
 	return bigtext;
 }
 
-function removeSpans(spanList) {
+function tl_removeSpans(spanList) {
 	var textNodes = []; // list of corresponding text nodes in in span
 	for (var i=0; i<spanList.length;i++) {
 		var text = spanList[i].textContent;
@@ -233,13 +233,11 @@ function removeSpans(spanList) {
 		spanList[i].parentNode.insertBefore(textNodes[i],spanList[i]);
 		spanList[i].parentNode.removeChild(spanList[i]);		
 	}
-
 }
 
-function getText()
+function tl_getText()
 {
 	// make sure selection is not in margin or annotate dialog
-	
 	var text = null;
 	if (window.getSelection)
 		{ text = window.getSelection();}
@@ -248,12 +246,12 @@ function getText()
 	else if (document.selection)
 	    { text = document.selection.createRange().text; }
 	
-	var inDoc = inDocument(text.anchorNode);
+	var inDoc = tl_inDocument(text.anchorNode);
 	if (inDoc) { return text; }
 	else { return null; }
 }
 
-function hasParent(node,parent){
+function tl_hasParent(node,parent){
 	while(node){
 		if(node == parent) return true;
 		node = node.parentNode;
@@ -261,7 +259,7 @@ function hasParent(node,parent){
 	return false;
 }
 
-function inDocument(element) {
+function tl_inDocument(element) {
 	// TODO: put this back
 	return true;
 	
@@ -272,47 +270,13 @@ function inDocument(element) {
 //	else return false; // this element is in one of the thinklink dialogs
 }
 
-function normalizeString(text) {
+function tl_normalizeString(text) {
 	text = text.replace(/\\u\w\w\w\w/g,"");
 	text = text.replace(/[^\s\w\d,;\:\-+.\'\"]/g,"");
 	return text.replace(/\s+/g," ");
 }
 
-
-//function setTextPos(currentElement, depth, text, id, annoteObj)
-//{
-//	if (currentElement)
-//	{
-//    	var j;
-//    	var tagName=currentElement.tagName;
-//
-//    	// Traverse the tree
-//    	var i=0;
-//    	var currentElementChild=currentElement.childNodes[i];
-//    	while (currentElementChild)
-//    	{
-//				
-//				if (inDocument(currentElementChild) && currentElementChild.nodeValue!= null && currentElementChild.nodeValue.indexOf(text,0) >=0) // have text and the text matches
-//				{
-//					var exists = document.getElementById(id);
-//					if (exists != null) return; // don't recreate the span!
-//					
-//					var spanText = '<span id="' + id + '">'+ text +'</span>';
-//					$(currentElementChild).replaceWith(currentElementChild.nodeValue.replace(text,spanText));
-//					var position = findPos(document.getElementById(id));
-//					annoteObj.setPosition(position); // set the position once we've found it
-//				}
-//      		// Recursively traverse the tree structure of the child node
-//      		setTextPos(currentElementChild, depth+1,text,id,annoteObj);
-//      		i++;
-//      		currentElementChild=currentElement.childNodes[i];
-//			
-//    	}
-//
-//  	}
-//}
-
-function findPos(element) {
+function tl_findPos(element) {
 	var curleft = curtop = 0;
 	if (element.offsetParent) {
 		curleft = element.offsetLeft;
@@ -325,7 +289,7 @@ function findPos(element) {
 	return [curleft,curtop];
 }
 
-function getMouseXY(e) {
+function tl_getMouseXY(e) {
 	var posx = 0;
 	var posy = 0;
 	if (!e) var e = window.event;

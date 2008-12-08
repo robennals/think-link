@@ -14,7 +14,6 @@
 //  limitations under the License.
 
 function tl_suggest(parentElem,attached, url, textarg) {
-//	this.parent = document.body;
 	this.parent = parentElem; // div to put everything in
 	this.queryURL = url;
 	this.arg = textarg;
@@ -147,7 +146,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 			requestUrl = this.queryURL+args;	
 		}
 		
-		doAJAX(scriptID,requestUrl,function(result){	
+		tl_doAJAX(scriptID,requestUrl,function(result){	
 			//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
 			this.argList = "";
 			that.showResults(result,resultTitle);	
@@ -173,7 +172,7 @@ function tl_suggest(parentElem,attached, url, textarg) {
 			
 		this.resultsList = result;
 		if (this.attached) {
-			var resultsPosition = findPos(this.textBox); // location of search text box
+			var resultsPosition = tl_findPos(this.textBox); // location of search text box
 			if(this.absoluteMode){
 				this.resultsDiv.style.position = "absolute";
 			}else{
