@@ -63,7 +63,8 @@ function doResize(){
 //	resizeBox.css("height",window.innerHeight - topheight);
 }
 var thinklink_user_id = <%=@user['id']%>;
-var thinklink_deletes = process_deletes(<%=($store.user_deletes @user['id']).to_json%>);
+var thinklink_deletes = make_hash(<%=($store.user_deletes @user['id']).to_json%>);
+var thinklink_bookmarks = make_hash(<%=($store.user_bookmarks @user['id']).to_json%>);
 
 makeArgBrowseFrame("browser1",<%=@object.to_json%>,"400px");
 makeArgBrowseFrame("browser2",<%=@object2.to_json%>,"400px");

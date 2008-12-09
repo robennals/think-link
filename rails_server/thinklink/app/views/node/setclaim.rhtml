@@ -17,7 +17,8 @@ Select a factual claim that this snippet is making
 <script type="text/javascript">
 
 var thinklink_user_id = <%=@user['id']%>;
-var thinklink_deletes = process_deletes(<%=($store.user_deletes @user['id']).to_json%>);
+var thinklink_deletes = make_hash(<%=($store.user_deletes @user['id']).to_json%>);
+var thinklink_bookmarks = make_hash(<%=($store.user_bookmarks @user['id']).to_json%>);
 
 makeSnippet(<%=@snippet.to_json%>).appendTo("#snipspace");
 makeArgBrowser("argbrowser",<%=@object.to_json%>);

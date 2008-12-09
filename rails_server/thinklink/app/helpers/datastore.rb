@@ -127,12 +127,16 @@ module Datastore
 	def add_user(email,name,password)
 		id = new_guid
 		batch_insert :obj, id, 
-				:info => {:type => "user", 'email' => email, 'name' => name, 'password' => password}
+				:info => {:type => "user", 'email' => email, 'name' => name, 'password' => password, 'date' => get_time}
 		return id
 	end
 
 	def user_deletes(userid)
 		return (get_all :obj,userid,:deleted).keys
+	end
+	
+	def user_bookmarks(userid)
+		return (get_all :obj,userid,:bookmarked).keys
 	end
 
 	def get_newsnips(userid)
@@ -185,7 +189,7 @@ module Datastore
 		
 	def add_node(type,user,info)  #claim or topic
 		id = new_guid
-		batch_insert :obj,id,:info => info.merge(:type => type, 'user' => user)
+		batch_insert :obj,id,:info => info.merge(:type => type, 'user' => user, 'date' => get_time)
 		return id
 	end
 	
@@ -196,7 +200,7 @@ module Datastore
 	
 	def add_link(subject,verb,object)
 		id = new_guid
-		batch_insert :obj, id, :info => {:type => :link, 'subject' => subject, 'verb' => verb, 'object' => object}
+		batch_insert :obj, id, :info => {:type => :link, 'subject' => subject, 'verb' => verb, 'object' => object, 'date' => get_time}
 		return id
 	end
 	
@@ -204,6 +208,16 @@ module Datastore
 		info = get_all :obj,id,:info
 		props = get_all :objgen,id,:props
 		return props.merge(info).merge('id' => id)
+	end
+	
+	def get_first_snippet(id)
+		to = get_all_json :objgen,id,:links_to
+		to.each do |key,link|
+			if link['verb'] == 'states'
+				return get_all :obj,link['subject'],:info
+			end
+		end
+		return nil
 	end
 	
 	def get_for_type(type,limit=10,offset=0)
@@ -300,8 +314,15 @@ module Datastore
 	end
 	
 	def delete(id,userid)
-#		insert :obj,id,:deletedby,userid,get_time
 		insert :obj,userid,:deleted,id,get_time  # what did the user want to delete
+	end
+	
+	def bookmark(id,userid)
+		insert :obj,userid,:bookmarked,id,get_time 
+	end
+	
+	def unbookmark(id,userid)
+		remove :obj,userid,:bookmarked,id
 	end
 	
 	# HACK: do this more nicely - should be deleting the link object
@@ -331,7 +352,7 @@ private
 
 	def get_tables
 		return { 
-			:obj => [:info, :ratings, :orders, :deleted],
+			:obj => [:info, :ratings, :orders, :deleted, :bookmarked],
 			:user => [:recent, :orders],				# in addition to stuff in :obj
 			:objgen => [:links_from, :links_to, :props, :deletedby, :newsnips],
 			:url => [:snippets],

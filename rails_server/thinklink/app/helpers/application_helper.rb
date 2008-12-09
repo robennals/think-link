@@ -13,6 +13,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+require 'rexml/document'
+
 class Store
 	include Datastore
 	def initialize
@@ -48,6 +50,7 @@ module ApplicationHelper
 			format.html { render :action => action }
 			format.xml { render :xml => obj.to_xml(opts)}
 			format.json { render :text => obj.to_json(opts)}
+			format.rss { render :text => make_rss(obj)}
 			format.js {
 				if params[:callback]
 					render :text => params[:callback]+"(" + obj.to_json(opts) + ")"
@@ -56,6 +59,47 @@ module ApplicationHelper
 				end
 			}
 		end
+	end
+	
+	def get_urlbase
+		hostname = Socket.gethostname
+		if hostname == "rob"
+			base = "http://localhost:3000"
+		else
+			base = "http://durandal.cs.berkeley.edu/tl"
+		end
+		return base
+	end
+	
+	def make_rss(obj)
+		base = get_urlbase
+		doc = REXML::Document.new("<rss version='2.0'/>");
+		channel = doc.root.add_element("channel");
+		xml_prop channel,"title",obj['text']
+		xml_prop channel,"link",base+"/node/"+obj['id']
+		
+		obj['to'].each do |verb,things|
+			things.each do |link|
+				item = channel.add_element "item"
+				xml_prop item,"title",link['text']
+				if link['date']
+					xml_prop item,"pubDate",link['date']
+				end
+				xml_prop item,"link",base+"/node/"+link['id']				
+				xml_prop item,"guid",base+"/node/"+link['id']
+				snippet = $store.get_first_snippet link['id']
+				if snippet && snippet['text'] 
+					xml_prop item,"description",snippet['text']
+					# + trim_string(snippet['title'],40) + " - " + trim_string(snippet['url'],40)
+				end
+			end
+		end 
+		return doc.to_s
+	end
+	
+	def xml_prop(parent,name,text)
+		txt = parent.add_element(name);
+		txt.add_text text
 	end
 
 	def json_decode(json)

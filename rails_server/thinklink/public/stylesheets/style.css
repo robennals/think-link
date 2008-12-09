@@ -571,6 +571,7 @@ h1 {
 	padding-bottom: 2px;
 	cursor: pointer;
 	margin-left: 2px;
+	text-decoration: none;
 }
 
 .browsebutton_selected {

@@ -61,6 +61,9 @@ function getIcon(obj){
 	var mk = function(icon){return urlbase+"/images/"+icon+".png";};
 	switch(obj.type){
 		case "claim":
+//			if(is_bookmarked(obj)){
+//				return mk("lightbulb");
+//			}else 
 			if(obj.opposed){
 				return mk("lightbulb_red");
 			}else if(obj.supported){
@@ -79,7 +82,7 @@ function getIcon(obj){
 		case "newsnips":
 			return mk("script");
 		case "user":
-			return mk("user");
+			return mk("user_off");
 	}
 }
 
@@ -115,14 +118,32 @@ function makeArgBrowseFrame(divid,obj,height,title){
 	$("<nobr class='browsebutton'>search</nobr>").appendTo(buttons)
 		.attr("id","search-"+idnum)
 		.click(function(){searchMode(idnum)});
-	$("<nobr class='browsebutton'>history</nobr>").appendTo(buttons)
+	$("<a class='browsebutton'>history</a>").appendTo(buttons)
+		.attr("href",urlbase+"/node/recent")
 		.attr("id","recent-"+idnum)
-		.click(function(){recentMode(idnum)});
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			ev.preventDefault();
+
+				recentMode(idnum)});
 //	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
 //		.click(function(){hotMode(idnum)});
-	$("<nobr class='browsebutton'>unattached</nobr>").appendTo(buttons)
+	$("<a class='browsebutton'>unattached</a>").appendTo(buttons)
+		.attr("href",urlbase+"/node/newsnips")
 		.attr("id","newsnips-"+idnum)
-		.click(function(){unattachedMode(idnum)});
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			ev.preventDefault();
+			unattachedMode(idnum)});
+	$("<a class='browsebutton'>feed</a>").appendTo(buttons)
+		.attr("id","feed-"+idnum)
+		.attr("target","_blank");
+
+//	$("<a/>").append($("<img/>")
+//		.attr("src",urlbase+"/images/feed.png")).appendTo(buttons);
+		
 
 //	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
 //		.click(function(){mineMode(idnum)});
@@ -145,6 +166,7 @@ function updateButtons(idnum,id){
 	updateButton(idnum,"history",id);
 	updateButton(idnum,"newsnips",id);
 	updateButton(idnum,"search",id);
+	getel("feed-"+idnum).setAttribute("href",urlbase+"/node/"+id+".rss");
 }
 
 function makeArgBrowser(divid,obj,height){
@@ -225,11 +247,23 @@ function makeDragItem(obj,label){
 
 	var tditem = $("<td/>").append(item).appendTo(tr);
 
+//	var rssicon = $("<img/>")
+//		.css("display","none")
+//		.css("cursor","pointer")
+//		.css("margin-left","4px")
+//		.attr("src",urlbase+"/images/feed.png")
+//		.attr("title","rss feed")
+//		.attr("class","itembutton");
+//	var rssbutton = $("<a/>").append(rssicon)
+//		.attr("target","blank")
+//		.attr("href",urlbase+"/node/"+obj.id+".rss")
+//		.appendTo(item);
+//
 	var breakicon = $("<img/>")
 		.css("display","none")
 		.css("cursor","pointer")
-		.attr("src",urlbase+"/images/link_break.png")
 		.css("margin-left","4px")
+		.attr("src",urlbase+"/images/link_break.png")
 		.attr("title","disconnect")
 		.attr("class","itembutton")
 		.appendTo(item)
@@ -238,23 +272,24 @@ function makeDragItem(obj,label){
 			ev.stopPropagation();
 			ev.preventDefault();
 			deleteLink(ev,holder,obj.linkid)});
-//	var tdbreak = $("<td/>").append(breakicon).appendTo(tr);
 
 //	if(thinklink_user_id == obj.user){
-		var deleteicon = $("<img/>")
-			.css("display","none")
-			.css("cursor","pointer")
-			.attr("src",urlbase+"/images/cross.png")
-			.attr("title","delete")
-			.attr("class","itembutton")
-			.appendTo(item)
-			.click(function(ev){
-				ev.cancelBubble = true;
-				ev.stopPropagation();
-				ev.preventDefault();
-				deleteNode(ev,holder,obj.id)});
+	var deleteicon = $("<img/>")
+		.css("display","none")
+		.css("cursor","pointer")
+		.attr("src",urlbase+"/images/cross.png")
+		.attr("title","delete")
+		.attr("class","itembutton")
+		.appendTo(item)
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			ev.preventDefault();
+			deleteNode(ev,holder,obj.id)});
 //		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
 //	}
+
+
 
 	if(thinklink_user_id == obj.user){
 		var renameicon = $("<img/>")
@@ -279,13 +314,13 @@ function makeDragItem(obj,label){
 			setTimeout(function(){
 				if(holder.tl_selected){
 					breakicon.css("display","");
+//					rssicon.css("display","");
 					if(deleteicon){
 						deleteicon.css("display","");						
 					}
 					if(renameicon){
 						renameicon.css("display","");						
 					}
-
 				}
 			},300);
 			dragOver(ev,this,id)}
@@ -294,6 +329,7 @@ function makeDragItem(obj,label){
 		.mouseout(function(ev){
 			if(isParent(ev.relatedTarget,holder.get(0))) return;
 			breakicon.css("display","none");
+//			rssicon.css("display","none");
 			if(deleteicon){
 				deleteicon.css("display","none");						
 			}
@@ -592,6 +628,10 @@ function makeSubItems(div,obj){
 function is_deleted(obj){
 	if(thinklink_deletes[obj.id] || (obj.linkid && thinklink_deletes[obj.linkid])) return true;
 	return false;
+}
+
+function is_bookmarked(obj){
+	return(thinklink_bookmarks[obj.id]);
 }
 
 function get_hash_keys(hsh){
@@ -1392,13 +1432,14 @@ function renameNode(ev,item,id){
 	}
 }
 
-function process_deletes(deletes){
+function make_hash(deletes){
 	var hsh = {};
 	for(var i = 0; i < deletes.length; i++){
 		hsh[deletes[i]] = true;
 	}
 	return hsh;
 }
+
 
 //function deleteLink(ev,node,id,verb){
 //	var group = findNodeGroup(node);
