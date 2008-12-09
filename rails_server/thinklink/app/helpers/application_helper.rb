@@ -85,9 +85,9 @@ module ApplicationHelper
 				if link['date']
 					xml_prop item,"pubDate",link['date']
 				end
-				xml_prop item,"link",base+"/node/"+link['id']				
-				xml_prop item,"guid",base+"/node/"+link['id']
-				snippet = $store.get_first_snippet link['id']
+				xml_prop item,"link",base+"/node/"+link['id'].to_s				
+				xml_prop item,"guid",base+"/node/"+link['id'].to_s
+				snippet = $store.get_first_snippet link['id'].to_s
 				if snippet && snippet['text'] 
 					xml_prop item,"description",snippet['text']
 					# + trim_string(snippet['title'],40) + " - " + trim_string(snippet['url'],40)
