@@ -189,7 +189,7 @@ function makeInnerBrowser(idnum,browser,obj,height){
 	var searchbar = $("<div class='hidden'/>")
 		.attr("id","searchbar-"+idnum)
 		.appendTo(browser);
-	var searchbox = $("<input class='searchbox inputbox' type='text'/>")
+	var searchbox = $("<i class='searchbox inputbox' type='text'/>")
 		.attr("id","searchbox-"+idnum)
 		.appendTo(searchbar)
 		.keypress(function(ev){
@@ -1082,6 +1082,11 @@ function loadObject(idnum,obj){
 	makeSubItems(getel("children-"+id),obj);
 	makeCurrentItem(getel("current-"+id),obj);
 	pushHistory(idnum,obj.id);
+	
+	var browser = getel("browser-"+id);
+	if(browser){
+		browser.setAttribute("tl_id",obj.id);
+	}
 }
 	
 function searchDo(idnum){
@@ -1169,7 +1174,11 @@ function dragDone(ev,node){
 		}else{
 			newitem.insertBefore(dragInfo.dropNode);
 		}
-		if(dragInfo.droptitle && dragInfo.droptitle == dragInfo.reltitle){
+		
+		var sourceobjectid = dragInfo.browser.getAttribute("tl_id");
+		
+		if((dragInfo.droptitle && dragInfo.droptitle == dragInfo.reltitle) || 
+				sourceobjectid == "newsnips"){
 			$(dragInfo.holder).remove();			
 		}else{
 			dragInfo.holder.style.display = "";
@@ -1383,19 +1392,6 @@ function isParent(node,parent){
 // nothing right now
 function browseDragOut(ev,browser){
 	return;
-//	if(!isParent(ev.relatedTarget,browser)){
-//		if(isParent(ev.relatedTarget,dragInfo.logo) || isParent(ev.target,dragInfo.logo)) return;
-//		if(dragInfo.hoverBrowser == browser){
-//			dragInfo.hoverBrowser = null;
-//			if(dragInfo.holder){
-//				dragInfo.holder.style.display = "";
-//				if(dragInfo.spacer){
-//					dragInfo.spacer.remove();
-//					dragInfo.spacer = null;
-//				}
-//			}
-//		}
-//	}
 }
 
 function setClaim(snipid){
