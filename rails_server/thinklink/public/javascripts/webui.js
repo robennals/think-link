@@ -189,7 +189,7 @@ function makeInnerBrowser(idnum,browser,obj,height){
 	var searchbar = $("<div class='hidden'/>")
 		.attr("id","searchbar-"+idnum)
 		.appendTo(browser);
-	var searchbox = $("<i class='searchbox inputbox' type='text'/>")
+	var searchbox = $("<input class='searchbox inputbox' type='text'/>")
 		.attr("id","searchbox-"+idnum)
 		.appendTo(searchbar)
 		.keypress(function(ev){
