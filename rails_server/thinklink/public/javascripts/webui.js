@@ -82,7 +82,7 @@ function getIcon(obj){
 		case "newsnips":
 			return mk("script");
 		case "user":
-			return mk("user_off");
+			return mk("user");
 	}
 }
 
@@ -166,7 +166,10 @@ function updateButtons(idnum,id){
 	updateButton(idnum,"history",id);
 	updateButton(idnum,"newsnips",id);
 	updateButton(idnum,"search",id);
-	getel("feed-"+idnum).setAttribute("href",urlbase+"/node/"+id+".rss");
+	var feed = getel("feed-"+idnum);
+	if(feed){
+		feed.setAttribute("href",urlbase+"/node/"+id+".rss");
+	}
 }
 
 function makeArgBrowser(divid,obj,height){
@@ -285,7 +288,7 @@ function makeDragItem(obj,label){
 			ev.cancelBubble = true;
 			ev.stopPropagation();
 			ev.preventDefault();
-			deleteNode(ev,holder,obj.id)});
+			deleteNode(ev,holder,obj.id,obj.type)});
 //		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
 //	}
 
@@ -345,13 +348,13 @@ function makeDragItem(obj,label){
 	return holder;
 }
 
-function newThing(node,id,verb){
+function newThing(node,id,verb,objecttype){
 	var group = findNodeGroup(node);
 	var idnum = getNodeIdNum(group);
 	var reqId = getId();
 	var browser = findBrowser(node);
 	var id = browser.getAttribute("tl_id");
-	var typ = getVerbSubjectType(verb);
+	var typ = getVerbSubjectType(verb,objecttype);
 	var icon = $("<img/>").attr("src",getIcon({type:typ}));	
 	var holder = $("<div class='dragholder'/>");
 	var table = $("<table class='dragtable'>").appendTo(holder);
@@ -474,7 +477,7 @@ function makeSnippet(snippet){
 			.click(function(ev){
 				ev.cancelBubble = true;
 				ev.stopPropagation();
-				deleteNode(ev,holder,snippet.id)});
+				deleteNode(ev,holder,snippet.id,"snippet")});
 	}
 
 	holder.click(function(){selectItem(this,snippet.id)})
@@ -556,16 +559,16 @@ function invertVerb(verb,text,type){
 	return "";
 }
 
-function getVerbSubjectType(verb){
+function getVerbSubjectType(verb,objecttype){
 	switch(verb){
 		case "about": return "claim";
 		case "refines": return "topic";
 		case "opposes": return "claim";
 		case "supports": return "claim";
 		case "states": return "snippet";
-		case "related": return "claim";
+		case "related": return objecttype;
 		case "created by": return "snippet";
-		case "relates to": return "claim";
+		case "relates to": return objecttype;
 	}
 }
 
@@ -579,7 +582,9 @@ function makeSubItems(div,obj){
 	
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];		
-		var newicon = $("<img class='newthing' src='"+urlbase+"/images/add.png' onclick='newThing(this,"+obj.id+",\""+verb+"\")'/>");
+		var newicon = $("<img class='newthing' src='"+urlbase+
+			"/images/add.png' onclick='newThing(this,"+obj.id+
+			",\""+verb+"\",\""+obj.type+"\")'/>");
 		if(verb != "colitem"){
 			var reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
@@ -1410,9 +1415,9 @@ function deleteLink(ev,node,id){
 	});
 }
 
-function deleteNode(ev,node,id){
-	if(confirm("Are you sure you want to completely delete this claim?\n"
-		+"If you just want to disconnect the claim then click 'Cancel' and"
+function deleteNode(ev,node,id,type){
+	if(confirm("Are you sure you want to completely delete this "+type+"?\n"
+		+"If you just want to disconnect the "+type+" then click 'Cancel' and"
 		+"then click the disconnect button")){
 		$.post(urlbase+"/node/"+id+"/delete.json",{},function(){
 			thinklink_deletes[id] = true;

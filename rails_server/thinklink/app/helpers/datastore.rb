@@ -220,6 +220,20 @@ module Datastore
 		return nil
 	end
 	
+	def get_summary_text(id)
+		summary = "";
+		to = get_all_json :objgen,id,:links_to
+		to.each do |key,link|
+			if link['verb'] == 'supports' || link['verb'] == 'opposes' || link['verb'] == 'states' || link['verb'] == 'about'
+				text = get_column :obj,link['subject'],:info,'text'
+				if text
+					summary = summary + "<p>" + text + "</p>";
+				end
+			end
+		end
+		return summary
+	end
+	
 	def get_for_type(type,limit=10,offset=0)
 		results = []
 		rows = sql_select_all("SELECT * FROM obj_info WHERE columnname = 'type' AND value = '#{type}' LIMIT #{limit} OFFSET #{offset}")

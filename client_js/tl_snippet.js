@@ -103,7 +103,7 @@ function tl_snippet_dialog(margin) {
 		}		
 	}
 	
-	this.new = function(sourceText){
+	this.new = function(sourceText, origText){
 		if (sourceText=="" || sourceText == null) {
 			this.noSelection();
 			 return; 
@@ -111,8 +111,11 @@ function tl_snippet_dialog(margin) {
 		this.sourceText = sourceText;
 		
 		// determine last dom node to aid in finding associated permalink
-		var sourceSpans = tl_mark_snippet(this.sourceText,"highlight_free");
-		if(!sourceSpans) return;
+		var sourceSpans = tl_mark_snippet(this.sourceText,"tl_highlight_free");
+		if(!sourceSpans){
+			alert("Mind Mix was not able to create a snippet from this selection.");
+			return;
+		}
 		this.sourceSpans = sourceSpans;
 		
 		var pivotSpan = sourceSpans[sourceSpans.length-1];
@@ -148,6 +151,7 @@ function tl_snippet_dialog(margin) {
 				that.margin.itemsLoaded=false;
 				tl_removeSpans(that.sourceSpans);
 				that.margin.addItem({text:that.sourceText,id:result.id,claim:null});
+				that.margin.createMarginPull();
 			}
 		});		
 	}

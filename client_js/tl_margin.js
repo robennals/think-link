@@ -197,23 +197,6 @@ function tl_margin()
 		pullimg.setAttribute("src",this.lightbulb_right);
 	}
 
-	this.showToolbarIcon = function(){
-	  	var evt = document.createEvent("Events");
-    	evt.initEvent("thinklink-showicon", true, false);
-    	document.body.dispatchEvent(evt);
-
-		// show lit lightbulb and arrow to pull out margin
-		if (document.getElementById("tl_marginpull") == null) { this.createMarginPull(); }
-		
-	};
-
-	this.hideToolbarIcon = function(){
-	  var evt = document.createEvent("Events");
-    evt.initEvent("thinklink-hideicon", true, false);
-    document.body.dispatchEvent(evt);
-	};
-
-
 	this.refresh = function() {		
 		tl_log("refresh");
 		
@@ -246,13 +229,7 @@ function tl_margin()
 					that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
 					that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
 				}
-				
-				if(result.length > 0){
-						that.showToolbarIcon();
-  				}else{
-  					that.hideToolbarIcon();
-  				}
-				
+								
 				//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
 				that.itemsLoaded=true;
 //				that.highlightSnippets(); } // highlight everything by default

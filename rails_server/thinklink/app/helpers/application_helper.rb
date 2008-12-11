@@ -64,33 +64,35 @@ module ApplicationHelper
 	def get_urlbase
 		hostname = Socket.gethostname
 		if hostname == "rob"
-			base = "http://localhost:3000"
+			return "http://localhost:3000"
 		else
-			base = "http://durandal.cs.berkeley.edu/tl"
+			return "http://durandal.cs.berkeley.edu/tl"
 		end
-		return base
 	end
 	
 	def make_rss(obj)
-		base = get_urlbase
+		urlbase = get_urlbase
 		doc = REXML::Document.new("<rss version='2.0'/>");
 		channel = doc.root.add_element("channel");
 		xml_prop channel,"title",obj['text']
-		xml_prop channel,"link",base+"/node/"+obj['id']
-		
+		xml_prop channel,"link",urlbase+"/node/"+obj['id']
+				
 		obj['to'].each do |verb,things|
-			things.each do |link|
-				item = channel.add_element "item"
-				xml_prop item,"title",link['text']
-				if link['date']
-					xml_prop item,"pubDate",link['date']
-				end
-				xml_prop item,"link",base+"/node/"+link['id'].to_s				
-				xml_prop item,"guid",base+"/node/"+link['id'].to_s
-				snippet = $store.get_first_snippet link['id'].to_s
-				if snippet && snippet['text'] 
-					xml_prop item,"description",snippet['text']
-					# + trim_string(snippet['title'],40) + " - " + trim_string(snippet['url'],40)
+			if verb != 'states'
+				things.each do |link|
+					item = channel.add_element "item"
+					xml_prop item,"title",link['text']
+					if link['date']
+						xml_prop item,"pubDate",link['date']
+					end
+					xml_prop item,"link",urlbase+"/node/"+link['id'].to_s				
+					xml_prop item,"guid",urlbase+"/node/"+link['id'].to_s
+					summary = $store.get_summary_text link['id'].to_s
+	#				snippet = $store.get_first_snippet link['id'].to_s
+	#				if snippet && snippet['text'] 
+						xml_prop item,"description",summary
+						# + trim_string(snippet['title'],40) + " - " + trim_string(snippet['url'],40)
+	#				end
 				end
 			end
 		end 

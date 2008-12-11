@@ -93,7 +93,7 @@ function tl_doAJAX(scriptID,url,callback) {
 }
 
 function tl_mark_snippet(snippet,hilite_class) {
-	if (hilite_class==null){ hilite_class = "highlight"; }
+	if (hilite_class==null){ hilite_class = "tl_highlight"; }
 	snippet = tl_normalizeString(snippet);
 	if(snippet[snippet.length-1] == " "){
 		snippet = snippet.substring(0,snippet.length-1);
