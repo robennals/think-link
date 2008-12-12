@@ -150,6 +150,7 @@ module CrapBase
 	def rerun_triggers(table,key,family)	
 		valuemap = {family => get_all(table,key,family)}
 		run_triggers table,key,valuemap
+		return nil
 	end
 		
 private	
@@ -172,16 +173,6 @@ private
 			if matches(table,valuemap,mode,trigger[:options])
 				if trigger[:keys]
 					trigger[:keys][key] = true
-#					if !trigger[:thread]
-#						trigger[:thread] = Thread.new do
-#							if opts[:delay]
-#								sleep opts[:delay]									
-#							end
-#							trigger[:callback].call(trigger[:keys])
-#							trigger[:keys] = []
-#							trigger[:thread] = nil
-#						end
-#					end
 				else
 					trigger[:callback].call(table,key,valuemap)
 				end

@@ -181,7 +181,13 @@ function makeArgBrowser(divid,obj,height){
 	makeInnerBrowser(idnum,browser,obj,height);	
 }
 
+var thinklink_user_id;
+var thinklink_deletes;
+
 function makeInnerBrowser(idnum,browser,obj,height){
+	if(!thinklink_user_id) thinklink_user_id = 0;
+	if(!thinklink_deletes) thinklink_deletes = {};
+	
 	document.addEventListener("keydown",function(ev){
 		keyDownHandler(ev);
 	},true);
@@ -207,7 +213,13 @@ function makeInnerBrowser(idnum,browser,obj,height){
 		body.css("height",height)
 	}
 	
-	loadObject(idnum,obj);		
+	if(typeof obj == "object"){
+		loadObject(idnum,obj);		
+	}else{
+		$.getJSON(urlbase+"/node/"+obj+".js?callback=?",{},function(obj){
+			loadObject(idnum,obj);
+		});
+	}
 }
 
 function makeDragItem(obj,label){
@@ -291,7 +303,6 @@ function makeDragItem(obj,label){
 			deleteNode(ev,holder,obj.id,obj.type)});
 //		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
 //	}
-
 
 
 	if(thinklink_user_id == obj.user){
@@ -631,6 +642,7 @@ function makeSubItems(div,obj){
 }
 
 function is_deleted(obj){
+	if(window.thinklink_deletes === undefined) return;
 	if(thinklink_deletes[obj.id] || (obj.linkid && thinklink_deletes[obj.linkid])) return true;
 	return false;
 }
@@ -804,7 +816,7 @@ function loadItemInfo(idnum,id){
 	var children = getel("children-"+idnum);
 	animateInitHide(parents);
 	animateInitHide(children);
-	$.getJSON(urlbase+"/node/" + id,{},function(obj){
+	$.getJSON(urlbase+"/node/" + id +".js?callback=?",{},function(obj){
 		combineRelates(obj);
 		parents.innerHTML = "";
 		children.innerHTML = "";
@@ -857,7 +869,7 @@ function goBack(idnum){
 		if(div){
 			selectItem(div,last);
 		}else{		
-			$.getJSON(urlbase+"/node/"+last,{},function(obj){
+			$.getJSON(urlbase+"/node/"+last+".js?callback=?",{},function(obj){
 				loadObject(idnum,obj);
 			})
 		}
@@ -1033,19 +1045,19 @@ function searchKeyPress(ev,idnum){
 }
 
 function recentMode(idnum){
-	$.getJSON(urlbase+"/node/recent",{},function(obj){
+	$.getJSON(urlbase+"/node/recent.js?callback=?",{},function(obj){
 			loadObject(idnum,obj);		
 	});
 }
 
 function mineMode(idnum){
-	$.getJSON(urlbase+"/node/me",{},function(obj){
+	$.getJSON(urlbase+"/node/me.js?callback=?",{},function(obj){
 			loadObject(idnum,obj);
 	});
 }
 
 function unattachedMode(idnum){
-	$.getJSON(urlbase+"/node/newsnips",{},function(obj){
+	$.getJSON(urlbase+"/node/newsnips.js?callback=?",{},function(obj){
 			loadObject(idnum,obj);
 	});
 }
@@ -1096,7 +1108,7 @@ function searchDo(idnum){
 
 //	var id = makeMainGroups(idnum);
 //	var children = getel("children-"+id);
-	$.getJSON(urlbase+"/node/search",{query:query},function(obj){
+	$.getJSON(urlbase+"/node/search.js?query="+encodeURIComponent(query)+"&callback=?",function(obj){
 			loadObject(idnum,obj);
 //		for(var i = 0; i < results.length; i++){
 //			$(children).append(makeDragItem(results[i]));

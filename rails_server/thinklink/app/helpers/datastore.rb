@@ -127,7 +127,7 @@ module Datastore
 	def add_user(email,name,password)
 		id = new_guid
 		batch_insert :obj, id, 
-				:info => {:type => "user", 'email' => email, 'name' => name, 'password' => password, 'date' => get_time}
+				:info => {:type => "user", 'email' => email, 'name' => name, 'password' => password, 'date' => get_time, 'text' => name}
 		return id
 	end
 
@@ -408,7 +408,7 @@ private
 	def initialize_datastore
 		initialize_crapbase
 	
-		create_tables(get_tables())
+#		create_tables(get_tables())
 				
 		#url -> snippet info
 		add_trigger :table => :obj, :family => :info, :column => 'url' do |table,key,values|
