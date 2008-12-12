@@ -229,6 +229,10 @@ function tl_margin()
 					that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
 					that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
 				}
+				
+				if(result.length > 0){
+					that.createMarginPull();
+				}
 								
 				//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
 				that.itemsLoaded=true;
