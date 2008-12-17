@@ -94,6 +94,7 @@ function tl_doAJAX(scriptID,url,callback) {
 
 function tl_mark_snippet(snippet,hilite_class) {
 	if (hilite_class==null){ hilite_class = "tl_highlight"; }
+	snippet = tl_fixSnippetUnicode(snippet);
 	snippet = tl_normalizeString(snippet);
 	if(snippet[snippet.length-1] == " "){
 		snippet = snippet.substring(0,snippet.length-1);
@@ -270,9 +271,18 @@ function tl_inDocument(element) {
 //	else return false; // this element is in one of the thinklink dialogs
 }
 
+function tl_fixSnippetUnicode(text){
+	text = text.replace(/\\u201c/g,"\u201c");
+	text = text.replace(/\\u201d/g,"\u201d");
+	text = text.replace(/\\u2018/g,"\u2018");
+	text = text.replace(/\\u2019/g,"\u2019");
+	text = text.replace(/\\u2014/g,"\u2014");
+	return text;	
+}
+
 function tl_normalizeString(text) {
 	text = text.replace(/\\u\w\w\w\w/g,"");
-	text = text.replace(/[^\s\w\d,;\:\-+.\'\"]/g,"");
+	text = text.replace(/[^\s\w\d,;\!\:\-+.\'\"\(\)\{\}\u201C\u201D\u2018\u2019\u2014]/g,"");	
 	return text.replace(/\s+/g," ");
 }
 
