@@ -371,6 +371,7 @@ private
 			:objgen => [:links_from, :links_to, :props, :deletedby, :newsnips],
 			:url => [:snippets],
 			:email => [:user],
+			:text => [:nodes],
 			:word => [:objects,:props],
 			:compatmap => [:claim,:topic,:user,:snippet]
 		}	
@@ -420,6 +421,12 @@ private
 		add_trigger :table => :obj, :family => :info, :column => 'email' do |table,key,values|
 			info = values[:info]
 			insert :email, info['email'], :user,key,info 
+		end
+		
+		#text -> id
+		add_trigger :table => :obj, :family => :info, :column => 'text' do |table,key,values|
+			info = values[:info]
+			insert :text, info['text'], :nodes, "id", key
 		end
 		
 		#user -> newly created snippets 

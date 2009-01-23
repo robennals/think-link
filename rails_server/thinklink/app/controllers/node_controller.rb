@@ -63,7 +63,7 @@ class NodeController < ApplicationController
 		name = params[:name]
 		info = $store.get_info params[:id]
 		if info['user'] == @user['id']
-			$store.set_text params[:id], name
+			$store.set_text params[:id], name,@user['id']
 		end
 		emit params[:name]
 	end

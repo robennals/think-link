@@ -16,10 +16,11 @@
 require 'rexml/document'
 
 class Store
-	include Datastore
-	def initialize
-		initialize_datastore
-	end
+	#~ include Datastore
+	#~ def initialize
+		#~ initialize_datastore
+	#~ end
+	include Datastore_mysql
 end
 
 $store = Store.new

@@ -211,8 +211,18 @@ private
 		ActiveRecord::Base.connection.execute(sql)
 	end
 	
-	def esc(str)	
-		return Mysql::escape_string(str.to_s)
+	def sql_update(sql)
+		ActiveRecord::Base.connection.update(sql)
 	end
+	
+	# normal string escaping doesn't work because the gem won't install on windows
+	def esc(str)
+#		return str.to_s.sub("'","''")
+		return str.to_s.gsub(/\\|'/) { |c| "\\#{c}" }
+	end
+	
+	#~ def broken_esc(str)	
+		#~ return Mysql::escape_string(str.to_s)
+	#~ end
 	
 end

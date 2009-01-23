@@ -1076,14 +1076,19 @@ function makeMainGroups(idnum){
 
 function combineRelates(obj){
 	var fromrel = obj.from['relates to'];
-	obj.from['relates to'] = [];
+	var torel = obj.to['relates to'];
+	if(!torel){
+		torel = [];
+	}
 	if(fromrel){
 		if(!obj.to['relates to']){
 			obj.to['relates to'] = [];
 		}
-		for(var i = 0; i < fromrel.length; i++){
-			obj.to['relates to'].push(fromrel[i]);
+		for(var i = 0; i < torel.length; i++){
+			fromrel.push(torel[i]);
 		}
+		obj.from['relates to'] = [];
+		obj.to['relates to'] = fromrel;
 	}
 }
 
