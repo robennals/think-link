@@ -13,9 +13,7 @@ $letters.scan(/./).each do |x|
 	
 	puts x
 	
-	names = Hash.new do |hash,key|
-		hash[key] = Hash.new {|hash,key| hash[key] = 0}
-	end
+	names = Hash.new {|hash,key| hash[key] = 0}
 		
 	infile.each do |line|
 		links = line.scan(/(.+) -> (.+)/)
@@ -25,20 +23,19 @@ $letters.scan(/./).each do |x|
 			name = link[0]
 			target = link[1]
 			next if target =~ /:/
-			names[name][target] = names[name][target] + 1
+			next if name =~ /:/
+			names["#{name}->#{target}"]+=1
 		end
 	
 		if $count > 10000
 			puts $bigcount
-		$count = 0
-	end
-
+			$count = 0
+		end
 	end
 	
-	
-	names.each do |name,targets|
-		targets.each do |target,count|
-			outfile.puts "#{name}->#{target}:#{count}"
+	names.each do |name,count|
+		if count > 10
+			outfile.puts "#{name}:#{count}"
 		end
 	end
 	

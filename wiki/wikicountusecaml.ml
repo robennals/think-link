@@ -22,7 +22,6 @@ let try_line file in
 		Some (input_line file)
 	with End_of_file e -> None
 		 
-
 let for_file file func =
 	try
 		let line = input_line file in
