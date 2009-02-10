@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;
@@ -109,7 +110,11 @@ class Dyn{
 		}else{
 			return o.toString();
 		}
-	}		
+	}
+	
+	String toJSON(){
+		return toJSON(this);
+	}
 }
 
 /** really simple connection pool that just grows on demand */
@@ -211,6 +216,55 @@ public class DataBase {
 		return makeObject("search?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
 	
+	private PreparedStatement add_node = con.prepareStatement(
+			"INSERT INTO v2_node (text,user_id,type,info) VALUES (?,?,?,?)");
+	int addNode(String text,int user_id,int type,String info) throws SQLException{
+		add_node.setString(1,text);
+		add_node.setInt(2, user_id);
+		add_node.setInt(3, type);
+		add_node.setString(4,info);
+		return execWithKey(add_node);
+	}
+	
+	private PreparedStatement add_snippet = con.prepareStatement(
+		"INSERT INTO v2_snippets (url_prefix,node_id,page_text) VALUES (?,?,?)");
+	void addSnippet(int userid, String text, String url, String title, String pagetext) throws SQLException{
+		Dyn info = new Dyn();
+		info.put("title", title);
+		int nodeid = addNode(text,userid,SNIPPET,Dyn.toJSON(info));
+		
+		String prefix = url.substring(0, 128);
+		
+		add_snippet.setString(1,prefix);
+		add_snippet.setInt(2,nodeid);
+		add_snippet.setString(3,pagetext);
+		add_snippet.executeUpdate();
+	}
+
+	private PreparedStatement add_link = con.prepareStatement(
+			"INSERT INTO v2_link (src,dst,type) VALUES (?,?,?))");
+	void addLink(int src, int dst, int type) throws SQLException{
+		add_link.setInt(1,src);
+		add_link.setInt(2,dst);
+		add_link.setInt(3,type);
+		add_link.executeUpdate();
+	}
+	
+	static final int NOTHING = 0;
+	static final int GOOD = 1;
+	static final int BAD = 2;
+	
+	private PreparedStatement set_vote = con.prepareStatement(
+			"INSERT INTO v2_vote (user_id,node_id,subnode_id,action) VALUES (?,?,?,?)");
+	void setVote(int userid,int nodeid,int subnodeid, int action) throws SQLException{
+		set_vote.setInt(1, userid);
+		set_vote.setInt(2, nodeid);
+		set_vote.setInt(3, subnodeid);
+		set_vote.setInt(4, action);
+		set_vote.executeUpdate();
+	}
+	
+			
 	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
 		Dyn tomap = new Dyn();
 		tomap.put("colitem", map_types(Dyn.list(children)));
@@ -223,6 +277,15 @@ public class DataBase {
 		d.put("to", tomap);
 		return d;
 	}
+
+	private int execWithKey(PreparedStatement stmt) throws SQLException{
+		stmt.executeUpdate();
+		ResultSet keys = stmt.getGeneratedKeys();
+		keys.next();
+		int key = keys.getInt(1);
+		keys.close();
+		return key;
+	}
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = Dyn.one(get_info(id));
@@ -234,6 +297,7 @@ public class DataBase {
 		}
 		return d;
 	}
+
 	
 	String verb_for_int(int i){
 		switch(i){ 
@@ -247,6 +311,11 @@ public class DataBase {
 		}
 		return null;
 	}
+	
+	static final int TOPIC = 1;
+	static final int CLAIM = 2;
+	static final int SNIPPET = 3;
+	static final int USER = 4;
 	
 	String type_for_int(int i){
 		switch(i){

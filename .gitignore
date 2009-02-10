@@ -17,3 +17,5 @@ Edit.000
 *.sql
 store
 init.d
+*.class
+*~
