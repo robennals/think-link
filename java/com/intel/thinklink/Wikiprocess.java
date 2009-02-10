@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,7 @@ public class Wikiprocess {
 	
 	static String wikifile = "/home/rob/Reference/Wikipedia/enwiki-20081008-pages-articles.xml";
 	static String pruneprefix = "/home/rob/Reference/Wikipedia/namepruned/";
-	static String outfile = "/home/rob/Reference/Wikipedia/java_wordfreqs";
+	static String outfile = "/home/rob/Reference/Wikipedia/java_wordfreqs_once";
 	
 	public static HashMap<String,Integer> loadWords() throws Exception{
 		HashMap<String,Integer> h = new HashMap<String,Integer>();
@@ -76,6 +77,7 @@ public class Wikiprocess {
 					);
 			String line;
 			HashMap<String,Integer> h = loadWords();
+			Set<String> done = new HashSet<String>();
 			boolean inbody = false;
 			while((line = reader.readLine()) != null){
 				if(line.contains("<text")){
@@ -84,10 +86,13 @@ public class Wikiprocess {
 				if(line.contains("</text")){
 					inbody = false;
 				}				
+				if(line.contains("<title")){
+					done.clear();
+				}
 				if(!inbody) continue;
 				String[] words = wordpat.split(line);
 				for(int start = 0; start < words.length; start++){
-					for(int length = 1; length < words.length - start; length++){
+					for(int length = 1; length <= words.length - start; length++){
 						StringBuffer prefix = new StringBuffer();
 						for(int i = start; i < start + length; i++){
 							if(i != start){
@@ -97,8 +102,11 @@ public class Wikiprocess {
 						}
 						String p = prefix.toString();
 						if(h.containsKey(p)){
-							int val = h.get(p);
-							h.put(p,val+1);
+							if(!done.contains(p)){
+								int val = h.get(p);
+								h.put(p,val+1);								
+								done.add(p);
+							}
 						}else{
 							break;
 						}

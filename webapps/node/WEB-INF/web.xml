@@ -1,0 +1,11 @@
+<web-app>
+	<servlet>
+	<servlet-name>node</servlet-name>
+	<servlet-class>com.intel.thinklink.NodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	<servlet-name>node</servlet-name>
+	<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>
+

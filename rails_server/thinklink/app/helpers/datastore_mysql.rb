@@ -26,6 +26,69 @@ require 'crapbase/crapbase_mysql'
 
 module Datastore_mysql
 
+# -- topic guessing --
+
+	def guess_topics(text)
+		suggestions = []
+		words = text.scan(/\w+/)
+		goodprefixes = [""]
+		(1..words.length).each do |length|
+			prefixes = []
+			(0..words.length-length).each do |start|
+				if goodprefixes.include? words[start...start+length-1].join " "
+					prefixes.push words[start...start+length].join " "
+				end
+			end
+			if prefixes.empty? then return sort_by_score suggestions end
+			prefixcond = make_sql_or prefixes,"prefix"
+			suggestions += sql_select_all "SELECT * FROM v2_linkwords WHERE #{prefixcond}"
+			goodrows = sql_select_all "SELECT prefix FROM v2_prefix WHERE #{prefixcond}"			
+			goodprefixes = goodrows.map {|x| x['prefix']}
+		end
+		return sort_by_score suggestions
+	end
+	
+	def get_guess_infos(guesses)
+		ids = guesses.map {|x| x['link_id']}
+		prefixcond = make_sql_or ids, "id"
+		infos = sql_select_all "SELECT * from v2_node WHERE #{prefixcond}"
+		hsh = {}
+		infos.each do |row|
+			hsh[row['id']] = row
+		end
+		guesses.each do |guess|
+			guess['node'] = hsh[guess['link_id']]
+		end
+		return guesses
+	end
+	
+	def print_guesses(guesses)
+		guesses.each do |guess|
+			puts "#{guess['prefix']} -> #{guess['node']['text']}:#{guess['score']}"
+		end
+		return nil
+	end
+	
+	def full_guesses(text)
+		guess = guess_topics text
+		infos = get_guess_infos guess[0..10]
+		print_guesses infos
+	end
+	
+	def sort_by_score(arr)
+		return arr.sort {|x,y| y['score'].to_f <=> x['score'].to_f}
+	end
+
+	def make_sql_or(list,var)
+		str = ""
+		list.each do |val|
+			if str != "" 
+				str += " OR "
+			end
+			str += "(#{var} = '#{esc(val)}')"			
+		end
+		return str
+	end
 
 # --- snippets ---
 

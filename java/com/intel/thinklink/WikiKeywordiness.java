@@ -19,9 +19,10 @@ public class WikiKeywordiness {
 //	static String wikifile = "/home/rob/Reference/Wikipedia/wikipedia_small.xml";
 	
 	static String prefix = "/home/rob/Reference/Wikipedia/";
-	static String gatherfile = prefix+"namegathered_all";
-	static String freqfile = prefix+"java_wordfreqs";
-	static String outfile = prefix+"java_keywordiness";
+//	static String gatherfile = prefix+"namegathered_all";
+	static String gatherfile = prefix+"java_redirectlinks";
+	static String freqfile = prefix+"java_wordfreqs_once";
+	static String outfile = prefix+"java_keywordiness_once";
 	
 	public static BufferedReader openInFile(String s) throws Exception{
 		return new BufferedReader(
@@ -73,7 +74,7 @@ public class WikiKeywordiness {
 		Vector<String> keys = new Vector<String>(hsh.keySet());
 		Collections.sort(keys,new Comparator<String>(){
 			public int compare(String o1, String o2) {
-				return (int)(1000.0*(hsh.get(o1)-hsh.get(o2)));
+				return (int)(100000.0*(hsh.get(o1)-hsh.get(o2)));
 			}				
 		});
 		return keys;
