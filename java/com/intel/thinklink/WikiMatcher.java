@@ -23,14 +23,6 @@ class WikiMatch {
 	}
 }
 
-//class lowercase{	// Ah. Naming conventions aren't enforced. Is this used? Interesting...
-//	String Wibble;
-//	int Wobble;
-//	boolean foo(int x, int y){
-//		return y < x > y;
-//	}
-//}
-
 public class WikiMatcher {
 	static String prefix = "/home/rob/Reference/Wikipedia/";
 	static String infile = prefix+"java_keywordiness_once";

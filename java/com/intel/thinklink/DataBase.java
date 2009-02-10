@@ -1,7 +1,6 @@
 package com.intel.thinklink;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,8 +10,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Dyn is not efficient. Replace with static stuff when it matters.
@@ -82,6 +79,7 @@ class Dyn{
 			return "\"" + Util.escape((String)o) + "\"";
 		}else if(o instanceof Vector){
 			Vector v = (Vector)o;
+			if(v.size() == 0) return "[]";
 			StringBuffer buf = new StringBuffer();
 			for(Object el : v){
 				if(buf.length() == 0){
@@ -96,6 +94,7 @@ class Dyn{
 		}else if(o instanceof Dyn){
 			Dyn d = (Dyn)o;
 			Set<String> keys = d.map.keySet();
+			if(keys.size() == 0) return "{}";
 			StringBuffer buf = new StringBuffer();
 			for(String key : keys){
 				if(buf.length() == 0){
@@ -110,8 +109,24 @@ class Dyn{
 		}else{
 			return o.toString();
 		}
+	}		
+}
+
+/** really simple connection pool that just grows on demand */
+class ConnectionPool{
+	static Vector<DataBase> pool = new Vector<DataBase>();
+	public static synchronized DataBase get() throws Exception{
+		if(pool.size() == 0){
+			return new DataBase();
+		}else{
+			DataBase el = pool.lastElement();
+			pool.remove(pool.size() - 1);
+			return el;
+		}
 	}
-		
+	public static synchronized void release(DataBase d){
+		pool.add(d);
+	}
 }
 
 public class DataBase {
@@ -123,16 +138,16 @@ public class DataBase {
 	{
 		Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/thinklink",
+				"jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
 				"thinklink","thinklink");
 	}
 	
-	private PreparedStatement get_user = con.prepareStatement("SELECT * FROM v2_user WHERE email = ?");
-	int getUser(String email) throws SQLException {
+	private PreparedStatement get_user = con.prepareStatement("SELECT node_id,password FROM v2_user WHERE email = ?");
+	int getUser(String email, String password) throws SQLException {
 		get_user.setString(1,email);
 		ResultSet result = get_user.executeQuery();
-		if(result.next()){
-			return result.getInt(1);
+		if(result.next() && result.getString(2).equals(password)){
+			return result.getInt(1);				
 		}else{
 			return 0;
 		}
@@ -169,8 +184,49 @@ public class DataBase {
 		return res.getString(1);		
 	}
 	
+	private PreparedStatement get_recent = con.prepareStatement(
+			"SELECT v2_node.* FROM v2_node, v2_history "+
+			"WHERE v2_node.id = v2_history.node_id AND v2_history.user_id = ? LIMIT 100");
+	Dyn getRecent(int userid) throws SQLException{
+		get_recent.setInt(1, userid);
+		ResultSet items = get_recent.executeQuery();
+		return makeObject("recent","History of Recent Browsing","recent",items);
+	}
+	
+	private PreparedStatement get_newsnips = con.prepareStatement(
+			"SELECT v2_node.* FROM v2_node, v2_newsnips "+
+			"WHERE v2_node.id = v2_newsnips.node_id "+
+			"AND v2_newsnips.user_id = ? LIMIT 100");
+	Dyn getNewSnips(int userid) throws SQLException{
+		get_newsnips.setInt(1, userid);
+		ResultSet items = get_newsnips.executeQuery();
+		return makeObject("newsnips","Your Unfiled Snippets","newsnips",items);
+	}
+	
+	private PreparedStatement search_stmt = con.prepareStatement(
+			"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) LIMIT 100");
+	Dyn search(String query) throws SQLException{
+		search_stmt.setString(1, query);
+		ResultSet items = search_stmt.executeQuery();
+		return makeObject("search?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+	}
+	
+	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
+		Dyn tomap = new Dyn();
+		tomap.put("colitem", map_types(Dyn.list(children)));
+
+		Dyn d = new Dyn();
+		d.put("id", id);
+		d.put("text", text);
+		d.put("type", type);
+		d.put("from", new Vector());	
+		d.put("to", tomap);
+		return d;
+	}
+	
 	Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = Dyn.one(get_info(id));
+		map_type(d);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
 		if(userid != 0){
@@ -203,8 +259,15 @@ public class DataBase {
 	}
 	
 	Dyn map_type(Dyn d){
-		d.put("type",type_for_int(d.getInt(d.getString("type"))));
+		d.put("type",type_for_int(d.getInt("type")));
 		return d;
+	}
+	
+	Vector<Dyn> map_types(Vector<Dyn> els){
+		for(Dyn d : els){
+			map_type(d);
+		}
+		return els;
 	}
 		
 	Dyn map_links(Vector<Dyn> links){
@@ -215,6 +278,7 @@ public class DataBase {
 			if(!hsh.containsKey(verb)){
 				hsh.put(verb, new Vector<Dyn>());
 			}
+			map_type(d);
 			hsh.get(verb).add(d);
 		}
 		return new Dyn(hsh);

@@ -5,7 +5,8 @@
 	</servlet>
 	<servlet-mapping>
 	<servlet-name>node</servlet-name>
-	<url-pattern>/</url-pattern>
+	<url-pattern>/node/*</url-pattern>
 	</servlet-mapping>
+
 </web-app>
 
