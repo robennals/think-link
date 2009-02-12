@@ -434,17 +434,17 @@ function trim_url(url){
 function makeSnippet(snippet){
 	var id = getId();
 	
-	var url = snippet.url;
-	var realurl = snippet.realurl;
+	var url = snippet.info.url;
+	var realurl = snippet.info.realurl;
 	if(!realurl){
 		realurl = url;
 	}
 	var holder = $("<div class='dragholder'>")
 		.attr("id","holder-"+id)
 		.attr("tl_id",snippet.id)
-		.attr("tl_title",snippet.title)
-		.attr("tl_url",snippet.url)
-		.attr("tl_realurl",snippet.realurl)
+		.attr("tl_title",snippet.info.title)
+		.attr("tl_url",snippet.info.url)
+		.attr("tl_realurl",snippet.info.realurl)
 		.attr("tl_text",snippet.text)
 		.attr("tl_cls","snippet");
 	;
@@ -458,7 +458,7 @@ function makeSnippet(snippet){
 	$("<div class='sniptext'/>")
 		.text("... "+snippet.text.substring(0,200)+" ...")
 		.appendTo(table.find(".snipbody"));
-	$("<a class='snippet_url'/>").text(trim_string(snippet.title,40) + " - "+trim_url(url))
+	$("<a class='snippet_url'/>").text(trim_string(snippet.info.title,40) + " - "+trim_url(url))
 		.attr("href",realurl).attr("target","_blank")
 		.append(img)
 		.appendTo(table.find(".snipbody"));
@@ -491,7 +491,9 @@ function makeSnippet(snippet){
 				deleteNode(ev,holder,snippet.id,"snippet")});
 	}
 
-	holder.click(function(){selectItem(this,snippet.id)})
+	holder
+		.click(function(){suggestDo(snippet.id)})
+//		.click(function(){selectItem(this,snippet.id)})
 		.mouseup(function(ev){dragCapture(ev,this)})
 		.mousedown(function(ev){dragStart(ev,this)})
 		.mouseover(function(ev){
@@ -524,13 +526,14 @@ function makeSnippet(snippet){
 function getVerbsTo(type){	
 	switch(type){
 		case "claim":	return ["supports","opposes","relates to","states"];
-		case "topic": return ["refines","about","relates to","states"];
+		case "topic": return ["relates to","about","states"];
 		case "snippet": return [];
 		case "user": return ["created by"];
 		case "recent":
 		case "newsnips":
 		case "search":
 		case "hot":
+		case "suggestions":
 			return ["colitem"];			
 	}
 }
@@ -1094,7 +1097,7 @@ function combineRelates(obj){
 
 function loadObject(idnum,obj){
 	combineRelates(obj);
-	var id = makeMainGroups(idnum);
+	var id = makeMainGroups(idnum);	
 	makeParentItems(getel("parents-"+id),obj);
 	makeSubItems(getel("children-"+id),obj);
 	makeCurrentItem(getel("current-"+id),obj);
@@ -1120,6 +1123,13 @@ function searchDo(idnum){
 //		}
 	});
 }
+
+function suggestDo(id){
+	$.getJSON("http://localhost:8180/test/test?id="+id+"&callback=?",function(obj){
+		loadObject(0,obj);
+	});
+}
+
 
 function normalizeText(txt){
 	txt = txt.replace(/\s+/g," ");

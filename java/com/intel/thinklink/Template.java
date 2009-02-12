@@ -27,7 +27,6 @@ p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.
 p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
 p("");
 p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/webui.js\"></script>");
-p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/localconfig.js\"></script>");
 p("			");
 p("		</head>");
 p("		<body id=\"body\">");
@@ -99,4 +98,44 @@ p("");
 p("		</body>");
 p("		</html>");
 	}
+
+	static void doNodeTemplate(PrintWriter writer,int userid, Dyn obj){
+		w = writer;
+p("		<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
+p("		\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+p("		<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+p("		<head>");
+p("			<meta http-equiv=\"Content-Type\" content=\"text/html;.");
+p("			charset=iso-8859-1\" />");
+p("			<meta http-equiv=\"Content-Language\" content=\"en-us\" />");
+p("			<title>MindMix</title>");
+p("			<link href=\"/thinklink/stylesheets/style.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />");
+p("			");
+p("			");
+p("");
+p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.js\"></script>");
+p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
+p("");
+p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/webui.js\"></script>");
+p("			");
+p("		</head>");
+p("		<body id=\"body\">");
+p("			<div id=\"container\">");
+p("			");
+p("		<div id=\"argbrowser\">");
+p("		</div>");
+p("");
+p("		<script type=\"text/javascript\">");
+p("		var urlbase = '/thinklink/';");
+p("		var thinklink_user_id = "+userid+";");
+p("		var thinklink_deletes = make_hash([]);");
+p("		var thinklink_bookmarks = make_hash([]);");
+p("		makeArgBrowser('argbrowser',"+obj.toJSON()+");");
+p("		</script>");
+p("");
+p("			</div>");
+p("		</body>");
+p("		</html>");		
+	}
+
 }

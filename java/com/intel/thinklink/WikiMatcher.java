@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // best match?
@@ -23,9 +24,11 @@ class WikiMatch {
 	}
 }
 
+
 public class WikiMatcher {
 	static String prefix = "/home/rob/Reference/Wikipedia/";
 	static String infile = prefix+"java_keywordiness_once";
+	static String linkfile = prefix+"keyword_dblinks";
 	
 	public static HashMap<String,WikiMatch[]> loadNoEx() {
 		try{
@@ -34,6 +37,8 @@ public class WikiMatcher {
 			return null;
 		}
 	}
+	
+	static Pattern tabpat = Pattern.compile("\t");
 	
 	public static HashMap<String,WikiMatch[]> loadMatchers() throws Exception {
 		HashMap<String,WikiMatch[]> keywordmap = new HashMap<String,WikiMatch[]>();

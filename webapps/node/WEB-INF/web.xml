@@ -8,5 +8,21 @@
 	<url-pattern>/node/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+	<servlet-name>node</servlet-name>
+	<url-pattern>/apianon/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>node</servlet-name>
+	<url-pattern>/index.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>node</servlet-name>
+	<url-pattern>/scripthack/*</url-pattern>
+	</servlet-mapping>
+
+
 </web-app>
 

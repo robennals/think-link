@@ -128,6 +128,35 @@ function tl_snippet_dialog(margin) {
 		that.makeReallySimpleSnippet(sourceSpans);
 	};
 	
+	this.findPara = function(para){
+		if(para.nodeName == "#text" || para.tagName == "A"){
+			return this.findPara(para.parentNode);
+		}else{
+			return para;
+		}
+	};
+	
+	this.findPageText = function(sourceSpans){
+		var para = this.findPara(sourceSpans[0].parentNode);
+		node = para;
+		
+		var pagetext = "";
+		while(pagetext.length < 1000){
+			if(node.tagName == para.tagName){
+				pagetext += node.textContent + " ";
+			}
+			node = node.previousSibling;
+		}
+		
+		return pagetext.substring(0,1000);
+		
+		try{
+			return sourceSpans[0].parentNode.parentNode.textContent.substring(0,500);
+		}catch(e){
+			return "";
+		}		
+	};
+	
 	this.makeReallySimpleSnippet = function(sourceSpans){
 		var that = this;
 		var url = this.margin.normTool.normalizeUrl(this.margin.url);
@@ -143,6 +172,7 @@ function tl_snippet_dialog(margin) {
 			+"&url="+encodeURIComponent(url)
 			+"&realurl="+encodeURIComponent(url_real)				
 			+"&title="+encodeURIComponent(document.title)
+			+"&pagetext="+that.findPageText(sourceSpans)
 		,function(result){
 			if(result.error){
 				tl_removeSpans(that.sourceSpans);

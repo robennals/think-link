@@ -1,6 +1,7 @@
 package com.intel.thinklink;
 
 import java.net.URLEncoder;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +12,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;
+
+class JSONString{
+	String s;
+	JSONString(String s){
+		this.s = s;
+	}
+}
 
 /**
  * Dyn is not efficient. Replace with static stuff when it matters.
@@ -28,6 +36,12 @@ class Dyn{
 	
 	void put(String key,Object o){
 		map.put(key, o);
+	}
+	void putJSON(String key, String s){
+		map.put(key, new JSONString(s));
+	}
+	void setJSON(String key){
+		putJSON(key,getString(key));
 	}
 	String get(String key){
 		return (String)map.get(key);
@@ -92,6 +106,13 @@ class Dyn{
 			}
 			buf.append(']');
 			return buf.toString();				
+		}else if(o instanceof JSONString){
+			JSONString js = (JSONString)o;
+			if(js.s != null && js.s.length() != 0){
+				return ((JSONString) o).s;
+			}else{
+				return "{}";
+			}
 		}else if(o instanceof Dyn){
 			Dyn d = (Dyn)o;
 			Set<String> keys = d.map.keySet();
@@ -147,6 +168,18 @@ public class DataBase {
 				"thinklink","thinklink");
 	}
 	
+	private PreparedStatement node_for_text = con.prepareStatement(
+			"SELECT id FROM v2_node WHERE text = ?");
+	int nodeForText(String text) throws SQLException {
+		node_for_text.setString(1, text);
+		ResultSet result = node_for_text.executeQuery();
+		if(result.next()){
+			return result.getInt(1);
+		}else{
+			return 0;
+		}
+	}
+	
 	private PreparedStatement get_user = con.prepareStatement("SELECT node_id,password FROM v2_user WHERE email = ?");
 	int getUser(String email, String password) throws SQLException {
 		get_user.setString(1,email);
@@ -160,23 +193,25 @@ public class DataBase {
 	
 	private PreparedStatement get_info = con.prepareStatement("SELECT * FROM v2_node WHERE id = ?");
 	ResultSet get_info(int id) throws SQLException{
-		get_info.setInt(1,id);
+		get_info.setInt(1,id);		
 		return get_info.executeQuery();
 	}
 		
 	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
-					"WHERE dst=? AND src = v2_node.id");	
+					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
 		get_links_to.setInt(1,id);
+		get_links_to.setInt(2,10);
 		return get_links_to.executeQuery();
 	}
 	
 	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
-			"WHERE src=? AND dst = v2_node.id");
+			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
 		get_links_from.setInt(1,id);
+		get_links_from.setInt(2,10);
 		return get_links_from.executeQuery();
 	}
 	
@@ -201,7 +236,7 @@ public class DataBase {
 	private PreparedStatement get_newsnips = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_newsnips "+
 			"WHERE v2_node.id = v2_newsnips.node_id "+
-			"AND v2_newsnips.user_id = ? LIMIT 100");
+			"AND v2_newsnips.user_id = ? ORDER BY id DESC LIMIT 100");
 	Dyn getNewSnips(int userid) throws SQLException{
 		get_newsnips.setInt(1, userid);
 		ResultSet items = get_newsnips.executeQuery();
@@ -216,8 +251,24 @@ public class DataBase {
 		return makeObject("search?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
 	
+	private PreparedStatement url_snippets = con.prepareStatement(
+			"SELECT v2_node.* FROM v2_node, v2_snippet WHERE "+
+			"v2_snippet.node_id = v2_node.id AND v2_snippet.url_prefix IN (?,?,?,?,?,?,?,?)");
+	Vector<Dyn> urlSnippets(Vector<String> urls) throws SQLException{
+		for(int i = 0; i < 8; i++){
+			if(urls.size() > i){
+				url_snippets.setString(i+1, urls.get(i));
+			}else{
+				url_snippets.setString(i+1, null);
+			}
+		}
+		ResultSet items = url_snippets.executeQuery();
+		return Dyn.list(items);
+	}
+	
 	private PreparedStatement add_node = con.prepareStatement(
-			"INSERT INTO v2_node (text,user_id,type,info) VALUES (?,?,?,?)");
+			"INSERT INTO v2_node (text,user_id,type,info,opposed,avg_order) VALUES (?,?,?,?,0,'')",
+			Statement.RETURN_GENERATED_KEYS);
 	int addNode(String text,int user_id,int type,String info) throws SQLException{
 		add_node.setString(1,text);
 		add_node.setInt(2, user_id);
@@ -227,18 +278,28 @@ public class DataBase {
 	}
 	
 	private PreparedStatement add_snippet = con.prepareStatement(
-		"INSERT INTO v2_snippets (url_prefix,node_id,page_text) VALUES (?,?,?)");
-	void addSnippet(int userid, String text, String url, String title, String pagetext) throws SQLException{
+		"INSERT INTO v2_snippet (url_prefix,node_id,page_text) VALUES (?,?,?)");
+	private PreparedStatement add_newsnip = con.prepareStatement(
+		"INSERT INTO v2_newsnips (user_id,node_id) VALUES (?,?)");
+	void addSnippet(int userid, String text, String url, String realurl, String title, String pagetext) throws SQLException{
 		Dyn info = new Dyn();
 		info.put("title", title);
+		info.put("url",url);
+		info.put("realurl",realurl);
 		int nodeid = addNode(text,userid,SNIPPET,Dyn.toJSON(info));
+
+		if(pagetext == null){
+			pagetext = "";
+		}
 		
-		String prefix = url.substring(0, 128);
-		
-		add_snippet.setString(1,prefix);
+		add_snippet.setString(1,url);
 		add_snippet.setInt(2,nodeid);
 		add_snippet.setString(3,pagetext);
 		add_snippet.executeUpdate();
+		
+		add_newsnip.setInt(1,userid);
+		add_newsnip.setInt(2,nodeid);
+		add_newsnip.executeUpdate();
 	}
 
 	private PreparedStatement add_link = con.prepareStatement(
@@ -263,7 +324,14 @@ public class DataBase {
 		set_vote.setInt(4, action);
 		set_vote.executeUpdate();
 	}
-	
+
+	private PreparedStatement get_snippet = con.prepareStatement(
+			"SELECT * FROM v2_node, v2_snippet WHERE "+
+			"v2_node.id = v2_snippet.node_id AND v2_node.id = ?");
+	Dyn getSnippet(int id) throws SQLException{
+		get_snippet.setInt(1,id);
+		return Dyn.one(get_snippet.executeQuery());
+	}
 			
 	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
 		Dyn tomap = new Dyn();
@@ -279,7 +347,7 @@ public class DataBase {
 	}
 
 	private int execWithKey(PreparedStatement stmt) throws SQLException{
-		stmt.executeUpdate();
+		stmt.execute();
 		ResultSet keys = stmt.getGeneratedKeys();
 		keys.next();
 		int key = keys.getInt(1);
@@ -289,7 +357,7 @@ public class DataBase {
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = Dyn.one(get_info(id));
-		map_type(d);
+		map_info(d);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
 		if(userid != 0){
@@ -327,14 +395,15 @@ public class DataBase {
 		return null;
 	}
 	
-	Dyn map_type(Dyn d){
+	Dyn map_info(Dyn d){
 		d.put("type",type_for_int(d.getInt("type")));
+		d.setJSON("info");
 		return d;
 	}
 	
 	Vector<Dyn> map_types(Vector<Dyn> els){
 		for(Dyn d : els){
-			map_type(d);
+			map_info(d);
 		}
 		return els;
 	}
@@ -347,7 +416,7 @@ public class DataBase {
 			if(!hsh.containsKey(verb)){
 				hsh.put(verb, new Vector<Dyn>());
 			}
-			map_type(d);
+			map_info(d);
 			hsh.get(verb).add(d);
 		}
 		return new Dyn(hsh);

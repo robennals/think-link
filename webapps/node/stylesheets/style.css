@@ -217,6 +217,35 @@ a img {
 /*	width: 20%; */
 	margin-left: 8px;
 }
+
+.topbut {
+	background-color : lightgrey;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: black;
+	-moz-border-radius: 3px;
+	cursor: pointer;
+}
+
+.topbut:hover{
+	background-color : green;
+	color: white;	
+}
+
+
+.suggesttitle {
+	padding: 1px 1px 1px 5px;
+    font-family: Helvetica, Geneva, Arial, sans-serif;
+	margin: 0px;
+	font-size: 16px;
+	font-weight: bold;	
+	background-color: #CCCCCC;
+	color: black;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+
+}
+
 h2 {
 	padding: 1px 1px 1px 5px;
   font-family: Helvetica, Geneva, Arial, sans-serif;
