@@ -192,26 +192,27 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_info = con.prepareStatement("SELECT * FROM v2_node WHERE id = ?");
-	ResultSet get_info(int id) throws SQLException{
+	ResultSet get_info(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
+		logRecent(userid,id);
 		return get_info.executeQuery();
 	}
 		
-	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,v2_node.type AS type, "+
+	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
 		get_links_to.setInt(1,id);
-		get_links_to.setInt(2,10);
+		get_links_to.setInt(2,1000);
 		return get_links_to.executeQuery();
 	}
 	
-	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,v2_node.type AS type, "+
+	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
 		get_links_from.setInt(1,id);
-		get_links_from.setInt(2,10);
+		get_links_from.setInt(2,1000);
 		return get_links_from.executeQuery();
 	}
 	
@@ -226,11 +227,21 @@ public class DataBase {
 	
 	private PreparedStatement get_recent = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_history "+
-			"WHERE v2_node.id = v2_history.node_id AND v2_history.user_id = ? LIMIT 100");
+			"WHERE v2_node.id = v2_history.node_id " +
+			"	AND v2_history.user_id = ? ORDER BY date DESC " +
+			" 	LIMIT 100");
 	Dyn getRecent(int userid) throws SQLException{
 		get_recent.setInt(1, userid);
 		ResultSet items = get_recent.executeQuery();
 		return makeObject("recent","History of Recent Browsing","recent",items);
+	}
+	
+	private PreparedStatement log_recent = con.prepareStatement(
+			"INSERT DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)");
+	void logRecent(int userid, int nodeid) throws SQLException{
+		log_recent.setInt(1, userid);
+		log_recent.setInt(2, nodeid);
+		log_recent.executeUpdate();
 	}
 	
 	private PreparedStatement get_newsnips = con.prepareStatement(
@@ -301,9 +312,9 @@ public class DataBase {
 		add_newsnip.setInt(2,nodeid);
 		add_newsnip.executeUpdate();
 	}
-
+		
 	private PreparedStatement add_link = con.prepareStatement(
-			"INSERT INTO v2_link (src,dst,type) VALUES (?,?,?))");
+			"INSERT INTO v2_link (src,dst,type) VALUES (?,?,?)");
 	void addLink(int src, int dst, int type) throws SQLException{
 		add_link.setInt(1,src);
 		add_link.setInt(2,dst);
@@ -356,7 +367,7 @@ public class DataBase {
 	}
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
-		Dyn d = Dyn.one(get_info(id));
+		Dyn d = Dyn.one(get_info(id,userid));
 		map_info(d);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
@@ -380,6 +391,17 @@ public class DataBase {
 		return null;
 	}
 	
+	int int_for_verb(String s){
+		if(s.equals("relates to")) return 1;
+		if(s.equals("supports")) return 2;
+		if(s.equals("opposes")) return 3;
+		if(s.equals("states")) return 4;
+		if(s.equals("about")) return 5;
+		if(s.equals("refines")) return 6;
+		if(s.equals("created by")) return 7;
+		return 0;
+	}
+	
 	static final int TOPIC = 1;
 	static final int CLAIM = 2;
 	static final int SNIPPET = 3;
@@ -393,6 +415,14 @@ public class DataBase {
 		case 4: return "user";
 		}
 		return null;
+	}
+	
+	int int_for_type(String s){
+		if(s.equals("topic")) return 1;
+		if(s.equals("claim")) return 2;
+		if(s.equals("snippet")) return 3;
+		if(s.equals("user")) return 4;
+		return 0;
 	}
 	
 	Dyn map_info(Dyn d){

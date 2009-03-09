@@ -27,6 +27,8 @@ public class NodeServlet extends HttpServlet {
 
 	// POST URLs
 	Pattern addSnipPath = Pattern.compile("/node/addsnip");
+	Pattern createPath = Pattern.compile("/node/create");
+	Pattern addLinkPath = Pattern.compile("/node/addlink");
 	
 	static String getCookie(HttpServletRequest req, String key){
 		Cookie[] cookies = req.getCookies();
@@ -46,6 +48,20 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			base.addSnippet(userid, req.getParameter("text"), req.getParameter("url"), 
 					req.getParameter("realurl"), req.getParameter("title"), req.getParameter("pagetext"));			
+		}
+		m = createPath.matcher(path);
+		if(m.find()){
+			int id = base.addNode(req.getParameter("text"),userid,
+					base.int_for_type(req.getParameter("type")),"");
+			out.append(""+id);
+			return;
+		}
+		m = addLinkPath.matcher(path);
+		if(m.find()){
+			base.addLink(
+				Integer.parseInt(req.getParameter("subject")), 
+				Integer.parseInt(req.getParameter("object")), 
+				base.int_for_verb(req.getParameter("verb")));
 		}
 	}
 
@@ -159,6 +175,20 @@ public class NodeServlet extends HttpServlet {
 		}
 		out.close();
 		
+	}
+	
+	
+	static void outputDyn(PrintWriter out, HttpServletRequest req, String format, int userid, Dyn data){
+		if(format.equals(".js")){
+			String callback = req.getParameter("callback");
+			if(callback == null){
+				callback = "thinklink_callback";
+			}
+			out.append(callback);
+			out.append("("+Dyn.toJSON(data)+");");
+		}else{
+			out.append(Dyn.toJSON(data));
+		}
 	}
 	
 	static void outputNode(PrintWriter out, HttpServletRequest req, String format, int userid, Dyn data){

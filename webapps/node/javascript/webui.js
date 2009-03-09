@@ -137,6 +137,16 @@ function makeArgBrowseFrame(divid,obj,height,title){
 			ev.stopPropagation();
 			ev.preventDefault();
 			unattachedMode(idnum)});
+
+	$("<a class='browsebutton'>more</a>").appendTo(buttons)
+		.attr("href",urlbase+"/node/more")
+		.attr("id","more-"+idnum)
+		.click(function(ev){
+			ev.cancelBubble = true;
+			ev.stopPropagation();
+			ev.preventDefault();
+			moreMode(idnum)});
+			
 	$("<a class='browsebutton'>feed</a>").appendTo(buttons)
 		.attr("id","feed-"+idnum)
 		.attr("target","_blank");
@@ -262,47 +272,19 @@ function makeDragItem(obj,label){
 
 	var tditem = $("<td/>").append(item).appendTo(tr);
 
-//	var rssicon = $("<img/>")
-//		.css("display","none")
-//		.css("cursor","pointer")
-//		.css("margin-left","4px")
-//		.attr("src",urlbase+"/images/feed.png")
-//		.attr("title","rss feed")
-//		.attr("class","itembutton");
-//	var rssbutton = $("<a/>").append(rssicon)
-//		.attr("target","blank")
-//		.attr("href",urlbase+"/node/"+obj.id+".rss")
-//		.appendTo(item);
-//
-	var breakicon = $("<img/>")
-		.css("display","none")
-		.css("cursor","pointer")
-		.css("margin-left","4px")
-		.attr("src",urlbase+"/images/link_break.png")
-		.attr("title","disconnect")
-		.attr("class","itembutton")
-		.appendTo(item)
-		.click(function(ev){
-			ev.cancelBubble = true;
-			ev.stopPropagation();
-			ev.preventDefault();
-			deleteLink(ev,holder,obj.linkid)});
+	var tdvote = $("<td/>").appendTo(tr);
 
-//	if(thinklink_user_id == obj.user){
-	var deleteicon = $("<img/>")
-		.css("display","none")
-		.css("cursor","pointer")
-		.attr("src",urlbase+"/images/cross.png")
-		.attr("title","delete")
-		.attr("class","itembutton")
-		.appendTo(item)
-		.click(function(ev){
-			ev.cancelBubble = true;
-			ev.stopPropagation();
-			ev.preventDefault();
-			deleteNode(ev,holder,obj.id,obj.type)});
-//		var tddelete = $("<td/>").append(deleteicon).appendTo(tr);				
-//	}
+	var up = $("<img/>").attr("src",urlbase+"/images/vote_up_e.png")
+		.attr("title","Promote")
+		.mouseover(function(){up.attr("src",urlbase+"/images/vote_up_on.png")})
+		.mouseout(function(){up.attr("src",urlbase+"/images/vote_up_e.png")})
+		.appendTo(tdvote);
+		
+	var down = $("<img/>").attr("src",urlbase+"/images/vote_down_e.png")
+		.attr("title","Remove")
+		.mouseover(function(){down.attr("src",urlbase+"/images/vote_down_on.png")})
+		.mouseout(function(){down.attr("src",urlbase+"/images/vote_down_e.png")})
+		.appendTo(tdvote);
 
 
 	if(thinklink_user_id == obj.user){
@@ -323,39 +305,7 @@ function makeDragItem(obj,label){
 	holder.click(function(){selectItem(this,obj.id)})
 		.mouseup(function(ev){dragCapture(ev,this)})
 		.mousedown(function(ev){dragStart(ev,this)})
-		.mouseover(function(ev){
-			holder.tl_selected = true;
-			setTimeout(function(){
-				if(holder.tl_selected){
-					breakicon.css("display","");
-//					rssicon.css("display","");
-					if(deleteicon){
-						deleteicon.css("display","");						
-					}
-					if(renameicon){
-						renameicon.css("display","");						
-					}
-				}
-			},300);
-			dragOver(ev,this,id)}
-			)
 		.mousemove(function(ev){dragOver(ev,this,id)})
-		.mouseout(function(ev){
-			if(isParent(ev.relatedTarget,holder.get(0))) return;
-			breakicon.css("display","none");
-//			rssicon.css("display","none");
-			if(deleteicon){
-				deleteicon.css("display","none");						
-			}
-			if(renameicon){
-				renameicon.css("display","none");						
-			}
-
-			holder.tl_selected = false;
-			dragOut(ev,this,id)});
-		
-
-
 	return holder;
 }
 
@@ -406,8 +356,8 @@ function createFinished(id,holder,input,typ,verb,reqId,idnum){
 		holder.remove();
 		return;
 	}	
-	$.post(urlbase+"/node/create.json",{type:typ,info:makeJSONString({text:input.val()})},function(newid){
-		$.post(urlbase+"/node/create.json",{type:"link",info:makeJSONString({subject:newid,verb:verb,object:id})},function(result){
+	$.post(urlbase+"/node/create.json",{type:typ,text:input.val()},function(newid){
+		$.post(urlbase+"/node/addlink.json",{type:"link",subject:newid,verb:verb,object:id},function(result){
 			holder.remove();
 			loadItemInfo(idnum,id);
 		});
@@ -431,7 +381,7 @@ function trim_url(url){
 	}		
 }
 
-function makeSnippet(snippet){
+function makeSnippet(snippet,bossmode){
 	var id = getId();
 	
 	var url = snippet.info.url;
@@ -448,6 +398,7 @@ function makeSnippet(snippet){
 		.attr("tl_text",snippet.text)
 		.attr("tl_cls","snippet");
 	;
+	
 	var table = $(
 		"<table class='dragtable'>"
 			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
@@ -455,27 +406,29 @@ function makeSnippet(snippet){
 	var img = $("<img/>").attr("src",urlbase+"/images/application_go.png");
 	table.find("img").attr("src",urlbase+"/images/comment.png");
 	var snipbody = table.find(".snipbody");
-	$("<div class='sniptext'/>")
-		.text("... "+snippet.text.substring(0,200)+" ...")
+	var sniptext = $("<div class='sniptext'/>")
+		//.text("... "+snippet.text.substring(0,200)+" ...")
 		.appendTo(table.find(".snipbody"));
+		
+		
 	$("<a class='snippet_url'/>").text(trim_string(snippet.info.title,40) + " - "+trim_url(url))
 		.attr("href",realurl).attr("target","_blank")
 		.append(img)
 		.appendTo(table.find(".snipbody"));
 
 	
-	var breakicon = $("<img/>")
-		.css("display","none")
-		.css("cursor","pointer")
-		.attr("src",urlbase+"/images/link_break.png")
-		.css("margin-left","4px")
-		.attr("title","disconnect")
-		.attr("class","itembutton")
-		.appendTo(snipbody)
-		.click(function(ev){
-			ev.cancelBubble = true;
-			ev.stopPropagation();
-			deleteLink(ev,holder,snippet.linkid)});
+	//var breakicon = $("<img/>")
+		//.css("display","none")
+		//.css("cursor","pointer")
+		//.attr("src",urlbase+"/images/link_break.png")
+		//.css("margin-left","4px")
+		//.attr("title","disconnect")
+		//.attr("class","itembutton")
+		//.appendTo(snipbody)
+		//.click(function(ev){
+			//ev.cancelBubble = true;
+			//ev.stopPropagation();
+			//deleteLink(ev,holder,snippet.linkid)});
 
 	if(thinklink_user_id == snippet.user){
 		var deleteicon = $("<img/>")
@@ -491,33 +444,23 @@ function makeSnippet(snippet){
 				deleteNode(ev,holder,snippet.id,"snippet")});
 	}
 
+	if(bossmode){
+		sniptext.append(snippet.text)
+		$("<br/><span class='topbut'>connect snippet to claim</span>").appendTo(snipbody);
+		$("<span class='nobut'>ignore snippet</span>").appendTo(snipbody);
+		//var tr = $("<tr><td/><td><span class='topbut'>connect snippet to claim</span></td></tr>").appendTo(table);
+	}else{
+		sniptext.text("... "+snippet.text.substring(0,200)+" ...")
+	}
+
+
+
 	holder
 		.click(function(){suggestDo(snippet.id)})
 //		.click(function(){selectItem(this,snippet.id)})
 		.mouseup(function(ev){dragCapture(ev,this)})
 		.mousedown(function(ev){dragStart(ev,this)})
-		.mouseover(function(ev){
-			holder.tl_selected = true;
-			setTimeout(function(){
-				if(holder.tl_selected){
-					breakicon.css("display","");
-					if(deleteicon){
-						deleteicon.css("display","");
-					}
-				}
-			},300);
-			dragOver(ev,this,id)
-		})
-		.mousemove(function(ev){dragOver(ev,this,id)})
-		.mouseout(function(ev){
-			if(isParent(ev.relatedTarget,holder.get(0))) return;
-			breakicon.css("display","none");
-			if(deleteicon){
-				deleteicon.css("display","none");
-			}
-			holder.tl_selected = false;
-			dragOut(ev,this,id)
-		});		
+		.mousemove(function(ev){dragOver(ev,this,id)});
 		
 		
 	return holder;
@@ -625,7 +568,11 @@ function makeSubItems(div,obj){
 					}
 				}
 			}
-			for(var j = 0; j < items.length; j++){
+			var limit = 10;
+			if(verb == "colitem"){
+				limit = 100;
+			}
+			for(var j = 0; j < items.length && j < limit; j++){
 				if(items[j].done || is_deleted(items[j])) continue;
 				$(div).append(makeDragItem(items[j]));
 				empty = false;
@@ -879,6 +826,8 @@ function goBack(idnum){
 	}
 }
 
+var global_selection_text = "";
+
 function selectItem(div,id){
 	var group = findNodeGroup(div);
 	var idnum = getNodeIdNum(group);
@@ -892,6 +841,7 @@ function selectItem(div,id){
 	browser.setAttribute("tl_id",id);
 	
 	document.location.hash = id;
+	global_selection_text = div.textContent;
 	
 	pushHistory(idnum,id);
 
@@ -1062,6 +1012,27 @@ function mineMode(idnum){
 function unattachedMode(idnum){
 	$.getJSON(urlbase+"/node/newsnips.js?callback=?",{},function(obj){
 			loadObject(idnum,obj);
+	});
+}
+
+function moreMode(idnum){
+	var query = '"'+global_selection_text+'"';
+	$.getJSON("http://boss.yahooapis.com/ysearch/web/v1/"+encodeURIComponent(query)+
+		"?appid=NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E"+
+		"&format=json&callback=?",function(boss){
+		var id = makeMainGroups(idnum);
+		var current = getel("current-"+id);
+		$("<span/>").text("Suggested Snippets for: "+query)
+			.css("font-size","20px").appendTo(current);
+		var children = getel("children-"+id);
+		var results = boss.ysearchresponse.resultset_web;
+		for(var i = 0; i < results.length; i++){
+			var s = results[i];
+			var snip = makeSnippet(
+				{id:"boss-"+i,text:s['abstract'],
+					info:{title:s.title,url:s.url,realurl:s.url}},true);
+			snip.appendTo(children);
+		}
 	});
 }
 

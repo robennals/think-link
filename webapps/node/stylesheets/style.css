@@ -232,6 +232,21 @@ a img {
 	color: white;	
 }
 
+.nobut {
+	background-color : lightgrey;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: black;
+	-moz-border-radius: 3px;
+	cursor: pointer;
+}
+
+.nobut:hover{
+	background-color : red;
+	color: white;	
+}
+
+
 
 .suggesttitle {
 	padding: 1px 1px 1px 5px;

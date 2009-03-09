@@ -246,6 +246,7 @@ function thinklink_setCookies(username,password){
 	cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
 	thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
 	thinklink_setCookieForUri("http://localhost:3000/",username,password);
+	thinklink_setCookieForUri("http://localhost:8180/",username,password);
 	thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
 }
 

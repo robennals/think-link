@@ -1,0 +1,53 @@
+
+http://events.kmi.open.ac.uk/essence/tools/
+http://globalsensemaking.wik.is/About_GSm/Existing_Sm_Tools/Compendium
+
+Compendium
+DebateGraph
+Cohere
+MIT Delibertorium
+Argumentations
+Cope IT
+Debatewise
+Truthmapping
+
+
+-- Argumentations --
+
+Site to develop argument maps. People build simple argument trees.
+No papers. No research. 
+
+-- Argumentative --
+
+Windows app for building argument maps.
+
+-- Cohere --
+
+Simon Buckingham Shum et al.
+Annotate a URL with ideas. Make connections between ideas.
+Links such as responds-to.
+Links to related URLS, but isn't about identifying repeated bad ideas.
+
+-- CoPe it! --
+
+-- DebateGraph --
+
+-- Debatewise --
+
+-- The Deliberatorium --
+
+-- IDeM --
+
+-- Open Qabal --
+
+-- Rationale --
+
+-- TopicSpaces --
+
+-- TruthMapping --
+
+-- Wordsmyth --
+
+-- Zotero --
+
+
