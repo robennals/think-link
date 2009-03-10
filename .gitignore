@@ -1,3 +1,6 @@
+think
+*.kilepr
+*.backup
 *.bak
 *.log
 intel_docs

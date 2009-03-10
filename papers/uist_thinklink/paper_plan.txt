@@ -1,0 +1,82 @@
+
+=== Key Points ===
+
+
+== Structure of the Web ==
+
+The Web contains information of dubious reliability.
+
+Clay Shirky "Not information overload, filter failure"
+
+
+== Previous argumentation systems ==
+
+We build on IBIS.
+
+IBIS has known flaws, which we reduce.
+
+We don't try to be strict.
+
+Just want for/against/related
+
+Lots of previous work about argumentation.
+
+
+== UI ==
+
+We highlight things in red if they are contentious.
+
+Users can pick things out as contentious or interesting.
+
+Contentious will be shown to others. Interesting only used as evidence.
+	TODO: highlight interesting when follow link?
+		- highlighting proxy?
+
+Usage model where a user uses Google or whatever and finds web pages
+	that make a claim they disagree with, and mark them up.
+
+Can mark up claims in bulk using the bulk topic assignment interface.
+	TODO: make this work well
+
+Simple user study shows one can mark up instances of contentious snippets at very high speed.
+	- show how many snippets one can find in an hour
+
+=== Data ===
+
+Seeded with all contentious claims from Snopes (6k-ish) and with a selected set of facts from FactCheck.
+
+
+
+== System ==
+
+Think Link can be included directly into a web site as a script.
+
+Think Link has an Open API that can allow other web sites to include information from other web sites potentially with their own UI.
+
+
+=== Approach ===
+
+Discuss related work as I go, rather than at the end. 
+Write as if I am a disinterested third party.
+At least 40 recent paper citations. 
+All web citations as footnotes.
+
+=== Structure ===
+
+-- Intro --
+
+The Web contains information that may be wrong. 
+
+Allow anyone to publish, means can't be sure accurate.
+
+Quote from Tim Berners Lee.
+
+Think Link is a tool that tries to pull information together. Show you when stuff you are reading conflicts with other stuff.
+
+
+-- The User Experience --
+
+
+
+
+

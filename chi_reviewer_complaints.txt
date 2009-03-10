@@ -1,0 +1,323 @@
+
+-- Stereotypical and Oversimplifying relations between the claims --
+
+Too stereotypical and oversimplifying relations between th eclaims.
+Sceptical that the claim relations can model the semantic relations of the claim adequately.
+
+There needs to be a way to collapse arguements when they settle on an
+  agreed position.
+
+While a nice
+  property of the system is its simplicity, a need for more diverse link
+  types was apparently expressed in the user study. I would have liked to
+  see a more thorough discussion where the trade-offs lie if more complex
+  linking was supported.
+
+There are a number of issues, most of which are addressed in the paper,
+  that could impede the use of the system proposed. The notion of claims
+  seems to be a very narrow perspective on how users view Web content.
+
+Users said that they would like to make more general statements about the
+  text they read. There is also the issue, whether the initial claim
+  entered by a reader of the page correctly represents the content of the
+  snippet.
+
+RESPONSE: 
+Defer entirely to IBIS model. Just say using IBIS.
+	Cite existing studies about whether IBIS works.
+
+Mention how things collapse when old stuff gets rated down, or people edit their wordings. 
+	(cite other work on this)
+
+Collect snippets by assigning to a topic, then assign to a claim later.
+
+Show only when it conflicts. 
+	(ok to pitch difference as not visible for user study?)
+
+
+-- Users rephasing content --
+
+The claims shown, for example, in figure 4 are all rephrasing
+  the actual text content. I would not be sure that users (1) are motivated
+  to restate the text on the page and (2) that the claim stated is a
+  correct interpretation of the text snippet. These issues would have to be
+  investigated more thoroughly if the system was to used more widely.
+
+
+RESPONSE:
+  Only rephrase if there are several snippets saying the same thing.
+	First gather, then organize.
+  If I am gathering as evidence, then can just stick in a topic.
+  If I disagree with it, then I want to make it is contentious - and it will guide
+	me that way.
+
+
+-- Missing Research Discourse --
+
+Problem of missing research discourse. Novelty of work questioned. Need to be clearer about how different.
+
+All in all the PC had the feeling that the value of the available
+  empirical material is hard to judge and that there would be a lot of
+  revision work necessary to integrate the paper into a research discourse.
+  But we do believe that with the advised improvements the paper can make a
+  strong contribution at future CHI conferences.
+
+Need to refer to Compendium.
+
+Does not sufficiently discuss the relation of
+  the work presented to other relevant areas, in particular Semantic Web
+  techniques, that could provide similar capabilities yet with higher
+  complexity for the user.
+
+While the authors provide a good review of prior 'tools', I felt the
+  reference list was a bit too heavy on newspaper and trade journal
+  articles. 
+
+This work is not completely novel as it bears similarity to work done in
+  the late 80's with Hypercard (see e.g. the Smith & Bernhardt reference
+  below). Again, this is a reference that I felt was relevant to this
+  paper, but was not included.
+
+  Smith, T. and Bernhardt, S. 1988. Expectations and experiences with
+  HyperCard: a pilot study. In Proceedings of the 6th Annual international
+  Conference on Systems Documentation. ACM Press, 47-56.
+
+RESPONSE:
+	
+Huge related work section, focussing on real papers.
+Discuss semantic web.
+Discuss prior argumentation.
+Discuss hypertext (like crazy)
+Discuss Compendium.
+Discuss studies of argumentation systems.
+
+
+-- vs Semantic Web --
+
+Concerning these proposed functions, I was
+  missing a discussion of how this relates to the use of ontologies and to
+  semantic annotations in the context of the Semantic Web. 
+
+
+-- vs IBIS --
+
+Personally, I saw the main innovation of the approach in comparison to
+  the earlier work on IBIS etc. in the fact, that the original information
+  and the claim definition and networking do not happen at the same time
+  (this was usually the case in IBIS and design rationale systems), and are
+  in fact separate. However, since there was no strong mentioning of this
+  earlier research in the paper, we were not sure whether the authors are
+  even aware of this aspect...
+
+One place that they differ from the previous literature is that they
+  break up the writing and the annotation of claims into an async activity,
+  whereas the earlier literature largely had it as a sync activity.  I
+  think that if the contribution to the earlier literature were drawn out
+  more, and the usability claims either further investigated or toned down,
+  this would be a serious contribution.  I look forward to seeing this work
+  in the future.
+
+
+-- vs Tagging Systems --
+
+Aspects of the UI for Think Link are similar to input
+  interfaces for tagging systems and I was disappointed not to find a
+  single tagging reference.  In particular, the Sen et al. reference below
+  is extremely relevant to how ordering of claims influences selection.
+
+Sen, S., Lam, S. K., Rashid, A. M., Cosley, D., Frankowski, D.,
+  Osterhouse, J., Harper, F. M. and Riedl, J. tagging, communities,
+  vocabulary, evolution. In Proc. CSCW 2006, ACM Press (2006), 181-190.
+
+
+-- vs Design and Decision Rationale (DR) --
+
+First, the authors seem quite oblivious to the long history of design and
+  decision rationale (DR) systems in HCI and CSCW.  While they promised a
+  longer literature review in their rebuttal, they still seemed as though
+  they did not know that literature.  The authors should look at Conklin,
+  J. Lee, J. Carroll, Potts, and Buckingham-Shum, all of which will point
+  to a fairly extensive literature.
+
+RESPONSE:
+  Include a much much much more comprehensive literature review of this stuff.
+	Read everything by those authors and cite everything they mention.
+
+
+
+
+-- Wikipedia Robustness --
+
+  There is also a claim made in the paper that is counter to established
+  research.  The authors point to a newspaper article that voices concerns
+  about how easy it is to subvert Wikipedia to give people false
+  information.  However, the Viegas et al. reference below found that
+  malicious edits within Wikipedia were corrected within 90 minutes at the
+  latest.
+
+  Viegas, F. B., Wattenberg, M. and Dave, K. Studying cooperation and
+  conflict between authors with history flow visualizations. In Proc. CHI
+  2003, ACM Press (2004), 575-582.
+
+  Also Travis talking about Wikipedia culture for cultivating and tidying up.
+
+RESPONSE:
+  Cite it, and explain how and why different.
+
+
+-- User Studies --
+
+There have been earlier user studies on argumentation structures that should have been mentioned to relate your findings to. 
+
+The user study was not ambitious enough to actually find out relevant issues.
+
+"lab studies with regard to th einterface do not make much sense in an application where it is actually scale that matters"
+
+Asside from an interface lab study about and a full-fledged real-world study, the authors could also present a study about the appropriateness of the claim relations that could be established, and maybe there is enough material available already.
+
+The qualitative, formative evaluation presented pinpoints a number of
+  critical issues in the design of such a system and seems appropriate for
+  this type of contribution.
+
+However, the system
+  was evaluated with only 6 participants looking at pre-highlighted
+  webpages.  A proper evaluation would involve deploying Think Link either
+  internally within the corporate intranet or externally in the public
+  internet and looking at usage patterns.  I am not convinced with the
+  findings of the evaluation in its current form.
+
+I think the paper can be better organized for readability. The 'First
+  Study' seems to be a pilot study and the 'Second study' the actual user
+  study.  In the results section it is difficult to parse which findings
+  are from the first study and which are from the second.  Since the first
+  study informed the eventual design of Think Link, perhaps starting from
+  there and discussing how the prototype evolved would tell a better story.
+
+ Second, and the reason why the first concern is so important, is that
+  that prior literature floundered on the usability of those apps.  I like
+  the app in this paper, and I find it charming to see DR systems return.
+  However, the evaluation in this paper is fairly superficial (two small
+  user studies with limited rationale maps).  It may be that the authors
+  have created a truly usable DR application here.  That would be
+  wonderful.  However, I wonder how usable it is when it scales indeed to
+  the "web of factual claims."
+
+RESPONSE:
+
+Cite prior work about usability. Talk about how this is used differently.
+   Very lightweight model for finding conflicting things, rather than a detailed 
+	argument organizer.
+   We don't want to flesh out every detail or an argument in small nodes, but to 
+	show you where the other important documents are.
+
+Mention that would need to deploy widely in the field to see how well it really works. Position the user studies as being exploratory. Have it up and live and invite people to try it out???
+
+Present as a "series of studies" rather than separating?
+
+Do further user studies?
+Do a mechanical Turk deployment of a system that works better?
+	Turk task of finding web pages that make a controversial statement?
+		Not a real user study.
+
+
+-- Scalability Issues --
+
+I am also concerned with the scalability of the interface when it is
+  deployed to a large audience, which would be the ultimate goal of Think
+  Link.  The more controversial an issue, the more claims it will generate
+  and the more important it will be to present all of this information
+  succinctly to users without creating information overload.
+
+I liked the collaborative filtering aspects of Think Link.  However, I
+  did not see any evaluation of this interesting aspect.  Surprisingly, the
+  last paragraph of the user study section mentions this as future work,
+  whereas this was introduced as a feature when discussing the design of
+  the Think Link system.
+
+
+RESPONSE:
+  Talk about voting to keep the number of core points small and to merge things together.
+
+
+-- Icon Clarity --
+
+The icons in Figure 5 are hard to tell apart.  The icon for a claim that
+  is voted for looks exactly the same as neither supported or opposed.
+  This is also a weakness of the visual aspect of the tool.
+
+RESPONSE:
+  Need to make icons different in black and white.
+	Not just different icon color.
+	Contentious - exclamation
+	Not contentious - lightbulb
+
+-- study with remote users --
+
+Can I get a study working with remote users?
+	- Mechanical Turk. Can I make it work well?
+		
+
+-- Other comments --
+
+In my mind, the
+  experience of stumbling upon a webpage with Think Link is akin to
+  highlights and annotations found in a second hand book marked by its
+  previous owner(s), except Think Link integrates from multiple sources.
+
+Organize figure placement better. 
+
+"Why people annotate" is out of place.
+
+Various typos.
+
+-- key UI changes in new version --
+
+Not required to immediately file.
+Has "related" option between snippets.
+
+Three relations:
+	relates, supports, opposes.
+		Snippets support statements.
+			Vote up and down based on interest.
+	Snippets relate to topics.
+	Claims relate to topics.
+	Snippets relate to claims.
+	Snippets support/oppose claims.
+	Claims support/oppose claims.
+	Topics relate to topics.
+
+Special relations:
+	Opposite to.
+	Same as.	
+
+
+-- Key actions needed --
+
+Rewrite the paper in the light of the CHI reviews.
+
+*then* make the UI changes that this motivates.
+*then* do a further user study, if I can...
+
+
+-- What is motivated by the better writeup --
+
+Importance of filing things quickly?
+	Can briefly alude to it.
+
+Idea of a gang of people who go round web sites finding things that they disagree with.
+	Talk about future plans for tools that help people find these things.
+	At present a matter of googling and then marking.
+	Usage model: 
+		* Find something you disagree with.
+		* Google for things that say what you disagree with
+		* Crawl all over the site, saying why you think things are wrong
+
+
+
+
+
+
+
+
+
+
