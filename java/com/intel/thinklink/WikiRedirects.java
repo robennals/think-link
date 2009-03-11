@@ -23,8 +23,8 @@ public class WikiRedirects {
 		
 		try{
 			HashMap<String,String> links = new HashMap<String,String>();
-			BufferedReader reader = WikiKeywordiness.openInFile(wikifile);
-			BufferedWriter writer = WikiKeywordiness.openOutFile(outfile);
+			BufferedReader reader = Util.openInFile(wikifile);
+			BufferedWriter writer = Util.openOutFile(outfile);
 			
 			boolean inbody = false;
 			String line;

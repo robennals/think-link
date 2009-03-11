@@ -14,7 +14,7 @@ public class WikiApplyRedirects {
 
 	public static HashMap<String,String> loadRedirects() throws Exception{
 		HashMap<String,String> h = new HashMap<String,String>();
-		BufferedReader reader = WikiKeywordiness.openInFile(redirectfile);
+		BufferedReader reader = Util.openInFile(redirectfile);
 		String line;
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf("->");
@@ -31,7 +31,7 @@ public class WikiApplyRedirects {
 	
 	public static HashMap<String,Integer> loadAndMergeLinks(HashMap<String,String> redirects) throws Exception{
 		HashMap<String,Integer> linkmap = new HashMap<String,Integer>();
-		BufferedReader reader = WikiKeywordiness.openInFile(linkfile);
+		BufferedReader reader = Util.openInFile(linkfile);
 		String line;
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
@@ -82,7 +82,7 @@ public class WikiApplyRedirects {
 			HashMap<String,Integer> links = loadAndMergeLinks(redirects);
 			out("saving");
 			Set<String> keys = links.keySet();
-			Writer writer = WikiKeywordiness.openOutFile(outfile);
+			Writer writer = Util.openOutFile(outfile);
 			for(String key : keys){
 				writer.append(key+":"+links.get(key)+"\n");
 			}

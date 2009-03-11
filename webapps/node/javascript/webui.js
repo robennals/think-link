@@ -274,17 +274,21 @@ function makeDragItem(obj,label){
 
 	var tdvote = $("<td/>").appendTo(tr);
 
+	var votebox = $("<nobr/>").attr("class","votebox").appendTo(tditem);
+
 	var up = $("<img/>").attr("src",urlbase+"/images/vote_up_e.png")
 		.attr("title","Promote")
+		.attr("class","votebutton")
 		.mouseover(function(){up.attr("src",urlbase+"/images/vote_up_on.png")})
 		.mouseout(function(){up.attr("src",urlbase+"/images/vote_up_e.png")})
-		.appendTo(tdvote);
+		.appendTo(votebox);
 		
 	var down = $("<img/>").attr("src",urlbase+"/images/vote_down_e.png")
 		.attr("title","Remove")
+		.attr("class","votebutton")
 		.mouseover(function(){down.attr("src",urlbase+"/images/vote_down_on.png")})
 		.mouseout(function(){down.attr("src",urlbase+"/images/vote_down_e.png")})
-		.appendTo(tdvote);
+		.appendTo(votebox);
 
 
 	if(thinklink_user_id == obj.user){
@@ -403,7 +407,7 @@ function makeSnippet(snippet,bossmode){
 		"<table class='dragtable'>"
 			+"<tr><td><img/></td><td><div class='snipbody'/></td></tr>"
 		+"</table>").appendTo(holder);	
-	var img = $("<img/>").attr("src",urlbase+"/images/application_go.png");
+//	var img = $("<img/>").attr("src",urlbase+"/images/application_go.png");
 	table.find("img").attr("src",urlbase+"/images/comment.png");
 	var snipbody = table.find(".snipbody");
 	var sniptext = $("<div class='sniptext'/>")
@@ -413,7 +417,7 @@ function makeSnippet(snippet,bossmode){
 		
 	$("<a class='snippet_url'/>").text(trim_string(snippet.info.title,40) + " - "+trim_url(url))
 		.attr("href",realurl).attr("target","_blank")
-		.append(img)
+	//	.append(img)
 		.appendTo(table.find(".snipbody"));
 
 	
@@ -538,12 +542,13 @@ function makeSubItems(div,obj){
 	}
 	
 	for(var i = 0; i < verbs.length; i++){
-		var verb = verbs[i];		
+		var verb = verbs[i];	
+		var reltitle = null;	
 		var newicon = $("<img class='newthing' src='"+urlbase+
 			"/images/add.png' onclick='newThing(this,"+obj.id+
 			",\""+verb+"\",\""+obj.type+"\")'/>");
 		if(verb != "colitem"){
-			var reltitle = $("<div class='relationtitle'/>")
+			reltitle = $("<div class='relationtitle'/>")
 				.attr("tl_verb",verb)
 				.text(invertVerb(verb,obj.text,obj.type))
 				.appendTo(div);	
@@ -580,13 +585,16 @@ function makeSubItems(div,obj){
 		}
 		
 		if(empty){
-			var empty = $("<div class='empty'>empty</div>")
-				.attr("tl_verb",verb)
-				.mouseover(function(ev){dragEmptyOver(ev,this,obj.id)})
-				.mouseout(function(ev){dragEmptyOut(ev,this,obj.id)})
-				.mouseup(function(ev){dragEmptyCapture(ev,this,obj.id)});
+			if(reltitle){
+				reltitle.remove();
+			}
+			//var empty = $("<div class='empty'>empty</div>")
+				//.attr("tl_verb",verb)
+				//.mouseover(function(ev){dragEmptyOver(ev,this,obj.id)})
+				//.mouseout(function(ev){dragEmptyOut(ev,this,obj.id)})
+				//.mouseup(function(ev){dragEmptyCapture(ev,this,obj.id)});
 				
-			$(div).append(empty);
+			//$(div).append(empty);
 		}				
 	}
 }
@@ -818,8 +826,14 @@ function goBack(idnum){
 		var div = findDivWithId(idnum,last);
 		if(div){
 			selectItem(div,last);
-		}else{		
-			$.getJSON(urlbase+"/node/"+last+".js?callback=?",{},function(obj){
+		}else{	
+			var url; 	
+			if(last.indexOf(".js") != -1){
+				url = urlbase+"/node/"+last+"&callback=?";
+			}else{
+				url = urlbase+"/node/"+last+".js&callback=?";
+			}
+			$.getJSON(url,{},function(obj){
 				loadObject(idnum,obj);
 			})
 		}

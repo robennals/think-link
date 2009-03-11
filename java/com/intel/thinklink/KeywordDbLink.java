@@ -15,7 +15,7 @@ public class KeywordDbLink {
 		try{
 			base = ConnectionPool.get();
 			System.out.println("loading keywords");
-			BufferedWriter w = WikiKeywordiness.openOutFile(outfile);
+			BufferedWriter w = Util.openOutFile(outfile);
 			HashMap<String,WikiMatch[]> keywordmap = WikiMatcher.loadMatchers();
 
 			System.out.println("linking to database");

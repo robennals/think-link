@@ -52,7 +52,7 @@ public class NodeServlet extends HttpServlet {
 		m = createPath.matcher(path);
 		if(m.find()){
 			int id = base.addNode(req.getParameter("text"),userid,
-					base.int_for_type(req.getParameter("type")),"");
+					req.getParameter("type"),"");
 			out.append(""+id);
 			return;
 		}
@@ -61,7 +61,7 @@ public class NodeServlet extends HttpServlet {
 			base.addLink(
 				Integer.parseInt(req.getParameter("subject")), 
 				Integer.parseInt(req.getParameter("object")), 
-				base.int_for_verb(req.getParameter("verb")));
+				req.getParameter("verb"));
 		}
 	}
 

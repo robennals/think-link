@@ -42,7 +42,7 @@ public class WikiMatcher {
 	
 	public static HashMap<String,WikiMatch[]> loadMatchers() throws Exception {
 		HashMap<String,WikiMatch[]> keywordmap = new HashMap<String,WikiMatch[]>();
-		BufferedReader reader = WikiKeywordiness.openInFile(infile);
+		BufferedReader reader = Util.openInFile(infile);
 		String line;
 		
 		WikiMatch[] dummy = new WikiMatch[0];

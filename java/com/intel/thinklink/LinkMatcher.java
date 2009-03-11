@@ -41,7 +41,7 @@ public class LinkMatcher {
 
 	public static HashMap<String,LinkMatch[]> loadLinkMatchers() throws Exception {
 		HashMap<String,LinkMatch[]> keywordmap = new HashMap<String,LinkMatch[]>();
-		BufferedReader reader = WikiKeywordiness.openInFile(linkfile);
+		BufferedReader reader = Util.openInFile(linkfile);
 		String line;
 		
 		LinkMatch[] dummy = new LinkMatch[0];

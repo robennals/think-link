@@ -6,6 +6,8 @@
 \usepackage{graphics}
 \usepackage{color}
 
+\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
+
 \begin{document}
 
 % --- Copyright notice ---
@@ -62,37 +64,18 @@ User Interfaces. - Graphical user interfaces.}
 
 \section{INTRODUCTION}
 
-The web provides users with a huge number of pages that they can read, but extracting accurate and balanced information from these pages can be difficult. Not everything on the web is accurate~\cite{Mintz2002,Neumann2003,Resnik98,Zhou2004} and many web sites have a strong political bias~\cite{Herman2002,Genzkow2007}. If a user is to form a rounded opinion about a topic then they will need to either stick to sources that they trust or spend time looking for evidence on other web sites that supports or opposes what they read. Even if a user tries hard to research every topic they read, they can still get caught out by beliefs that they had not realised were disputed.
+The web provides users with a huge number of pages that they can read, but extracting accurate and balanced information from these pages can be difficult. Not everything on the web is accurate~\cite{Mintz2002,Neumann2003,Resnik1998,Zhou2004} and many web sites have a strong political bias~\cite{Herman2002,Gentzkow2007}. If a user is to form a rounded opinion about a topic then they will need to either stick to sources that they trust or spend time looking for evidence on other web sites that supports or opposes what they read. Even if a user tries hard to research every topic they read, they can still get caught out by beliefs that they had not realised were disputed.
 
-In this paper we present DisagreeWeb, a tool helps users discover when information they read is disputed or presents only one side of a contentious issue. We hope that DisagreeWeb will make it easier for users to be be aware of points of view that contradict with those that they usually encounter.
+In this paper we present DisagreeWeb, a tool helps users discover when information they read is disputed or presents only one side of a contentious issue. When DisagreeWeb is used as a browser plugin it will highlight text that makes a disputed claim. If a user clicks on such a highlighted snippet then DisagreeWeb presents the user with an argument graph that shows the best evidence for and against the claim, as judged by other users of DisagreeWeb (Figure~\ref{claimview}). The argument graph contains links to snippets of text on other web sites that express conflicting or supporting points of view.
 
-When DisagreeWeb is used as a browser plugin it will highlight text on web pages that expresses or implies a disputed claim. If a user clicks on such a highlighted snippet then DisagreeWeb presents the user with a visualization of an argu
+DisagreeWeb relies on users to identify disputed claims, to find appearances of these claims on web sites, and to vote for which snippets are most important.
 
-visualization that shows the user the best evidence for and against the claim, as judged by other users of DisagreeWeb.
+\want{Seeded with all claims from Snopes}.
+\want{Seeded with all contentious claims identified in the three months on FactCheck.org}
+\want{Tested with hundreds of users}.
+\want{Tested with real users and found took N seconds on average to identify and categorize snippets}
 
-
-
-
-
-
-that shows users when the information that they read conflicts with information available on other sources.
-
-D
-
- DisagreeWeb is implemented as a browser extension 
-
-
-
-aims to let users see when the information they are reading conflicts with information from other sources.
-
-DisagreeWeb is implemented as a browser extension. 
-
-
-The web suffers from filter failure~\cite{Shirky2008}. 
-
-
-
-Part of the problem is that conventional web browsers present the web as a network of connected pages, when it is often the case that what the user is really interested in is the factual claims made by those pages, and the connections between those claims. While a web page will typically contain links to other articles, these typically only reference a small proportion of the other pages that discuss the topic, and are unlikely to include sources that disagree with the author. The best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The root of the problem is that the web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for users to add knowledge to the web, it makes it hard for users to collate all the knowledge available on a topic.
+DisagreeWeb layers an argumentation graph over the existing web. 
 
 \begin{figure}[tb]
 	\begin{center}
@@ -102,14 +85,7 @@ Part of the problem is that conventional web browsers present the web as a netwo
 	\end{center}
 \end{figure}
 
-% \begin{figure}[tb]
-% %	\begin{center}
-%  	\includegraphics[width=6cm]{../screenshots/claim_popup_crop2.png}
-%  	\caption{Click on a claim to investigate evidence for and against it}
-%  	\label{claimview}
-% 	\end{center}
-% \end{figure}
-
+\section{RELATED WORK}
 
 
 \section{HIGHLIGHTING CONTROVERSIAL CLAIMS}

@@ -17,8 +17,11 @@ require 'find'
 	#end
 #end
 
+def tidy_text(s)
+	return s.gsub(/^s*\?\s*/,"").gsub(/[\n\r]/,"").gsub("&nbsp;"," ").gsub(/\s+/," ")
+end
 
-outfile = File.new("snopesclaims.csv","w")
+outfile = File.new("snopesclaims_text.csv","w")
 
 Find.find("/home/rob/Reference/Crawls/www.snopes.com") do |path|
 	next if FileTest.directory? path
@@ -27,12 +30,28 @@ Find.find("/home/rob/Reference/Crawls/www.snopes.com") do |path|
 	status = doc.search("//font[@color='#2D8F26']/b[text()*='Status']")
 	next if claim.length != 1 
 	next if status.length != 1
+	next if path.include? "print=y"
 	
-	claimtext = claim[0].parent.next.to_s.gsub(/^\s*\?\s*/,"").gsub(/[\n\r]/,"")
+	claimtext = ""
+	node = claim[0].parent.next;
+	while(node) do
+		break if !node.search("font").empty?
+		break if !node.text? && !node.comment? && node.name == "font"
+		claimtext += node.search("text()").to_s
+		node = node.next
+	end
+	claimtext = tidy_text claimtext
+	
+#	claimtext = claim[0].parent.next.to_s.gsub(/^\s*\?\s*/,"").gsub(/[\n\r]/,"")
+	
 	statustext = status[0].parent.next.next.search("text()").to_s.gsub(/\./,"")
 	
+	bodytext = doc.search("//font[@size='3']/div/text()").map{|node| node.to_s}.join " "
+	bodytext = tidy_text(bodytext)
+	url = path.gsub("/home/rob/Reference/Crawls/","http://")
+	
 	puts "#{claimtext}\t#{path}\t#{statustext}"
-	outfile.puts "#{path}\t#{statustext}\t#{claimtext}"
+	outfile.puts "#{url}\t#{statustext}\t#{claimtext}\t#{bodytext}"
 end
 
 outfile.close

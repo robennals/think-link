@@ -57,7 +57,7 @@ public class WikiCountLinks {
 				
 		try{
 			HashMap<String,Integer> links = new HashMap<String,Integer>();
-			BufferedReader reader = WikiKeywordiness.openInFile(wikifile);
+			BufferedReader reader = Util.openInFile(wikifile);
 			HashSet<String> done = new HashSet<String>();
 			
 			boolean inbody = false;

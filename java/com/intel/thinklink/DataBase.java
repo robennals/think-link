@@ -1,16 +1,13 @@
 package com.intel.thinklink;
 
 import java.net.URLEncoder;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Vector;
 
 class JSONString{
@@ -20,123 +17,6 @@ class JSONString{
 	}
 }
 
-/**
- * Dyn is not efficient. Replace with static stuff when it matters.
- * @author rob
- *
- */
-class Dyn{
-	HashMap<String,Object> map = new HashMap<String,Object>(); 	
-
-	Dyn(HashMap v){
-		map = v;
-	}
-	Dyn(){
-	}
-	
-	void put(String key,Object o){
-		map.put(key, o);
-	}
-	void putJSON(String key, String s){
-		map.put(key, new JSONString(s));
-	}
-	void setJSON(String key){
-		putJSON(key,getString(key));
-	}
-	String get(String key){
-		return (String)map.get(key);
-	}
-	Dyn getDyn(String key){
-		return (Dyn)map.get(key);
-	}
-	Vector<Dyn> getVec(String key){
-		return (Vector<Dyn>)map.get(key);
-	}
-	String getString(String key){
-		return (String)map.get(key);
-	}
-	int getInt(String key){
-		return (Integer)map.get(key);
-	}
-	void remove(String key){
-		map.remove(key);
-	}
-	
-	static Dyn one(ResultSet res) throws SQLException{
-		res.next();
-		Dyn d = dyn(res);
-		res.close();
-		return d;
-	}
-	
-	static Dyn dyn(ResultSet res) throws SQLException{
-		Dyn dyn = new Dyn();
-		ResultSetMetaData meta = res.getMetaData();
-		int numcolumns = meta.getColumnCount();
-		for(int i = 1; i <= numcolumns; i++){
-			dyn.put(meta.getColumnLabel(i), res.getObject(i));
-		}
-		return dyn;
-	}
-	
-	static Vector<Dyn> list(ResultSet res) throws SQLException{
-		Vector<Dyn> vec = new Vector<Dyn>();
-		while(res.next()){
-			Dyn d = Dyn.dyn(res);
-			vec.add(d);
-		}
-		res.close();
-		return vec;
-	}
-	
-	static String toJSON(Object o){
-		if(o instanceof String){
-			return "\"" + Util.escape((String)o) + "\"";
-		}else if(o instanceof Vector){
-			Vector v = (Vector)o;
-			if(v.size() == 0) return "[]";
-			StringBuffer buf = new StringBuffer();
-			for(Object el : v){
-				if(buf.length() == 0){
-					buf.append("[");
-				}else{
-					buf.append(",");
-				}
-				buf.append(toJSON(el));
-			}
-			buf.append(']');
-			return buf.toString();				
-		}else if(o instanceof JSONString){
-			JSONString js = (JSONString)o;
-			if(js.s != null && js.s.length() != 0){
-				return ((JSONString) o).s;
-			}else{
-				return "{}";
-			}
-		}else if(o instanceof Dyn){
-			Dyn d = (Dyn)o;
-			Set<String> keys = d.map.keySet();
-			if(keys.size() == 0) return "{}";
-			StringBuffer buf = new StringBuffer();
-			for(String key : keys){
-				if(buf.length() == 0){
-					buf.append('{');
-				}else{
-					buf.append(',');
-				}
-				buf.append("\""+Util.escape(key)+"\"" + ':' + toJSON(d.map.get(key)));
-			}
-			buf.append('}');			
-			return buf.toString();
-		}else{
-			return o.toString();
-		}
-	}
-	
-	String toJSON(){
-		return toJSON(this);
-	}
-}
 
 /** really simple connection pool that just grows on demand */
 class ConnectionPool{
@@ -192,13 +72,15 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_info = con.prepareStatement("SELECT * FROM v2_node WHERE id = ?");
-	ResultSet get_info(int id,int userid) throws SQLException{
+	Dyn get_info(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
+		Dyn node = Dyn.one(get_info.executeQuery());
+		node.setJSON("info");
 		logRecent(userid,id);
-		return get_info.executeQuery();
+		return node;
 	}
 		
-	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,v2_node.type AS type, "+
+	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
@@ -207,7 +89,7 @@ public class DataBase {
 		return get_links_to.executeQuery();
 	}
 	
-	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,v2_node.type AS type, "+
+	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
@@ -233,7 +115,7 @@ public class DataBase {
 	Dyn getRecent(int userid) throws SQLException{
 		get_recent.setInt(1, userid);
 		ResultSet items = get_recent.executeQuery();
-		return makeObject("recent","History of Recent Browsing","recent",items);
+		return makeObject("recent.js","History of Recent Browsing","recent",items);
 	}
 	
 	private PreparedStatement log_recent = con.prepareStatement(
@@ -251,15 +133,15 @@ public class DataBase {
 	Dyn getNewSnips(int userid) throws SQLException{
 		get_newsnips.setInt(1, userid);
 		ResultSet items = get_newsnips.executeQuery();
-		return makeObject("newsnips","Your Unfiled Snippets","newsnips",items);
+		return makeObject("newsnips.js","Your Unfiled Snippets","newsnips",items);
 	}
 	
 	private PreparedStatement search_stmt = con.prepareStatement(
-			"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) LIMIT 100");
+			"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) AND (type='claim' OR type='topic') LIMIT 100");
 	Dyn search(String query) throws SQLException{
 		search_stmt.setString(1, query);
 		ResultSet items = search_stmt.executeQuery();
-		return makeObject("search?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
 	
 	private PreparedStatement url_snippets = con.prepareStatement(
@@ -280,10 +162,10 @@ public class DataBase {
 	private PreparedStatement add_node = con.prepareStatement(
 			"INSERT INTO v2_node (text,user_id,type,info,opposed,avg_order) VALUES (?,?,?,?,0,'')",
 			Statement.RETURN_GENERATED_KEYS);
-	int addNode(String text,int user_id,int type,String info) throws SQLException{
+	int addNode(String text,int user_id,String type,String info) throws SQLException{
 		add_node.setString(1,text);
 		add_node.setInt(2, user_id);
-		add_node.setInt(3, type);
+		add_node.setString(3, type);
 		add_node.setString(4,info);
 		return execWithKey(add_node);
 	}
@@ -292,12 +174,12 @@ public class DataBase {
 		"INSERT INTO v2_snippet (url_prefix,node_id,page_text) VALUES (?,?,?)");
 	private PreparedStatement add_newsnip = con.prepareStatement(
 		"INSERT INTO v2_newsnips (user_id,node_id) VALUES (?,?)");
-	void addSnippet(int userid, String text, String url, String realurl, String title, String pagetext) throws SQLException{
+	int addSnippet(int userid, String text, String url, String realurl, String title, String pagetext) throws SQLException{
 		Dyn info = new Dyn();
 		info.put("title", title);
 		info.put("url",url);
 		info.put("realurl",realurl);
-		int nodeid = addNode(text,userid,SNIPPET,Dyn.toJSON(info));
+		int nodeid = addNode(text,userid,"snippet",Dyn.toJSON(info));
 
 		if(pagetext == null){
 			pagetext = "";
@@ -311,15 +193,37 @@ public class DataBase {
 		add_newsnip.setInt(1,userid);
 		add_newsnip.setInt(2,nodeid);
 		add_newsnip.executeUpdate();
-	}
 		
+		return nodeid;
+	}
+	
+	private PreparedStatement update_opposed_on = con.prepareStatement(
+	 "UPDATE v2_node SET opposed = true WHERE id IN (SELECT DISTINCT (dst) FROM `v2_link` WHERE TYPE = 'opposes')");
+	private PreparedStatement update_opposed_off = con.prepareStatement(
+	 "UPDATE v2_node SET opposed = false WHERE NOT id IN (SELECT DISTINCT (dst) FROM `v2_link` WHERE TYPE = 'opposes')");
+	void updateOpposed() throws SQLException{
+		update_opposed_on.executeUpdate();
+		update_opposed_off.executeUpdate();
+	}
+	
+	private PreparedStatement set_opposed = con.prepareStatement(
+			"UPDATE v2_node SET opposed = ? WHERE id = ?");
+	void setOpposed(int id, boolean val) throws SQLException {
+		set_opposed.setBoolean(1, val);
+		set_opposed.setInt(2,id);
+		set_opposed.executeUpdate();
+	}
+	
 	private PreparedStatement add_link = con.prepareStatement(
 			"INSERT INTO v2_link (src,dst,type) VALUES (?,?,?)");
-	void addLink(int src, int dst, int type) throws SQLException{
+	void addLink(int src, int dst, String verb) throws SQLException{
 		add_link.setInt(1,src);
 		add_link.setInt(2,dst);
-		add_link.setInt(3,type);
+		add_link.setString(3,verb);
 		add_link.executeUpdate();
+		if(verb.equals("opposes")){
+			setOpposed(dst,true);
+		}
 	}
 	
 	static final int NOTHING = 0;
@@ -346,8 +250,7 @@ public class DataBase {
 			
 	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
 		Dyn tomap = new Dyn();
-		tomap.put("colitem", map_types(Dyn.list(children)));
-
+		tomap.put("colitem", Dyn.list(children,"info"));
 		Dyn d = new Dyn();
 		d.put("id", id);
 		d.put("text", text);
@@ -367,8 +270,7 @@ public class DataBase {
 	}
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
-		Dyn d = Dyn.one(get_info(id,userid));
-		map_info(d);
+		Dyn d = get_info(id,userid);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
 		if(userid != 0){
@@ -376,80 +278,19 @@ public class DataBase {
 		}
 		return d;
 	}
-
 	
-	String verb_for_int(int i){
-		switch(i){ 
-			case 1: return "relates to";
-			case 2: return "supports";
-			case 3: return "opposes";
-			case 4: return "states";
-			case 5: return "about";
-			case 6: return "refines";
-			case 7: return "created by";
-		}
-		return null;
-	}
-	
-	int int_for_verb(String s){
-		if(s.equals("relates to")) return 1;
-		if(s.equals("supports")) return 2;
-		if(s.equals("opposes")) return 3;
-		if(s.equals("states")) return 4;
-		if(s.equals("about")) return 5;
-		if(s.equals("refines")) return 6;
-		if(s.equals("created by")) return 7;
-		return 0;
-	}
-	
-	static final int TOPIC = 1;
-	static final int CLAIM = 2;
-	static final int SNIPPET = 3;
-	static final int USER = 4;
-	
-	String type_for_int(int i){
-		switch(i){
-		case 1: return "topic";
-		case 2: return "claim";
-		case 3: return "snippet";
-		case 4: return "user";
-		}
-		return null;
-	}
-	
-	int int_for_type(String s){
-		if(s.equals("topic")) return 1;
-		if(s.equals("claim")) return 2;
-		if(s.equals("snippet")) return 3;
-		if(s.equals("user")) return 4;
-		return 0;
-	}
-	
-	Dyn map_info(Dyn d){
-		d.put("type",type_for_int(d.getInt("type")));
-		d.setJSON("info");
-		return d;
-	}
-	
-	Vector<Dyn> map_types(Vector<Dyn> els){
-		for(Dyn d : els){
-			map_info(d);
-		}
-		return els;
-	}
-		
 	Dyn map_links(Vector<Dyn> links){
 		HashMap<String,Vector<Dyn>> hsh = new HashMap<String,Vector<Dyn>>();
 		for(Dyn d : links){
-			String verb = verb_for_int(d.getInt("linktype"));
-			d.remove("linktype");
+			String verb = d.getString("linktype");
 			if(!hsh.containsKey(verb)){
 				hsh.put(verb, new Vector<Dyn>());
 			}
-			map_info(d);
+			d.setJSON("info");
 			hsh.get(verb).add(d);
 		}
 		return new Dyn(hsh);
 	}
+	
 }
 

@@ -137,7 +137,13 @@ a img {
 	vertical-align: top;
 }
 
+.votebutton {
+	vertical-align: bottom;
+}
 
+.votebox {
+	padding-left: 3px;
+}
 
 .dragtable tr td {
 	vertical-align: top;

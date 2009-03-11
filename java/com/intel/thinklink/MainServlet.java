@@ -26,7 +26,8 @@ public class MainServlet extends HttpServlet {
 			DataBase base = ConnectionPool.get();
 			try{
 				Dyn snippet = base.getSnippet(id);
-				String text = snippet.get("text") + " " + snippet.get("text") + " "+ snippet.get("page_text");
+				String sniptext = snippet.get("text");
+				String text = sniptext + " " + sniptext + " " + sniptext + " " + sniptext+ " " + sniptext + " " + snippet.get("page_text");
 				Vector<WikiMatch> matches = WikiMatcher.getMatches(text); 
 				matches = WikiMatcher.sumMatches(matches);
 				

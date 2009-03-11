@@ -2,10 +2,6 @@ package com.intel.thinklink;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,24 +20,9 @@ public class WikiKeywordiness {
 	static String freqfile = prefix+"java_wordfreqs_once";
 	static String outfile = prefix+"java_keywordiness_once";
 	
-	public static BufferedReader openInFile(String s) throws Exception{
-		return new BufferedReader(
-				new InputStreamReader(
-						new FileInputStream(s)
-						));
-	}
-	
-	public static BufferedWriter openOutFile(String s) throws Exception{
-		return new BufferedWriter(
-				new OutputStreamWriter(
-						new FileOutputStream(s)
-						));
-	}
-	
-	
 	public static HashMap<String,Integer> loadUseFreqs() throws Exception{
 		HashMap<String,Integer> h = new HashMap<String,Integer>();
-		BufferedReader reader = openInFile(freqfile);
+		BufferedReader reader = Util.openInFile(freqfile);
 		String line;
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
@@ -54,7 +35,7 @@ public class WikiKeywordiness {
 
 	public static HashMap<String,Float> loadMapFreqs(HashMap<String,Integer> usefreqs) throws Exception{
 		HashMap<String,Float> keywordmap = new HashMap<String,Float>();
-		BufferedReader reader = openInFile(gatherfile);
+		BufferedReader reader = Util.openInFile(gatherfile);
 		String line;
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
@@ -81,7 +62,7 @@ public class WikiKeywordiness {
 	}
 	
 	public static void outputHash(Vector<String> keys, HashMap<String,Float> hsh) throws Exception{
-		BufferedWriter w = openOutFile(outfile);
+		BufferedWriter w = Util.openOutFile(outfile);
 		for(String key : keys){
 			w.append(key+":"+hsh.get(key)+"\n");
 		}
