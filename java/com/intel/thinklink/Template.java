@@ -8,8 +8,33 @@ public class Template {
 	}
 	
 	static PrintWriter w;
-		
+
 	static void doTopTemplate(PrintWriter writer,String username,int userid, Dyn panela, Dyn panelb){
+		w = writer;
+		p("	<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
+		p("	\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+		p("	<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+		p("		<head>");
+		p("			<meta http-equiv=\"Content-Type\" content=\"text/html;.");
+		p("			charset=iso-8859-1\" />");
+		p("			<meta http-equiv=\"Content-Language\" content=\"en-us\" />");
+		p("			<title>Think Link</title>");
+		p("			<link href=\"/thinklink/stylesheets/leftright.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />");
+		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.js\"></script>");
+		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
+		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/leftrightui.js\"></script>");
+		p("      </head>");
+		p("		<body id=\"body\">");
+		p("			<div id='container'></div>");
+		p("			<script type='text/javascript'>");
+		p("			var urlbase = '/thinklink/';");
+		p("			makeOrgUI('container');");
+		p("			</script>");
+		p("     </body>");
+		p("</html>");
+	}
+	
+	static void doTopTemplateOld(PrintWriter writer,String username,int userid, Dyn panela, Dyn panelb){
 		w = writer;
 p("		<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
 p("		\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -86,9 +111,10 @@ p("		var thinklink_user_id = "+userid+";");
 p("		var thinklink_deletes = make_hash([]);");
 p("		var thinklink_bookmarks = make_hash([]);");
 p("		var urlbase = '/thinklink/';");
+p("		var thinklink_organizer = true;");	
 p("");
-p("		makeArgBrowseFrame(\"browser1\","+Dyn.toJSON(panela)+");");
-p("		makeArgBrowseFrame(\"browser2\","+Dyn.toJSON(panelb)+");");
+p("		makeArgBrowseFrame(\"browser1\","+Dyn.toJSON(panela)+",null,null,0);");
+p("		makeArgBrowseFrame(\"browser2\","+Dyn.toJSON(panelb)+",null,null,1);");
 p("");
 p("		doResize();");
 p("		window.addEventListener(\"resize\",doResize,true);");
@@ -127,6 +153,7 @@ p("		</div>");
 p("");
 p("		<script type=\"text/javascript\">");
 p("		var urlbase = '/thinklink/';");
+p("		var thinklink_organizer = false;");	
 p("		var thinklink_user_id = "+userid+";");
 p("		var thinklink_deletes = make_hash([]);");
 p("		var thinklink_bookmarks = make_hash([]);");

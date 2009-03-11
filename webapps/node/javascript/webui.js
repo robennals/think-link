@@ -90,11 +90,11 @@ function makeSpacer(){
 	return $("<div class='dragspacer'>spacer</div>");
 }
 
-function makeArgBrowseFrame(divid,obj,height,title){
+function makeArgBrowseFrame(divid,obj,height,title,idnum){
 	if (!title){
 		title = "Claim Browser";
 	}
-	var idnum = getId();
+//	var idnum = getId();
 	var browser = $("#"+divid)
 		.attr("class","browsetable")
 		.attr("id","browser-"+idnum)
@@ -110,7 +110,6 @@ function makeArgBrowseFrame(divid,obj,height,title){
 	var table = $("<table class='browsetitle'/>")
 		.css("width","100%").appendTo(h2);
 	var row = $("<tr/>").appendTo(table);
-//	$("<img src='"+urlbase+"/images/resultset_previous.png'/>").appendTo(row);
 	$("<td class='browsetitle'>"+title+"</td>").appendTo(row);
 	var buttons = $("<td class='browsebuttons'/>").appendTo(row);
 	$("<nobr class='browsebutton'>back</nobr>").appendTo(buttons)
@@ -127,8 +126,6 @@ function makeArgBrowseFrame(divid,obj,height,title){
 			ev.preventDefault();
 
 				recentMode(idnum)});
-//	$("<nobr class='browsebutton'>hot</nobr>").appendTo(buttons)
-//		.click(function(){hotMode(idnum)});
 	$("<a class='browsebutton'>unattached</a>").appendTo(buttons)
 		.attr("href",urlbase+"/node/newsnips")
 		.attr("id","newsnips-"+idnum)
@@ -149,14 +146,7 @@ function makeArgBrowseFrame(divid,obj,height,title){
 			
 	$("<a class='browsebutton'>feed</a>").appendTo(buttons)
 		.attr("id","feed-"+idnum)
-		.attr("target","_blank");
-
-//	$("<a/>").append($("<img/>")
-//		.attr("src",urlbase+"/images/feed.png")).appendTo(buttons);
-		
-
-//	$("<nobr class='browsebutton'>mine</nobr>").appendTo(buttons)
-//		.click(function(){mineMode(idnum)});
+		.attr("target","_blank");	
 		
 	makeInnerBrowser(idnum,box,obj,height);
 }
@@ -890,8 +880,6 @@ function selectItem(div,id){
 		propholder.selectedDiv = dragitem;
 
 		loadItemInfo(idnum,id);				
-//		smoothReplace(url+"expand?"+params,"children-"+idnum);
-//		smoothReplace(url+"parents?"+params,"parents-"+idnum);
 		
 		if(children){
 			$(children).animate({height:'hide'},500,function(){
@@ -923,9 +911,6 @@ function selectItem(div,id){
 		});
 
 		loadItemInfo(idnum,id);				
-//				
-//		smoothReplace(url+"expand?"+params,"children-"+idnum);
-//		smoothReplace(url+"parents?"+params,"parents-"+idnum);
 		
 		propholder.selectedDiv = dragitem;
 		if(parents){
