@@ -23,6 +23,7 @@ public class Template {
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/leftrightui.js\"></script>");
+		p("			<script type='text/javascript' src='http://www.getfirebug.com/firebug/firebugx.js'></script>");
 		p("      </head>");
 		p("		<body id=\"body\">");
 		p("			<div id='container'></div>");

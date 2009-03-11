@@ -1,33 +1,37 @@
 
 var big_right_arrow = null;
+var panelbox = null;
+
 
 function makeOrgUI(divid){
-	var left = makePanel(0,"recent.js");
-	var right = makePanel(1);	
-	var arrow = makeArrow();
-	big_right_arrow = arrow;
-	$(document.body).append(left).append(right).append(arrow);
-
-	doLayout();
-	window.addEventListener("resize",doLayout,true);
+	panelbox = $("<tr class='panelbox'/>");
+	$(document.body).append($("<table class='toptable'>").append(panelbox));
 	
-	setTimeout(doLayout,100);
+	getPanel(0,"recent.js");
+	
+	//var arrow = makeArrow();
+	//big_right_arrow = arrow;
 }
 
-function doLayout(){
-	var width = window.innerWidth;	
-	var panelwidth = (width - 60)/2;
-	$("#panel-0").css("width",panelwidth);
-	$("#panel-1").css("width",panelwidth).css("left",panelwidth+50);
+function getPanel(panelnum,nodeid){
+	for(var i = panelnum; $("#panel-"+i).length != 0; i++){
+		$("#panel-"+i).remove();		
+	}
+	panel = makePanel(panelnum,nodeid);
+	panelbox.append(panel);
+}
 
-	if(selection){
-		moveArrow(selection);
-	}else{
-		moveArrow($("#panel-0"));
+function makeArrow(panelnum,item){
+	for(var i = panelnum; $("#arrow-"+i).length != 0; i++){
+		$("#arrow-"+i).remove();		
 	}
 
-	var height = window.innerHeight;
-	$(".panelbody").css("height",height - 50);
+	var pos = getPos(item.get(0));
+	var arrow = $("<td class='arrow'>")
+		.attr("id","arrow-"+panelnum)
+		.css("padding-top",pos.top + item.height()/2 - 40);
+	arrow.append($("<img/>").attr("src",iconUrl("big_right_arrow")));
+	return arrow;	
 }
 
 function moveArrow(){
@@ -39,43 +43,38 @@ function moveArrow(){
 	}
 	var pos = getPos(node.get(0));
 	var panel = $("#panel-0");
+	var panel2 = $("#panel-1");
 	var panpos = getPos(panel.get(0));
-	big_right_arrow.css('left',panpos.left + panel.width() + 2);
-	big_right_arrow.css('top',pos.top + node.height()/2 - big_right_arrow.height()/2);
+	//big_right_arrow.css('left',panpos.left + panel.width() + 2);
+	//big_right_arrow.css('top',pos.top + node.height()/2 - big_right_arrow.height()/2);
+	
+	//if(panel2.height() < pos.top + node.height()){
+		//panel2.css("top",pos.top + node.height() - panel2.height());
+	//}else{
+		//panel2.css("top",10);
+	//}
 }
 
-function makeArrow(){
-	var arrow = $("<img class='arrow'/>")
-		.attr("src",urlbase+"/images/big_right_arrow.png")
-		.css("position","absolute");
-	arrow.appendTo(document.body);
-	return arrow; 
-}
+//function makeArrow(){
+	//var arrow = $("<img class='arrow'/>")
+		//.attr("src",urlbase+"/images/big_right_arrow.png");
+////		.css("position","absolute");
+	//arrow.appendTo(document.body);
+	//return arrow; 
+//}
 
 
-function doResize(){
-	var nowheight = document.body.offsetHeight;
-	var wantheight = window.innerHeight;
-	var resizeBox = $(".panel_body");
-	var bodyheight = resizeBox.get(0).offsetHeight;
-	var pad = 20;
-	resizeBox.css("height",bodyheight + wantheight - nowheight - pad);
-	topheight = $(".helpmessage").get(0).offsetHeight + $(".browsetitle").get(0).offsetHeight;
-	resizeBox.css("height",window.innerHeight - topheight);
-}
-
-
-function makePanel(panelid,nodeid){
-	var panel = $("<div class='panel'/>").attr("id","panel-"+panelid);
+function makePanel(panelnum,nodeid){
+	var panel = $("<td class='panel'/>").attr("id","panel-"+panelnum);
 	if(nodeid){
-		loadObject(panel,nodeid);
+		loadObject(panel,nodeid,panelnum);
 	}else{
 		panel.append($("<div class='info'><h2>Browser Panel</h2><div class='message'>Select a node</div></div>"));
 	}
 	return panel;
 }
 
-function loadObject(panel,nodeid){
+function loadObject(panel,nodeid,panelnum){
 	var url;
 	if(nodeid.indexOf("?") == -1){
 		url = urlbase+"node/"+nodeid+"?callback=?";
@@ -84,57 +83,142 @@ function loadObject(panel,nodeid){
 	}
 	$.getJSON(url,function(obj){
 		panel.empty();
-		panel.append(makeInfo(obj));
-		doLayout();
+		panel.append(makeInfo(obj,panelnum));
 	});	
 }
 
 var verbs = ["supports","opposes","relates to","colitem"];
 
-function makeInfo(obj){
+function makeInfo(obj,panelnum){
 	var info = $("<div class='info'/>");
 	var body = $("<div class='panelbody'>").appendTo(info);
 	$("<h2/>").text(obj.text).appendTo(body);	
-	for(var i = 0; i < verbs.length; i++){
-		verb = verbs[i];
-		var links = obj.to[verb];
-		if(links && links.length > 0){
-			$("<h3/>").text(invertVerb(verb)).appendTo(body);
-			var box = $("<div class='subgroup'>").appendTo(body);
-			for(var j = 0; j < links.length; j++){
-				box.append(makeLink(links[j]));
-			} 
-		} 
+	
+	switch(obj.type){
+		case "snippet":
+			
+			break;
+		case "topic":
+			body.append(makeSubGroup("claims about this topic",obj.to.about,panelnum));
+			body.append(makeSubGroup("related topics",obj.to['relates to'],panelnum));
+			break;
+		case "claim":
+			body.append(makeSubGroup("supported by",obj.to.supports,panelnum));
+			body.append(makeSubGroup("opposed by",obj.to.opposes,panelnum));
+			body.append(makeSubGroup("related to",obj.to['relates to'],panelnum));
+			break;
+		default:
+			body.append(makeSubGroup(null,obj.to.colitem,panelnum));
+			break;
+
 	}
+	
+	//for(var i = 0; i < verbs.length; i++){
+		//verb = verbs[i];
+		//var links = obj.to[verb];
+		//if(links && links.length > 0){
+			//if(verb != "colitem"){
+				//$("<h3/>").text(invertVerb(verb)).appendTo(body);
+			//}
+			//var box = $("<div class='subgroup'>").appendTo(body);
+			//for(var j = 0; j < links.length; j++){
+				//box.append(makeLink(links[j],panelnum));
+			//} 
+		//} 
+	//}
 	return info;
 }
 
-function makeLink(obj){
-	var item = $("<a/>")
-		.attr("class","item")
+function makeSubGroup(subtitle,links,panelnum){
+	var group = $("<div class='subgroup'>").appendTo(group);
+	if(links && links.length > 0){
+		if(subtitle && subtitle != "colitem"){
+			$("<h3/>").text(subtitle).appendTo(group);
+		}
+		for(var j = 0; j < links.length; j++){
+			group.append(makeLink(links[j],panelnum));
+		} 
+	} 
+	return group;
+}
+
+function makeLink(obj,panelnum){
+	var item = $("<a class='item'/>")
 		.attr("href",urlbase+"node/"+obj.id)
-		.text(obj.text)
-		.click(function(ev){ev.preventDefault();selectItem(item,obj.id);})
+		.attr("tl_id",obj.id)		// TODO: shouldn't need this
+		.attr("tl_panel",panelnum)
+		.click(function(ev){
+			ev.preventDefault();
+			selectItem(item,obj.id,panelnum);
+			return false;
+			})		
+	var icon = $("<img class='icon'/>").attr("src",getIcon(obj));				
+	var text = $("<span/>").text(obj.text);
+	item.append(makeHBox([icon,text],"linkbox"));
+	
+	var votebox = $("<nobr class='votebox'/>").appendTo(text);
+	
+	var up = $("<img class='vote' title='Promote'/>").attr("src",iconUrl("vote_up_e"))
+		.mouseover(function(){up.attr("src",iconUrl("vote_up_on"))})
+		.mouseout(function(){up.attr("src",iconUrl("vote_up_e"))})
+		.click(function(ev){
+			ev.preventDefault(); ev.stopPropagation();			
+		})
+		.appendTo(votebox);		
+
+	var down = $("<img class='vote' title='Remove'/>").attr("src",iconUrl("vote_down_e"))
+		.mouseover(function(){down.attr("src",iconUrl("vote_down_on"))})
+		.mouseout(function(){down.attr("src",iconUrl("vote_down_e"))})
+		.click(function(ev){
+			ev.preventDefault(); ev.stopPropagation();			
+		})
+		.appendTo(votebox);		
+	
 	return item;
 }
 
-var selection = null;
+function iconUrl(icon){
+	return urlbase+"images/"+icon+".png";
+}
 
-function selectItem(item,id){
-	item.attr("class","item-selected");
-	if(selection){
-		selection.attr("class","item");
+function getIcon(obj){
+	if(obj.icon){
+		return obj.icon;
 	}
-	selection = item;
-	moveArrow();
-	loadObject($("#panel-1"),""+id+".js");
+	switch(obj.type){
+		case "claim":
+			if(obj.opposed){
+				return iconUrl("exclamation");
+			}else{
+				return iconUrl("lightbulb");
+			}
+		case "topic":
+			return iconUrl("folder");
+		case "user":
+			return iconUrl("user");
+	}
 }
-
-function shiftLeft(){
 	
-}
 
-function shiftRight(){
+var selection = {};
+
+function selectItem(item,id,panelnum){
+	try{
+		if(selection[panelnum] == item){
+			return;
+		}
+		item.attr("class","item-selected");
+		if(selection[panelnum]){
+			selection[panelnum].attr("class","item");
+		}
+		selection[panelnum] = item;
+		panelbox.append(makeArrow(panelnum,item));
+		getPanel(panelnum+1,""+id+".js");
+		var pos = getPos(item.get(0));
+		$('html,body').animate({scrollLeft: pos.left},500);
+	}catch(ex){
+		console.error(ex);
+	}
 }
 
 function getParentWithClass(node,classname){
@@ -146,12 +230,11 @@ function getParentWithClass(node,classname){
 	}
 }
 
-function getPanel(node){
-	return getParentWithClass(node,"panel");
-}
-
 function makeHBox(items,classname){
-	var table = $("<table/>").attr("class",classname);
+	var table = $("<table/>");
+	if(classname){
+		table.attr("class",classname);
+	}
 	var tr = $("<tr/>").appendTo(table);
 	for(var i = 0; i < items.length; i++){
 		var td = $("<td/>").append(items[i]).appendTo(tr);
@@ -189,3 +272,16 @@ function invertVerb(verb,text,type){
 	}	
 	return "";
 }
+
+
+function tl_log(msg){		
+	if(typeof console !== "undefined"){
+		console.log(msg);
+	}
+}
+
+//function tl_error(ex){		
+	//if(typeof console !== "undefined"){
+		//console.error(ex);
+	//}
+//}

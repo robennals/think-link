@@ -29,12 +29,14 @@ body, h1,h2,h3,p,item{
 	margin-right: 5px;
 	margin-bottom: 5px;
 	-moz-border-radius: 8px;
-	max-width: 500px;
+	width: 400px;
 	border: 1px solid #666666;
-	position: absolute;
-	top: 10px;
+	vertical-align: top;
 }
 
+.info {
+	width: 400px;
+}
 
 h2{
 	padding: 1px 1px 1px 5px;
@@ -47,14 +49,6 @@ h2{
 	-moz-border-radius-topright: 5px;
 }
 
-
-/*
-h2 {
-	font-size: 13px;
-	margin: 4px;
-}
-*/
-
 h3{
 	font-size: 13px;
 	font-style: italic;
@@ -62,6 +56,24 @@ h3{
 	margin: 4px;
 }
 
-.panelbody{
-	overflow: auto;
+.linkbox tr td{
+	vertical-align: top;
+}
+
+a img {
+	text-decoration: none;
+	border: none;
+}
+
+.votebox {
+	padding-left: 4px;
+	vertical-align: top;
+}
+
+.vote {
+	vertical-align: top;
+}
+
+.arrow {
+	vertical-align: top;
 }

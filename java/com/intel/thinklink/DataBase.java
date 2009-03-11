@@ -110,6 +110,7 @@ public class DataBase {
 	private PreparedStatement get_recent = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_history "+
 			"WHERE v2_node.id = v2_history.node_id " +
+			"   AND v2_node.type != 'snippet' " +
 			"	AND v2_history.user_id = ? ORDER BY date DESC " +
 			" 	LIMIT 100");
 	Dyn getRecent(int userid) throws SQLException{
