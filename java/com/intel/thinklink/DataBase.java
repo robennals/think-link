@@ -85,7 +85,19 @@ public class DataBase {
 		node.setJSON("info");
 		return node;
 	}
-	
+
+	private PreparedStatement find_by_name = con.prepareStatement(
+	"SELECT id FROM v2_node WHERE text = ?");
+	public int findByName(String name) throws SQLException {
+		find_by_name.setString(1,name);
+		ResultSet result = find_by_name.executeQuery();
+		if(result.next()){
+			return result.getInt(1);
+		}else{
+			return 0;
+		}
+	}
+
 
 	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
@@ -273,6 +285,15 @@ public class DataBase {
 		}
 	}
 	
+	
+	public void addLink(int id, String verb, String text, String type,int userid) throws SQLException {
+		int dst = findByName(text);
+		if(dst == 0){
+			dst = addNode(text,userid,type,"");
+		}
+		addLink(id,dst,verb);		
+	}
+	
 	static final int NOTHING = 0;
 	static final int GOOD = 1;
 	static final int BAD = 2;
@@ -362,6 +383,7 @@ public class DataBase {
 		}
 		return new Dyn(hsh);
 	}
+
 	
 }
 

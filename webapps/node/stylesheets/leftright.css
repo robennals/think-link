@@ -34,8 +34,25 @@ body, h1,h2,h3,p,item,addhdr{
 	vertical-align: top;
 }
 
+.wikipanel {
+	margin-right: 5px;
+	margin-bottom: 5px;
+	-moz-border-radius: 8px;
+	width: 600px;
+	border: 1px solid #666666;
+	vertical-align: top;
+}
+
+.wikipanel iframe {
+	width: 600px;
+}
+
 .info {
 	width: 400px;
+}
+
+.wikipanel .info{
+	width: 600px;
 }
 
 
@@ -178,4 +195,9 @@ a img {
 .greenadd:hover{
 	background-color : green;
 	color: white;	
+}
+
+.snipshorturl {
+	color: #0000CC;
+	margin-left: 10px;
 }

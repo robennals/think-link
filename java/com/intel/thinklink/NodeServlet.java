@@ -29,8 +29,9 @@ public class NodeServlet extends HttpServlet {
 	// POST URLs
 	Pattern addSnipPath = Pattern.compile("/node/addsnip");
 	Pattern createPath = Pattern.compile("/node/create");
-	Pattern addLinkPath = Pattern.compile("/node/addlink");
-	
+//	Pattern addLinkPath = Pattern.compile("/node/addlink");
+	Pattern addLinkPath = Pattern.compile("/node/(\\d+)/addlink");
+;
 	static String getCookie(HttpServletRequest req, String key){
 		Cookie[] cookies = req.getCookies();
 		if(cookies == null) return null;
@@ -59,11 +60,19 @@ public class NodeServlet extends HttpServlet {
 		}
 		m = addLinkPath.matcher(path);
 		if(m.find()){
-			base.addLink(
-				Integer.parseInt(req.getParameter("subject")), 
-				Integer.parseInt(req.getParameter("object")), 
-				req.getParameter("verb"));
+			base.addLink(Integer.parseInt(m.group(1)),
+					req.getParameter("verb"),
+					req.getParameter("text"),
+					req.getParameter("type"),
+					userid);
 		}
+//		m = addLinkPath.matcher(path);
+//		if(m.find()){
+//			base.addLink(
+//				Integer.parseInt(req.getParameter("subject")), 
+//				Integer.parseInt(req.getParameter("object")), 
+//				req.getParameter("verb"));
+//		}
 	}
 
 	private Vector<String> getUrls(HttpServletRequest req){
