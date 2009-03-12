@@ -25,9 +25,16 @@ public class MainServlet extends HttpServlet {
 		try{
 			DataBase base = ConnectionPool.get();
 			try{
-				Dyn snippet = base.getSnippet(id);
-				String sniptext = snippet.get("text");
-				String text = sniptext + " " + sniptext + " " + sniptext + " " + sniptext+ " " + sniptext + " " + snippet.get("page_text");
+				Dyn info = base.getInfo(id);
+				String text;
+				if(info.get("type").equals("snippet")){
+					Dyn snippet = base.getSnippet(id);
+					String sniptext = snippet.get("text");
+					text = sniptext + " " + sniptext + " " + sniptext + " " + sniptext+ " " + sniptext + " " + snippet.get("page_text");			
+				}else{
+					text = info.get("text");
+				}
+				
 				Vector<WikiMatch> matches = WikiMatcher.getMatches(text); 
 				matches = WikiMatcher.sumMatches(matches);
 				

@@ -1,4 +1,4 @@
-body, h1,h2,h3,p,item{
+body, h1,h2,h3,p,item,addhdr{
 	font-family: Helvetica, Geneva, Arial, sans-serif;
 }
 
@@ -38,6 +38,7 @@ body, h1,h2,h3,p,item{
 	width: 400px;
 }
 
+
 h2{
 	padding: 1px 1px 1px 5px;
 	margin: 0px;
@@ -47,6 +48,14 @@ h2{
 	color: #c2d7ef;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
+}
+
+
+.objtitle{
+	font-size: 13px;
+	font-weight: bold;
+	margin: 0px;
+	padding: 1px 1px 1px 5px;
 }
 
 h3{
@@ -76,4 +85,97 @@ a img {
 
 .arrow {
 	vertical-align: top;
+}
+
+.more {
+	padding-left: 15px;
+	font-style: italic;
+	cursor: pointer;
+}
+
+/*
+.suggestions .item{
+	font-size: 12px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	height: 15px;  /* needed due to FireFox not handling padding properly */
+}
+*/
+
+
+
+.suggestions img {
+	height: 12px;
+}
+
+.addbox{
+	font-size: 13px;
+	background-color: #EEEEEE;
+	margin-top: 16px;
+	padding-left: 4px;
+}
+
+.addhdr{
+	padding-right: 5px;
+	font-weight: bold;
+}
+
+.adder{
+	padding: 4px;
+	text-decoration: underline;
+	color: #0000CC;
+	cursor: pointer;
+}
+
+.adder-selected{
+	font-weight: bold;
+	background-color: #E0ECFF;
+	padding: 4px;
+}
+
+.addpanel {
+	background-color: #E0ECFF;
+	padding-bottom: 5px;
+}
+
+.suggestions {
+	background-color: white;
+	margin: 5px; 
+	margin-left: 16px;
+}
+
+.sugghdr {
+	font-size: 13px;
+	padding-left: 8px;
+	padding-top: 8px;
+}
+
+.addtxt {
+	width: 300px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.widthpad {
+	display: block;
+	height: 1px;
+	width: 400px;
+}
+
+.greenadd {
+	background-color : lightgrey;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: black;
+	-moz-border-radius: 3px;
+	cursor: pointer;
+}
+
+.greenadd:hover{
+	background-color : green;
+	color: white;	
 }

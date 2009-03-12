@@ -24,7 +24,8 @@ public class NodeServlet extends HttpServlet {
 	Pattern hackNewSnipPath = Pattern.compile("/scripthack/newsnippet(\\.\\w+)?"); 
 	Pattern globPath = Pattern.compile("/(.*)?(\\.(\\w+))?");
 	Pattern urlSearchPath = Pattern.compile("/apianon/search(\\.\\w+)?");
-
+	Pattern prefixPath = Pattern.compile("/node/prefix(\\.\\w+)?");
+	
 	// POST URLs
 	Pattern addSnipPath = Pattern.compile("/node/addsnip");
 	Pattern createPath = Pattern.compile("/node/create");
@@ -97,7 +98,7 @@ public class NodeServlet extends HttpServlet {
 		m = searchPath.matcher(path);
 		if(m.find()){
 			String format = m.group(1);
-			outputNode(out,req,format,userid,base.search(req.getParameter("query")));
+			outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type")));
 			return;
 		}
 		
@@ -130,11 +131,22 @@ public class NodeServlet extends HttpServlet {
 			return;
 		}
 		
+//		m = prefixPath.matcher(path);
+//		if(m.find()){
+//			String format = m.group(1);
+//			outputNode(out,req,format,userid,base.getPrefix)
+//		}
 		
 		if(path.equals("/node/") || path.equals("node") || path.equals("/index.html")){
 			Template.doTopTemplate(out, null, userid, base.getRecent(userid), base.getNewSnips(userid));
 			return;
 		}
+		
+		if(path.equals("/node/old")){
+			Template.doTopTemplateOld(out, null, userid, base.getRecent(userid), base.getNewSnips(userid));
+			return;
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)

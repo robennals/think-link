@@ -79,7 +79,14 @@ public class DataBase {
 		logRecent(userid,id);
 		return node;
 	}
-		
+	Dyn getInfo(int id) throws SQLException{
+		get_info.setInt(1,id);		
+		Dyn node = Dyn.one(get_info.executeQuery());
+		node.setJSON("info");
+		return node;
+	}
+	
+
 	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
@@ -87,6 +94,32 @@ public class DataBase {
 		get_links_to.setInt(1,id);
 		get_links_to.setInt(2,1000);
 		return get_links_to.executeQuery();
+	}
+
+	private PreparedStatement get_some_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
+			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
+			"WHERE dst=? AND src = v2_node.id "+
+			"AND v2_node.type = ? AND v2_link.type = ? "+
+			"LIMIT ?");	
+	ResultSet getSomeLinksTo(int id,String nodetype, String verb,int count) throws SQLException{
+		get_some_links_to.setInt(1,id);
+		get_some_links_to.setString(2,nodetype);
+		get_some_links_to.setString(3,verb);
+		get_some_links_to.setInt(4,count);
+		return get_some_links_to.executeQuery();
+	}
+
+	private PreparedStatement get_some_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
+			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
+			"WHERE src=? AND dst = v2_node.id "+
+			"AND v2_node.type = ? AND v2_link.type = ? "+
+			"LIMIT ?");	
+	ResultSet getSomeLinksFrom(int id,String nodetype, String verb,int count) throws SQLException{
+		get_some_links_from.setInt(1,id);
+		get_some_links_from.setString(2,nodetype);
+		get_some_links_from.setString(3,verb);
+		get_some_links_from.setInt(4,count);
+		return get_some_links_from.executeQuery();
 	}
 	
 	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
@@ -144,6 +177,19 @@ public class DataBase {
 		ResultSet items = search_stmt.executeQuery();
 		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
+
+	private PreparedStatement search_type_stmt = con.prepareStatement(
+	"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
+	Dyn search(String query,String type) throws SQLException{
+		if(type == null){
+			return search(query);
+		}
+		search_type_stmt.setString(1, query);
+		search_type_stmt.setString(2,type);
+		ResultSet items = search_type_stmt.executeQuery();
+		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+	}
+
 	
 	private PreparedStatement url_snippets = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_snippet WHERE "+
@@ -270,6 +316,31 @@ public class DataBase {
 		return key;
 	}
 	
+
+//	Dyn getLinks(int id, int userid) throws SQLException{
+//		Dyn d = get_info(id,userid);
+//		String type = d.getString("type");
+//		Dyn to = new Dyn();
+//		Dyn from = new Dyn();
+//		d.put("to",to);
+//		d.put("from", from);
+//		if(type.equals("claim")){
+//			from.put("supports", Dyn.list(getSomeLinksFrom(id,"claim","supports",5)));
+//			from.put("opposes", Dyn.list(getSomeLinksFrom(id,"claim","opposes",5)));
+//			from.put("about", Dyn.list(getSomeLinksFrom(id,"topic","relates to",5)));
+//			to.put("supports", Dyn.list(getSomeLinksTo(id,"claim","supports",5)));
+//			to.put("opposes", Dyn.list(getSomeLinksTo(id,"claim","opposes",5)));
+//			to.put("prosnips", Dyn.list(getSomeLinksTo(id,"snippet","supports",5)));
+//			to.put("consnips", Dyn.list(getSomeLinksTo(id,"snippet","opposes",5)));			
+//			to.put("aboutsnips", Dyn.list(getSomeLinksTo(id,"snippet","relates to",5)));			
+//		}else if(type.equals("snippet")){
+//			from.put("prosnips", Dyn.list(getSomeLinksFrom(id,"snippet","supports",5)));
+//			from.put("consnips", Dyn.list(getSomeLinksFrom(id,"snippet","opposes",5)));			
+//			from.put("aboutsnip", Dyn.list(getSomeLinksFrom(id,"snippet","relates to",5)));			
+//		}
+//		return d;
+//	}
+	
 	Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = get_info(id,userid);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
@@ -279,7 +350,6 @@ public class DataBase {
 		}
 		return d;
 	}
-	
 	Dyn map_links(Vector<Dyn> links){
 		HashMap<String,Vector<Dyn>> hsh = new HashMap<String,Vector<Dyn>>();
 		for(Dyn d : links){
