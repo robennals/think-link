@@ -411,7 +411,7 @@ function tl_margin()
 		if(snippet.opposed){
 			highlightclass += "_con";
 		}
-		if(!snippet.claim){
+		if(!snippet.claimid){
 			highlightclass += "_free";
 		}
 		if(enable){
@@ -427,9 +427,9 @@ function tl_margin()
 		var that = this;
 		
 		var highlightclass;
-		if(snippet.claim && snippet.claim.opposed != null){
+		if(snippet.claimid && snippet.opposed != null){
 			highlightclass = "tl_highlight_con";
-		}else if(!snippet.claim){
+		}else if(!snippet.claimid){
 			highlightclass = "tl_highlight_free";
 		}else{
 			highlightclass = "tl_highlight";
@@ -443,16 +443,16 @@ function tl_margin()
 		var numItems = this.items.push(snippet); // add to margin's array
 		
 		var showtxt;
-		if(snippet.claim){
-			showtxt = snippet.claim.text;
+		if(snippet.claimid){
+			showtxt = snippet.claimtext;
 		}else{
 			showtxt = "no claim associated - click to pick a claim";
 		}
 		var opposed= false;
 		var claimid = null;
-		if(snippet.claim){
-			opposed = snippet.claim.opposed;		
-			claimid = snippet.claim.id;
+		if(snippet.claimid){
+			opposed = snippet.opposed;		
+			claimid = snippet.claimid;
 		}
 		snippet.opposed = opposed;
 		

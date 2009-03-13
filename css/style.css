@@ -87,15 +87,17 @@
 	z-index: 2147483647;
 /*	background-color: #CCDDDD; */
 	background-color: #eeeeee;
-	border: 2px solid #242E35;
+	border: 1px solid #242E35;
 	color: #242E35;
 	padding: 1px;
 	overflow: auto;
 	font-size: 9pt;
 	font-family: verdana, sans-serif;
 	text-align: left;
+/*
 	-moz-border-radius-topleft: 16px;
 	-moz-border-radius-topright: 16px;
+*/
 }
 
 .tl_dialog td {
@@ -105,14 +107,20 @@
 }
 
 .tl_dialog_title {
+/*
 	-moz-border-radius-topleft: 12px;
 	-moz-border-radius-topright: 12px;
+*/
 /*	background-color: #4A7B6F; 
 	color: #EEEEE7; */
+	background-color: lightGrey;
+/*
 	background-color: #5867a2;
-	color: #c2d7ef;
+*/
+	color: black;
 	text-align: left;
-	font-size: 12pt;
+	font-size: 13px;
+	font-weight: bold;
 	font-family: verdana, sans-serif;
 /*	border-bottom: 2px solid #242E35; */
 	padding: 2px;	

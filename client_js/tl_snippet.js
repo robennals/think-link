@@ -98,7 +98,7 @@ function tl_snippet_dialog(margin) {
 
 	this.noSelection = function(){
 		if(confirm("You don't have any text selected and so cannot create a new snippet.\n"
-			+"Would you like to open the Mind Mix claim browser?")){
+			+"Would you like to open the Think Link claim browser?")){
 				window.open(thinklink_mainhome);
 		}		
 	}
@@ -113,7 +113,7 @@ function tl_snippet_dialog(margin) {
 		// determine last dom node to aid in finding associated permalink
 		var sourceSpans = tl_mark_snippet(this.sourceText,"tl_highlight_free");
 		if(!sourceSpans){
-			alert("Mind Mix was not able to create a snippet from this selection.");
+			alert("Think Link was not able to create a snippet from this selection.");
 			return;
 		}
 		this.sourceSpans = sourceSpans;

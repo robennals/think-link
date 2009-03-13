@@ -202,6 +202,24 @@ public class DataBase {
 		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
 
+	private PreparedStatement url_claim_snippets = con.prepareStatement(
+	"SELECT snip.id,snip.text,claim.opposed,snip.user_id,claim.id AS claimid,claim.text AS claimtext "+
+		"FROM ((v2_snippet LEFT JOIN v2_link ON v2_snippet.node_id = v2_link.src) "+
+		"LEFT JOIN v2_node AS claim ON claim.id = dst) "+
+		"LEFT JOIN v2_node AS snip ON snip.id = src " +
+		"WHERE url_prefix IN (?,?,?,?,?,?,?,?)"
+	);
+	Vector<Dyn> urlClaimSnippets(Vector<String> urls) throws SQLException{	
+		for(int i = 0; i < 8; i++){
+			if(urls.size() > i){
+				url_claim_snippets.setString(i+1, urls.get(i));
+			}else{
+				url_claim_snippets.setString(i+1, null);
+			}
+		}
+		ResultSet items = url_claim_snippets.executeQuery();
+		return Dyn.list(items);
+	}
 	
 	private PreparedStatement url_snippets = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_snippet WHERE "+

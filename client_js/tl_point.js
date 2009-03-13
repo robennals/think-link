@@ -45,11 +45,11 @@ function tl_point_browser() {
 		
 	this.viewFrame = function(snippet) {
 		var url;
-		if(snippet.claim){
-			title = "Investigate Claim";
-			url = thinklink_pointbase+snippet.claim.id+"?snippet="+snippet.id;
+		if(snippet.claimid){
+			title = "Claim Info";
+			url = thinklink_pointbase+snippet.claimid+"?snippet="+snippet.id;
 		}else{
-			title = "What does this Claim?";
+			title = "Snippet Info";
 			url = thinklink_pointbase+snippet.id+"/setclaim";
 		}
 		
@@ -69,7 +69,8 @@ function tl_point_browser() {
 		win.style.position = "fixed";
 		win.style.top = "50px";
 		win.style.left = "200px";
-		win.style.width = Math.min((window.innerWidth - 250),550) + "px";
+		win.style.width = "435px";
+			//Math.min((window.innerWidth - 250),550) + "px";
 		
 		var titleBar = document.createElement("div");
 		win.appendChild(titleBar);
@@ -90,14 +91,6 @@ function tl_point_browser() {
 		titleBox.textContent = title;
 		titleBar.appendChild(titleBox);
 		
-		if(!snippet.clam){
-			var searchButton = document.createElement("input");
-			searchButton.className = "tl_openbutton";
-			searchButton.setAttribute("type","button");
-			searchButton.setAttribute("value","search");
-			buttonBox.appendChild(searchButton);
-		}
-
 		var openButton = document.createElement("input");
 		openButton.className = "tl_openbutton";
 		openButton.setAttribute("type","button");
@@ -128,12 +121,6 @@ function tl_point_browser() {
 		frameholder.appendChild(pointframe);
 		frameholder.style.width="100%";
 		win.appendChild(frameholder);
-
-		if(!snippet.claim){
-			searchButton.addEventListener("click",function(){
-				pointframe.src = url+"?view=search";
-			},true);
-		}
 		
 		that.showMe();	
 	}

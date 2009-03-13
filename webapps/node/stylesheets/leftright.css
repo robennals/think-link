@@ -1,5 +1,11 @@
+body {
+	margin: 0px;
+	background: white;
+}
+
 body, h1,h2,h3,p,item,addhdr{
 	font-family: Helvetica, Geneva, Arial, sans-serif;
+	font-size: 13px;
 }
 
 .item, .item-selected{
@@ -20,7 +26,6 @@ body, h1,h2,h3,p,item,addhdr{
 	color: black;
 }
 
-
 .item:hover{
 	background-color: #ebf7fd;
 }
@@ -38,13 +43,13 @@ body, h1,h2,h3,p,item,addhdr{
 	margin-right: 5px;
 	margin-bottom: 5px;
 	-moz-border-radius: 8px;
-	width: 600px;
+	width: 400px;
 	border: 1px solid #666666;
 	vertical-align: top;
 }
 
 .wikipanel iframe {
-	width: 600px;
+	width: 400px;
 }
 
 .info {
@@ -52,7 +57,7 @@ body, h1,h2,h3,p,item,addhdr{
 }
 
 .wikipanel .info{
-	width: 600px;
+	width: 400px;
 }
 
 
@@ -65,6 +70,7 @@ h2{
 	color: #c2d7ef;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
+	cursor: pointer;
 }
 
 
@@ -181,6 +187,7 @@ a img {
 	display: block;
 	height: 1px;
 	width: 400px;
+	color: white;
 }
 
 .greenadd {
@@ -200,4 +207,97 @@ a img {
 .snipshorturl {
 	color: #0000CC;
 	margin-left: 10px;
+}
+
+.topbar {
+	background-color: lightgrey;
+	width: 750px;
+	display: block;
+	-moz-border-radius-bottomright: 4px;
+/*
+	height: 24px;
+*/
+}
+
+.topbut {
+	padding-left: 10px;
+	padding-right: 10px;
+
+	padding-top: 3px;
+	padding-bottom: 3px;
+
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.topbut:hover{
+	background-color: #5867a2;
+	color: white;
+/*
+	font-weight: bold;
+*/
+}
+
+.leftbar {
+/*
+	float: left;
+*/	display: inline;
+	margin-top: 4px;
+}
+
+.rightbar {
+	display: inline;	
+	margin-left: 100px;
+
+/*
+	float: right;
+*/
+}
+
+.toptable {
+	clear: both;
+	margin-top: 10px;
+}
+
+.searchbox {
+	border-width: 1px 0 1px 1px;
+	margin: 1px;
+	margin-bottom: 2px;
+}
+
+.searchbut {
+	vertical-align: middle;
+	margin-left: 2px;
+	cursor: pointer;
+}
+
+.thinklinktitle {
+	padding: 1px 10px 1px 5px;
+	font-size: 14px;
+	color: white;
+	font-weight: bold;
+	margin-right: 4px;
+	background-color: #5867A2;
+	-moz-border-radius-topright: 8px;
+	-moz-border-radius-bottomright: 8px;
+}
+
+.navleft {
+	float: left;
+	position: relative;
+	left: -18px;
+	top: 2px;
+	cursor: pointer;
+}
+
+.navright {
+	float: right;
+	position: relative;
+	right: -18px;
+	top: 2px;
+	cursor: pointer;
+}
+
+.filler {
+	width: 400px;
 }

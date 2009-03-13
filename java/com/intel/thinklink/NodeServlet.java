@@ -2,6 +2,7 @@ package com.intel.thinklink;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -99,15 +100,23 @@ public class NodeServlet extends HttpServlet {
 		
 		m = nodePath.matcher(path);		
 		if(m.find()){
-			String format = m.group(2);				
-			outputNode(out,req,format,userid,base.getLinks(Integer.parseInt(m.group(1)), userid));
+			String format = m.group(2);
+			if(format == null || format.equals(".html")){
+				Template.doNodeTemplate(out, userid, m.group(1)+".js");
+			}else{
+				outputNode(out,req,format,userid,base.getLinks(Integer.parseInt(m.group(1)), userid));
+			}
 			return;
 		}
 		
 		m = searchPath.matcher(path);
 		if(m.find()){
 			String format = m.group(1);
-			outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type")));
+			if(format == null || format.equals(".html")){
+				Template.doNodeTemplate(out, userid, "search.js?query="+URLEncoder.encode(req.getParameter("query")));
+			}else{
+				outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type")));
+			}
 			return;
 		}
 		
@@ -129,7 +138,7 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			String format = m.group(1);
 			Vector<String> urls = getUrls(req);
-			outputList(out,req,format,base.urlSnippets(urls));
+			outputList(out,req,format,base.urlClaimSnippets(urls));
 			return;
 		}
 		
@@ -213,9 +222,7 @@ public class NodeServlet extends HttpServlet {
 	}
 	
 	static void outputNode(PrintWriter out, HttpServletRequest req, String format, int userid, Dyn data){
-		if(format == null || format.equals(".html")){
-			Template.doNodeTemplate(out, userid, data);
-		}else if(format.equals(".js")){
+		if(format.equals(".js")){
 			String callback = req.getParameter("callback");
 			if(callback == null){
 				callback = "thinklink_callback";
