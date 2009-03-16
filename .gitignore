@@ -1,6 +1,6 @@
 *.csv
 *tmp*
-think
+think/*
 *.kilepr
 *.backup
 *.bak

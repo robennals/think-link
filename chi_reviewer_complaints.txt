@@ -313,7 +313,14 @@ Idea of a gang of people who go round web sites finding things that they disagre
 		* Crawl all over the site, saying why you think things are wrong
 
 
+-- Linking UI --
 
+RHS shows three panels:
+	Suggested Topics.
+	Suggested Claims.
+	Suggested Snippets.
+
+RHS is only a suggested organizer.
 
 
 

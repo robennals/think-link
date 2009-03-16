@@ -84,7 +84,10 @@ public class Dyn{
 	}
 	
 	static String toJSON(Object o){
-		if(o instanceof String){
+		if(o == null){
+			return "null";
+		}
+		else if(o instanceof String){
 			return "\"" + Util.escape((String)o) + "\"";
 		}else if(o instanceof Vector){
 			Vector v = (Vector)o;

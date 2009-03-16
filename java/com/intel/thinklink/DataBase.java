@@ -206,8 +206,8 @@ public class DataBase {
 	"SELECT snip.id,snip.text,claim.opposed,snip.user_id,claim.id AS claimid,claim.text AS claimtext "+
 		"FROM ((v2_snippet LEFT JOIN v2_link ON v2_snippet.node_id = v2_link.src) "+
 		"LEFT JOIN v2_node AS claim ON claim.id = dst) "+
-		"LEFT JOIN v2_node AS snip ON snip.id = src " +
-		"WHERE url_prefix IN (?,?,?,?,?,?,?,?)"
+		"LEFT JOIN v2_node AS snip ON snip.id = v2_snippet.node_id " +
+		"WHERE url_prefix IN (?,?,?,?,?,?,?,?) "
 	);
 	Vector<Dyn> urlClaimSnippets(Vector<String> urls) throws SQLException{	
 		for(int i = 0; i < 8; i++){
