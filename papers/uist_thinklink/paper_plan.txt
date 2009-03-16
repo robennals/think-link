@@ -1,15 +1,23 @@
 
-=== Key Points ===
 
+= Key Points =
 
-== Structure of the Web ==
+== Introduction/Motivation/Project Summary ==
 
 The Web contains information of dubious reliability.
 
 Clay Shirky "Not information overload, filter failure"
 
+User marks something when this disagree with it.
 
-== Previous argumentation systems ==
+User marks something when it is interesting.
+
+User uses Google or other tool to find web pages that disagree with them, to mark them up.
+
+People take part in a social discussion community where people promote the opinions of a particular group by marking things that others follow.
+	- IDEA: give people a score based on how many other users ran into things they found
+
+== Related Work - Background of the field ==
 
 We build on IBIS.
 
@@ -41,10 +49,13 @@ Can mark up claims in bulk using the bulk topic assignment interface.
 Simple user study shows one can mark up instances of contentious snippets at very high speed.
 	- show how many snippets one can find in an hour
 
-=== Data ===
+== Data ==
 
 Seeded with all contentious claims from Snopes (6k-ish) and with a selected set of facts from FactCheck.
 
+Topics are from Wikipedia.
+
+Use Wikify algorithm to work out what the correct topics are. Don't add a topic until it has claims.
 
 
 == System ==
@@ -54,29 +65,61 @@ Think Link can be included directly into a web site as a script.
 Think Link has an Open API that can allow other web sites to include information from other web sites potentially with their own UI.
 
 
+== User Studies ==
+
+[this can be largely preserved - copy and paste]
+
+User studies were exploratory - to guide design, rather than to show that it works. Only way to show that it works would be to deploy it with millions of real users and thousands of claims - which our implementation is not yet robust enough for.
+
+First study: Explained the idea of the tool. Watch as they browse - to learn normal behavior and see what they mark. Political, then normal.
+Second study: Didn't tell them anything about the tool.
+
+People want to explore a topic before attaching something to it.
+
+People weren't sure what to mark - so distinguish between "Disagree" and "Interesting".
+
+Things weren't always "supports or oppose" so introduce "related" - not in IBIS.
+
+People liked it "I could see myself getting addicted to this" - while browsing claims.
+
+People liked being able to see when things conflicted "The web needs to be taken with a grain of salt and this gives you salt goggles".
+
+Some people just wanted to look at entertaining gossip, rather than hard news.
+
+Participants said they found the tool "very intuitive".
+
+In earlier version, people had difficulty creating links. People took time finding the correct thing to associate a snippet with. Didn't complain, but was clear it was a problem.
+
+Problem of compound snippets - if contentious, would write "and". Also confusing to mark twice. Changed user interface so snippet can support multiple claims.
+
+Users wanted to mark up a table or an image as a snippet - it might be interesting or useful evidence.
+
+Initially, every snippet needed it's own claim. Realised that while this makes sense for dubious claims, it doesn't make sense for "interesting claims", where you may not be sure what you want to connect it to until later.
+	- thus added ability for a snippet to be attached to a topic, but without having a claim associated.
+
+People would consistently mark the first paragraph of an article as a snippet - since this often summarises the key interesting point an article makes. Not clear if special support should me included to make this easier or exploit this summary.
+
+
+=== Related Work ===
+
+
+Argumentation systems: IBIS, JANUS, Cope_it.
+Argumentation systems that link to web content.
+
+Annotation systems.
+Tagging systems [called out by CHI reviewers]
+
+
+
 === Approach ===
 
-Discuss related work as I go, rather than at the end. 
-Write as if I am a disinterested third party.
+Introduce core related work at the beginning, and then compare with related work as we go along.
+
+Write as if we are a disinterested third party.
+
 At least 40 recent paper citations. 
+
 All web citations as footnotes.
-
-=== Structure ===
-
--- Intro --
-
-The Web contains information that may be wrong. 
-
-Allow anyone to publish, means can't be sure accurate.
-
-Quote from Tim Berners Lee.
-
-Think Link is a tool that tries to pull information together. Show you when stuff you are reading conflicts with other stuff.
-
-
--- The User Experience --
-
-
 
 
 

@@ -27,6 +27,10 @@ Simon Buckingham Shum et al.
 Annotate a URL with ideas. Make connections between ideas.
 Links such as responds-to.
 Links to related URLS, but isn't about identifying repeated bad ideas.
+Has a firefox plugin.
+Uses various visualizations.
+
+Use websites to back up ideas, rather than connection going the other way.
 
 -- CoPe it! --
 

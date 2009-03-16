@@ -5,6 +5,21 @@
 \usepackage{url}
 \usepackage{graphics}
 \usepackage{color}
+% \usepackage[pdftex]{hyperref}
+% \hypersetup{%
+% pdftitle={Browsing the Web of Factual Claims},
+% pdfauthor={Beth Trushkowsky and Rob Ennals},
+% pdfkeywords={CSCW, sensemaking, web, browsers, collaboration, mind mapping},
+% bookmarksnumbered,
+% pdfstartview={FitH},
+% colorlinks,
+% citecolor=black,
+% filecolor=black,
+% linkcolor=black,
+% urlcolor=black,
+% breaklinks=true,
+% }
+
 
 \newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
 
@@ -46,7 +61,7 @@
 %RULE: Don't cite media reports unless I have to
 
 \abstract
-We present DisagreeWeb, a browser extension that aims to let users see when the information they are reading presents only one side of a disputed issue. As the user browses the web, DisagreeWeb highlights snippets of text that make claims that conflict with information on other web sites. If a user clicks on such a disputed claim then DisagreeWeb will show tem an argument graph showing the best evidence for and against the claim being true, as determined by other users of DisagreeWeb.
+We present Think Link, a browser extension that aims to let users see when the information they are reading presents only one side of a disputed issue. As the user browses the web, Think Link highlights snippets of text that make claims that conflict with information on other web sites. If a user clicks on such a disputed claim then Think Link will show tem an argument graph showing the best evidence for and against the claim being true, as determined by other users of Think Link.
 
 \keywords{CSCW, sensemaking, web, browsers, collaboration, mind mapping} 
 
@@ -66,16 +81,16 @@ User Interfaces. - Graphical user interfaces.}
 
 The web provides users with a huge number of pages that they can read, but extracting accurate and balanced information from these pages can be difficult. Not everything on the web is accurate~\cite{Mintz2002,Neumann2003,Resnik1998,Zhou2004} and many web sites have a strong political bias~\cite{Herman2002,Gentzkow2007}. If a user is to form a rounded opinion about a topic then they will need to either stick to sources that they trust or spend time looking for evidence on other web sites that supports or opposes what they read. Even if a user tries hard to research every topic they read, they can still get caught out by beliefs that they had not realised were disputed.
 
-In this paper we present DisagreeWeb, a tool helps users discover when information they read is disputed or presents only one side of a contentious issue. When DisagreeWeb is used as a browser plugin it will highlight text that makes a disputed claim. If a user clicks on such a highlighted snippet then DisagreeWeb presents the user with an argument graph that shows the best evidence for and against the claim, as judged by other users of DisagreeWeb (Figure~\ref{claimview}). The argument graph contains links to snippets of text on other web sites that express conflicting or supporting points of view.
+In this paper we present Think Link, a tool helps users discover when information they read is disputed or presents only one side of a contentious issue. When Think Link is used as a browser plugin it will highlight text that makes a disputed claim. If a user clicks on such a highlighted snippet then Think Link presents the user with an argument graph that shows the best evidence for and against the claim, as judged by other users of Think Link (Figure~\ref{claimview}). The argument graph contains links to snippets of text on other web sites that express conflicting or supporting points of view.
 
-DisagreeWeb relies on users to identify disputed claims, to find appearances of these claims on web sites, and to vote for which snippets are most important.
+Think Link relies on users to identify disputed claims, to find appearances of these claims on web sites, and to vote for which snippets are most important.
 
 \want{Seeded with all claims from Snopes}.
 \want{Seeded with all contentious claims identified in the three months on FactCheck.org}
 \want{Tested with hundreds of users}.
 \want{Tested with real users and found took N seconds on average to identify and categorize snippets}
 
-DisagreeWeb layers an argumentation graph over the existing web. 
+Think Link layers an argumentation graph over the existing web. 
 
 \begin{figure}[tb]
 	\begin{center}
