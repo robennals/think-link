@@ -105,6 +105,7 @@ People would consistently mark the first paragraph of an article as a snippet - 
 
 Argumentation systems: IBIS, JANUS, Cope_it.
 Argumentation systems that link to web content.
+MUST refer to ZENO (main reason for prior bounce).
 
 Annotation systems.
 Tagging systems [called out by CHI reviewers]

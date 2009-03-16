@@ -1,0 +1,8 @@
+Think Link is a tool that shows you when information you read on the web is disputed by other sources.
+
+While the web contains a vast amount of useful information, many web sites contain misinformation or present heavily biased views of topics.
+Think Link makes it easier to pick through this minefield by highlighting information that conflicts with that on other web pages, and producing an argument graph that shows users the best sources for each side of an issue.
+
+This technology is the first of its kind, and has not been presented previously at Research @ Intel day.
+
+
