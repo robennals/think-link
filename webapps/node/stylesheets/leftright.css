@@ -15,8 +15,8 @@ body, h1,h2,h3,p,item,addhdr{
 	color: black;
 	font-size: 13px;
  	padding: 1px;
- 	padding-left: 10px;
- 	padding-right: 10px;
+ 	padding-left: 4px;
+ 	padding-right: 4px;
 }
 
 .item-selected{
@@ -73,10 +73,16 @@ h2{
 	cursor: pointer;
 }
 
+linkbox {
+	margin-left: 6px;
+	margin-right: 6px;
+}
 
 .objtitle{
 	font-size: 13px;
+/*
 	font-weight: bold;
+*/
 	margin: 0px;
 	padding: 1px 1px 1px 5px;
 }
@@ -86,6 +92,15 @@ h3{
 	font-style: italic;
 	border-bottom: 1px solid black;
 	margin: 4px;
+}
+
+.createdby{
+	font-weight: bold;
+	font-style: italic;
+}
+
+.username{
+	color: #0000CC;
 }
 
 .linkbox tr td{

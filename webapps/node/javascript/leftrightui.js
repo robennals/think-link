@@ -187,7 +187,7 @@ function makeInfo(obj,panelnum){
 	var body = $("<div class='panelbody'>").appendTo(info);
 	
 	body.append(makeNavButtons(panelnum));
-	
+		
 	var title;
 	if(obj.type == "recent"){
 		title = $("<h2/>").append("History").appendTo(body);
@@ -204,7 +204,11 @@ function makeInfo(obj,panelnum){
 	obj.from.supports = removeParent(obj.from.supports,panelnum);
 	obj.from.opposes = removeParent(obj.from.opposes,panelnum);
 	obj.from['relates to'] = removeParent(obj.from['relates to'],panelnum);
-	
+			
+
+	if(obj.type == "snippet" || obj.type == "claim" || obj.type == "topic"){		
+		body.append(makeUserLink(obj,panelnum));
+	}
 	
 	var relates = [];
 	if(obj.to['relates to']){
@@ -379,6 +383,22 @@ function makeSuggestion(obj,panelnum,callback){
 	item.append(makeHBox([add,text],"linkbox"));
 	
 	return item;
+}
+
+function makeUserLink(obj,panelnum){
+	var item = $("<a class='item'/>")
+		.attr("href",urlbase+"user/"+obj.user_id)
+		.click(function(ev){
+			ev.preventDefault();
+			selectItem(item,obj.user_id,panelnum,obj.username);
+			return false;
+		});		
+
+	item.append($("<span class='createdby'>created by </span>"));	
+	
+	item.append($("<span class='username'/>").text(obj.username));
+
+	return item;		
 }
 
 function trim_url(url){

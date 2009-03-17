@@ -71,7 +71,9 @@ public class DataBase {
 		}
 	}
 	
-	private PreparedStatement get_info = con.prepareStatement("SELECT * FROM v2_node WHERE id = ?");
+	private PreparedStatement get_info = con.prepareStatement(
+			"SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user WHERE id = ? " +
+			"AND v2_node.user_id = v2_user.node_id");
 	Dyn get_info(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
 		Dyn node = Dyn.one(get_info.executeQuery());
