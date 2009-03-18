@@ -22,6 +22,7 @@
 
 
 \newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
+\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
 
 \begin{document}
 
@@ -79,18 +80,15 @@ User Interfaces. - Graphical user interfaces.}
 
 \section{INTRODUCTION}
 
-The web provides users with a huge number of pages that they can read, but extracting accurate and balanced information from these pages can be difficult. Not everything on the web is accurate~\cite{Mintz2002,Neumann2003,Resnik1998,Zhou2004} and many web sites have a strong political bias~\cite{Herman2002,Gentzkow2007}. If a user is to form a rounded opinion about a topic then they will need to either stick to sources that they trust or spend time looking for evidence on other web sites that supports or opposes what they read. Even if a user tries hard to research every topic they read, they can still get caught out by beliefs that they had not realised were disputed.
+The web provides users with a huge number of pages that they can read, but extracting accurate and balanced information from these pages can be difficult. Not everything on the web is accurate~\cite{Mintz2002,Neumann2003,Resnik1998,Zhou2004} and many web sites present only one side of a contentious issue~\cite{Herman2002,Gentzkow2007}. If a user is to form a rounded opinion about a topic then they will need to either stick to sources that they trust or spend time looking for evidence on other web sites that supports or opposes what they read. Even if a user tries hard to research every topic they read, they can still get caught out by beliefs that they had not realised were disputed.
 
-In this paper we present Think Link, a tool helps users discover when information they read is disputed or presents only one side of a contentious issue. When Think Link is used as a browser plugin it will highlight text that makes a disputed claim. If a user clicks on such a highlighted snippet then Think Link presents the user with an argument graph that shows the best evidence for and against the claim, as judged by other users of Think Link (Figure~\ref{claimview}). The argument graph contains links to snippets of text on other web sites that express conflicting or supporting points of view.
+In this paper we present Think Link, a tool helps users discover when information they read conflicts with information on other web sites, and shows users the best sources that provide alternative points of view. When Think Link is used as a browser plugin it will highlight text that makes a disputed claim. If a user clicks on such a highlighted snippet then Think Link presents the user with an argument graph that shows the best evidence for and against the claim, as judged by other users of Think Link (Figure~\ref{claimview}). The argument graph contains links to snippets of text on other web sites that express conflicting or supporting points of view.
 
-Think Link relies on users to identify disputed claims, to find appearances of these claims on web sites, and to vote for which snippets are most important.
+Think Link relies on users to identify disputed claims, to find appearances of these claims on web sites, and to vote for which snippets are most important. If a user is viewing a web page, they can identify disputed claims and useful evidence. Think Link will guide a user in finding existing claims that a snippet may be making and in connecting existing claims.
 
-\want{Seeded with all claims from Snopes}.
-\want{Seeded with all contentious claims identified in the three months on FactCheck.org}
-\want{Tested with hundreds of users}.
-\want{Tested with real users and found took N seconds on average to identify and categorize snippets}
+Think Link is designed to cator to two distinct groups of people. Activists care strongly about particular claims that they disagree with and combine Think Link with a preferred search engine to find instances of these claims and mark them up so other users can see them. Sceptical readers install Think Link as a browser plugin so that they can see when things they read and disputed and find other links that present other points of view. A reader may of course be an activist for one issue and a sceptical reader for others.
 
-Think Link layers an argumentation graph over the existing web. 
+The design of Think Link was guided by two user studies, in which we observed the behaviour of users who fitted the roles of Activist or Sceptical Reader. 
 
 \begin{figure}[tb]
 	\begin{center}
@@ -100,41 +98,55 @@ Think Link layers an argumentation graph over the existing web.
 	\end{center}
 \end{figure}
 
-
-\section{Introduction}
-
-The web provides users with a huge number of pages that they can read, but extracting useful and reliable information from these pages can be difficult. Not everything on the web is accurate~\cite{bbcwebwarning}. If a user is to avoid being mislead by false claims then they will need to either stick to sources they can trust, or spend time looking for evidence on other web sites that supports or opposes what they have read. Similarly, a user will not find every claim on the web interesting. If a user is to locate claims that help them answer the questions they are interested in then they may have to spend considerable time reading claims that do not interest them in order to pick out those that do. Throughout this paper we will use the motivating example of a user who is worried about global warming and wants to find out what is going on and what they can do to help. Many web pages contain claims about global warming that are false, and many web pages repeat the same claims, making it difficult for a user to find interesting new facts that they were not previously aware of.
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/claim_popup_crop2.png}
-	\caption{Click on a claim to investigate evidence for and against it}
-	\label{claimview}
-	\end{center}
-\end{figure}
-
-The difficulty of finding correct information on the web has been discussed a lot recently. Tim Berners Lee has expressed concern about the difficulty that people face discerning whether information on the web is true~\cite{bbcwebwarning}. Many people have also voiced concerns about how easily people can subvert Wikipedia to give people false information~\cite{wikifalse}. Several commentators have observed that there is a Media Echo Chamber effect~\cite{echochamber,echochamber2} in which news sources report claims that they have heard from other news sources, despite the fact that these claims may be misleading or untrue. If a user only reads news sources from a particular group then they may only be exposed to the views of that group and may not be aware that opposing views exist unless they actively seek them.  
-
-Part of the problem is that conventional web browsers present the web as a network of connected pages, when it is often the case that what the user is really interested in is the factual claims made by those pages, and the connections between those claims. While a web page will typically contain links to other articles, these typically only reference a small proportion of the other pages that discuss the topic, and are unlikely to include sources that disagree with the author. The best arguments supporting or opposing a claim may be distributed across a large number of disconnected pages, making it difficult for a user to assemble an argument from the pages on the web. The root of the problem is that the web is structured around where knowledge is coming from (pages written by particular authors) rather than what knowledge is about (the ideas contained on the pages). While this makes it easier for users to add knowledge to the web, it makes it hard for users to collate all the knowledge available on a topic.
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=7.7cm]{../screenshots/summary_graph.png}
-	\caption{Think link connects claims to each other and to web snippets}
-	\label{summarygraph}
-	\end{center}
-\end{figure}
-
-In this paper we present Think Link, a tool that overlays a new network of links over the existing web, connecting snippets of text to snippets elsewhere on the web that make related claims. Think Link maintains a central shared ``claim graph'' (Figure~\ref{summarygraph}) containing claims made on the web, their supporting and opposing relationships to each other, and the snippets that make these claims. When a user views a web page, Think Link highlights snippets that have been identified as making factual claims, with the highlight color indicating whether other sources have been found that disagree with the claim. If a user clicks on a snippet then they will see a ``claim browser'' (Figure~\ref{claimview}) that allows them to see other claims made on the web that support or oppose the claim the snippet makes, and snippets elsewhere on the web that make these other claims. 
-
-The Think Link claim graph is editable by all users, in a manner similar to a wiki. Any user can add new claims, connect existing claims together, and identify snippets on web pages that make specific claims. Collaborative filtering is used to filter out junk or abusive information, while minimizing the danger of political edit wars.
-
-Not everyone will necessarily want a tool like Think Link. Some people may be looking for confirmation of their own points of view rather than information that challenges their beliefs. We hope however that Think Link may be able to make some contribution to helping people find out about other points of view, and help people more easily find the most interest claims about topics they are interested in.
-
-The contributions of this paper are the presentation of a new approach for connecting information on the web, the design of a user interface that makes it easy for users to find claims that support and oppose claims that they read on the web, and a qualitative user study of how participants use such an interface.
+% \begin{figure}[tb]
+% 	\begin{center}
+% 	\includegraphics[width=7.7cm]{../screenshots/summary_graph.png}
+% 	\caption{Think link connects claims to each other and to web snippets}
+% 	\label{summarygraph}
+% 	\end{center}
+% \end{figure}
 
 
 \section{Related Work}
+
+\subsection{Argumentation}
+
+Cohere~\cite{Shum2008}. Compendium~\cite{Selvin2001}. Cope it~\cite{Karacapilidis2001}. AIF~\cite{McGinnis2007} and ArgDF~\cite{Rahwan2007}. IBIS~\cite{Rittel1973}. gIBIS~\cite{Conklin1987}. IBIS problems~\cite{Isenmann1997}. ClaimSpotter~\cite{Sereno2005,Sereno2004}. ClaiMaker~\cite{Uren2003}. Video Annotation~\cite{Diakopoulos2008}. Collabatorium~\cite{Klein2007}, for Global Warming~\cite{Malone2007}. Lawyer argument model~\cite{Verheij1999}. Toulmin model~\cite{Toulmin1958}. Zeno~\cite{Gordon1997}. Discoursium~\cite{Yetim2007}.
+Entity Workspace~\cite{Billman2007}. 
+Mess Maps and Resolution Mapping~\cite{Horn2007}.
+TRELLIS~\cite{Chklovski2005}.  
+People should define own link types~\cite{Wang1998}.
+
+\subsection{Checking Accuracy on the Web}
+
+NewsCube~\cite{Park2009}.
+Wikipedia fixes Vandalism~\cite{Viegas2004}.
+Trustworthiness~\cite{Gil2006}.
+WikiTrust~\cite{Adler2008}. Wiki Dashboard~\cite{Kittur2008}.
+Wiki Scanner\footnote{http://wikiscanner.virgil.gr}.
+SourceWatch\footnote{http://sourcewatch.org}, Snopes\footnote{http://snopes.com}, FactCheck\footnote{http://factcheck.org}.
+
+\subsection{Tagging and Annotating}
+
+Tagging~\cite{Marlow2006}. Tagomizer~\cite{Park2007}. Reasons for choices of tags~\cite{Sen2006}. Tagging Roles~\cite{Muller2008}. 
+
+SpinSpotter\footnote{http://spinspotter.com}. ClipMarks\footnote{http://clipmarks.com}, Diigo~\footnote{http://diigo.com}, Stickis\footnote{http://stickis.com}.
+
+How to Personalize the Web~\cite{Barrett1997}. 
+
+\subsection{Clipping}
+
+ScratchPad~\cite{Gotz2007}. Internet Scrapbook~\cite{Sugiura1998}. Reverse Linking~\cite{Yesilada2007}. Hunter Gatherer~\cite{2002}. Dontcheva~\cite{Dontcheva2007a}.
+
+\subsection{To discuss in the body}
+
+Paraphrases~\cite{Chklovski2005}. Suggested formal paraphrases~\cite{Blythe2004}.
+Importance of Lurkers~\cite{Takahashi2003}
+Wikify~\cite{Mihalcea2007}.
+
+
+
+
 
 Think Link is very influenced by wikis like Wikipedia~\cite{wikipedia}. Like Think Link, wikis allow users to find information organized by topic rather than author and allow users to collaborate together to bring together all the best information about a topic. Wikipedia's greatest strength is arguably also its greatest weakness. Since anyone can edit Wikipedia, there is always the danger that information one reads may be incorrect~\cite{wikifalse}. Several projects have attempted to address this problem by tracking sources of edits~\cite{wikicorrect,wikicorrect2,wikicorrect3}, but it is difficult to remove the problem entirely. While good Wikipedia articles will often include references to sources for their claims, following all sources to check up all claims can be laborious. Think Link tries to avoid this problem by linking claims back to the original sources that made these claims. Users can thus use the known trustworthiness of the original sources to judge the reliability of a claim. 
 
@@ -151,7 +163,7 @@ Web clipping tools such as Google Notebook, Scrapbook~\cite{scrapbook}, and Zote
 
 In Vannevar Bush's seminal MEMEX article~\cite{memex} he proposed an architecture in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Several more recent systems have allowed user to add links to existing pages. ENQUIRE~\cite{weavingtheweb} and TrackBack~\cite{trackback} have bidirectional links, allowing one to see the sites that link to a page as well as those that link from it. Everything2.com links each page to the most popular pages that users viewed at the same time. Think Link's key difference from this work is that it imposes an additional layer of structure, identifying the factual claims that snippets are making and allowing users to browse this graph, rather than just allowing users to specify links between pages.
 
-One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations} find places where a passage is repeated in several documents (usually a quotation) and allow users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{Chi2005} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{Center2003} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
+One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations} find places where a passage is repeated in several documents (usually a quotation) and allow users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{Chi2005} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{Olston2003} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
 
 Much work has been done on the idea of using a graph to represent an argument~\cite{argumentation,argmas}. Popular argument models include the Toulmin Model~\cite{toulmin}, the Carneades Model~\cite{carneades}, and the IBIS model~\cite{ibis}. Models used for argumentation theory are usually significantly more complex than our simple supports/opposes model, with the result that they provide a more accurate model of the logical argument, at the cost of requiring more skill to assemble. One feature found in some argumentation graphs~\cite{Korb97acognitive} that we may add in the future is the ability to attach a numerical weight (maybe from voting) asserting how much a claim supports or opposes another claim, or how reliable a claim is.
 
