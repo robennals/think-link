@@ -125,6 +125,8 @@ Think Link uses a relatively simple graph structure, similar to that of gIBIS~\c
 
 Think Link's argument visualization is influenced by the left-to-right layout of Cohere~\cite{Shum2008}. Compendium~\cite{Selvin2001} contains a number of other visualizations of argument graphs. Mess Maps~\cite{Horn2007} present an alternative view in which an argument is divided into different sectors, each of which presents the argument from a different frame of discourse (e.g. policy maker vs industrialist vs environmentalist).
 
+In attempt to unify the different argumentation tools being developed, several interchange formats have been proposed~\cite{Rahwan2007a,McGinnis2007} to allow different web argumentation tools to share descriptions of contentious issues.
+
 Isenmann and Reuter~\cite{Isenmann1997} identify a number of problems with the IBIS model, which they argue are reasons why it has not achieved widespread use. We believe that while the problems they observe are important when an IBIS tool is being used for conflict modelling and resolution they are less of a problem for a tool like Think Link that is designed primarily for conflict discovery. We do not expect users to use Think Link to create a detailed model of an argument and use this to reach consensus. Instead, our aim is that a user should use Think Link to discover when things they read are disputed, and easily find evidence for the other side.
 \todo{Say more about this}.
 
@@ -163,23 +165,37 @@ Several authors have investigated ways to make Wikipedia\footnote{http://wikiped
 % Wiki Scanner\footnote{http://wikiscanner.virgil.gr}.
 % SourceWatch\footnote{http://sourcewatch.org}, Snopes\footnote{http://snopes.com}, FactCheck\footnote{http://factcheck.org}.
 
-\subsection{Tagging and Annotating}
+\subsection{Tagging, Clipping, and Annotating}
 
-Video Annotation~\cite{Diakopoulos2008}
+Tagging Systems~\cite{Marlow2006,Golder2006} allow users to collect and organize information by associating it with an ad-hoc collection of tags. Notable tagging systems include del.icio.us\footnote{http:\\del.icio.us} which uses tags to organize web pages, and Flickr\footnote{http://flickr.com} which associates tags with photos. 
 
-Tagging~\cite{Marlow2006}. Tagomizer~\cite{Park2007}. Reasons for choices of tags~\cite{Sen2006}. Tagging Roles~\cite{Muller2008}. 
+Some tagging tools also do clipping. Clipping tools such as Internet Scrapbook~\cite{Sugiura19998}, Hunter Gatherer~\cite{2002}, ScratchPad~\cite{Gotz2007}, ClipMarks\footnote{http://clipmarks.com}, and Diigo\footnote{http://diigo.com} allow users to collect text snippets from web pages, tag them, and share them with friends. In many cases, a tagging or clipping system will also allow users who are looking at a tagged or clipped object to see the tags that other users have associated with it, or highlight the parts of a document that have been clipped.
 
-SpinSpotter\footnote{http://spinspotter.com}. ClipMarks\footnote{http://clipmarks.com}, Diigo~\footnote{http://diigo.com}, Stickis\footnote{http://stickis.com}.
+Several tools allow users to mark up content that is considered to controversial. Videolyzer~\cite{Diakopoulos2008} allows users to annotate and comment on political videos with accompanying textual transcriptions. A user can mark up a section of video for bias, accuracy, or rhetorical technique. Comments can include references to external sources that back up the argument being made. 
 
-How to Personalize the Web~\cite{Barrett1997}. 
+SpinSpotter\footnote{http://spinspotter.com} allows a user to highlight snippets of text that contain spin or bias and either describe why the text is biased, or rewrite the text in an unbiased way. While SpinSpotter and Think Link share a goal of drawing user attention to biased or inaccurate information, they do so in a different way. SpinSpotter annotates a snippet with an annotation specific to that particular snippet of text, while Think Link treats a snippet as being an instance of a shared contentious claim, and links all snippets identified as making that claim to a shared graph node linking to other information about that claim.
 
-\subsection{Clipping}
+\subsection{Augmented Web Navigation}
 
-ScratchPad~\cite{Gotz2007}. Internet Scrapbook~\cite{Sugiura1998}. Reverse Linking~\cite{Yesilada2007}. Hunter Gatherer~\cite{2002}. Dontcheva~\cite{Dontcheva2007a}.
+Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} looks for instances of subject-verb-object triples on web pages and connects these together as a graph in which objects are linked by statements made about them on different web pages. 
 
-\subsection{Semantic Web}
+Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. This ``linking of quotations'' is similar in spirit to the linking of claims in Think Link. 
 
-Nobody is going to mark up their own web page as being wrong.
+
+
+% Tagging~\cite{Marlow2006}. Tagomizer~\cite{Park2007}. Reasons for choices of tags~\cite{Sen2006}. Tagging Roles~\cite{Muller2008}. 
+% 
+% SpinSpotter\footnote{http://spinspotter.com}. ClipMarks\footnote{http://clipmarks.com}, Diigo~\footnote{http://diigo.com}, Stickis\footnote{http://stickis.com}.
+% 
+% How to Personalize the Web~\cite{Barrett1997}. 
+
+% \subsection{Clipping}
+% 
+% ScratchPad~\cite{Gotz2007}. Internet Scrapbook~\cite{Sugiura1998}. Reverse Linking~\cite{Yesilada2007}. Hunter Gatherer~\cite{2002}. Dontcheva~\cite{Dontcheva2007a}.
+
+% \subsection{Semantic Web}
+% 
+% Nobody is going to mark up their own web page as being wrong.
 
 \subsection{To discuss in the body}
 
@@ -187,24 +203,6 @@ Paraphrases~\cite{Chklovski2005}. Suggested formal paraphrases~\cite{Blythe2004}
 Importance of Lurkers~\cite{Takahashi2003}
 Wikify~\cite{Mihalcea2007}.
 
-
-
-
-
-Think Link is very influenced by wikis like Wikipedia~\cite{wikipedia}. Like Think Link, wikis allow users to find information organized by topic rather than author and allow users to collaborate together to bring together all the best information about a topic. Wikipedia's greatest strength is arguably also its greatest weakness. Since anyone can edit Wikipedia, there is always the danger that information one reads may be incorrect~\cite{wikifalse}. Several projects have attempted to address this problem by tracking sources of edits~\cite{wikicorrect,wikicorrect2,wikicorrect3}, but it is difficult to remove the problem entirely. While good Wikipedia articles will often include references to sources for their claims, following all sources to check up all claims can be laborious. Think Link tries to avoid this problem by linking claims back to the original sources that made these claims. Users can thus use the known trustworthiness of the original sources to judge the reliability of a claim. 
-
-When a topic is heavily politicized, Wikipedia can be subject to edit wars in which people who hold one opinion delete opinions held by the other side~\cite{wikicorrect3}, making it difficult for the community to collaborate together to produce a document that is both comprehensive and unbiased. Think Link attempts to avoid this problem by taking an ``append-only, collaborative filtering'' approach. A user cannot remove claims that they disagree with\footnote{With special exceptions for dealing with spam and abuse}. Instead all they can do is vote against them, and connect them to claims that provide opposing evidence.
-
-Another key difference between Think Link and a wiki is that Think Link pulls the whole web into its graph of connected claims. A user can use Think Link to investigate claims they read on arbitrary web sites, without having to restrict their browsing to a single wiki site.
-
-SpinSpotter~\cite{spinspotter} shares Think Link's goal of allowing users to identify misleading and inaccurate information on web pages that they read. If a user sees a section of text that they think is misleading then they can mark it up, causing it to be highlighted when other users view the same page. While Think Link and SpinSpotter both share the goal of letting users mark up snippets that may be inaccurate, they differ in what they let users find out about such snippets. SpinSpotter allows users to give a textual description of why the snippet is spin and a suggested edit that would make it more accurate. Think Link instead connects the snippet to its global claim graph, allowing users to quickly access evidence for and against the truth of the claim. There is also a difference in the nature of what SpinSpotter and Think Link expect users to mark up. Think Link is interested in evaluating the truth of factual claims, while SpinSpotter also interested in identifying biased phrases (e.g. ``tree hugger'').
-
-Other web annotation systems such as ShiftSpace.org, Stickis.com, SharedCopy.com, and Diigo.com allow people to add their own annotations to existing web pages and view annotations written by other people. Common annotations include commenting on perceived inaccuracies, highlighting interesting passages, or linking to other relevant documents. More generally, tools like WBI~\cite{personalweb} and Mash Maker~\cite{mashmaker} allow arbitrary changes to be made to web pages. We are not aware of any such system that links web pages to a graph of factual claims. 
-
-
-Web clipping tools such as Google Notebook, Scrapbook~\cite{scrapbook}, and Zotero.org allow one to gather and organize interesting from web pages. Many web clipping tools are also web annotation systems. These tools are designed for gathering and sharing interesting information, rather than for identifying the claims being made, or allowing users to navigate to related claims being made on other sites.
-
-In Vannevar Bush's seminal MEMEX article~\cite{memex} he proposed an architecture in which links between documents were established by readers, according to the associations between them. As Bush says: ``It is exactly as though the physical items had been gathered together from widely separated sources and bound together to form a new book''. Several more recent systems have allowed user to add links to existing pages. ENQUIRE~\cite{weavingtheweb} and TrackBack~\cite{trackback} have bidirectional links, allowing one to see the sites that link to a page as well as those that link from it. Everything2.com links each page to the most popular pages that users viewed at the same time. Think Link's key difference from this work is that it imposes an additional layer of structure, identifying the factual claims that snippets are making and allowing users to browse this graph, rather than just allowing users to specify links between pages.
 
 One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations} find places where a passage is repeated in several documents (usually a quotation) and allow users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{Chi2005} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{Olston2003} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
 
@@ -499,10 +497,10 @@ We hope that Think Link will make it easier for people to be informed about the 
 
 \section{Acknowledgments}
 
-We would like to think Allison Woodruff, Tye Rattenbury, and all our user study participants for all their help during the design of Think Link. Think Link uses icons from the free FamFamFam Silk~\cite{silkicons} collection.
+We would like to think Allison Woodruff, Tye Rattenbury, and all our user study participants for all their help during the design of Think Link. Think Link uses icons from the free FamFamFam Silk\footnote{http:\\famfamfam.com} collection.
 
 
-
+\todo{Sort out bad references}
 \bibliography{refs}
 
 \end{document}
