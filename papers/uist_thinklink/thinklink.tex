@@ -109,19 +109,19 @@ The design of Think Link was guided by two user studies, in which we observed th
 
 \section{Related Work}
 
-Think Link builds on work in several different areas. The argumentation structure influenced by IBIS~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987}; the idea of highlighting information that may not be trustworthy was previously applied to Wikipedia by Wiki-Trust~\cite{Adler2008}; the model of using a community to collect and filter information from a range of sources is influenced by tagging systems~\cite{Marlow2006}; and the idea of gathering up a collection of snippets from web pages has been used by clipping tools such as Internet Scrapbook~\cite{Sugiura1998}. 
+Think Link builds on work in several different areas. The argumentation structure influenced by IBIS~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987a}; the idea of highlighting information that may not be trustworthy was previously applied to Wikipedia by Wiki-Trust~\cite{Adler2008}; the model of using a community to collect and filter information from a range of sources is influenced by tagging systems~\cite{Marlow2006}; and the idea of gathering up a collection of snippets from web pages has been used by clipping tools such as Internet Scrapbook~\cite{Sugiura1998}. 
 
 What makes Think Link interesting is the way that it combines ideas from these different domains and applies them to the task of leading users towards information that conflicts with that which they read.
 
 \subsection{Argumentation}
 
-Think Link is an example of an Issue Based Information System (IBIS)~\cite{Rittel1973}. IBIS tools such as gIBIS~\cite{Conklin1987}, Compendium~\cite{Selvin2001}, Collabatorium~\cite{Klein2007}, Zeno~\cite{Gordon1996}, and Cohere~\cite{Shum2008} model discouse as a graph of connected ideas. While the graph structure varies between tools, most tools allow one to mark an idea as supporting or opposing another idea, and allow one to mark an idea as addressing an issue. Some tools, such as Collabatorium~\cite{Klein2007} and Cope It~\cite{Karacapilidis2001} structure an argument as a tree, while others such as Think Link, gIBIS~\cite{Conklin1987} and Cohere~\cite{Shum2008} structure an argument as a graph, in which a single idea can support or oppose multiple other ideas.
+Think Link is an example of an Issue Based Information System (IBIS)~\cite{Rittel1973}. IBIS tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Collabatorium~\cite{Klein2007}, Zeno~\cite{Gordon1996}, and Cohere~\cite{Shum2008} model discouse as a graph of connected ideas. While the graph structure varies between tools, most tools allow one to mark an idea as supporting or opposing another idea, and allow one to mark an idea as addressing an issue. Some tools, such as Collabatorium~\cite{Klein2007} and Cope It~\cite{Karacapilidis2001} structure an argument as a tree, while others such as Think Link, gIBIS~\cite{Conklin1987a} and Cohere~\cite{Shum2008} structure an argument as a graph, in which a single idea can support or oppose multiple other ideas.
 
 Cohere is perhaps the tool most similar to Think Link. Cohere allows one to use snippets from web pages as evidence to support ideas in its argument graph and provides a Firefox plugin that makes it easier to grab snippets from pages that one browses. While Cohere and Think Link both connect an argument graph to the web, they do so in very different ways. In Cohere, a user attaches a web snippet to their idea in order to use it as evidence. By contrast, in Think Link, the main reason to connect a web snippet to an argument is to mark the snippet as contentious and encourage other readers of the snippet to look at the argument. 
 
 ClaimSpotter~\cite{Sereno2005,Sereno2004} allows one to mark up a scholarly document with logical triples (subject, verb, object) describing interesting claims that are being made in the document. This semantic information can be used to connect claims in different documents and see when a logical claim in one document contradicts another. Entity Workspace~\cite{Bier2006} does something similar for intelligence documents.  
 
-Think Link uses a relatively simple graph structure, similar to that of gIBIS~\cite{Conklink1987}, allowing a claim to support, oppose, or be related to another claim. Cohere~\cite{Shum2008} extends this by allowing one to new link types marked with pro,con,or neutral polarity Toulmin~\cite{toulmin1958} proposes a more complex graph structure, implemented that expresses warrants, data, qualifiers, and reservations. Verheij~\cite{Verheij1999} uses the Toulmin model to create an argumentation tool for lawyers.
+Think Link uses a relatively simple graph structure, similar to that of gIBIS~\cite{Conklink1987a}, allowing a claim to support, oppose, or be related to another claim. Cohere~\cite{Shum2008} extends this by allowing one to new link types marked with pro,con,or neutral polarity Toulmin~\cite{toulmin1958} proposes a more complex graph structure, that expresses warrants, data, qualifiers, and reservations. Verheij~\cite{Verheij1999} uses the Toulmin model to create an argumentation tool for lawyers. More complicated models such as Carneades~\cite{Gordon2007} have been used for artificial intelligence, where it is necessary to be more precise about the structure of an argument.
 
 Think Link's argument visualization is influenced by the left-to-right layout of Cohere~\cite{Shum2008}. Compendium~\cite{Selvin2001} contains a number of other visualizations of argument graphs. Mess Maps~\cite{Horn2007} present an alternative view in which an argument is divided into different sectors, each of which presents the argument from a different frame of discourse (e.g. policy maker vs industrialist vs environmentalist).
 
@@ -177,11 +177,7 @@ SpinSpotter\footnote{http://spinspotter.com} allows a user to highlight snippets
 
 \subsection{Augmented Web Navigation}
 
-Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} looks for instances of subject-verb-object triples on web pages and connects these together as a graph in which objects are linked by statements made about them on different web pages. 
-
-Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. This ``linking of quotations'' is similar in spirit to the linking of claims in Think Link. 
-
-
+Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} and Idea Navigation~\cite{Etzioni2008} look for instances of subject-verb-object triples on web pages and connect these together as a graph in which objects are linked by statements made about them on different web pages. ScentHighlights~\cite{Chi2005a} highlights snippets of text on a web page that are related to topics that the user has said that they are intersted in. Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. This ``linking of quotations'' is similar in spirit to the linking of claims in Think Link. 
 
 % Tagging~\cite{Marlow2006}. Tagomizer~\cite{Park2007}. Reasons for choices of tags~\cite{Sen2006}. Tagging Roles~\cite{Muller2008}. 
 % 
@@ -203,12 +199,6 @@ Paraphrases~\cite{Chklovski2005}. Suggested formal paraphrases~\cite{Blythe2004}
 Importance of Lurkers~\cite{Takahashi2003}
 Wikify~\cite{Mihalcea2007}.
 
-
-One of the goals of Think Link is that people should be able to browse information on the web through the ideas being expressed. This is a goal that is shared with several other projects. Kolak and Schilit~\cite{quotations} find places where a passage is repeated in several documents (usually a quotation) and allow users to navigate from such a passage to all other documents where that passage is quoted. Idea Navigation~\cite{ideanavigation} uses a natural language parser to identify subject-verb-object assertions in documents and then allows users to search for browse the assertions in a document corpus. ScentHighlights~\cite{Chi2005} identifies sections of text that you might find interesting and highlights them for you. ScentTrails~\cite{Olston2003} identifies links to documents that you might find interesting and makes them bigger. Unlike Think Link, these tool attempt to extract text of interest automatically, rather than relying on users to identify and connect interesting factual claims.
-
-Much work has been done on the idea of using a graph to represent an argument~\cite{argumentation,argmas}. Popular argument models include the Toulmin Model~\cite{toulmin}, the Carneades Model~\cite{carneades}, and the IBIS model~\cite{ibis}. Models used for argumentation theory are usually significantly more complex than our simple supports/opposes model, with the result that they provide a more accurate model of the logical argument, at the cost of requiring more skill to assemble. One feature found in some argumentation graphs~\cite{Korb97acognitive} that we may add in the future is the ability to attach a numerical weight (maybe from voting) asserting how much a claim supports or opposes another claim, or how reliable a claim is.
-
-
 %\subsection{Automated Reasoning}
 %
 %Case-Based reasoning
@@ -221,7 +211,6 @@ Much work has been done on the idea of using a graph to represent an argument~\c
 
 \section{The Think Link System}
 
-
 \begin{figure}[tb]
 	\begin{center}
 	\includegraphics[width=6cm]{../screenshots/highlight_crop.png}
@@ -229,7 +218,6 @@ Much work has been done on the idea of using a graph to represent an argument~\c
 	\label{highlight}
 	\end{center}
 \end{figure}
-
 
 Think Link is a tool that overlays a web of factual claims on the existing web (Figure~\ref{summarygraph}). As a user browses the web, Think Link highlights snippets of text that have been identified as making factual claims. If a user clicks on a highlighted snippet, Think Link will display an interface that allows the user to easily find snippets on other pages that make related claims (Figure~\ref{claimview}). Think Link allows a user to easily access the best arguments for and against a claim that can be found on the web, and allows users to more easily evaluate the truth of claims that they read.
 

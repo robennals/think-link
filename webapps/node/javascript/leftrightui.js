@@ -182,6 +182,18 @@ function makeNavButtons(panelnum){
 	return navbuttons;
 }
 
+function filterByType(list,type){
+	var out = [];
+	if(!list) return [];
+	for(var i = 0; i<list.length;i++){
+		var item = list[i];
+		if(item.type == type){
+			out.push(item);
+		}
+	}
+	return out;
+}
+
 function makeInfo(obj,panelnum){
 	var info = $("<div class='info'/>");
 	var body = $("<div class='panelbody'>").appendTo(info);
@@ -226,8 +238,10 @@ function makeInfo(obj,panelnum){
 			body.append(makeSubGroup("related topics",obj.from.about,panelnum));
 			break;
 		case "topic":
-			body.append(makeSubGroup("claims about this topic",obj.to.about,panelnum));
-			body.append(makeSubGroup("snippets about this topic",obj.to.snipabout,panelnum));
+			var claims = filterByType(obj.to.about,"claim");
+			var snippets = filterByType(obj.to.about,"snippet");
+			body.append(makeSubGroup("claims about this topic",claims,panelnum));
+			body.append(makeSubGroup("snippets about this topic",snippets,panelnum));
 			body.append(makeSubGroup("related topics",relates,panelnum));
 			break;
 		case "claim":
@@ -303,16 +317,25 @@ function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
 			adder.parent().find(".adder-selected").attr("class","adder");
 			adder.attr("class","adder-selected");
 			var textbox = $("<input class='addtxt' type='text'>").appendTo(panel);
-			var gobut = $("<input class='addbutton' type='button' value='add'>").appendTo(panel);
+			var gobut = $("<input class='addbutton' type='button' value='add'>")
+				.click(function(){
+					callback({text:textbox.val(),id:"none"});
+				})
+				.appendTo(panel);
 
 			textbox.keyup(function(){
 				var text = textbox.val();
 				setTimeout(function(){
 					var nowtext = textbox.val();
 					if(text == nowtext){
-						updateSuggestions(panel,
-							urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
-							panelnum,"suggested "+type+"s",obj,callback);
+						if(type=="topic"){
+							updateTopicSuggestions(panel,text,
+								panelnum,"suggested topics",obj,callback);
+						}else{
+							updateSuggestions(panel,
+								urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
+								panelnum,"suggested "+type+"s",obj,callback);
+						}
 					}
 				},500);
 			});
@@ -329,6 +352,37 @@ function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
 		});
 	
 	return adder;
+}
+
+function mergeSuggestions(lists){
+	var hsh = {};
+	var out = [];
+	for(var i = 0; i < lists.length; i++){
+		for(var j = 0; j < lists[i].length; j++){
+			var item = lists[i][j];
+			if(!hsh[item.text]){
+				hsh[item.text] = true;
+				out.push(item);
+			}
+		}
+	}
+	return out;
+}
+
+function updateTopicSuggestions(panel,text,panelnum,title,obj,callback){
+	var searchurl = urlbase+"node/search.js?type=topic&callback=?&query="+encodeURIComponent(text);
+	var wikiurl = "http://localhost:8180/test/test?text="+text+"&callback=?";
+	$.getJSON(searchurl,function(xs){
+		$.getJSON(wikiurl,function(ys){
+			panel.find(".suggestions").remove();
+			panel.find(".sugghdr").remove();
+			var sugs = mergeSuggestions([xs.to.colitem,ys.to.colitem]);
+			$("<div class='sugghdr'/>").text(title).appendTo(panel);
+			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback));	
+		});
+	});
+					
+	
 }
 
 function updateSuggestions(panel,url,panelnum,title,obj,callback){

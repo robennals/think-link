@@ -21,18 +21,19 @@ public class MainServlet extends HttpServlet {
 		doGet(req,res);
 	}
 	
-	protected void matchForId(PrintWriter out, HttpServletRequest req, int id){
+	protected void matchForId(PrintWriter out, HttpServletRequest req, int id,String text){
 		try{
 			DataBase base = ConnectionPool.get();
 			try{
-				Dyn info = base.getInfo(id);
-				String text;
-				if(info.get("type").equals("snippet")){
-					Dyn snippet = base.getSnippet(id);
-					String sniptext = snippet.get("text");
-					text = sniptext + " " + sniptext + " " + sniptext + " " + sniptext+ " " + sniptext + " " + snippet.get("page_text");			
-				}else{
-					text = info.get("text");
+				if(text == null){
+					Dyn info = base.getInfo(id);
+					if(info.get("type").equals("snippet")){
+						Dyn snippet = base.getSnippet(id);
+						String sniptext = snippet.get("text");
+						text = sniptext + " " + sniptext + " " + sniptext + " " + sniptext+ " " + sniptext + " " + snippet.get("page_text");			
+					}else{
+						text = info.get("text");
+					}
 				}
 				
 				Vector<WikiMatch> matches = WikiMatcher.getMatches(text); 
@@ -80,9 +81,15 @@ public class MainServlet extends HttpServlet {
 		
 		String text = req.getParameter("text");
 		String id = req.getParameter("id");
+		String callback = req.getParameter("callback");
 		
+		int idnum = 0;
 		if(id != null){
-			matchForId(out,req,Integer.parseInt(id));
+			idnum = Integer.parseInt(id);
+		}
+		
+		if(callback != null){
+			matchForId(out,req,idnum,text);
 			out.close();
 			return;
 		}

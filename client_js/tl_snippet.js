@@ -141,7 +141,7 @@ function tl_snippet_dialog(margin) {
 		node = para;
 		
 		var pagetext = "";
-		while(pagetext.length < 1000){
+		while(node && pagetext.length < 1000){
 			if(node.tagName == para.tagName){
 				pagetext += node.textContent + " ";
 			}
