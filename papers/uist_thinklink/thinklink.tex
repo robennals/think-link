@@ -285,18 +285,85 @@ One danger in a voting system is that a large group of people will drown out the
 
 \todo{Talk about searches}
 \todo{Cite work on collaborative filtering}
+\todo{Mention the sidebar?}
 
 % If the current page contains snippets then a tab appears in the top left corner of the window. The tab contains a light bulb icon whose color changes according to the nature of the snippets on the page (Figure~\ref{bookmark_icons}) - red if a snippet contains a contentious claim. This allows a user to quickly tell if a page contains something of interest without having to scroll through the whole page. Clicking on the tab opens the margin. The margin provides a summary of all the interesting claims that users have identified on the current page and is designed to mimic the traditional margin notes that readers often write on physical documents~\cite{marginalia}. To emphasize the connection between a margin note and its associated snippet, each margin note is aligned vertically with its snippet and the snippet is highlighted more strongly when the user mouses over the associated margin note. 
 
 \subsection{Campaigning on the Disputed Web}
 
+If an activist user has installed the Think Link browser extension then they can mark up snippets that they believe make disputed claims, causing them to be highlighted when viewed by other readers. A user can mark a snippet as disputed by selecting the text, and clicking ``This is disputed'' in the context menu. 
+
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{../screenshots/v2_snipmark.png}
+	\caption{Use the context menu to mark a new snippet}
+	\label{createprocess}
+	\end{center}
+\end{figure*}
+
+
+
+In order for the snippet to be useful for other readers, one needs to state what claim it is making. Since a user will often want to collect many snippets that make the same point, Think Link allows a user to associate snippets with claims in bulk, rather than having to specify a snippet every time they create a snippet.
+
+When a user creates a snippet, it is initially highlighted in blue, to show that it has not yet been associated with a claim. Such unattached snippets are only visible to the user who created them. A user can chose to associate a snippet with a claim immediately by clicking on it and selecting from a list of suggested snippets. Alternatively, they can use the claim browser to assign snippets to claims in bulk (Figure~\ref{sniptopic}).
+
+
+
+
+% Put all user study stuff at the end
+
+
+In order for the snippet to be useful for other readers, one needs to state what claim it is making. Early versions of Think Link required a user to state the disputed claim that a snippet was making at the point at which they marked it; however our studies revealed that this made the process of marking snippets too arduous and deterred users from marking snippets. Recent versions of TWe thus instead created an interface that allows a user to mark up snippets without saying what claim they are making and then assign snippets to claims ``in bulk'' (Figure~\ref{sniptopic}.
+
 \begin{figure}[tb]
 	\begin{center}
 	\includegraphics[width=8cm]{../screenshots/v2_sniptopic.png}
-	\caption{Use topic suggestion to quickly file evidence snippets}
+	\caption{The claim browser shows a list of unfiled snippets}
 	\label{sniptopic}
 	\end{center}
 \end{figure}
+
+When a user creates a snippet, it is intially highlighted in blue, to show that it has not yet been associated with a snippet and will not be visible to other users. If the user clicks on the highlighted snippet then 
+
+
+
+
+
+
+If an activist user is looking for snippets that make a particular claim that they disagree with then they may collect many snippets that are making the same claim. Rather than requiring 
+
+
+
+
+It is important to make this process as simple and easy as possible.
+
+ Rather than requiring a user to specify the claim a snippet is making when the snippet is created, Think Link allows users to mark snippets without saying what it is they claim and then associate snippets with claims ``in bulk''.
+
+
+
+
+
+
+It is important to make the process of creating snippassociating snippets with claims as easy as possible. If 
+
+
+ In early versions of Think Link we required a user to state the claim a snippet was making when they marked it; however our user studies revealed that this made the process of creating snippets take too long and put users off creating them. 
+
+
+In early versions of Think Link we required a user to state the claim a snippet was making at the point at which they created the snippet; however our user studies revealed that  
+
+Think Link allows an activist user to highlight snippets that they believe make contentious claims so that other readers will be exposed to the evidence on the other side. If a user finds a snippet of text that they believe is making a disputed claim then they can select the text, and select ``This is disputed'' from the 
+
+
+
+
+
+\begin{figure}[tb]
+	\includegraphics[width=8.5cm]{../screenshots/snipsave_diagram_full.png}
+	\caption{Selecting the claim made by a new snippet}
+	\label{snipsavecrop}
+\end{figure}
+
 
 \subsection{Organizing the Argument Graph}
 
@@ -307,25 +374,12 @@ One danger in a voting system is that a large group of people will drown out the
 \subsection{Creating new Snippets}
 \label{newsnippet}
 
-\begin{figure*}[tb]
-	\begin{center}
-	\includegraphics[width=16cm]{../screenshots/newsnip_all.png}
-	\caption{Process for creating a new snippet}
-	\label{createprocess}
-	\end{center}
-\end{figure*}
-
 %\begin{figure}[tb]
 %	\includegraphics[width=8.5cm]{../screenshots/snipsave_full.png}
 %	\caption{The claim selection window allows one to identify the claim a snippet is making}
 %	\label{snipsavefull}
 %\end{figure}
 
-\begin{figure}[tb]
-	\includegraphics[width=8.5cm]{../screenshots/snipsave_diagram_full.png}
-	\caption{Selecting the claim made by a new snippet}
-	\label{snipsavecrop}
-\end{figure}
 
 There are several reasons a user may wish to add a snippet to Think Link. They may find the snippet useful and may want to refer to it again in the future; they may disagree with the claim the snippet is making, and want to alert other readers to the fact that there are opposing arguments; they may think the claim argues a point well and want to be able to use it to make an argument, or they may agree with the claim and want to provide easy access to evidence elsewhere that backs it up. 
 

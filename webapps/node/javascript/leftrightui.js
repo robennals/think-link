@@ -377,8 +377,8 @@ function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
 					panelnum,"suggested topics",obj,callback);
 			}else{ // crappy suggestions for the moment
 				updateSuggestions(panel,
-					"http://localhost:8180/thinklink/node/search.js?type=claim&query="+encodeURIComponent(obj.text)+"&callback=?",
-					panelnum,"suggested claims",obj,callback);
+					"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+					panelnum,"suggested "+type+"s",obj,callback);
 			}
 		});
 	
@@ -464,7 +464,12 @@ function makeSuggestion(obj,panelnum,callback){
 			callback(obj.text);
 		});
 
-	var text = $("<span/>").css('font-size','13px').text(obj.text);
+	var text;
+	if(obj.type == "snippet"){
+		text = $("<span class='snippet-text'/>").text("\"..."+obj.text.substring(0,160)+"...\"");	
+	}else{
+		text = $("<span/>").css('font-size','13px').text(obj.text);
+	}
 	item.append(makeHBox([add,text],"linkbox"));
 	
 	return item;
