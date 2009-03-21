@@ -4,10 +4,12 @@ var panelbox = null;
 var topbar = null;
 
 var widthpad = null;
+var global_miniui = true;
 
 function makeUI(id,withtop){
 	if(withtop){
 		topbar = makeTopBar();
+		global_miniui = false;
 	}
 	if(!id){
 		id = "recent.js";
@@ -15,8 +17,19 @@ function makeUI(id,withtop){
 	$(document.body).append(topbar);
 	panelbox = $("<tr class='panelbox'/>");
 	$(document.body).append($("<table class='toptable'>").append(panelbox));
-	widthpad = $("<div class='widthpad'>pad</div>").appendTo(document.body);	
+	widthpad = $("<div class='widthpad'/>").appendTo(document.body);	
 	getPanel(0,id);
+	if(global_miniui){
+		$(".toptable").css("margin-top",0);
+	}else{
+		$(window).resize(doLayout);
+		doLayout();
+	}
+}
+
+function doLayout(){
+	if(global_miniui) return;
+	$(".panelbody").height(window.innerHeight - 90 + "px");
 }
 
 function makeTopBar(){
@@ -77,6 +90,7 @@ function getPanel(panelnum,nodeid,name){
 	}
 	panel = makePanel(panelnum,nodeid,name);
 	panelbox.append(panel);
+	doLayout();
 }
 
 function removeArrows(panelnum){
@@ -87,25 +101,21 @@ function removeArrows(panelnum){
 
 function makeArrow(panelnum,item){
 	removeArrows(panelnum);
-	var pos = getPos(item.get(0));
+	var pos = GetElementAbsolutePos(item.get(0));
 	var arrow = $("<td class='arrow'>")
 		.attr("id","arrow-"+panelnum)
-		.css("padding-top",pos.top + item.height()/2 - 60);
+		.css("padding-top",pos.y + item.height()/2 - 60);
 	arrow.append($("<img/>").attr("src",iconUrl("big_right_arrow")));
 	return arrow;	
 }
 
-function moveArrow(){
-	var node;
-	if(selection){
-		node = selection;
-	}else{
-		node = $("#panel-0");
+function updateArrowPos(panelnum){
+	var item = selection[panelnum];
+	var arrow = $("#arrow-"+panelnum);
+	if(item && arrow){
+		var pos = GetElementAbsolutePos(item.get(0));
+		arrow.css("padding-top",pos.y + item.height()/2 - 60);				
 	}
-	var pos = getPos(node.get(0));
-	var panel = $("#panel-0");
-	var panel2 = $("#panel-1");
-	var panpos = getPos(panel.get(0));
 }
 
 
@@ -196,26 +206,48 @@ function filterByType(list,type){
 
 function makeInfo(obj,panelnum){
 	var info = $("<div class='info'/>");
-	var body = $("<div class='panelbody'>").appendTo(info);
-	
-	body.append(makeNavButtons(panelnum));
 		
+	//if(!global_miniui){	
+		info.append(makeNavButtons(panelnum));
+	//}
+
 	var title;
 	if(obj.type == "recent"){
-		title = $("<h2/>").append("History").appendTo(body);
+		title = $("<h2/>").append("History").appendTo(info);
+	}else if(obj.opposed){
+		title = $("<h2 class='disputed-title'/>").append("disputed claim").appendTo(info);
 	}else{
-		title = $("<h2/>").append(obj.type).appendTo(body);
+		title = $("<h2/>").append(obj.type).appendTo(info);
 	}
+
+	var body = $("<div class='panelbody'>").appendTo(info);
+	if(global_miniui){
+		body.css("height","400px");
+		body.css("overflow-y","auto");	
+	}
+	
+	body.scroll(function(){
+		updateArrowPos(panelnum);
+	});
+
 	
 	title.click(function(){
 		scrollToPanel(panelnum);
 	});
 	
-	$("<div class='objtitle'/>").text(obj.text).appendTo(body);	
-	
-	obj.from.supports = removeParent(obj.from.supports,panelnum);
-	obj.from.opposes = removeParent(obj.from.opposes,panelnum);
-	obj.from['relates to'] = removeParent(obj.from['relates to'],panelnum);
+	if(obj.type == "snippet"){
+		$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(body);	
+		$("<a class='snippet-url' target='_blank'/>")
+			.attr("href",obj.info.realurl)
+			.text(obj.info.realurl)
+			.appendTo(body);
+	}else{
+		$("<div class='objtitle'/>").text(obj.text).appendTo(body);	
+	}
+		
+	//obj.from.supports = removeParent(obj.from.supports,panelnum);
+	//obj.from.opposes = removeParent(obj.from.opposes,panelnum);
+	//obj.from['relates to'] = removeParent(obj.from['relates to'],panelnum);
 			
 
 	if(obj.type == "snippet" || obj.type == "claim" || obj.type == "topic"){		
@@ -234,7 +266,7 @@ function makeInfo(obj,panelnum){
 		case "snippet":		
 			body.append(makeSubGroup("claims supported",obj.from.supports,panelnum));
 			body.append(makeSubGroup("claims opposed",obj.from.opposes,panelnum));
-			body.append(makeSubGroup("claims discussed",relates,panelnum));
+			body.append(makeSubGroup("claims related",relates,panelnum));
 			body.append(makeSubGroup("related topics",obj.from.about,panelnum));
 			break;
 		case "topic":
@@ -263,13 +295,21 @@ function makeInfo(obj,panelnum){
 	var addpanel = $("<div class='addpanel'/>");
 	if(obj.type == "claim"){
 		add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
+		add.append($("<br/>"));
 		add.append(makeAdder("supporting claim","claim","supports",true,addpanel,obj,panelnum));
 		add.append(makeAdder("opposing claim","claim","opposes",true,addpanel,obj,panelnum));
 		add.append(makeAdder("related claim","claim","relates to",true,addpanel,obj,panelnum));
+		add.append($("<br/>"));
+		add.append(makeAdder("supporting snippet","snippet","supports",true,addpanel,obj,panelnum));
+		add.append(makeAdder("opposing snippet","snippet","opposes",true,addpanel,obj,panelnum));
+		add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
+		add.append($("<br/>"));
+		add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
+		add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
 	}else if(obj.type == "snippet"){
 		add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
-		add.append(makeAdder("supported claim","claim","supports",false,addpanel,obj,panelnum));
-		add.append(makeAdder("opposed claim","claim","opposes",false,addpanel,obj,panelnum));
+		add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
+		add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
 		add.append(makeAdder("related claim","claim","relates to",false,addpanel,obj,panelnum));
 	}else if(obj.type == "topic"){
 		add.append(makeAdder("related topic","topic","relates to",false,addpanel,obj,panelnum));
@@ -290,20 +330,11 @@ function makeInfo(obj,panelnum){
 }
 
 function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
-	var callback = function(other){	
-		if(reverse){
-			$.post(urlbase+"node/"+other.id+"/addlink.js?verb="+verb+
-				"&type="+type+
-				"&id="+obj.id+"&text="+obj.text+"&reverse="+reverse,function(){
-					getPanel(panelnum,obj.id+'.js',null);
-			});
-		}else{
-			$.post(urlbase+"node/"+obj.id+"/addlink.js?verb="+verb+
-				"&type="+type+
-				"&id="+other.id+"&text="+other.text+"&reverse="+reverse,function(){
-					getPanel(panelnum,obj.id+'.js',null);
-			});
-		}
+	var callback = function(othertxt){	
+		$.post(urlbase+"node/"+obj.id+"/addlink.js?verb="+verb+
+			"&type="+type+"&text="+othertxt+"&reverse="+reverse,function(){
+				getPanel(panelnum,obj.id+'.js',null);
+		});
 	};
 	
 	var adder = $("<span class='adder'/>").text(title)
@@ -319,7 +350,7 @@ function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
 			var textbox = $("<input class='addtxt' type='text'>").appendTo(panel);
 			var gobut = $("<input class='addbutton' type='button' value='add'>")
 				.click(function(){
-					callback({text:textbox.val(),id:"none"});
+					callback(textbox.val());
 				})
 				.appendTo(panel);
 
@@ -430,7 +461,7 @@ function makeSuggestion(obj,panelnum,callback){
 		.css('font-size','13px')
 		.click(function(ev){
 			ev.preventDefault(); ev.stopPropagation();			
-			callback(obj);
+			callback(obj.text);
 		});
 
 	var text = $("<span/>").css('font-size','13px').text(obj.text);
@@ -476,7 +507,12 @@ function makeLink(obj,panelnum,suggestcb){
 	
 	var icon = $("<img class='icon'/>").attr("src",getIcon(obj));				
 		// TODO: fix bug that requires explicit CSS here
-	var text = $("<span/>").css('font-size','13px').text(obj.text);
+	var text;
+	if(obj.type == "snippet"){
+		text = $("<span class='snippet-text'/>").text("\"..."+obj.text.substring(0,160)+"...\"");	
+	}else{
+		text = $("<span/>").css('font-size','13px').text(obj.text);
+	}
 	item.append(makeHBox([icon,text],"linkbox"));
 	
 	if(obj.type == "snippet" && obj.info && obj.info.url){
@@ -627,3 +663,39 @@ function tl_log(msg){
 		console.log(msg);
 	}
 }
+
+var __isFireFox = true;
+
+function GetElementAbsolutePos(element) {  
+    var res = new Object();  
+    res.x = 0; res.y = 0;  
+    if (element !== null) {  
+        res.x = element.offsetLeft;   
+        res.y = element.offsetTop;   
+          
+        var offsetParent = element.offsetParent;  
+        var parentNode = element.parentNode;  
+  
+        while (offsetParent !== null) {  
+            res.x += offsetParent.offsetLeft;  
+            res.y += offsetParent.offsetTop;  
+  
+            if (offsetParent != document.body && offsetParent != document.documentElement) {  
+                res.x -= offsetParent.scrollLeft;  
+                res.y -= offsetParent.scrollTop;  
+            }  
+            //next lines are necessary to support FireFox problem with offsetParent  
+            if (__isFireFox) {  
+                while (offsetParent != parentNode && parentNode !== null) {  
+                    res.x -= parentNode.scrollLeft;  
+                    res.y -= parentNode.scrollTop;  
+                      
+                    parentNode = parentNode.parentNode;  
+                }      
+            }  
+            parentNode = offsetParent.parentNode;  
+            offsetParent = offsetParent.offsetParent;  
+        }  
+    }  
+    return res;  
+}  

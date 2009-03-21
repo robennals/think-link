@@ -83,11 +83,31 @@
 	text-align: left;
 }
 
+.tl_fader {
+	background-color: black;
+	opacity: 0.5;
+	display: block;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	z-index: 1000;
+}
+
+.tl_point_frame {
+	border: none;
+}
+
 .tl_dialog {
 	z-index: 2147483647;
 /*	background-color: #CCDDDD; */
+/*
 	background-color: #eeeeee;
+*/
+/*
 	border: 1px solid #242E35;
+*/
 	color: #242E35;
 	padding: 1px;
 	overflow: auto;
@@ -113,10 +133,12 @@
 */
 /*	background-color: #4A7B6F; 
 	color: #EEEEE7; */
-	background-color: lightGrey;
+/*	background-color: lightGrey; */
 /*
 	background-color: #5867a2;
 */
+	background-color: transparent;
+	height: 26px;
 	color: black;
 	text-align: left;
 	font-size: 13px;
@@ -352,4 +374,5 @@ a img {
 	font-family: verdana, sans-serif;
 	vertical-align: top;
 	margin-right: 4px;
+	height: 22px;
 }

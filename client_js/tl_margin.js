@@ -220,7 +220,7 @@ function tl_margin()
 				for (var item=0; item< result.length; item++) {
 					tl_log("addItem");
 					that.addItem(result[item]);
-					if (result[item].claim && result[item].claim.opposed) {
+					if (result[item].claimid && result[item].opposed) {
 						that.haveOpposedPoint = true; 
 					}
 				}
@@ -378,14 +378,14 @@ function tl_margin()
 			span.addEventListener("mouseover",function(ev){
 					that.setHighlightClass(snippet,true);
 					var div = document.createElement("div");
-					if (snippet.claim && snippet.claim.opposed){
+					if (snippet.claimid && snippet.opposed){
 						div.innerHTML = "<span class='tl_claim_warn'>contentious claim: "+
 								"</span><span class='tl_claim_text'>"+
-								snippet.claim.text+"</span><span class='tl_claim_click'>"+
+								snippet.claimtext+"</span><span class='tl_claim_click'>"+
 								"(click snippet for more info)</span>";
-					}else if(snippet.claim){
+					}else if(snippet.claimid){
 						div.innerHTML = "<span class='tl_claim_prefix'>this claims: </span><span class='tl_claim_text'>"
-							+snippet.claim.text+"</span><span class='tl_claim_click'> (click snippet for more info)</span>";
+							+snippet.claimtext+"</span><span class='tl_claim_click'> (click snippet for more info)</span>";
 					}else{
 						div.innerHTML = "<span class='tl_claim_prefix'>this snippet has not been associated with a claim</span><span class='tl_claim_text'>"+
 							"</span><span class='tl_claim_click'> (click snippet to attach to a claim)</span>";
@@ -427,7 +427,7 @@ function tl_margin()
 		var that = this;
 		
 		var highlightclass;
-		if(snippet.claimid && snippet.opposed != null){
+		if(snippet.claimid && snippet.opposed){
 			highlightclass = "tl_highlight_con";
 		}else if(!snippet.claimid){
 			highlightclass = "tl_highlight_free";

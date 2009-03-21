@@ -43,13 +43,24 @@ function tl_point_browser() {
 	this.init = function() {
 	}
 		
+	this.addFader = function(viewframe){
+		var fader = document.createElement("div");
+		fader.className = "tl_fader";
+		fader.addEventListener("click",function(ev){
+			document.body.removeChild(fader);
+			document.body.removeChild(viewframe);
+		},true);
+		document.body.appendChild(fader);
+		return fader;
+	}	
+		
 	this.viewFrame = function(snippet) {
 		var url;
 		if(snippet.claimid){
-			title = "Claim Info";
+			//title = "Claim Info";
 			url = thinklink_pointbase+snippet.claimid+"?snippet="+snippet.id;
 		}else{
-			title = "Snippet Info";
+			//title = "Snippet Info";
 			url = thinklink_pointbase+snippet.id+"/setclaim";
 		}
 		
@@ -65,6 +76,8 @@ function tl_point_browser() {
 		win.style.zIndex = "214783647";
 		document.body.appendChild(win);
 		
+		var fader = this.addFader(win);
+				
 		win.style.overflow = "hidden";
 		win.style.position = "fixed";
 		win.style.top = "50px";
@@ -87,37 +100,55 @@ function tl_point_browser() {
 		buttonBox.style.right = "4px";
 		titleBar.appendChild(buttonBox);
 		
-		var titleBox = document.createElement("nobr");
-		titleBox.textContent = title;
-		titleBar.appendChild(titleBox);
+		//var titleBox = document.createElement("nobr");
+		//titleBox.textContent = title;
+		//titleBar.appendChild(titleBox);
+
+
+		var ignoreButton = document.createElement("input");
+		ignoreButton.className = "tl_openbutton";
+		ignoreButton.setAttribute("type","button");
+		ignoreButton.setAttribute("value","Don't highlight this again");
+		buttonBox.appendChild(ignoreButton);
+		ignoreButton.addEventListener("click",function(){
+			that.hideMe();
+			tl_doAJAX("tl_ignore","scripthack/ignoreclaim.js"+
+				"?claim="+snippet.claimid,function(){});					
+		},true);
 		
 		var openButton = document.createElement("input");
 		openButton.className = "tl_openbutton";
 		openButton.setAttribute("type","button");
-		openButton.setAttribute("value","Open Organizer");
+		openButton.setAttribute("value","Open Full Interface");
 		buttonBox.appendChild(openButton);
 		openButton.addEventListener("click",function(){
 			window.open(thinklink_mainhome);
 		},true);
 
 		var close = document.createElement("img");
+		close.style.width = "64px";
 		close.style.paddingTop = "2px";
 		close.setAttribute("src",thinklink_imagebase+"cancel.png");
 		buttonBox.appendChild(close);
 		close.addEventListener("click",function(){
 			that.hideMe();
+			document.body.removeChild(fader);
 		},true);
 		
 		// add actual content
 		var frameholder = document.createElement("div");
-		frameholder.style.height = (window.innerHeight * (2/3)) + "px";
+		frameholder.style.height = "430px";
+//		frameholder.style.height = (window.innerHeight * (2/3)) + "px";
 
 		var pointframe = document.createElement("iframe");
 		pointframe.src = url;
 		pointframe.style.width="100%";
 		pointframe.style.height="100%";
-		pointframe.style.overflow = "auto";
+		//pointframe.style.overflow = "auto";
+		pointframe.style.overflow = "hidden";
+		pointframe.style.border = "none";
 		pointframe.setAttribute("id","tl_point_frame");
+		pointframe.setAttribute("allowtransparency","true");
 		frameholder.appendChild(pointframe);
 		frameholder.style.width="100%";
 		win.appendChild(frameholder);

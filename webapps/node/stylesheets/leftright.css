@@ -1,6 +1,6 @@
 body {
 	margin: 0px;
-	background: white;
+/*	background: white; */
 }
 
 body, h1,h2,h3,p,item,addhdr{
@@ -37,6 +37,7 @@ body, h1,h2,h3,p,item,addhdr{
 	width: 400px;
 	border: 1px solid #666666;
 	vertical-align: top;
+	background-color: white;
 }
 
 .wikipanel {
@@ -78,13 +79,17 @@ linkbox {
 	margin-right: 6px;
 }
 
-.objtitle{
+.objtitle, .snippet-text{
 	font-size: 13px;
 /*
 	font-weight: bold;
 */
 	margin: 0px;
 	padding: 1px 1px 1px 5px;
+}
+
+.snippet-text {
+	font-style: italic;
 }
 
 h3{
@@ -186,6 +191,11 @@ a img {
 	margin-left: 16px;
 }
 
+.panelbody {
+	overflow-y: auto;
+	overflow-x: none;
+}
+
 .sugghdr {
 	font-size: 13px;
 	padding-left: 8px;
@@ -202,7 +212,12 @@ a img {
 	display: block;
 	height: 1px;
 	width: 400px;
-	color: white;
+	color: transparent;
+}
+
+.disputed-title {
+	background-color: darkRed;
+	color: #efd7c2;
 }
 
 .greenadd {
@@ -221,6 +236,11 @@ a img {
 
 .snipshorturl {
 	color: #0000CC;
+	margin-left: 10px;
+}
+
+.snippet-url {
+	font-size: 12px;
 	margin-left: 10px;
 }
 

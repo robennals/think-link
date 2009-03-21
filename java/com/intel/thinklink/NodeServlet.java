@@ -65,6 +65,7 @@ public class NodeServlet extends HttpServlet {
 					req.getParameter("verb"),
 					req.getParameter("text"),
 					req.getParameter("type"),
+					Boolean.parseBoolean(req.getParameter("reverse")),
 					userid);
 		}
 //		m = addLinkPath.matcher(path);

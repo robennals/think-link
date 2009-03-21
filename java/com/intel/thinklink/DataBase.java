@@ -167,7 +167,7 @@ public class DataBase {
 	}
 	
 	private PreparedStatement log_recent = con.prepareStatement(
-			"INSERT DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)");
+			"REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)");
 	void logRecent(int userid, int nodeid) throws SQLException{
 		log_recent.setInt(1, userid);
 		log_recent.setInt(2, nodeid);
@@ -306,12 +306,16 @@ public class DataBase {
 	}
 	
 	
-	public void addLink(int id, String verb, String text, String type,int userid) throws SQLException {
+	public void addLink(int id, String verb, String text, String type,boolean reverse,int userid) throws SQLException {
 		int dst = findByName(text);
 		if(dst == 0){
 			dst = addNode(text,userid,type,"");
 		}
-		addLink(id,dst,verb);		
+		if(reverse){
+			addLink(dst,id,verb);					
+		}else{
+			addLink(id,dst,verb);		
+		}
 	}
 	
 	static final int NOTHING = 0;
@@ -389,6 +393,7 @@ public class DataBase {
 		if(userid != 0){
 			d.put("uservotes",getUserVotes(id,userid));
 		}
+		logRecent(userid,id);
 		return d;
 	}
 	Dyn map_links(Vector<Dyn> links){
