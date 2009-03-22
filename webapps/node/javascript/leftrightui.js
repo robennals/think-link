@@ -291,31 +291,45 @@ function makeInfo(obj,panelnum){
 
 	}
 	
-	var add = $("<div class='addbox'><span class='addhdr'>add</span></div>").appendTo(body);;
+	var add = $("<div class='addbox'></div>").appendTo(body);;
 	var addpanel = $("<div class='addpanel'/>");
+	
 	if(obj.type == "claim"){
-		add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
-		add.append($("<br/>"));
-		add.append(makeAdder("supporting claim","claim","supports",true,addpanel,obj,panelnum));
-		add.append(makeAdder("opposing claim","claim","opposes",true,addpanel,obj,panelnum));
-		add.append(makeAdder("related claim","claim","relates to",true,addpanel,obj,panelnum));
-		add.append($("<br/>"));
-		add.append(makeAdder("supporting snippet","snippet","supports",true,addpanel,obj,panelnum));
-		add.append(makeAdder("opposing snippet","snippet","opposes",true,addpanel,obj,panelnum));
-		add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
-		add.append($("<br/>"));
-		add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
-		add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
+		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+		add.append(makeSuggester("claim",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
 	}else if(obj.type == "snippet"){
-		add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
-		add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
-		add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
-		add.append(makeAdder("related claim","claim","relates to",false,addpanel,obj,panelnum));
+		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+		add.append(makeSuggester("claim",["supports","opposes","relates to"],false,addpanel,obj,panelnum));
 	}else if(obj.type == "topic"){
-		add.append(makeAdder("related topic","topic","relates to",false,addpanel,obj,panelnum));
-		add.append(makeAdder("related claim","claim","about",true,addpanel,obj,panelnum));
-		add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
+		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+		add.append(makeSuggester("claim",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
 	}
+
+	//if(obj.type == "claim"){
+		//add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
+		//add.append($("<br/>"));
+		//add.append(makeAdder("supporting claim","claim","supports",true,addpanel,obj,panelnum));
+		//add.append(makeAdder("opposing claim","claim","opposes",true,addpanel,obj,panelnum));
+		//add.append(makeAdder("related claim","claim","relates to",true,addpanel,obj,panelnum));
+		//add.append($("<br/>"));
+		//add.append(makeAdder("supporting snippet","snippet","supports",true,addpanel,obj,panelnum));
+		//add.append(makeAdder("opposing snippet","snippet","opposes",true,addpanel,obj,panelnum));
+		//add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
+		//add.append($("<br/>"));
+		//add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
+		//add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
+	//}else if(obj.type == "snippet"){
+		//add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
+		//add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
+		//add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
+		//add.append(makeAdder("related claim","claim","relates to",false,addpanel,obj,panelnum));
+	//}else if(obj.type == "topic"){
+		//add.append(makeAdder("related topic","topic","relates to",false,addpanel,obj,panelnum));
+		//add.append(makeAdder("related claim","claim","about",true,addpanel,obj,panelnum));
+		//add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
+	//}
 
 	addpanel.appendTo(body);
 
@@ -328,6 +342,64 @@ function makeInfo(obj,panelnum){
 	
 	return info;
 }
+
+
+function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
+	var callback = function(othertxt,verb){	
+		$.post(urlbase+"node/"+obj.id+"/addlink.js?verb="+verb+
+			"&type="+type+"&text="+othertxt+"&reverse="+reverse,function(){
+				getPanel(panelnum,obj.id+'.js',null);
+		});
+	};
+	
+	var adder = $("<span class='adder'/>").text("add "+type)
+		.click(function(){
+			panel.empty();
+			if(adder.attr("class") == "adder-selected"){
+				adder.attr("class","adder");
+				return;
+			}
+			
+			adder.parent().find(".adder-selected").attr("class","adder");
+			adder.attr("class","adder-selected");
+			var textbox = $("<input class='addtxt' type='text'>").appendTo(panel);
+			var gobut = $("<input class='addbutton' type='button' value='add'>")
+				.click(function(){
+					callback(textbox.val());
+				})
+				.appendTo(panel);
+
+			textbox.keyup(function(){
+				var text = textbox.val();
+				setTimeout(function(){
+					var nowtext = textbox.val();
+					if(text == nowtext){
+						if(type=="topic"){
+							updateTopicSuggestions(panel,text,
+								panelnum,"suggested topics",obj,callback);
+						}else{
+							updateSuggestions(panel,
+								urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
+								panelnum,"suggested "+type+"s",obj,callback,verbs);
+						}
+					}
+				},500);
+			});
+
+			if(type == "topic"){
+				updateSuggestions(panel,
+					"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
+					panelnum,"suggested topics",obj,callback,verbs);
+			}else{ // crappy suggestions for the moment
+				updateSuggestions(panel,
+					"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+					panelnum,"suggested "+type+"s",obj,callback,verbs);
+			}
+		});
+	
+	return adder;
+}
+
 
 function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
 	var callback = function(othertxt){	
@@ -409,27 +481,27 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback){
 			panel.find(".sugghdr").remove();
 			var sugs = mergeSuggestions([xs.to.colitem,ys.to.colitem]);
 			$("<div class='sugghdr'/>").text(title).appendTo(panel);
-			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback));	
+			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback,["relates to"]));	
 		});
 	});
 					
 	
 }
 
-function updateSuggestions(panel,url,panelnum,title,obj,callback){
+function updateSuggestions(panel,url,panelnum,title,obj,callback,verbs){
 	panel.find(".suggestions").remove();
 	panel.find(".sugghdr").remove();
 	$.getJSON(url,function(sugs){
 		$("<div class='sugghdr'/>").text(title).appendTo(panel);
-		panel.append(makeSuggestor(obj,sugs,panelnum,callback));
+		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
 	});
 }
 
-function makeSuggestor(obj,topics,panelnum,callback){
+function makeSuggestor(obj,topics,panelnum,callback,verbs){
 	var box = $("<div class='suggestions'/>");
 	var topics = topics.to.colitem;
 	for(var i = 0; i < topics.length; i++){ // TODO: allow this to be expanded
-		box.append(makeSuggestion(topics[i],panelnum,callback));
+		box.append(makeSuggestion(topics[i],panelnum,callback,verbs));
 	}
 	return box;
 }
@@ -447,7 +519,40 @@ function makeSubGroup(subtitle,links,panelnum){
 	return group;
 }
 
-function makeSuggestion(obj,panelnum,callback){
+function shortVerb(verb){
+	switch(verb){
+		case "supports": return "pro";
+		case "opposes": return "con";
+		case "relates to": return "add";
+		case "about": return "add";
+	}
+}
+
+function verbIcon(verb){
+	switch(verb){
+		case "supports": return "thumb_up";
+		case "opposes": return "thumb_down";
+		case "relates to": return "add";
+		case "about": return "add";
+	}	
+}
+
+function makeButton(verb){
+	var icon = verbIcon(verb);
+
+	var button = $("<img class='addbutton'>")
+		.attr("src",iconUrl(icon+"_grey"))
+		.attr("title",verb)
+		.mouseover(function(){
+			button.attr("src",iconUrl(icon));
+		})
+		.mouseout(function(){
+			button.attr("src",iconUrl(icon+"_grey"));
+		});
+	return button;
+}
+
+function makeSuggestion(obj,panelnum,callback,verbs){
 	var item = $("<a class='item'/>")
 		.attr("href",urlbase+"node/"+obj.id)
 		.attr("tl_panel",panelnum)
@@ -457,12 +562,19 @@ function makeSuggestion(obj,panelnum,callback){
 			return false;
 		});
 	
-	var add = $("<span class='greenadd'>add</span>")
-		.css('font-size','13px')
-		.click(function(ev){
-			ev.preventDefault(); ev.stopPropagation();			
-			callback(obj.text);
-		});
+	var buttons = $("<span class='linkbuttons'/>");
+	
+	for(var i = 0; i < verbs.length; i++){
+		var verb = verbs[i];
+		//var add = $("<span class='greenadd'>"+shortverb+"</span>")
+			//.css('font-size','13px')
+		var button = makeButton(verb);
+		button.click(function(ev){
+				ev.preventDefault(); ev.stopPropagation();			
+				callback(obj.text,verb);
+			});
+		button.appendTo(buttons);
+	}
 
 	var text;
 	if(obj.type == "snippet"){
@@ -470,7 +582,7 @@ function makeSuggestion(obj,panelnum,callback){
 	}else{
 		text = $("<span/>").css('font-size','13px').text(obj.text);
 	}
-	item.append(makeHBox([add,text],"linkbox"));
+	item.append(makeHBox([buttons,text],"linkbox"));
 	
 	return item;
 }
