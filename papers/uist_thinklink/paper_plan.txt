@@ -40,6 +40,8 @@ Contentious will be shown to others. Interesting only used as evidence.
 	TODO: highlight interesting when follow link?
 		- highlighting proxy?
 
+Normally only show disputed and own highlights. Open sidebar to show all. Tab on left summarises what is on the page.
+
 Usage model where a user uses Google or whatever and finds web pages
 	that make a claim they disagree with, and mark them up.
 
