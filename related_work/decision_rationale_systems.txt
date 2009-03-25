@@ -1,0 +1,14 @@
+
+
+-- design rationale --
+
+Use "reconstruction" to capture rationales in raw form such as video and then reconstruct them in a more structured form.
+
+
+-- Key models --
+
+Toulmin Model
+IBIS - issues, positions, arguments, resolutions,.
+PHI - Procedural Hierachy of Needs - 
+QOC- questions, options, criteria
+
