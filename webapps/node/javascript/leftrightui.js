@@ -303,43 +303,11 @@ function makeInfo(obj,panelnum){
 		add.append(makeSuggester("claim",["supports","opposes","relates to"],false,addpanel,obj,panelnum));
 	}else if(obj.type == "topic"){
 		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
-		add.append(makeSuggester("claim",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+		add.append(makeSuggester("claim",["about"],true,addpanel,obj,panelnum));
 		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
 	}
 
-	//if(obj.type == "claim"){
-		//add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
-		//add.append($("<br/>"));
-		//add.append(makeAdder("supporting claim","claim","supports",true,addpanel,obj,panelnum));
-		//add.append(makeAdder("opposing claim","claim","opposes",true,addpanel,obj,panelnum));
-		//add.append(makeAdder("related claim","claim","relates to",true,addpanel,obj,panelnum));
-		//add.append($("<br/>"));
-		//add.append(makeAdder("supporting snippet","snippet","supports",true,addpanel,obj,panelnum));
-		//add.append(makeAdder("opposing snippet","snippet","opposes",true,addpanel,obj,panelnum));
-		//add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
-		//add.append($("<br/>"));
-		//add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
-		//add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
-	//}else if(obj.type == "snippet"){
-		//add.append(makeAdder("topic","topic","about",false,addpanel,obj,panelnum));
-		//add.append(makeAdder("claim this supports","claim","supports",false,addpanel,obj,panelnum));
-		//add.append(makeAdder("claim this opposes","claim","opposes",false,addpanel,obj,panelnum));
-		//add.append(makeAdder("related claim","claim","relates to",false,addpanel,obj,panelnum));
-	//}else if(obj.type == "topic"){
-		//add.append(makeAdder("related topic","topic","relates to",false,addpanel,obj,panelnum));
-		//add.append(makeAdder("related claim","claim","about",true,addpanel,obj,panelnum));
-		//add.append(makeAdder("related snippet","snippet","about",true,addpanel,obj,panelnum));
-	//}
-
-	addpanel.appendTo(body);
-
-	//if(obj.type == "snippet" && obj.info && obj.info.url){
-	//var iframe = $("<iframe class='snipframe'/>")
-		//.attr("height",	$(".toptable").height())
-		//.attr("src",obj.info.url)
-		//.appendTo(info);		
-	//}
-	
+	addpanel.appendTo(body);	
 	return info;
 }
 
@@ -362,13 +330,13 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 			
 			adder.parent().find(".adder-selected").attr("class","adder");
 			adder.attr("class","adder-selected");
-			var textbox = $("<input class='addtxt' type='text'>").appendTo(panel);
-			var gobut = $("<input class='addbutton' type='button' value='add'>")
-				.click(function(){
-					callback(textbox.val());
-				})
-				.appendTo(panel);
 
+			var sugentry = $("<span class='sugentry'/>").appendTo(panel);
+			var textbox = $("<input class='addtxt' type='text'>");					
+			var buttons = makeVerbButtons(verbs,function(){return textbox.val()},callback);
+			buttons.appendTo(sugentry);
+
+			textbox.appendTo(sugentry);
 			textbox.keyup(function(){
 				var text = textbox.val();
 				setTimeout(function(){
@@ -394,63 +362,6 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 				updateSuggestions(panel,
 					"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
 					panelnum,"suggested "+type+"s",obj,callback,verbs);
-			}
-		});
-	
-	return adder;
-}
-
-
-function makeAdder(title,type,verb,reverse,panel,obj,panelnum){
-	var callback = function(othertxt){	
-		$.post(urlbase+"node/"+obj.id+"/addlink.js?verb="+verb+
-			"&type="+type+"&text="+othertxt+"&reverse="+reverse,function(){
-				getPanel(panelnum,obj.id+'.js',null);
-		});
-	};
-	
-	var adder = $("<span class='adder'/>").text(title)
-		.click(function(){
-			panel.empty();
-			if(adder.attr("class") == "adder-selected"){
-				adder.attr("class","adder");
-				return;
-			}
-			
-			adder.parent().find(".adder-selected").attr("class","adder");
-			adder.attr("class","adder-selected");
-			var textbox = $("<input class='addtxt' type='text'>").appendTo(panel);
-			var gobut = $("<input class='addbutton' type='button' value='add'>")
-				.click(function(){
-					callback(textbox.val());
-				})
-				.appendTo(panel);
-
-			textbox.keyup(function(){
-				var text = textbox.val();
-				setTimeout(function(){
-					var nowtext = textbox.val();
-					if(text == nowtext){
-						if(type=="topic"){
-							updateTopicSuggestions(panel,text,
-								panelnum,"suggested topics",obj,callback);
-						}else{
-							updateSuggestions(panel,
-								urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
-								panelnum,"suggested "+type+"s",obj,callback);
-						}
-					}
-				},500);
-			});
-
-			if(type == "topic"){
-				updateSuggestions(panel,
-					"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
-					panelnum,"suggested topics",obj,callback);
-			}else{ // crappy suggestions for the moment
-				updateSuggestions(panel,
-					"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
-					panelnum,"suggested "+type+"s",obj,callback);
 			}
 		});
 	
@@ -537,7 +448,7 @@ function verbIcon(verb){
 	}	
 }
 
-function makeButton(verb){
+function makeButton(verb,textfunc,callback){
 	var icon = verbIcon(verb);
 
 	var button = $("<img class='addbutton'>")
@@ -548,8 +459,24 @@ function makeButton(verb){
 		})
 		.mouseout(function(){
 			button.attr("src",iconUrl(icon+"_grey"));
+		})
+		.click(function(ev){
+				ev.preventDefault(); ev.stopPropagation();			
+				callback(textfunc(),verb);
 		});
 	return button;
+}
+
+function makeVerbButtons(verbs,textfunc,callback){
+	var buttons = $("<span class='linkbuttons'/>");
+	for(var i = 0; i < verbs.length; i++){
+		var verb = verbs[i];
+		//var add = $("<span class='greenadd'>"+shortverb+"</span>")
+			//.css('font-size','13px')
+		var button = makeButton(verb,textfunc,callback);
+		button.appendTo(buttons);
+	}	
+	return buttons;
 }
 
 function makeSuggestion(obj,panelnum,callback,verbs){
@@ -562,19 +489,7 @@ function makeSuggestion(obj,panelnum,callback,verbs){
 			return false;
 		});
 	
-	var buttons = $("<span class='linkbuttons'/>");
-	
-	for(var i = 0; i < verbs.length; i++){
-		var verb = verbs[i];
-		//var add = $("<span class='greenadd'>"+shortverb+"</span>")
-			//.css('font-size','13px')
-		var button = makeButton(verb);
-		button.click(function(ev){
-				ev.preventDefault(); ev.stopPropagation();			
-				callback(obj.text,verb);
-			});
-		button.appendTo(buttons);
-	}
+	var buttons = makeVerbButtons(verbs,function(){return obj.text},callback);
 
 	var text;
 	if(obj.type == "snippet"){

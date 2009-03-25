@@ -198,12 +198,17 @@ a img {
 
 .linkbuttons {
 	white-space: nowrap;
+	vertical-align: middle;
 }
 
 .sugghdr {
 	font-size: 13px;
 	padding-left: 8px;
 	padding-top: 8px;
+}
+
+.sugentry{
+	margin-left: 4px;
 }
 
 .addtxt {
