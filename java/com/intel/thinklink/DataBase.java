@@ -305,6 +305,12 @@ public class DataBase {
 		}
 	}
 	
+	private PreparedStatement not_new = con.prepareStatement(
+			"DELETE FROM v2_newsnips WHERE node_id = ?");
+	void notNew(int id) throws SQLException {
+		not_new.setInt(1,id);
+		not_new.executeUpdate();
+	}
 	
 	public void addLink(int id, String verb, String text, String type,boolean reverse,int userid) throws SQLException {
 		int dst = findByName(text);
@@ -316,6 +322,9 @@ public class DataBase {
 		}else{
 			addLink(id,dst,verb);		
 		}
+		// TODO: only do this if we know it is a snippet
+		notNew(id);
+		notNew(dst);
 	}
 	
 	static final int NOTHING = 0;
