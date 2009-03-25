@@ -19,7 +19,7 @@ class NodeServlet extends HttpServlet {
 			val nodeMatch = nodePath.matcher(path);
 			if(nodeMatch.find()){
 				val format = nodeMatch.group(5);				
-				getInfo(out,(new Integer(nodeMatch.group(1))).intValue,format);
+	//			getInfo(out,(new Integer(nodeMatch.group(1))).intValue,format);
 			}
 		}catch{
 		  case e =>
@@ -28,7 +28,7 @@ class NodeServlet extends HttpServlet {
 		out.close();
 	}
 
- 	var last_ex : Exception;
+ 	var last_ex : Exception = null;
 	
 //	def init(){
 //		try{
@@ -40,11 +40,11 @@ class NodeServlet extends HttpServlet {
 //		}
 //	}
  
-	def getInfo(out : PrintWriter,id : int,format : String){
-		// TODO: do user login sessions
-		val d = base.getLinks(id, 0);
-		out.append(Dyn.toJSON(d));
-	}
+//	def getInfo(out : PrintWriter,id : int,format : String){
+//		// TODO: do user login sessions
+//		val d = base.getLinks(id, 0);
+//		out.append(Dyn.toJSON(d));
+//	}
 	
 	def dumpObject(out : PrintWriter, info : Dyn, userid : int){
 	}

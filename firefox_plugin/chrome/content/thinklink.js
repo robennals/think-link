@@ -224,7 +224,8 @@ function thinklink_setCookieWithPaths(cookieSvc,cookieUri,name,value,path){
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/scripthack", null);
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/node", null);
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/scripthack", null);
-
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/thinklink/node", null);
+  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/thinklink/scripthack", null);
 }
 
 
@@ -232,6 +233,7 @@ function thinklink_setCookieForUri(uri,username,password){
   var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
   var cookieUri = ios.newURI(uri, null, null);
   var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
+  username = username.replace("@",".");
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"username",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"email",username);
   thinklink_setCookieWithPaths(cookieSvc,cookieUri,"password",password);

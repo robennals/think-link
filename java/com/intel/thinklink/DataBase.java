@@ -101,7 +101,8 @@ public class DataBase {
 	}
 
 
-	private PreparedStatement get_links_to = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
+	private PreparedStatement get_links_to = con.prepareStatement(
+					"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
@@ -136,7 +137,8 @@ public class DataBase {
 		return get_some_links_from.executeQuery();
 	}
 	
-	private PreparedStatement get_links_from = con.prepareStatement("SELECT v2_node.id,text,opposed,info,v2_node.type AS type, "+
+	private PreparedStatement get_links_from = con.prepareStatement(
+			"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
@@ -146,12 +148,11 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_user_votes = con.prepareStatement(
-			"SELECT action from v2_note WHERE node_id = ? AND user_id = ?");
-	String getUserVotes(int id, int userid) throws SQLException{
+			"SELECT link_id,vote from v2_vote WHERE node_id = ? AND user_id = ?");
+	Vector<Dyn> getUserVotes(int id, int userid) throws SQLException{
 		get_user_votes.setInt(1,id);
 		get_user_votes.setInt(2,userid);
-		ResultSet res = get_user_votes.executeQuery();
-		return res.getString(1);		
+		return Dyn.list(get_user_votes.executeQuery());		
 	}
 	
 	private PreparedStatement get_recent = con.prepareStatement(
@@ -165,6 +166,18 @@ public class DataBase {
 		ResultSet items = get_recent.executeQuery();
 		return makeObject("recent.js","History of Recent Browsing","recent",items);
 	}
+	
+	private PreparedStatement get_hot = con.prepareStatement(
+			"SELECT v2_node.*, COUNT(v2_history.user_id) AS count FROM v2_node, v2_history " +
+			"WHERE DATE_ADD(date,INTERVAL 7 DAY) > CURRENT_DATE() " +
+			"AND v2_node.id = v2_history.node_id " +
+			"AND v2_node.type != 'snippet' "+
+			"GROUP BY node_id ORDER BY count DESC " +
+			"LIMIT 50");
+	Dyn getHot() throws SQLException{
+		ResultSet items = get_hot.executeQuery();
+		return makeObject("hot.js","Hot topics and claims","hot",items);
+	}	
 	
 	private PreparedStatement log_recent = con.prepareStatement(
 			"REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)");
@@ -294,15 +307,48 @@ public class DataBase {
 	}
 	
 	private PreparedStatement add_link = con.prepareStatement(
-			"INSERT INTO v2_link (src,dst,type) VALUES (?,?,?)");
-	void addLink(int src, int dst, String verb) throws SQLException{
+			"INSERT INTO v2_link (src,dst,type,user_id) VALUES (?,?,?,?)");
+	void addLink(int src, int dst, String verb, int userid) throws SQLException{
 		add_link.setInt(1,src);
 		add_link.setInt(2,dst);
 		add_link.setString(3,verb);
+		add_link.setInt(4,userid);
 		add_link.executeUpdate();
 		if(verb.equals("opposes")){
 			setOpposed(dst,true);
 		}
+	}
+	
+	private PreparedStatement set_vote = con.prepareStatement(
+			"REPLACE INTO v2_vote (user_id,node_id,link_id,vote) VALUES (?,?,?,?)");
+	void setVote(int nodeid, int linkid, int vote, int userid) throws SQLException{
+		set_vote.setInt(1,userid);
+		set_vote.setInt(2,nodeid);
+		set_vote.setInt(3,linkid);
+		set_vote.setInt(4,vote);
+		set_vote.executeUpdate();
+	}
+	
+	private PreparedStatement  count_votes = con.prepareStatement(
+			"SELECT SUM(vote) FROM v2_vote WHERE link_id = 3006");
+	int countVotes(int linkid) throws SQLException{
+		count_votes.setInt(1,linkid);
+		ResultSet result = count_votes.executeQuery();
+		if(result.next()){
+			return result.getInt(1);
+		}else{
+			return 0;
+		}
+	}
+	
+	private PreparedStatement update_agg_votes = con.prepareStatement(
+			"UPDATE v2_link SET agg_votes = " +
+			"	(SELECT SUM(vote) FROM v2_vote WHERE link_id = ?) " +
+			"WHERE id = ?");
+	void updateAggVotes(int linkid) throws SQLException {
+		update_agg_votes.setInt(1,linkid);
+		update_agg_votes.setInt(2,linkid);
+		update_agg_votes.executeUpdate();
 	}
 	
 	private PreparedStatement not_new = con.prepareStatement(
@@ -318,27 +364,13 @@ public class DataBase {
 			dst = addNode(text,userid,type,"");
 		}
 		if(reverse){
-			addLink(dst,id,verb);					
+			addLink(dst,id,verb,userid);					
 		}else{
-			addLink(id,dst,verb);		
+			addLink(id,dst,verb,userid);		
 		}
 		// TODO: only do this if we know it is a snippet
 		notNew(id);
 		notNew(dst);
-	}
-	
-	static final int NOTHING = 0;
-	static final int GOOD = 1;
-	static final int BAD = 2;
-	
-	private PreparedStatement set_vote = con.prepareStatement(
-			"INSERT INTO v2_vote (user_id,node_id,subnode_id,action) VALUES (?,?,?,?)");
-	void setVote(int userid,int nodeid,int subnodeid, int action) throws SQLException{
-		set_vote.setInt(1, userid);
-		set_vote.setInt(2, nodeid);
-		set_vote.setInt(3, subnodeid);
-		set_vote.setInt(4, action);
-		set_vote.executeUpdate();
 	}
 
 	private PreparedStatement get_snippet = con.prepareStatement(
@@ -369,31 +401,6 @@ public class DataBase {
 		keys.close();
 		return key;
 	}
-	
-
-//	Dyn getLinks(int id, int userid) throws SQLException{
-//		Dyn d = get_info(id,userid);
-//		String type = d.getString("type");
-//		Dyn to = new Dyn();
-//		Dyn from = new Dyn();
-//		d.put("to",to);
-//		d.put("from", from);
-//		if(type.equals("claim")){
-//			from.put("supports", Dyn.list(getSomeLinksFrom(id,"claim","supports",5)));
-//			from.put("opposes", Dyn.list(getSomeLinksFrom(id,"claim","opposes",5)));
-//			from.put("about", Dyn.list(getSomeLinksFrom(id,"topic","relates to",5)));
-//			to.put("supports", Dyn.list(getSomeLinksTo(id,"claim","supports",5)));
-//			to.put("opposes", Dyn.list(getSomeLinksTo(id,"claim","opposes",5)));
-//			to.put("prosnips", Dyn.list(getSomeLinksTo(id,"snippet","supports",5)));
-//			to.put("consnips", Dyn.list(getSomeLinksTo(id,"snippet","opposes",5)));			
-//			to.put("aboutsnips", Dyn.list(getSomeLinksTo(id,"snippet","relates to",5)));			
-//		}else if(type.equals("snippet")){
-//			from.put("prosnips", Dyn.list(getSomeLinksFrom(id,"snippet","supports",5)));
-//			from.put("consnips", Dyn.list(getSomeLinksFrom(id,"snippet","opposes",5)));			
-//			from.put("aboutsnip", Dyn.list(getSomeLinksFrom(id,"snippet","relates to",5)));			
-//		}
-//		return d;
-//	}
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = get_info(id,userid);

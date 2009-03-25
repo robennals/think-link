@@ -21,6 +21,7 @@ public class NodeServlet extends HttpServlet {
 	Pattern nodePath = Pattern.compile("/node/(\\d+)(\\.\\w+)?");
 	Pattern searchPath = Pattern.compile("/node/search(\\.\\w+)?");
 	Pattern recentPath = Pattern.compile("/node/recent(\\.\\w+)?");
+	Pattern hotPath = Pattern.compile("/node/hot(\\.\\w+)?");
 	Pattern newSnipPath = Pattern.compile("/node/newsnips(\\.\\w+)?");
 	Pattern hackNewSnipPath = Pattern.compile("/scripthack/newsnippet(\\.\\w+)?"); 
 	Pattern globPath = Pattern.compile("/(.*)?(\\.(\\w+))?");
@@ -32,6 +33,7 @@ public class NodeServlet extends HttpServlet {
 	Pattern createPath = Pattern.compile("/node/create");
 //	Pattern addLinkPath = Pattern.compile("/node/addlink");
 	Pattern addLinkPath = Pattern.compile("/node/(\\d+)/addlink");
+	Pattern votePath = Pattern.compile("/node/(\\d+)/vote");
 ;
 	static String getCookie(HttpServletRequest req, String key){
 		Cookie[] cookies = req.getCookies();
@@ -68,13 +70,13 @@ public class NodeServlet extends HttpServlet {
 					Boolean.parseBoolean(req.getParameter("reverse")),
 					userid);
 		}
-//		m = addLinkPath.matcher(path);
-//		if(m.find()){
-//			base.addLink(
-//				Integer.parseInt(req.getParameter("subject")), 
-//				Integer.parseInt(req.getParameter("object")), 
-//				req.getParameter("verb"));
-//		}
+		m = votePath.matcher(path);
+		if(m.find()){
+			base.setVote(Integer.parseInt(m.group(1)),
+						 Integer.parseInt(req.getParameter("linkid")),
+						 Integer.parseInt(req.getParameter("vote")),userid);
+			base.updateAggVotes(Integer.parseInt(req.getParameter("linkid")));;
+		}
 	}
 
 	private Vector<String> getUrls(HttpServletRequest req){
@@ -125,6 +127,13 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			String format = m.group(1);
 			outputNode(out,req,format,userid,base.getRecent(userid));
+			return;
+		}
+
+		m = hotPath.matcher(path);
+		if(m.find()){
+			String format = m.group(1);
+			outputNode(out,req,format,userid,base.getHot());
 			return;
 		}
 		

@@ -12,7 +12,7 @@ function makeUI(id,withtop){
 		global_miniui = false;
 	}
 	if(!id){
-		id = "recent.js";
+		id = "hot.js";
 	}
 	$(document.body).append(topbar);
 	panelbox = $("<tr class='panelbox'/>");
@@ -40,7 +40,11 @@ function makeTopBar(){
 	var title = $("<span class='thinklinktitle'>Think Link</span>").appendTo(leftbar);
 	
 	var home = $("<span class='topbut'>Home</span>").appendTo(leftbar);
-	var hot = $("<span class='topbut'>Hot</span>").appendTo(leftbar);
+	var hot = $("<span class='topbut'>Hot</span>")
+		.click(function(){
+			gotoId("hot.js");
+		})
+		.appendTo(leftbar);
 		// TODO - show count beside unfiled if have unfiled snippets
 	var unfiled = $("<span class='topbut'>Unfiled</span>")
 		.click(function(){
@@ -78,6 +82,7 @@ function makeTopBar(){
 function gotoId(id){
 	removeArrows(0);
 	getPanel(0,id);
+	scrollToPanel(0);
 }
 
 function getPanel(panelnum,nodeid,name){
@@ -91,6 +96,13 @@ function getPanel(panelnum,nodeid,name){
 	panel = makePanel(panelnum,nodeid,name);
 	panelbox.append(panel);
 	doLayout();
+}
+
+function refreshPanel(panelnum,nodeid,name){
+	var url = makePanelUrl(nodeid,name);
+	$.getJSON(url,function(obj){
+		refreshInfoPanel($("#infopanel-"+panelnum),obj,panelnum);
+	});	
 }
 
 function removeArrows(panelnum){
@@ -126,13 +138,18 @@ function makePanel(panelnum,nodeid,name){
 	return panel;
 }
 
-function loadObject(panel,nodeid,panelnum,name){
+function makePanelUrl(nodeid,name){
 	var url;
 	if(nodeid.indexOf("?") == -1){
 		url = urlbase+"node/"+nodeid+"?callback=?";
 	}else{
 		url = urlbase+"node/"+nodeid+"&callback=?";
 	}
+	return url;	
+}
+
+function loadObject(panel,nodeid,panelnum,name){
+	var url = makePanelUrl(nodeid,name);
 	if(nodeid == "0.js"){ // wikipedia-only topic
 		panel.empty();
 		panel.append(makeWikiInfo(name,panelnum));	
@@ -204,54 +221,56 @@ function filterByType(list,type){
 	return out;
 }
 
-function makeInfo(obj,panelnum){
-	var info = $("<div class='info'/>");
-		
-	//if(!global_miniui){	
-		info.append(makeNavButtons(panelnum));
-	//}
+var global_myvotes = {};
 
-	var title;
-	if(obj.type == "recent"){
-		title = $("<h2/>").append("History").appendTo(info);
-	}else if(obj.opposed){
-		title = $("<h2 class='disputed-title'/>").append("disputed claim").appendTo(info);
+function getMyVote(link){
+	var myvote = global_myvotes[link.link_id];
+	if(myvote){
+		return myvote;
 	}else{
-		title = $("<h2/>").append(obj.type).appendTo(info);
+		return 0;
 	}
+}
 
-	var body = $("<div class='panelbody'>").appendTo(info);
-	if(global_miniui){
-		body.css("height","400px");
-		body.css("overflow-y","auto");	
-	}
-	
-	body.scroll(function(){
-		updateArrowPos(panelnum);
-	});
+function applyMyVotes(obj){
+	if(!obj.uservotes) return;
+	for(var i = 0; i < obj.uservotes.length; i++){
+		var entry = obj.uservotes[i];
+		global_myvotes[entry.link_id] = entry.vote;
+	}		
+}
 
-	
-	title.click(function(){
-		scrollToPanel(panelnum);
+function orderByVotes(list){
+	if(!list) return [];
+	list.sort(function(a,b){
+		if(getMyVote(a) != getMyVote(b)){
+			return getMyVote(b) - getMyVote(a);
+		}else{
+			return b.agg_votes - a.agg_votes;
+		}
 	});
+	return list;
+}
+
+function refreshInfoPanel(infopanel,obj,panelnum){
+	infopanel.empty();
+	applyMyVotes(obj);
 	
+	if(obj.opposed){
+		$("#title-"+panelnum).attr("class","disputed-title")
+	}	
 	if(obj.type == "snippet"){
-		$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(body);	
+		$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(infopanel);	
 		$("<a class='snippet-url' target='_blank'/>")
 			.attr("href",obj.info.realurl)
 			.text(obj.info.realurl)
-			.appendTo(body);
+			.appendTo(infopanel);
 	}else{
-		$("<div class='objtitle'/>").text(obj.text).appendTo(body);	
+		$("<div class='objtitle'/>").text(obj.text).appendTo(infopanel);	
 	}
-		
-	//obj.from.supports = removeParent(obj.from.supports,panelnum);
-	//obj.from.opposes = removeParent(obj.from.opposes,panelnum);
-	//obj.from['relates to'] = removeParent(obj.from['relates to'],panelnum);
-			
 
 	if(obj.type == "snippet" || obj.type == "claim" || obj.type == "topic"){		
-		body.append(makeUserLink(obj,panelnum));
+		infopanel.append(makeUserLink(obj,panelnum));
 	}
 	
 	var relates = [];
@@ -264,32 +283,76 @@ function makeInfo(obj,panelnum){
 	
 	switch(obj.type){
 		case "snippet":		
-			body.append(makeSubGroup("claims supported",obj.from.supports,panelnum));
-			body.append(makeSubGroup("claims opposed",obj.from.opposes,panelnum));
-			body.append(makeSubGroup("claims related",relates,panelnum));
-			body.append(makeSubGroup("related topics",obj.from.about,panelnum));
+			infopanel.append(makeSubGroup("claims supported",obj.from.supports,panelnum,obj));
+			infopanel.append(makeSubGroup("claims opposed",obj.from.opposes,panelnum,obj));
+			infopanel.append(makeSubGroup("claims related",relates,panelnum,obj));
+			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj));
 			break;
 		case "topic":
 			var claims = filterByType(obj.to.about,"claim");
 			var snippets = filterByType(obj.to.about,"snippet");
-			body.append(makeSubGroup("claims about this topic",claims,panelnum));
-			body.append(makeSubGroup("snippets about this topic",snippets,panelnum));
-			body.append(makeSubGroup("related topics",relates,panelnum));
+			infopanel.append(makeSubGroup("claims about this topic",claims,panelnum,obj));
+			infopanel.append(makeSubGroup("snippets about this topic",snippets,panelnum,obj));
+			infopanel.append(makeSubGroup("related topics",relates,panelnum,obj));
 			break;
 		case "claim":
-			body.append(makeSubGroup("supported by",obj.to.supports,panelnum));
-			body.append(makeSubGroup("opposed by",obj.to.opposes,panelnum));
-			body.append(makeSubGroup("related to",relates,panelnum));
-			body.append(makeSubGroup("supporting snippets",obj.to.prosnips,panelnum));
-			body.append(makeSubGroup("opposing snippets",obj.to.consnips,panelnum));
-			body.append(makeSubGroup("related snippets",obj.to.aboutsnips,panelnum));
-			body.append(makeSubGroup("related topics",obj.from.about,panelnum));
+			infopanel.append(makeSubGroup("supported by",obj.to.supports,panelnum,obj));
+			infopanel.append(makeSubGroup("opposed by",obj.to.opposes,panelnum,obj));
+			infopanel.append(makeSubGroup("related to",relates,panelnum,obj));
+			infopanel.append(makeSubGroup("supporting snippets",obj.to.prosnips,panelnum,obj));
+			infopanel.append(makeSubGroup("opposing snippets",obj.to.consnips,panelnum,obj));
+			infopanel.append(makeSubGroup("related snippets",obj.to.aboutsnips,panelnum,obj));
+			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj));
 			break;
 		default:
-			body.append(makeSubGroup(null,obj.to.colitem,panelnum));
+			infopanel.append(makeSubGroup(null,obj.to.colitem,panelnum,obj,true));
 			break;
-
 	}
+}
+
+function makeInfo(obj,panelnum){
+	global_morefor = 0;
+	
+	var info = $("<div class='info'/>");
+		
+	info.append(makeNavButtons(panelnum));
+
+	var title;
+	if(obj.type == "recent"){
+		title = $("<h2 class='history-title'>History</h2>");
+	}else if(obj.opposed){
+		title = $("<h2 class='disputed-title'>Disputed claim</h2>");
+	}else if(obj.type == "claim"){
+		title = $("<h2 class='claim-title'>Claim</h2>");
+	}else if(obj.type == "hot"){
+		title = $("<h2 class='hot-title'>Hot</h2>");
+	}else if(obj.type == "topic"){
+		title = $("<h2 class='topic-title'>Topic</h2>");
+	}else{
+		title = $("<h2/>").append(obj.type).appendTo(info);
+	}
+
+	title.appendTo(info).attr("id","title-"+panelnum);
+
+	var body = $("<div class='panelbody'>").appendTo(info);
+	if(global_miniui){
+		body.css("height","400px");
+		body.css("overflow-y","auto");	
+	}
+	
+	var infopanel = $("<div class='infopanel'>")
+		.attr("id","infopanel-"+panelnum)
+		.appendTo(body);
+	
+	body.scroll(function(){
+		updateArrowPos(panelnum);
+	});
+
+	title.click(function(){
+		scrollToPanel(panelnum);
+	});
+
+	refreshInfoPanel(infopanel,obj,panelnum);	
 	
 	var add = $("<div class='addbox'></div>").appendTo(body);;
 	var addpanel = $("<div class='addpanel'/>");
@@ -302,7 +365,7 @@ function makeInfo(obj,panelnum){
 		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
 		add.append(makeSuggester("claim",["supports","opposes","relates to"],false,addpanel,obj,panelnum));
 	}else if(obj.type == "topic"){
-		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+		add.append(makeSuggester("topic",["relates to"],false,addpanel,obj,panelnum));
 		add.append(makeSuggester("claim",["about"],true,addpanel,obj,panelnum));
 		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
 	}
@@ -316,7 +379,8 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 	var callback = function(othertxt,verb){	
 		$.post(urlbase+"node/"+obj.id+"/addlink.js?verb="+verb+
 			"&type="+type+"&text="+othertxt+"&reverse="+reverse,function(){
-				getPanel(panelnum,obj.id+'.js',null);
+				refreshPanel(panelnum,obj.id+".js",null)
+				//getPanel(panelnum,obj.id+'.js',null);
 		});
 	};
 	
@@ -344,7 +408,7 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 					if(text == nowtext){
 						if(type=="topic"){
 							updateTopicSuggestions(panel,text,
-								panelnum,"suggested topics",obj,callback);
+								panelnum,"suggested topics",obj,callback,verbs);
 						}else{
 							updateSuggestions(panel,
 								urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
@@ -383,7 +447,7 @@ function mergeSuggestions(lists){
 	return out;
 }
 
-function updateTopicSuggestions(panel,text,panelnum,title,obj,callback){
+function updateTopicSuggestions(panel,text,panelnum,title,obj,callback,verbs){
 	var searchurl = urlbase+"node/search.js?type=topic&callback=?&query="+encodeURIComponent(text);
 	var wikiurl = "http://localhost:8180/test/test?text="+text+"&callback=?";
 	$.getJSON(searchurl,function(xs){
@@ -392,7 +456,7 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback){
 			panel.find(".sugghdr").remove();
 			var sugs = mergeSuggestions([xs.to.colitem,ys.to.colitem]);
 			$("<div class='sugghdr'/>").text(title).appendTo(panel);
-			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback,["relates to"]));	
+			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback,verbs));	
 		});
 	});
 					
@@ -400,9 +464,9 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback){
 }
 
 function updateSuggestions(panel,url,panelnum,title,obj,callback,verbs){
-	panel.find(".suggestions").remove();
-	panel.find(".sugghdr").remove();
 	$.getJSON(url,function(sugs){
+		panel.find(".suggestions").remove();
+		panel.find(".sugghdr").remove();
 		$("<div class='sugghdr'/>").text(title).appendTo(panel);
 		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
 	});
@@ -417,16 +481,48 @@ function makeSuggestor(obj,topics,panelnum,callback,verbs){
 	return box;
 }
 
-function makeSubGroup(subtitle,links,panelnum){
-	var group = $("<div class='subgroup'>").appendTo(group);
+var global_morefor = 0;
+
+function makeSubGroup(subtitle,links,panelnum,parentobj,showall){
+	links = orderByVotes(links);
+	var group = $("<div class='subgroup'>");
+	var i;
 	if(links && links.length > 0){
 		if(subtitle && subtitle != "colitem"){
 			$("<h3/>").text(subtitle).appendTo(group);
 		}
-		for(var j = 0; j < links.length; j++){
-			group.append(makeLink(links[j],panelnum));
+		for(i = 0; i < links.length; i++){
+			var link = links[i];
+			if(getMyVote(link) == -1 ||
+					(i >= 2 && getMyVote(link) != 1 && link.type == "snippet") ||  
+					(i >= 4 && getMyVote(link) != 1)){
+				break;
+			}
+			group.append(makeLink(links[i],panelnum,parentobj));
 		} 
-	} 
+		
+		var endpoint = i;
+		
+		var extra = $("<div class='extralinks-hidden'/>").appendTo(group);
+		if(i < links.length){
+			for(;i < links.length; i++){
+				extra.append(makeLink(links[i],panelnum,parentobj));
+			}	
+			var more = $("<div class='more'/>")
+				.text("show "+(links.length - endpoint)+" more")
+				.click(function(){
+					extra.attr("class","extralinks-visible");
+					global_morefor = parentobj.id;
+					more.remove();
+				}).appendTo(group);
+		} 
+		
+		if(showall || global_morefor == parentobj.id){
+			extra.attr("class","extralinks-visible");			
+		}
+	}
+
+
 	return group;
 }
 
@@ -527,7 +623,43 @@ function trim_url(url){
 	}		
 }
 
-function makeLink(obj,panelnum,suggestcb){
+function getVoteUpIcon(obj,over){
+	if(global_myvotes[obj.linkid] == 1){
+		return "vote_up_on";
+	}else if(global_myvotes[obj.linkid] == -1){
+		if(over){
+			return "vote_restore_up_on";
+		}else{
+			return "vote_restore_up";
+		}
+	}else{
+		if(over){
+			return "vote_up_on";
+		}else{
+			return "vote_up_e";
+		}
+	}
+}
+
+function getVoteDownIcon(obj,over){
+	if(global_myvotes[obj.linkid] == -1){
+		return "vote_down_on";
+	}else if(global_myvotes[obj.linkid] == 1){
+		if(over){
+			return "vote_restore_down_on";
+		}else{
+			return "vote_restore_down";
+		}
+	}else{
+		if(over){
+			return "vote_down_on";
+		}else{
+			return "vote_down_e";
+		}
+	}
+}
+
+function makeLink(obj,panelnum,parentobj){
 	var item = $("<a class='item'/>")
 		.attr("href",urlbase+"node/"+obj.id)
 		.attr("tl_panel",panelnum)
@@ -554,23 +686,49 @@ function makeLink(obj,panelnum,suggestcb){
 	
 	var votebox = $("<nobr class='votebox'/>").appendTo(text);
 	
-	var up = $("<img class='vote' title='Promote'/>").attr("src",iconUrl("vote_up_e"))
-		.mouseover(function(){up.attr("src",iconUrl("vote_up_on"))})
-		.mouseout(function(){up.attr("src",iconUrl("vote_up_e"))})
-		.click(function(ev){
-			ev.preventDefault(); ev.stopPropagation();			
-		})
+	var up = $("<img class='vote' title='Promote'/>").attr("src",iconUrl(getVoteUpIcon(obj,false)))
+		.mouseover(function(){up.attr("src",iconUrl(getVoteUpIcon(obj,true)))})
+		.mouseout(function(){up.attr("src",iconUrl(getVoteUpIcon(obj,false)))})
+		.appendTo(votebox);
+
+	var down = $("<img class='vote' title='Remove'/>").attr("src",iconUrl(getVoteDownIcon(obj,false)))
+		.mouseover(function(){down.attr("src",iconUrl(getVoteDownIcon(obj,true)))})
+		.mouseout(function(){down.attr("src",iconUrl(getVoteDownIcon(obj,false)))})
 		.appendTo(votebox);		
 
-	var down = $("<img class='vote' title='Remove'/>").attr("src",iconUrl("vote_down_e"))
-		.mouseover(function(){down.attr("src",iconUrl("vote_down_on"))})
-		.mouseout(function(){down.attr("src",iconUrl("vote_down_e"))})
-		.click(function(ev){
+	up.click(function(ev){
+			ev.preventDefault(); ev.stopPropagation();									
+			if(global_myvotes[obj.linkid]){
+				global_myvotes[obj.linkid] = 0;
+				setVote(parentobj.id,obj.linkid,0);
+			}else{
+				global_myvotes[obj.linkid] = 1;
+				setVote(parentobj.id,obj.linkid,1);
+			}
+
+			up.attr("src",iconUrl(getVoteUpIcon(obj,false)));			
+			down.attr("src",iconUrl(getVoteDownIcon(obj,false)));
+			refreshPanel(panelnum,parentobj.id+'.js');
+			// TODO: slide to the top
+		});
+	down.click(function(ev){
 			ev.preventDefault(); ev.stopPropagation();			
+			if(global_myvotes[obj.linkid]){
+				global_myvotes[obj.linkid] = 0;
+				setVote(parentobj.id,obj.linkid,0);
+			}else{
+				global_myvotes[obj.linkid] = -1;
+				setVote(parentobj.id,obj.linkid,-1);
+			}
+			up.attr("src",iconUrl(getVoteUpIcon(obj,false)));			
+			down.attr("src",iconUrl(getVoteDownIcon(obj,false)));
+			refreshPanel(panelnum,parentobj.id+'.js');
 		})
-		.appendTo(votebox);		
-	
 	return item;
+}
+
+function setVote(nodeid,linkid,vote){
+	$.post(urlbase+"node/"+nodeid+"/vote?linkid="+linkid+"&vote="+vote,function(){});
 }
 
 function iconUrl(icon){

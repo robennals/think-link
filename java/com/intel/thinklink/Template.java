@@ -29,7 +29,7 @@ public class Template {
 		p("			<div id='container'></div>");
 		p("			<script type='text/javascript'>");
 		p("			var urlbase = '/thinklink/';");
-		p("			makeUI('recent.js',true);");
+		p("			makeUI('hot.js',true);");
 		p("			</script>");
 		p("     </body>");
 		p("</html>");

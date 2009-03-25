@@ -134,7 +134,13 @@ a img {
 	padding-left: 15px;
 	font-style: italic;
 	cursor: pointer;
+	color: darkBlue;
 }
+
+.extralinks-hidden {
+	display:none;
+}
+
 
 /*
 .suggestions .item{

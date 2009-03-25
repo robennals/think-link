@@ -32,7 +32,7 @@ public class AddSnopes {
 				}else{
 					verb = "relates to";
 				}
-				base.addLink(snipid, claimid, verb);
+				base.addLink(snipid, claimid, verb,0);
 			}
 			reader.close();
 		}catch(Exception e){
