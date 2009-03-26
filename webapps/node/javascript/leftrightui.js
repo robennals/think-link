@@ -443,13 +443,19 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 			adder.attr("class","adder-selected");
 
 			var sugentry = $("<span class='sugentry'/>").appendTo(panel);
-			var textbox = $("<input class='addtxt' type='text'>");		
+			var textbox = $("<input class='addtxt-empty' type='text' value='enter search keywords'>");		
 			if(type != "snippet"){			
 				var buttons = makeVerbButtons(verbs,function(){return textbox.val()},callback);
 				buttons.appendTo(sugentry);
 			}
 
 			textbox.appendTo(sugentry);
+			textbox.focus(function(){
+				if(textbox.attr("class") == "addtxt-empty"){
+					textbox.val("");
+					textbox.attr("class","addtxt");
+				}
+			});
 			textbox.keyup(function(){
 				var text = textbox.val();
 				setTimeout(function(){
@@ -477,6 +483,11 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 					panelnum,"suggested "+type+"s",obj,callback,verbs);
 			}
 		});
+	
+	if(obj.type == "snippet" && !obj.to.supports && !obj.to.opposes && type == "claim"){
+		adder.click();
+		
+	}
 	
 	return adder;
 }

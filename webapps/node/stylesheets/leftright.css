@@ -199,7 +199,7 @@ a img {
 
 .panelbody {
 	overflow-y: auto;
-	overflow-x: none;
+	overflow-x: hidden;
 }
 
 .linkbuttons {
@@ -217,10 +217,14 @@ a img {
 	margin-left: 4px;
 }
 
-.addtxt {
+.addtxt, .addtxt-empty {
 	width: 300px;
 	margin-top: 5px;
 	margin-left: 5px;
+}
+
+.addtxt-empty {
+	color: grey;
 }
 
 .widthpad {
@@ -236,6 +240,11 @@ a img {
 }
 
 .context-br{
+	margin: 10px;
+}
+
+.sniptitle {
+	font-weight: bold;
 	margin: 10px;
 }
 
