@@ -96,6 +96,7 @@ public class NodeServlet extends HttpServlet {
 	private void dispatchGet(DataBase base, PrintWriter out, int userid, HttpServletRequest req) throws Exception{
 		String path = req.getServletPath();
 		String pathinfo = req.getPathInfo();
+		req.setCharacterEncoding("UTF-8");
 		if(pathinfo != null){
 			path+=pathinfo;
 		}
@@ -151,11 +152,14 @@ public class NodeServlet extends HttpServlet {
 			outputList(out,req,format,base.urlClaimSnippets(urls));
 			return;
 		}
-		
+
 		m = hackNewSnipPath.matcher(path);
 		if(m.find()){
-			base.addSnippet(userid, req.getParameter("text"), req.getParameter("url"), 
-					req.getParameter("realurl"), req.getParameter("title"), req.getParameter("pagetext"));			
+			String text = Util.toUTF8(req.getParameter("text"));
+			String pagetext = Util.toUTF8(req.getParameter("pagetext"));
+			String title = Util.toUTF8(req.getParameter("title"));
+			base.addSnippet(userid, text, req.getParameter("url"), 
+					req.getParameter("realurl"), title, pagetext);			
 			return;
 		}
 		
@@ -201,6 +205,7 @@ public class NodeServlet extends HttpServlet {
 	throws ServletException, IOException
 	{
 		res.setContentType("text/html; charset=UTF-8");
+		req.setCharacterEncoding("UTF-8");
 		PrintWriter out = res.getWriter();		
 		try{
 			DataBase base = ConnectionPool.get();

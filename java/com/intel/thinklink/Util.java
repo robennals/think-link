@@ -6,8 +6,37 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 public class Util {
+	
+	/**
+	 * Convert ISO-8859-1 format string (which is the default sent by IE to the
+	 * UTF-8 format that the database is in.
+	 */
+	public static String toUTF8(String isoString) {
+		String utf8String = null;
+		if (null != isoString && !isoString.equals("")) {
+			try {
+				byte[] stringBytesISO = isoString.getBytes("ISO-8859-1");
+				utf8String = new String(stringBytesISO, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO: This should never happen. The
+				// UnsupportedEncodingException
+				// should be propagated instead of swallowed. This error would
+				// indicate
+				// a severe misconfiguration of the JVM.
+
+				// As we can't translate just send back the best guess.
+				System.out.println("UnsupportedEncodingException is: "
+						+ e.getMessage());
+				utf8String = isoString;
+			}
+		} else {
+			utf8String = isoString;
+		}
+		return utf8String;
+	} 
 	
     public static String escape(String string) {
         char         b;

@@ -271,6 +271,7 @@ function insertParagraphs(context,text,classname){
 function makeSnippetContext(obj,panelnum){
 	var pagetext = obj.page_text;
 	var context = $("<div class='snippet-context'/>");
+		
 	if(!pagetext){
 		$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(context);					
 		return context;
@@ -303,6 +304,9 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 		$("#title-"+panelnum).attr("class","disputed-title")
 	}	
 	if(obj.type == "snippet"){
+		if(obj.info && obj.info.title){
+			$("<div class='sniptitle'/>").text(obj.info.title).appendTo(infopanel);
+		}
 		infopanel.append(makeSnippetContext(obj,panelnum));
 		//$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(infopanel);	
 		$("<a class='snippet-url' target='_blank'/>")

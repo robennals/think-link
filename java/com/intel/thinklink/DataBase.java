@@ -105,7 +105,7 @@ public class DataBase {
 
 
 	private PreparedStatement get_links_to = con.prepareStatement(
-					"SELECT v2_node.id,text,opposed,agg_votes,v2_node.type AS type, "+
+					"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
@@ -141,7 +141,7 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_links_from = con.prepareStatement(
-			"SELECT v2_node.id,text,opposed,agg_votes,v2_node.type AS type, "+
+			"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
