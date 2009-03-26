@@ -380,6 +380,8 @@ public class DataBase {
 		add_link.setString(3,verb);
 		add_link.setInt(4,userid);
 		add_link.executeUpdate();
+		logRecent(src,userid);
+		logRecent(dst,userid);
 		if(verb.equals("opposes")){
 			setOpposed(dst,true);
 		}

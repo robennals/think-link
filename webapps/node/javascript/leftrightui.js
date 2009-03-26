@@ -532,8 +532,13 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback,verbs){
 		$.getJSON(wikiurl,function(ys){
 			panel.find(".suggestions").remove();
 			panel.find(".sugghdr").remove();
+			panel.find(".sugghdrbox").remove();
 			var sugs = mergeSuggestions([xs.to.colitem,ys.to.colitem]);
-			$("<div class='sugghdr'/>").text(title).appendTo(panel);
+			var hdrbox = $("<div class='sugghdrbox'/>").appendTo(panel);
+			$("<span class='sugghdr-on'/>")
+				.text(title).appendTo(hdrbox);
+
+			//$("<div class='sugghdr'/>").text(title).appendTo(panel);
 			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback,verbs));	
 		});
 	});
