@@ -74,10 +74,13 @@ public class DataBase {
 	private PreparedStatement get_info = con.prepareStatement(
 			"SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user WHERE id = ? " +
 			"AND v2_node.user_id = v2_user.node_id");
-	Dyn get_info(int id,int userid) throws SQLException{
+	Dyn getInfo(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
 		Dyn node = Dyn.one(get_info.executeQuery());
 		node.setJSON("info");
+		if(node.getString("type").equals("snippet")){
+			node.put("page_text",getPageText(id));
+		}
 		logRecent(userid,id);
 		return node;
 	}
@@ -102,7 +105,7 @@ public class DataBase {
 
 
 	private PreparedStatement get_links_to = con.prepareStatement(
-					"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
+					"SELECT v2_node.id,text,opposed,agg_votes,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
 	ResultSet getLinksTo(int id) throws SQLException{
@@ -138,7 +141,7 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_links_from = con.prepareStatement(
-			"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
+			"SELECT v2_node.id,text,opposed,agg_votes,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
 	ResultSet getLinksFrom(int id) throws SQLException{
@@ -207,16 +210,63 @@ public class DataBase {
 
 	private PreparedStatement search_type_stmt = con.prepareStatement(
 	"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
-	Dyn search(String query,String type) throws SQLException{
+	Dyn search(String query,String type,int userid) throws SQLException{
 		if(type == null){
 			return search(query);
 		}
+		if(type.equals("snippet")){
+			return searchSnippets(query,userid);
+		}
+
 		search_type_stmt.setString(1, query);
 		search_type_stmt.setString(2,type);
 		ResultSet items = search_type_stmt.executeQuery();
 		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
 	}
+	
+	private PreparedStatement search_snippet = con.prepareStatement(
+		"SELECT * FROM v2_node, v2_newsnips " +
+		"WHERE MATCH(text) AGAINST(?) " +
+		"AND v2_newsnips.user_id = ? " + // only suggest our own snippets
+		"AND v2_node.id = v2_newsnips.node_id " + // only suggest unattached snippets
+		"AND type='snippet'");
+	Dyn searchSnippets(String query,int userid) throws SQLException{
+		search_snippet.setString(1,query);
+		search_snippet.setInt(2,userid);
+		ResultSet items = search_snippet.executeQuery();
+		return makeObject("search.js?query="+URLEncoder.encode(query)+"&type=snippet","Search Results for "+query,"search",items);
+	}
+	
+	private PreparedStatement search_linkto_stmt = con.prepareStatement(
+	"SELECT v2_node.*,v2_link.type AS verb FROM v2_node " +
+	"LEFT JOIN ON src = v2_node.id AND dst = ? " +
+	"WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
+	Dyn searchLinkto(String query,int dst, String type) throws SQLException{
+		if(type == null){
+			return search(query);
+		}
+		search_linkto_stmt.setInt(1, dst);
+		search_linkto_stmt.setString(2, query);
+		search_linkto_stmt.setString(3,type);
+		ResultSet items = search_linkto_stmt.executeQuery();
+		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+	}
 
+	private PreparedStatement search_linkfrom_stmt = con.prepareStatement(
+			"SELECT v2_node.*,v2_link.type AS verb FROM v2_node " +
+			"LEFT JOIN ON src = v2_node.id AND dst = ? " +
+			"WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
+	Dyn searchLinkfrom(String query,int dst, String type) throws SQLException{
+		if(type == null){
+			return search(query);
+		}
+		search_linkfrom_stmt.setInt(1, dst);
+		search_linkfrom_stmt.setString(2, query);
+		search_linkfrom_stmt.setString(3,type);
+		ResultSet items = search_linkfrom_stmt.executeQuery();
+		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+	}
+	
 	private PreparedStatement url_claim_snippets = con.prepareStatement(
 	"SELECT snip.id,snip.text,claim.opposed,snip.user_id,claim.id AS claimid,claim.text AS claimtext "+
 		"FROM ((v2_snippet LEFT JOIN v2_link ON v2_snippet.node_id = v2_link.src) "+
@@ -380,6 +430,18 @@ public class DataBase {
 		get_snippet.setInt(1,id);
 		return Dyn.one(get_snippet.executeQuery());
 	}
+	
+	private PreparedStatement get_page_text = con.prepareStatement(
+			"SELECT page_text FROM v2_snippet WHERE node_id = ?");
+	String getPageText(int snipid) throws SQLException{
+		get_page_text.setInt(1,snipid);
+		ResultSet result = get_page_text.executeQuery();
+		if(result.next()){
+			return result.getString(1);				
+		}else{
+			return null;
+		}
+	}
 			
 	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
 		Dyn tomap = new Dyn();
@@ -403,7 +465,7 @@ public class DataBase {
 	}
 	
 	Dyn getLinks(int id, int userid) throws SQLException{
-		Dyn d = get_info(id,userid);
+		Dyn d = getInfo(id,userid);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
 		if(userid != 0){

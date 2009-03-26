@@ -118,7 +118,7 @@ public class NodeServlet extends HttpServlet {
 			if(format == null || format.equals(".html")){
 				Template.doNodeTemplate(out, userid, "search.js?query="+URLEncoder.encode(req.getParameter("query")));
 			}else{
-				outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type")));
+				outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type"),userid));
 			}
 			return;
 		}
@@ -200,7 +200,7 @@ public class NodeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)
 	throws ServletException, IOException
 	{
-		res.setContentType("text/html");
+		res.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = res.getWriter();		
 		try{
 			DataBase base = ConnectionPool.get();

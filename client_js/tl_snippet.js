@@ -129,21 +129,53 @@ function tl_snippet_dialog(margin) {
 	};
 	
 	this.findPara = function(para){
-		if(para.nodeName == "#text" || para.tagName == "A"){
+		if(para.nodeName == "#text" || para.tagName == "A" || para.tagName == "FONT"){
 			return this.findPara(para.parentNode);
 		}else{
 			return para;
 		}
 	};
 	
+	
+	// TODO: use POST to send this if possible
+	this.findPrevText = function(sourceSpans){
+		var para = this.findPara(sourceSpans[0].parentNode);
+		var node = para.previousSibling;
+		var prevtext = "";
+		while(node && prevtext.length < 500){
+			if(node.tagName == para.tagName){
+				prevtext = node.textContent + "\n" + prevtext;
+			}
+			node = node.previousSibling;
+		}
+		return prevtext;
+	};
+	
+	this.findNextText = function(sourceSpans){
+		var para = this.findPara(sourceSpans[0].parentNode);
+		var node = para.nextSibling;
+		var prevtext = "";
+		while(node && prevtext.length < 500){
+			if(node.tagName == para.tagName){
+				prevtext = prevtext + "\n" + node.textContent;
+			}
+			node = node.nextSibling;
+		}
+		return prevtext;		
+	};
+	
+	this.findParaText = function(sourceSpans){
+		var para = this.findPara(sourceSpans[0].parentNode);
+		return para.textContent;
+	};
+	
 	this.findPageText = function(sourceSpans){
 		var para = this.findPara(sourceSpans[0].parentNode);
-		node = para;
-		
+		var node = para.previousSibling;	
 		var pagetext = "";
 		while(node && pagetext.length < 1000){
 			if(node.tagName == para.tagName){
-				pagetext += node.textContent + " ";
+				pagetext += node.textContent + "\n";
 			}
 			node = node.previousSibling;
 		}
@@ -166,13 +198,25 @@ function tl_snippet_dialog(margin) {
 			url= this.margin.normTool.normalizeUrl(url);
 		} 
 		var url_real = this.margin.url;
+
+		var pagetext = that.findPrevText(sourceSpans) + "\n" + 
+			that.findParaText(sourceSpans) + "\n" +
+			that.findNextText(sourceSpans); 
+		
+		pagetext = pagetext.substring(0,3000);
+			
+		// TODO: check if there is a maximum URL length to worry about, and work round that
 		
 		tl_doAJAX("tl_new","scripthack/newsnippet.js"
 			+"?text="+encodeURIComponent(that.sourceText)
 			+"&url="+encodeURIComponent(url)
 			+"&realurl="+encodeURIComponent(url_real)				
 			+"&title="+encodeURIComponent(document.title)
-			+"&pagetext="+that.findPageText(sourceSpans)
+			//+"&prevtext="+encodeURIComponent(that.findPrevText(sourceSpans))
+			//+"&nexttext="+encodeURIComponent(that.findNextText(sourceSpans))
+			//+"&partext="+encodeURIComponent(that.findParaText(sourceSpans))
+			//+"&pagetext="+that.findPageText(sourceSpans)
+			+"&pagetext="+encodeURIComponent(pagetext)
 		,function(result){
 			if(result.error){
 				tl_removeSpans(that.sourceSpans);

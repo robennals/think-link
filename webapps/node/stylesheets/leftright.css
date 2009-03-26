@@ -235,6 +235,24 @@ a img {
 	color: #efd7c2;
 }
 
+.context-br{
+	margin: 10px;
+}
+
+.snippet-context {
+	margin: 10px;
+	max-height: 200px;
+	overflow-y: auto;
+	padding: 6px;
+	-moz-border-radius: 6px;
+	background-color: #EEEEEE;
+	border: 1px solid #999999;
+}
+
+.highlight-span {
+	background-color: #FFFF00;
+}
+
 .greenadd {
 	background-color : lightgrey;
 	padding-left: 2px;
