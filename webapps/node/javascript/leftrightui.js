@@ -276,6 +276,10 @@ function makeSnippetContext(obj,panelnum){
 		$("<div class='snippet-text'/>").text("\"..."+obj.text+"...\"").appendTo(context);					
 		return context;
 	}
+	
+	pagetext = pagetext.replace(/\n[\s\n]+/g,"\n");
+	obj.text = obj.text.replace(/\n[\s\n]+/g,"\n");
+	
 	var startpos = pagetext.indexOf(obj.text);
 	var prevtext = pagetext.substring(0,startpos);
 	var aftertext = pagetext.substring(startpos + obj.text.length);
@@ -422,6 +426,7 @@ function makeInfo(obj,panelnum){
 	return info;
 }
 
+var global_recentmode = false;
 
 function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 	var callback = function(othertxt,verb){	
@@ -467,20 +472,33 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 						}else{
 							updateSuggestions(panel,
 								urlbase+"node/search.js?type="+type+"&callback=?&query="+encodeURIComponent(text),
-								panelnum,"suggested "+type+"s",obj,callback,verbs);
+								panelnum,type,obj,callback,verbs);
 						}
 					}
 				},500);
 			});
 
-			if(type == "topic"){
-				updateSuggestions(panel,
-					"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
-					panelnum,"suggested topics",obj,callback,verbs);
-			}else{ // crappy suggestions for the moment
-				updateSuggestions(panel,
-					"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
-					panelnum,"suggested "+type+"s",obj,callback,verbs);
+			if(global_recentmode){
+				if(type == "topic"){
+					updateRecentSuggestions(panel,
+						"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
+						panelnum,"topic",obj,callback,verbs);
+				}else{ // crappy suggestions for the moment
+					updateRecentSuggestions(panel,
+						"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+						panelnum,type,obj,callback,verbs);
+				}
+
+			}else{
+				if(type == "topic"){
+					updateSuggestions(panel,
+						"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
+						panelnum,"topic",obj,callback,verbs);
+				}else{ // crappy suggestions for the moment
+					updateSuggestions(panel,
+						"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+						panelnum,type,obj,callback,verbs);
+				}
 			}
 		});
 	
@@ -523,13 +541,40 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback,verbs){
 	
 }
 
-function updateSuggestions(panel,url,panelnum,title,obj,callback,verbs){
+function updateSuggestions(panel,url,panelnum,type,obj,callback,verbs){
 	$.getJSON(url,function(sugs){
 		panel.find(".suggestions").remove();
 		panel.find(".sugghdr").remove();
-		$("<div class='sugghdr'/>").text(title).appendTo(panel);
+		panel.find(".sugghdrbox").remove();
+		var hdrbox = $("<div class='sugghdrbox'/>").appendTo(panel);
+		$("<span class='sugghdr-on'/>")
+			.text("suggested "+type+"s").appendTo(hdrbox);
+		var recent = $("<span class='sugghdr-off'/>")
+			.text("recent "+type+"s").appendTo(hdrbox);
+		recent.click(function(){
+			global_recentmode = true;
+			updateRecentSuggestions(panel,url,panelnum,type,obj,callback,verbs);
+		});
 		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
 	});
+}
+
+function updateRecentSuggestions(panel,url,panelnum,type,obj,callback,verbs){
+	$.getJSON(urlbase+"node/recent.js?type="+type+"&callback=?",function(sugs){
+		panel.find(".suggestions").remove();
+		panel.find(".sugghdr").remove();
+		panel.find(".sugghdrbox").remove();
+		var hdrbox = $("<div class='sugghdrbox'/>").appendTo(panel);
+		$("<span class='sugghdr-off'/>")
+			.click(function(){
+				global_recentmode = false;
+				updateSuggestions(panel,url,panelnum,type,obj,callback,verbs);
+			})
+			.text("suggested "+type+"s").appendTo(hdrbox);
+		var recent = $("<span class='sugghdr-on'/>")
+			.text("recent "+type+"s").appendTo(hdrbox);
+		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
+	});	
 }
 
 function makeSuggestor(obj,topics,panelnum,callback,verbs){

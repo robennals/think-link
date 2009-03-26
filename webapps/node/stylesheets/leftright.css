@@ -193,8 +193,9 @@ a img {
 
 .suggestions {
 	background-color: white;
-	margin: 5px; 
-	margin-left: 16px;
+	margin: 4px; 
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .panelbody {
@@ -207,10 +208,32 @@ a img {
 	vertical-align: middle;
 }
 
-.sugghdr {
+.sugghdr, .sugghdr-on, .sugghdr-off {
 	font-size: 13px;
 	padding-left: 8px;
 	padding-top: 8px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	font-weight: bold;
+	margin: 0 0 0 10px;
+	padding: 0 8px 4px;
+}
+
+.sugghdr-on {
+	background-color: white;
+}
+
+.sugghdr-off {
+	background-color: #EEEEEE;
+	border-style: solid solid none;
+	border-width: 1px 1px medium;
+	border-color: #999999 #999999;
+	cursor: pointer;
+}
+
+.sugghdrbox {
+	margin-top: 4px;
+	margin-bottom: 4px;
 }
 
 .sugentry{

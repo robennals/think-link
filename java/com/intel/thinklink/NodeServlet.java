@@ -127,7 +127,7 @@ public class NodeServlet extends HttpServlet {
 		m = recentPath.matcher(path);
 		if(m.find()){
 			String format = m.group(1);
-			outputNode(out,req,format,userid,base.getRecent(userid));
+			outputNode(out,req,format,userid,base.getRecent(userid,req.getParameter("type")));
 			return;
 		}
 

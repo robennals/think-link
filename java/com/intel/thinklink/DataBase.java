@@ -169,6 +169,22 @@ public class DataBase {
 		ResultSet items = get_recent.executeQuery();
 		return makeObject("recent.js","History of Recent Browsing","recent",items);
 	}
+
+	private PreparedStatement get_typed_recent = con.prepareStatement(
+			"SELECT v2_node.* FROM v2_node, v2_history "+
+			"WHERE v2_node.id = v2_history.node_id " +
+			"   AND v2_node.type = ? " +
+			"	AND v2_history.user_id = ? ORDER BY date DESC " +
+			" 	LIMIT 15");
+	Dyn getRecent(int userid, String type) throws SQLException{
+		if(type == null){
+			return getRecent(userid);
+		}
+		get_typed_recent.setString(1,type);
+		get_typed_recent.setInt(2, userid);
+		ResultSet items = get_typed_recent.executeQuery();
+		return makeObject("recent.js","History of Recent Browsing","recent",items);
+	}
 	
 	private PreparedStatement get_hot = con.prepareStatement(
 			"SELECT v2_node.*, COUNT(v2_history.user_id) AS count FROM v2_node, v2_history " +
