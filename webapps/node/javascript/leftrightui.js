@@ -29,7 +29,7 @@ function makeUI(id,withtop){
 
 function doLayout(){
 	if(global_miniui) return;
-	$(".panelbody").height(window.innerHeight - 90 + "px");
+	$(".panelbody").css("max-height",window.innerHeight - 90 + "px");
 }
 
 function makeTopBar(){
@@ -162,6 +162,7 @@ function loadObject(panel,nodeid,panelnum,name){
 			panel.empty();
 			panel.append(makeInfo(obj,panelnum));
 			updateSnipScrollPos(panelnum);
+			updateWidthPad();
 		});	
 	}
 }
@@ -192,7 +193,7 @@ function makeWikiInfo(name,panelnum){
 		.appendTo(info);
 	var iframe = $("<iframe class='wikiframe'/>")
 		.attr("height",	$(".toptable").height())
-		.attr("src","http://en.wikipedia.org/wiki/"+name)
+		.attr("src","http://en.wikipedia.org/wiki/"+name+"?printable=yes")
 		.appendTo(info);		
 	return info;
 }
@@ -317,6 +318,7 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			.attr("href",obj.info.realurl)
 			.text(obj.info.realurl)
 			.appendTo(infopanel);
+	}else if(obj.type == "hot" || obj.type == "recent"){
 	}else{
 		$("<div class='objtitle'/>").text(obj.text).appendTo(infopanel);	
 	}
@@ -335,10 +337,10 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 	
 	switch(obj.type){
 		case "snippet":		
-			infopanel.append(makeSubGroup("claims supported",obj.from.supports,panelnum,obj));
-			infopanel.append(makeSubGroup("claims opposed",obj.from.opposes,panelnum,obj));
-			infopanel.append(makeSubGroup("claims related",relates,panelnum,obj));
-			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj));
+			infopanel.append(makeSubGroup("claims this snippet supports",obj.from.supports,panelnum,obj));
+			infopanel.append(makeSubGroup("claims this snippet opposes",obj.from.opposes,panelnum,obj));
+			infopanel.append(makeSubGroup("claims this snippet relates to",relates,panelnum,obj));
+			infopanel.append(makeSubGroup("topics this snippet is about",obj.from.about,panelnum,obj));
 			break;
 		case "topic":
 			var claims = filterByType(obj.to.about,"claim");
@@ -351,10 +353,22 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			infopanel.append(makeSubGroup("supported by",obj.to.supports,panelnum,obj));
 			infopanel.append(makeSubGroup("opposed by",obj.to.opposes,panelnum,obj));
 			infopanel.append(makeSubGroup("related to",relates,panelnum,obj));
-			infopanel.append(makeSubGroup("supporting snippets",obj.to.prosnips,panelnum,obj));
-			infopanel.append(makeSubGroup("opposing snippets",obj.to.consnips,panelnum,obj));
-			infopanel.append(makeSubGroup("related snippets",obj.to.aboutsnips,panelnum,obj));
+
+			//infopanel.append(makeSubGroup("supporting claims",filterByType(obj.to.supports,"claim"),panelnum,obj));
+			//infopanel.append(makeSubGroup("opposing claims",filterByType(obj.to.opposes,"claim"),panelnum,obj));
+			//infopanel.append(makeSubGroup("related claims",relates,panelnum,obj));
+			//infopanel.append(makeSubGroup("supporting snippets",obj.to.supports,panelnum,obj));
+			//infopanel.append(makeSubGroup("opposing snippets",obj.to.opposes,panelnum,obj));
+			//infopanel.append(makeSubGroup("related snippets",relates,panelnum,obj));
 			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj));
+			break;
+		case "hot":
+			infopanel.append(makeSubGroup("hot topics",filterByType(obj.to.colitem,"topic"),panelnum,obj));
+			infopanel.append(makeSubGroup("hot claims",filterByType(obj.to.colitem,"claim"),panelnum,obj));			
+			break;
+		case "recent":
+			infopanel.append(makeSubGroup("recent topics",filterByType(obj.to.colitem,"topic"),panelnum,obj));
+			infopanel.append(makeSubGroup("recent claims",filterByType(obj.to.colitem,"claim"),panelnum,obj));			
 			break;
 		default:
 			infopanel.append(makeSubGroup(null,obj.to.colitem,panelnum,obj,true));
@@ -366,8 +380,16 @@ function makeInfo(obj,panelnum){
 	global_morefor = 0;
 	
 	var info = $("<div class='info'/>");
-		
-	info.append(makeNavButtons(panelnum));
+
+	info.append(makeNavButtons(panelnum));	
+
+	if(panelnum != 0){
+		var closebutton = $("<img class='closebutton'/>").attr("src",iconUrl("cancel")).appendTo(info);
+		closebutton.click(function(){
+			removeArrows(panelnum-1);
+			scrollToPanel(panelnum-1);
+		});
+	}
 
 	var title;
 	if(obj.type == "recent"){
@@ -384,7 +406,12 @@ function makeInfo(obj,panelnum){
 		title = $("<h2/>").append(obj.type).appendTo(info);
 	}
 
+	if(obj.type == "claim" || obj.type == "snippet" || obj.type == "topic"){
+		title.prepend($("<img class='panelicon'/>").attr("src",getIcon(obj)));
+	}
+
 	title.appendTo(info).attr("id","title-"+panelnum);
+
 
 	var body = $("<div class='panelbody'>").appendTo(info);
 	if(global_miniui){
@@ -863,7 +890,8 @@ function getIcon(obj){
 	switch(obj.type){
 		case "claim":
 			if(obj.opposed){
-				return iconUrl("exclamation");
+				return iconUrl("lightbulb_red");
+//				return iconUrl("exclamation");
 			}else{
 				return iconUrl("lightbulb");
 			}
@@ -880,11 +908,15 @@ function getIcon(obj){
 var selection = {};
 var selectionid = {};
 
+function updateWidthPad(){
+	if($(".toptable").width() > widthpad.width()){
+		widthpad.css("width",$(".toptable").width());
+	}
+}
+
 function selectItem(item,id,panelnum,text){
 	try{
-		if($(".toptable").width() > widthpad.width()){
-			widthpad.css("width",$(".toptable").width());
-		}
+		updateWidthPad();
 			
 		if(selection[panelnum] == item){
 			scrollToPanel(panelnum+1);

@@ -310,15 +310,39 @@ a img {
 }
 
 .topbar {
+/*
 	background-color: lightgrey;
+*/
+	background-color: #5867A2;
 	width: 750px;
 	display: block;
 	-moz-border-radius-bottomright: 4px;
+	-moz-border-radius-bottomleft: 4px;
 	position: fixed;
-	left: 0px;
+	left: 20px;
+	color: white;
 /*
 	height: 24px;
 */
+}
+
+.panelicon {
+	padding-right: 4px;
+	vertical-align: bottom;
+/*
+	float: left;
+	position: relative;
+	left: 1px;
+	top: 1px;
+*/
+}
+
+.closebutton {
+	float: right;
+	position: relative;
+	right: -30px;
+	top: 1px;
+	cursor: pointer;
 }
 
 .topbut {
@@ -333,8 +357,11 @@ a img {
 }
 
 .topbut:hover{
+/*
 	background-color: #5867a2;
-	color: white;
+*/
+	background-color: #EEEEEE;
+	color: black;
 /*
 	font-weight: bold;
 */
@@ -379,15 +406,17 @@ a img {
 	color: white;
 	font-weight: bold;
 	margin-right: 4px;
+/*
 	background-color: #5867A2;
 	-moz-border-radius-topright: 8px;
 	-moz-border-radius-bottomright: 8px;
+*/
 }
 
 .navleft {
-	float: left;
+	float: right;
 	position: relative;
-	left: -18px;
+	left: -400px;
 	top: 2px;
 	cursor: pointer;
 }
@@ -395,7 +424,7 @@ a img {
 .navright {
 	float: right;
 	position: relative;
-	right: -18px;
+	right: -33px;
 	top: 2px;
 	cursor: pointer;
 }
