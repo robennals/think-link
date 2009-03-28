@@ -529,7 +529,7 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 			}
 		});
 	
-	if(obj.type == "snippet" && !obj.to.supports && !obj.to.opposes && type == "claim"){
+	if(obj.type == "snippet" && !obj.from.supports && !obj.from.opposes && type == "claim"){
 		adder.click();
 		
 	}
@@ -833,12 +833,12 @@ function makeLink(obj,panelnum,parentobj,novote){
 	if(!novote){
 		var votebox = $("<nobr class='votebox'/>").appendTo(text);
 		
-		var up = $("<img class='vote' title='Promote'/>").attr("src",iconUrl(getVoteUpIcon(obj,false)))
+		var up = $("<img class='vote' title='Vote up'/>").attr("src",iconUrl(getVoteUpIcon(obj,false)))
 			.mouseover(function(){up.attr("src",iconUrl(getVoteUpIcon(obj,true)))})
 			.mouseout(function(){up.attr("src",iconUrl(getVoteUpIcon(obj,false)))})
 			.appendTo(votebox);
 
-		var down = $("<img class='vote' title='Remove'/>").attr("src",iconUrl(getVoteDownIcon(obj,false)))
+		var down = $("<img class='vote' title='Vote down'/>").attr("src",iconUrl(getVoteDownIcon(obj,false)))
 			.mouseover(function(){down.attr("src",iconUrl(getVoteDownIcon(obj,true)))})
 			.mouseout(function(){down.attr("src",iconUrl(getVoteDownIcon(obj,false)))})
 			.appendTo(votebox);		
