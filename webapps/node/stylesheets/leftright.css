@@ -8,6 +8,14 @@ body, h1,h2,h3,p,item,addhdr{
 	font-size: 13px;
 }
 
+.subgroup {
+/*
+	border: 1px solid #CCCCCC;
+	margin: 3px;
+	-moz-border-radius: 6px;
+*/
+}
+
 .item, .item-selected{
 	cursor: pointer;
 	display: block;
@@ -424,7 +432,7 @@ a img {
 .navright {
 	float: right;
 	position: relative;
-	right: -33px;
+	right: 412px;
 	top: 2px;
 	cursor: pointer;
 }

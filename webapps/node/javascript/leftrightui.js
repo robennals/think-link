@@ -207,7 +207,7 @@ function makeNavButtons(panelnum){
 		.appendTo(navbuttons);
 	var right = $("<img class='navright'/>").attr("src",iconUrl("resultset_next"))
 		.click(function(){
-			scrollToPanel(panelnum+1);
+			scrollToPanel(panelnum);
 		})
 		.appendTo(navbuttons);
 
@@ -384,7 +384,7 @@ function makeInfo(obj,panelnum){
 	info.append(makeNavButtons(panelnum));	
 
 	if(panelnum != 0){
-		var closebutton = $("<img class='closebutton'/>").attr("src",iconUrl("cancel")).appendTo(info);
+		var closebutton = $("<img class='closebutton'/>").attr("src",iconUrl("cancel_grey")).appendTo(info);
 		closebutton.click(function(){
 			removeArrows(panelnum-1);
 			scrollToPanel(panelnum-1);
@@ -666,6 +666,8 @@ function makeSubGroup(subtitle,links,panelnum,parentobj,showall){
 			}
 		} 
 		
+	}else{
+		group.attr("class","nogroup");
 	}
 
 
