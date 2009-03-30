@@ -402,6 +402,8 @@ function makeInfo(obj,panelnum){
 		title = $("<h2 class='hot-title'>Hot</h2>");
 	}else if(obj.type == "topic"){
 		title = $("<h2 class='topic-title'>Topic</h2>");
+	}else if(obj.type == "snippet"){
+		title = $("<h2 class='snippet-title'>Snippet</h2>");
 	}else{
 		title = $("<h2/>").append(obj.type).appendTo(info);
 	}
@@ -463,7 +465,7 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 		});
 	};
 	
-	var adder = $("<span class='adder'/>").text("add "+type)
+	var adder = $("<span class='adder'/>").text("link to "+type)
 		.click(function(){
 			panel.empty();
 			if(adder.attr("class") == "adder-selected"){
@@ -895,7 +897,8 @@ function getIcon(obj){
 				return iconUrl("lightbulb_red");
 //				return iconUrl("exclamation");
 			}else{
-				return iconUrl("lightbulb");
+				return iconUrl("lightbulb_green");
+				//return iconUrl("lightbulb");
 			}
 		case "snippet":
 			return iconUrl("comment");

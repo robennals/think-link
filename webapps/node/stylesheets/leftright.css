@@ -82,6 +82,11 @@ h2{
 	cursor: pointer;
 }
 
+.claim-title {
+	color: white;
+	background-color: #00910a;
+}
+
 linkbox {
 	margin-left: 6px;
 	margin-right: 6px;
@@ -143,6 +148,7 @@ a img {
 	font-style: italic;
 	cursor: pointer;
 	color: darkBlue;
+	font-size: 13px;
 }
 
 .extralinks-hidden {
