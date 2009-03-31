@@ -58,6 +58,7 @@ function tl_point_browser() {
 		var url;
 		if(snippet.claimid){
 			//title = "Claim Info";
+			//url = thinklink_pointbase+snippet.id;
 			url = thinklink_pointbase+snippet.claimid+"?snippet="+snippet.id;
 		}else{
 			//title = "Snippet Info";

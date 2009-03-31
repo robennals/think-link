@@ -8,14 +8,6 @@ body, h1,h2,h3,p,item,addhdr{
 	font-size: 13px;
 }
 
-.subgroup {
-/*
-	border: 1px solid #CCCCCC;
-	margin: 3px;
-	-moz-border-radius: 6px;
-*/
-}
-
 .item, .item-selected{
 	cursor: pointer;
 	display: block;
@@ -82,11 +74,6 @@ h2{
 	cursor: pointer;
 }
 
-.claim-title {
-	color: white;
-	background-color: #00910a;
-}
-
 linkbox {
 	margin-left: 6px;
 	margin-right: 6px;
@@ -148,7 +135,6 @@ a img {
 	font-style: italic;
 	cursor: pointer;
 	color: darkBlue;
-	font-size: 13px;
 }
 
 .extralinks-hidden {
@@ -351,14 +337,6 @@ a img {
 */
 }
 
-.closebutton {
-	float: right;
-	position: relative;
-	right: -30px;
-	top: 1px;
-	cursor: pointer;
-}
-
 .topbut {
 	padding-left: 10px;
 	padding-right: 10px;
@@ -430,19 +408,38 @@ a img {
 .navleft {
 	float: right;
 	position: relative;
-	left: -400px;
-	top: 2px;
+	left: -404px;
+	top: 0px;
+	height: 19px;
 	cursor: pointer;
 }
 
 .navright {
 	float: right;
 	position: relative;
-	right: 412px;
-	top: 2px;
+	right: 422px;
+	top: 0px;
+	height: 19px;
+	cursor: pointer;
+}
+
+.closebutton {
+	float: right;
+	position: relative;
+	right: -17px;
+	top: 1px;
 	cursor: pointer;
 }
 
 .filler {
 	width: 400px;
+}
+
+.sugbendbox{
+	margin-left: 13px;
+}
+
+.arrowbend {
+	vertical-align: bottom;
+	margin-right: 2px;
 }

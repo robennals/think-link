@@ -200,12 +200,12 @@ function makeWikiInfo(name,panelnum){
 
 function makeNavButtons(panelnum){
 	var navbuttons = $("<div class='navbutons'/>");
-	var left = $("<img class='navleft'/>").attr("src",iconUrl("resultset_previous"))
+	var left = $("<img class='navleft'/>").attr("src",iconUrl("arrow_left2"))
 		.click(function(){
 			scrollToPanel(panelnum-1);
 		})
 		.appendTo(navbuttons);
-	var right = $("<img class='navright'/>").attr("src",iconUrl("resultset_next"))
+	var right = $("<img class='navright'/>").attr("src",iconUrl("arrow_right2"))
 		.click(function(){
 			scrollToPanel(panelnum);
 		})
@@ -337,8 +337,8 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 	
 	switch(obj.type){
 		case "snippet":		
-			infopanel.append(makeSubGroup("claims this snippet supports",obj.from.supports,panelnum,obj));
-			infopanel.append(makeSubGroup("claims this snippet opposes",obj.from.opposes,panelnum,obj));
+			infopanel.append(makeSubGroup("claims this snippet supports",obj.from.supports,panelnum,obj,'supports'));
+			infopanel.append(makeSubGroup("claims this snippet opposes",obj.from.opposes,panelnum,obj,'opposes'));
 			infopanel.append(makeSubGroup("claims this snippet relates to",relates,panelnum,obj));
 			infopanel.append(makeSubGroup("topics this snippet is about",obj.from.about,panelnum,obj));
 			break;
@@ -350,8 +350,8 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			infopanel.append(makeSubGroup("related topics",relates,panelnum,obj));
 			break;
 		case "claim":
-			infopanel.append(makeSubGroup("supported by",obj.to.supports,panelnum,obj));
-			infopanel.append(makeSubGroup("opposed by",obj.to.opposes,panelnum,obj));
+			infopanel.append(makeSubGroup("supported by",obj.to.supports,panelnum,obj,'supports'));
+			infopanel.append(makeSubGroup("opposed by",obj.to.opposes,panelnum,obj,'opposes'));
 			infopanel.append(makeSubGroup("related to",relates,panelnum,obj));
 
 			//infopanel.append(makeSubGroup("supporting claims",filterByType(obj.to.supports,"claim"),panelnum,obj));
@@ -360,7 +360,7 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			//infopanel.append(makeSubGroup("supporting snippets",obj.to.supports,panelnum,obj));
 			//infopanel.append(makeSubGroup("opposing snippets",obj.to.opposes,panelnum,obj));
 			//infopanel.append(makeSubGroup("related snippets",relates,panelnum,obj));
-			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj));
+			infopanel.append(makeSubGroup("related topics",obj.from.about,panelnum,obj,'relates to'));
 			break;
 		case "hot":
 			infopanel.append(makeSubGroup("hot topics",filterByType(obj.to.colitem,"topic"),panelnum,obj));
@@ -371,7 +371,7 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			infopanel.append(makeSubGroup("recent claims",filterByType(obj.to.colitem,"claim"),panelnum,obj));			
 			break;
 		default:
-			infopanel.append(makeSubGroup(null,obj.to.colitem,panelnum,obj,true));
+			infopanel.append(makeSubGroup(null,obj.to.colitem,panelnum,obj,null,true));
 			break;
 	}
 }
@@ -381,9 +381,8 @@ function makeInfo(obj,panelnum){
 	
 	var info = $("<div class='info'/>");
 
-	info.append(makeNavButtons(panelnum));	
-
 	if(panelnum != 0){
+		info.append(makeNavButtons(panelnum));	
 		var closebutton = $("<img class='closebutton'/>").attr("src",iconUrl("cancel_grey")).appendTo(info);
 		closebutton.click(function(){
 			removeArrows(panelnum-1);
@@ -477,10 +476,14 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 			adder.attr("class","adder-selected");
 
 			var sugentry = $("<span class='sugentry'/>").appendTo(panel);
-			var textbox = $("<input class='addtxt-empty' type='text' value='enter search keywords'>");		
+			var textbox;
 			if(type != "snippet"){			
-				var buttons = makeVerbButtons(verbs,function(){return textbox.val()},callback);
+				textbox = $("<input class='addtxt-empty' type='text' value='enter new "+type+" or search keywords'>");		
+			
+				var buttons = makeVerbButtons(type,verbs,function(){return textbox.val()},callback);
 				buttons.appendTo(sugentry);
+			}else{
+				textbox = $("<input class='addtxt-empty' type='text' value='enter search keywords'>");		
 			}
 
 			textbox.appendTo(sugentry);
@@ -568,11 +571,24 @@ function updateTopicSuggestions(panel,text,panelnum,title,obj,callback,verbs){
 				.text(title).appendTo(hdrbox);
 
 			//$("<div class='sugghdr'/>").text(title).appendTo(panel);
-			panel.append(makeSuggestor(obj,{to:{colitem:sugs}},panelnum,callback,verbs));	
+			panel.append(makeSuggestor("topic",obj,{to:{colitem:sugs}},panelnum,callback,verbs));	
 		});
 	});
-					
+}					
 	
+
+
+function makeLinkIndication(type){
+	var span = $("<span class='sugbendbox'/>");
+	var arrow = $("<img class='arrowbend'/>").attr("src",iconUrl("arrow_bend")).appendTo(span);
+	var pick; 
+	//if(type == "topic"){
+		pick = $("<span class='sugghdr-bend'>click to link</span>").appendTo(span);
+	//}else{
+		//pick = $("<span class='sugghdr-bend'>click one to link</span>").appendTo(span);
+		//span.attr("class","sugbendbox-many");
+	//}
+	return span;
 }
 
 function updateSuggestions(panel,url,panelnum,type,obj,callback,verbs){
@@ -581,6 +597,7 @@ function updateSuggestions(panel,url,panelnum,type,obj,callback,verbs){
 		panel.find(".sugghdr").remove();
 		panel.find(".sugghdrbox").remove();
 		var hdrbox = $("<div class='sugghdrbox'/>").appendTo(panel);
+		makeLinkIndication(type).appendTo(hdrbox);
 		$("<span class='sugghdr-on'/>")
 			.text("suggested "+type+"s").appendTo(hdrbox);
 		var recent = $("<span class='sugghdr-off'/>")
@@ -589,7 +606,7 @@ function updateSuggestions(panel,url,panelnum,type,obj,callback,verbs){
 			global_recentmode = true;
 			updateRecentSuggestions(panel,url,panelnum,type,obj,callback,verbs);
 		});
-		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
+		panel.append(makeSuggestor(type,obj,sugs,panelnum,callback,verbs));
 	});
 }
 
@@ -599,6 +616,8 @@ function updateRecentSuggestions(panel,url,panelnum,type,obj,callback,verbs){
 		panel.find(".sugghdr").remove();
 		panel.find(".sugghdrbox").remove();
 		var hdrbox = $("<div class='sugghdrbox'/>").appendTo(panel);
+		makeLinkIndication(type).appendTo(hdrbox);
+		
 		$("<span class='sugghdr-off'/>")
 			.click(function(){
 				global_recentmode = false;
@@ -607,30 +626,22 @@ function updateRecentSuggestions(panel,url,panelnum,type,obj,callback,verbs){
 			.text("suggested "+type+"s").appendTo(hdrbox);
 		var recent = $("<span class='sugghdr-on'/>")
 			.text("recent "+type+"s").appendTo(hdrbox);
-		panel.append(makeSuggestor(obj,sugs,panelnum,callback,verbs));
+		panel.append(makeSuggestor(type,obj,sugs,panelnum,callback,verbs));
 	});	
 }
 
-function makeSuggestor(obj,topics,panelnum,callback,verbs){
+function makeSuggestor(type,obj,topics,panelnum,callback,verbs){
 	var box = $("<div class='suggestions'/>");
 	var topics = topics.to.colitem;
 	for(var i = 0; i < topics.length; i++){ // TODO: allow this to be expanded
-		box.append(makeSuggestion(topics[i],panelnum,callback,verbs));
+		box.append(makeSuggestion(type,topics[i],panelnum,callback,verbs));
 	}
 	return box;
 }
 
 var global_morefor = 0;
 
-function makeGroupIcon(title){
-	switch(title){
-		case "supported by": return "thumb_up_grey";
-		case "related to": return "add_grey";
-		case "opposed by": return "thumb_down_grey";
-	}
-}
-
-function makeSubGroup(subtitle,links,panelnum,parentobj,showall){
+function makeSubGroup(subtitle,links,panelnum,parentobj,verb,showall){
 	links = orderByVotes(links);
 	var group = $("<div class='subgroup'>");
 	var i;
@@ -645,7 +656,7 @@ function makeSubGroup(subtitle,links,panelnum,parentobj,showall){
 					(i >= 4 && getMyVote(link) != 1)){
 				break;
 			}
-			group.append(makeLink(links[i],panelnum,parentobj,showall));
+			group.append(makeLink(links[i],panelnum,parentobj,verb,showall));
 		} 
 		
 		var endpoint = i;
@@ -653,7 +664,7 @@ function makeSubGroup(subtitle,links,panelnum,parentobj,showall){
 		var extra = $("<div class='extralinks-hidden'/>").appendTo(group);
 		if(i < links.length){
 			for(;i < links.length; i++){
-				extra.append(makeLink(links[i],panelnum,parentobj,showall));
+				extra.append(makeLink(links[i],panelnum,parentobj,verb,showall));
 			}	
 			var more = $("<div class='more'/>")
 				.text("show "+(links.length - endpoint)+" more")
@@ -685,21 +696,35 @@ function shortVerb(verb){
 	}
 }
 
-function verbIcon(verb){
+function verbIcon(type,verb){
 	switch(verb){
 		case "supports": return "thumb_up";
 		case "opposes": return "thumb_down";
 		case "relates to": return "add";
 		case "about": return "add";
 	}	
+
+	//switch(verb){
+		//case "supports": return type+"_yes";
+		//case "opposes": return type+"_no";
+		//case "relates to": return type;
+		//case "about": return type;
+	//}	
 }
 
-function makeButton(verb,textfunc,callback){
-	var icon = verbIcon(verb);
+function makeButton(type,verb,textfunc,callback){
+	var icon = verbIcon(type,verb);
 
 	var button = $("<img class='addbutton'>")
 		.attr("src",iconUrl(icon+"_grey"))
-		.attr("title",verb)
+		.attr("title","link as "+verb)
+		//.mouseover(function(){
+			//button.css("background-color",'blue');
+		//})
+		//.mouseout(function(){
+			//button.css("background-color",'transparent');
+		//})
+
 		.mouseover(function(){
 			button.attr("src",iconUrl(icon));
 		})
@@ -713,20 +738,20 @@ function makeButton(verb,textfunc,callback){
 	return button;
 }
 
-function makeVerbButtons(verbs,textfunc,callback){
+function makeVerbButtons(type,verbs,textfunc,callback){
 	var buttons = $("<span class='linkbuttons'/>");
 	for(var i = 0; i < verbs.length; i++){
 		var verb = verbs[i];
 		//var add = $("<span class='greenadd'>"+shortverb+"</span>")
 			//.css('font-size','13px')
-		var button = makeButton(verb,textfunc,callback);
+		var button = makeButton(type,verb,textfunc,callback);
 		button.appendTo(buttons);
 	}	
 	return buttons;
 }
 
-function makeSuggestion(obj,panelnum,callback,verbs){
-	var item = $("<a class='item'/>")
+function makeSuggestion(type,obj,panelnum,callback,verbs){
+	var sugg = $("<a class='sugg'/>")
 		.attr("href",urlbase+"node/"+obj.id)
 		.attr("tl_panel",panelnum)
 		.click(function(ev){
@@ -735,7 +760,9 @@ function makeSuggestion(obj,panelnum,callback,verbs){
 			return false;
 		});
 	
-	var buttons = makeVerbButtons(verbs,function(){return obj.text},callback);
+	var buttons = makeVerbButtons(type,verbs,function(){return obj.text},callback);
+
+	var item = $("<div class='item'/>");
 
 	var text;
 	if(obj.type == "snippet"){
@@ -743,9 +770,12 @@ function makeSuggestion(obj,panelnum,callback,verbs){
 	}else{
 		text = $("<span/>").css('font-size','13px').text(obj.text);
 	}
-	item.append(makeHBox([buttons,text],"linkbox"));
+	item.append(text);
+	//item.append(buttons);
+	//item.append(makeHBox([text,buttons],"linkbox"));
+	sugg.append(makeHBox([buttons,item],"linkbox"));
 	
-	return item;
+	return sugg;
 }
 
 function makeUserLink(obj,panelnum){
@@ -809,7 +839,7 @@ function getVoteDownIcon(obj,over){
 	}
 }
 
-function makeLink(obj,panelnum,parentobj,novote){
+function makeLink(obj,panelnum,parentobj,verb,novote){
 	var item = $("<a class='item'/>")
 		.attr("href",urlbase+"node/"+obj.id)
 		.attr("tl_panel",panelnum)
@@ -819,7 +849,7 @@ function makeLink(obj,panelnum,parentobj,novote){
 			return false;
 			});		
 	
-	var icon = $("<img class='icon'/>").attr("src",getIcon(obj));				
+	var icon = $("<img class='icon'/>").attr("src",getIcon(obj,verb));				
 		// TODO: fix bug that requires explicit CSS here
 	var text;
 	if(obj.type == "snippet"){
@@ -887,26 +917,42 @@ function iconUrl(icon){
 	return urlbase+"images/"+icon+".png";
 }
 
-function getIcon(obj){
+function getIcon(obj,verb){
 	if(obj.icon){
 		return obj.icon;
 	}
-	switch(obj.type){
-		case "claim":
-			if(obj.opposed){
-				return iconUrl("lightbulb_red");
-//				return iconUrl("exclamation");
-			}else{
-				return iconUrl("lightbulb_green");
-				//return iconUrl("lightbulb");
-			}
-		case "snippet":
-			return iconUrl("comment");
-		case "topic":
-			return iconUrl("folder");
-		case "user":
-			return iconUrl("user");
+	if(obj.type == "claim" && obj.opposed){
+		return iconUrl("lightbulb_red");
+	}else if(obj.type == "snippet"){
+		return iconUrl("comment");
+	}else{
+		return iconUrl(obj.type);
 	}
+	//if(verb == "opposes"){
+		//return iconUrl(obj.type + "_no");
+	//}else if(verb == "supports"){
+		//return iconUrl(obj.type + "_yes");
+	//}else{
+		//return iconUrl(obj.type);
+	//}
+	
+	//switch(obj.type){
+		//case "claim":
+			//if(verb == "opposes"){
+				//return iconUrl("lightbulb_red");
+////				return iconUrl("exclamation");
+			//}else if(verb == "supports"){
+				//return iconUrl("lightbulb_green");
+				////return iconUrl("lightbulb");
+			//}else{
+			//}
+		//case "snippet":
+			//return iconUrl("comment");
+		//case "topic":
+			//return iconUrl("folder");
+		//case "user":
+			//return iconUrl("user");
+	//}
 }
 	
 
@@ -923,10 +969,10 @@ function selectItem(item,id,panelnum,text){
 	try{
 		updateWidthPad();
 			
-		if(selection[panelnum] == item){
-			scrollToPanel(panelnum+1);
-			return;
-		}
+		//if(selection[panelnum] == item){
+			//scrollToPanel(panelnum+1);
+			//return;
+		//}
 		item.attr("class","item-selected");
 		if(selection[panelnum]){
 			selection[panelnum].attr("class","item");
