@@ -89,9 +89,17 @@ When a user clicks on a highlighted snippet, Think Link presents an argument gra
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=5cm]{../screenshots/highlight_crop.png}
+	\includegraphics[width=6cm]{../screenshots/v2_highlight_shadow.png}
 	\caption{Think Link highlights snippets that make disputed claims}
 	\label{highlight}
+	\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{../screenshots/v2_popup_dim2.png}
+	\caption{Click on a snippet to investigate evidence for the claim it makes}
+	\label{claimview}
 	\end{center}
 \end{figure}
 
@@ -106,13 +114,7 @@ Think Link is designed to cater to two primary usage scenarios:
 
 The same user may be an Activist for some issues and a Sceptical Reader for others.
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=8cm]{../screenshots/v2_popup_dim.png}
-	\caption{Click on a snippet to investigate evidence for the claim it makes}
-	\label{claimview}
-	\end{center}
-\end{figure}
+
 
 \todo{Claim panel should have 'more' buttons}
 
@@ -158,16 +160,17 @@ Think Link uses a simple IBIS-like graph structure in which claims support, oppo
 
 If one sees a claim on the web that one suspects might be untrue then one can look it up on Snopes\footnote{http://snopes.com} or FactCheck\footnote{http://factcheck.org}. Snopes is a database of urban legends that the site owners investigated to determine whether they are true. 
 Think Link's database automatically imports all contentious claims identified by Snopes.
-FactCheck is a web site that investigates claims being made by US political parties and attempts to uncover the facts. 
+FactCheck is a web site that investigates claims being made by US political parties and attempts to uncover the facts. The advantage of Think Link is that it tells you when information on web sites is disputed automatically, without requiring you to suspect that information might be disputed and look for it on another site.
+
 %We use Fact Check as a useful source of disputed claims.
 
 % FactCheck updates infrequently enough that we have been able to manually add its disputed claims to Think Link as they appear.
 
 \todo{Make sure we stay in sync}
 
-NewsCube~\cite{Park2009} and MediaCloud\footnote{http://mediacloud.org} use statistics to help readers avoid media bias. NewsCube finds articles on the same topic that have different biases. MediaCloud shows which different words different news sources associate with the same topic.
+NewsCube~\cite{Park2009} and MediaCloud\footnote{http://mediacloud.org} use statistics to help readers avoid media bias. NewsCube finds articles on the same topic that have different biases. MediaCloud shows which different words different news sources associate with the same topic. Unlike Think Link, these tools find contrasting pages about broad topics, rather than trying to find particular claims that are disputed or snippets that make disputed claims.
 
-Several authors have created tools that help users know when to trust information on Wikipedia\footnote{http://wikipedia.org}. WikiTrust~\cite{Adler2008a} highlights passages on wikipedia that have been written recently or written by untrusted editors. Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is. Wiki Scanner\footnote{http://wikiscanner.virgil.gr} finds cases where a Wikipedia edit has been made by someone with a conflict of interest.
+Several authors have created tools that help users know when to trust information on Wikipedia\footnote{http://wikipedia.org}. WikiTrust~\cite{Adler2008a} highlights passages on wikipedia that have been written recently or written by untrusted editors. Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is. Wiki Scanner\footnote{http://wikiscanner.virgil.gr} finds cases where a Wikipedia edit has been made by someone with a conflict of interest. Unlike these Wikipedia-based systems, Think Link does not use edit history to determine when text is untrustworthy; rather it relies on a community of activist users.
 
 % 
 % 
@@ -184,13 +187,13 @@ Think Link is an example of an Open Hypermedia system~\cite{Bouvin2000}. Like ot
 
 \todo{Say how different from other Open Hypermedia link annotation systems}
 
-Tagging Systems~\cite{Marlow2006,Golder2006} allow users to collect and organize information by associating it with an ad-hoc collection of tags. Notable tagging systems include del.icio.us\footnote{http://del.icio.us} which uses tags to organize web pages, and Flickr\footnote{http://flickr.com} which associates tags with photos. 
+Tagging Systems~\cite{Marlow2006,Golder2006} allow users to collect and organize information by associating it with an ad-hoc collection of tags. Notable tagging systems include del.icio.us\footnote{http://del.icio.us} which uses tags to organize web pages, and Flickr\footnote{http://flickr.com} which associates tags with photos. While Think Link also allows users to organize information from other sources, it does not use tags.
 
 Annotation tools~\cite{Marshall1998} such as Annotea~\cite{Koivunen2001}, ScreenCrayons~\cite{Olsen2004}, and ReframeIt\footnote{http://reframeit.com} allow users to highlight sections of text on a page. Clipping tools such as Internet Scrapbook~\cite{Sugiura1998}, Hunter Gatherer~\cite{Schraefel2002}, ScratchPad~\cite{Gotz2007}, ClipMarks\footnote{http://clipmarks.com}, and Diigo\footnote{http://diigo.com} allow users to collect text snippets from web pages, tag them, and share them with friends. Some tools highlight snippets that have been clipped by other users. These tools do not attempt to identify when snippets make disputed claims or to connect them to opposing sides of an argument.
 
 SpinSpotter\footnote{http://spinspotter.com} allows a user to mark snippets that contain spin or bias. A user can comment on why a snippet is biased and rewrite the snippet in a neutral way. While SpinSpotter and Think Link both draw attention to biased or inaccurate snippets, they do different things with the snippets. SpinSpotter lets users annotate a snippet with comments specific to that particular snippet, while Think Link treats a snippet as being an instance of a shared claim, and links all snippets identified as making that claim to a shared node in the argument graph that is linked to other points of view.
 
-Videolyzer~\cite{Diakopoulos2008}\footnote{http:\\www.videolyzer.com} allows users to annotate and comment on political videos. A user can attach a comment to a section of video and tag it for bias, accuracy, or rhetorical technique. Comments can include references to external sources that back up the argument being made. Like SpinSpotter, Videolyzer does not attempt to gather multiple video sections that make a common contentious claim.
+Videolyzer~\cite{Diakopoulos2008}\footnote{http://www.videolyzer.com} allows users to annotate and comment on political videos. A user can attach a comment to a section of video and tag it for bias, accuracy, or rhetorical technique. Comments can include references to external sources that back up the argument being made. Like SpinSpotter, Videolyzer does not attempt to gather multiple video sections that make a common contentious claim.
 
 ClaimSpotter~\cite{Sereno2005,Sereno2004} allows one to mark up a scholarly paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} does something similar for intelligence documents. Like Think Link, these tools allow a user to mark the claims being made in a document, however these tools are more formal and are designed to extract knowledge rather than informally mark disputed snippets.
 
@@ -198,7 +201,8 @@ ClaimSpotter~\cite{Sereno2005,Sereno2004} allows one to mark up a scholarly pape
 
 \subsection{Augmented Web Navigation}
 
-Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} and Idea Navigation~\cite{Etzioni2008} look for instances of subject-verb-object triples on web pages and connect these together as a graph in which objects are linked by statements made about them on different web pages. ScentHighlights~\cite{Chi2005a} highlights snippets of text that relate to topics the user has expressed interest in. Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. 
+Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} and Idea Navigation~\cite{Etzioni2008} look for instances of subject-verb-object triples on web pages and connect these together as a graph in which objects are linked by statements made about them on different web pages. ScentHighlights~\cite{Chi2005a} highlights snippets of text that relate to topics the user has expressed interest in. Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. Think Link also creates new links between information, but it's links are created by users, rather than being mined automatically.
+
 
 % \subsection{Semantic Web}
 % 
@@ -218,6 +222,14 @@ For Sceptical Readers, Think Link highlights disputed snippets and links them to
 
 If a sceptical reader has installed the Think Link browser extension, Think Link will draw attention to snippets that make or imply disputed claims by highlighting them in red (Figure~\ref{highlight}). If a user hovers their mouse over a highlighted snippet then Think Link displays a tooltip giving the disputed claim. Clicking on a highlighted snippet reveals a visualization showing the best evidence for and against the claim, as determined by the user community (Figure~\ref{claimview}).
 
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=18cm]{../screenshots/v2_panels2.png}
+	\caption{The claim graph consists of an expanding sequence of linked panels}
+	\label{panels}
+	\end{center}
+\end{figure*}
+
 Since the purpose of a highlight is to alert the user to claims that they had not realized were contentious, there is little benefit in highlighting snippets that make claims that the user already realizes are contentious. A user can click the ``don't highlight this claim again'' button to tell Think Link that they are aware of the contentious nature of this claim and do not wish to be alerted about it again.
 
 Normally Think Link will only highlight snippets that make disputed claims that the user has not asked to ignore, and snippets marked by the user themselves. If the user wants to see all snippets on a page then they can do so by opening the Think Link sidebar. 
@@ -228,42 +240,26 @@ Normally Think Link will only highlight snippets that make disputed claims that 
 
 \subsection{Exploring the Argument Graph}
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=8.5cm]{../screenshots/v2_panels.png}
-	\caption{The claim graph consists of a series of linked panels}
-	\label{panels}
-	\end{center}
-\end{figure}
-
 Once a sceptical reader has identified a claim that they are interested in, they can use Think Link's claim browser interface (Figure~\ref{panels}) to investigate the evidence for and against it, and to see what other contentious claims have been made about related issues. 
 
-In our user studies, we found that sceptical readers wanted to be able to investigate the evidence for and against a claim without having to navigate away from that claim. We thus created an interface that consists of an expanding horizontal array of panels where each panel provides information about the item that is selected in the panel to its left. If a user clicks on a link in a panel then a new panel opens to the right giving more information about the linked node. To emphasize the connection between the panels, the claim browser places an arrow next to each selected item, pointing to the panel that gives more information about that item.
+In our user studies, we found that sceptical readers wanted to be able to investigate the evidence for and against a claim without having to navigate away from that claim. We thus created an interface that consists of an expanding horizontal array of panels where each panel provides information about the item that is selected in the panel to its left (Figure~\ref{panels}). If a user clicks on a link in a panel then a new panel opens to the right giving more information about the linked node. To emphasize the connection between the panels, the claim browser places an arrow next to each selected item, pointing to the panel that gives more information about that item.
 
-The panel for a claim (Figure~\ref{panel}) lists evidence that will help inform the users opinion about the claim and alternative points of view. Evidence is categorized as either supporting, opposing, or being related-to the claim. The ``related-to'' category is used for evidence that does not fit neatly into one side of the argument. Evidence can either be a snippet that talks about that claim, or another claim whose truth would support or oppose this claim.  The panel for a snippet shows the snippet text in the context of the web page it is part of. This, combined with the cascading panel interface allows a user to quickly read the evidence for and against a claim without having to leave the claim browser interface.
+The panel for a claim (third panel in Figure~\ref{panels}) lists evidence that will help inform the users opinion about the claim and alternative points of view. Evidence is categorized as either supporting, opposing, or being related-to the claim. The ``related-to'' category is used for evidence that does not fit neatly into one side of the argument. Evidence can either be a snippet that talks about that claim, or another claim whose truth would support or oppose this claim.  The panel for a snippet (last panel in Figure~\ref{panels}) shows the snippet text in the context of the web page it is part of. This, combined with the cascading panel interface allows a user to quickly read the evidence for and against a claim without having to leave the claim browser interface.
 
 \todo{Remove ``related`` from the topics list - confuses with related claims}
 \todo{Show the other panels?}
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_panel.png}
-	\caption{A claim panel presents information for and against a claim}
-	\label{panel}
-	\end{center}
-\end{figure}
+% \begin{figure}[tb]
+% 	\begin{center}
+% 	\includegraphics[width=6cm]{../screenshots/v2_panel.png}
+% 	\caption{A claim panel presents information for and against a claim}
+% 	\label{panel}
+% 	\end{center}
+% \end{figure}
 
 We found that it was important to allow the claim browser interface to be used in two different ways. When a sceptical reader is browsing a web page and sees a disputed claim, they want to be able to quickly see a small popup window giving evidence for a disputed claim without having to navigate away from the page~(Figure~\ref{claimview}); however if they are interested in the claim and want to investigate the evidence for a claim in more detail, it is preferable to use a full-window interface, as the small popup interface is too small to easily view large amounts of information.
 
 To preserve visual consistency, Think Link uses the same claim browser interface for the small popup interface as for the full-window interface. When used as a popup browser, the interface shows only one panel. Clicking on an item in the panel scrolls the display to the right to reveal a new panel. If the user clicks the ``back'' button, the interface will quickly scroll left back to the previous panel.
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_vote.png}
-	\caption{Voting buttons let users say which evidence is important}
-	\label{voting}
-	\end{center}
-\end{figure}
 
 %\todo{Key issue with hypertext was not talking about things that highlighted arguments?}
 
@@ -273,13 +269,22 @@ There are three link types: supports, opposes, and relates-to. A snippet or clai
 
 Think Link uses the list of page titles on Wikipedia as a seed-set for its topics. This allows Think Link to use the Wikify~\cite{Mihalcea2007} algorithm to automatically suggest topics for snippets and provides us with a comprehensive ready-made set of topics with well-maintained descriptions and synonyms.
 
-Think Link's graph model is simpler than that used by gIBIS~\cite{Conklin1987a}: we don't distinguish between an argument and a position, we allow a claim to relate-to another claim without supporting or opposing it, we merge issues with topics, and we collapse gIBIS's five ways of connecting issues together and four ways of connecting a claim to an issue into a single relates-to relation. 
+Think Link's graph model is simpler than that used by gIBIS~\cite{Conklin1987a}: we don't distinguish between an argument and a position, we allow a claim to relate-to another claim without supporting or opposing it, we merge issues with topics, and we collapse gIBIS's five ways of connecting issues together and four ways of connecting a claim to an issue into a single relates-to link type. 
 While Think Link's simplified graph structure is arguably less useful for the argument modelling and resolution task that gIBIS was designed for, we have found that it is sufficient for the conflict discovery and snippet organization task that Think Link is designed for. 
 We have also found that the smaller set of less precise link and node types reduces the mental effort required to create an argument graph.
 
 The order in which evidence is displayed is determined by user voting. A user can vote for or against a particular piece of evidence by clicking on the voting buttons next to that item~(Figure~\ref{voting}). When a user votes for something it will be moved to the top of their list, and also make that item appear earlier for other users.
 
-One danger in a voting system is that a large group of people may drown out the opinions of their opponents by voting down their opinions. Think Link uses several strategies to try to avoid this happening. Firstly, positive votes count for more than negative votes. Thus if two different groups are voting up their own evidence and voting down the opposing group's evidence, it is still likely that the opinions of both groups will be relatively prominent. Secondly, a piece of evidence only competes against other pieces of evidence on the same side of the argument, thus even if supporters of one side are voting up their own evidence, this will not push down evidence on the other side. In some cases, it may still be necessary to introduce a moderation system similar to that used in Wikipedia, where trusted users can override popular opinion when things go wrong. 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{../screenshots/v2_vote.png}
+	\caption{Voting buttons let users say which evidence is important}
+	\label{voting}
+	\end{center}
+\end{figure}
+
+
+One danger in a voting system is that a large group of people may drown out the opinions of their opponents by voting down their opinions. Think Link uses two strategies to try to reduce this problem. Firstly, positive votes count for more than negative votes. Thus if two different groups are voting up their own evidence and voting down the opposing group's evidence, it is still likely that the opinions of both groups will be relatively prominent. Secondly, a piece of evidence only competes against other pieces of evidence on the same side of the argument, thus even if supporters of one side are voting up their own evidence, this will not push down evidence on the other side -- though of course they may vote up bad arguments for the opposing point of view. We anticipate that we will eventually need to introduce a moderation system similar to that used in Wikipedia, allowing trusted users to override popular opinion when things go wrong. 
 \todo{Talk about whether we know if this works}
 
 \todo{Talk about searches}
@@ -326,7 +331,7 @@ Think Link provides three ways for a user to associate a claim with a snippet:
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{../screenshots/v2_sniptopic.png}
+	\includegraphics[width=8.5cm]{../screenshots/v2_sniptopic.png}
 	\caption{Snippet first: Pick a claim or topic for each unfiled snippet}
 	\label{sniptopic}
 	\end{center}
@@ -396,7 +401,7 @@ For the second study, we recruited six paid participants, four female, two male.
 
 In the second study we were more confident about usability and so told the participants nothing about how to use it. We gave each user a brief description of the aims of the tool, similar to the introduction of this paper, and then asked them to perform two tasks with it. The first task was to look at a selection of web pages that already had highlighted snippets and to explore the interface while thinking aloud about what they saw (the ``sceptical reader'' use case). The second task was to identify disputed claims on a set of pages we gave them about global warming and connect them appropriately to existing claims that we had pre-populated the claim graph with (the ``activist'' use case). 
 
-Participants were shown the prototype interface shown in Figures~\ref{secondbrowser} and \ref{secondsnippetbox}. This was similar to the interface described earlier in this paper, except that it used drag and drop to make connections rather than a suggestion system, it did not offer a ``relates-to'' link between claims, and it required a user to choose a claim at the point at which they create a snippet. 
+Participants were shown the prototype interface shown in Figures~\ref{secondbrowser} and \ref{secondsnippetbox}. This was similar to the interface described earlier in this paper, except that it used drag and drop to make connections rather than a suggestion system, it did not offer a ``relates-to'' link between claims, it required a user to choose a claim at the point at which they create a snippet, and the claim browser only showed one panel at a time. 
 
 \subsection{Findings}
 
@@ -406,7 +411,7 @@ In this section we present the findings from our two user studies. Findings from
 
 Response was generally positive, with many participants being very keen to use the tool soon. One participant said ``I can see myself getting addicted to this'', and several participants asked as to notify them when it is properly deployed. Most of the participants expressed an interest in using the tool, with some wanting to use it now, and others wanting to use it ``when it is more mature''.
 
-Most participants said that they would want to use Think Link to tell them when information they read was disputed (sceptical reader). One participant said ``The web needs to be taken with a grain of salt, and this gives you salt goggles''. A smaller number said they would want to mark up claims they disagreed with (activist). One participant who was a political blogger was very excited about the ability to mark up things he thought were lies.
+Most participants said that they would want to use Think Link to tell them when information they read was disputed (sceptical reader). One participant said ``The web needs to be taken with a grain of salt, and this gives you salt goggles''. A smaller number said they would be likely to mark up claims they disagreed with (activist). One participant who was a political blogger was very excited about the ability to mark up things he thought were lies.
 
 Most participants in the first study, and all participants in the second study were able to use the tool competently. Participants in the second study were able to use Think Link competently without it being demonstrated in advance and were able to correctly deduce what the different parts of the interface meant. Participants said they found the tool ``very intuitive'' and ``really cool''.
 
@@ -458,19 +463,19 @@ Some users marked one claim as supporting another when it would have been more l
 Some users were confused by claims that had a ``because'' relationship rather than a ``supports'' or ``opposes'' relationship. For example ``America did not sign the Kyoto Protocol'' {\it because} ``Signing Kyoto would harm the US economy''. Similarly, many users expressed a desire to mark claims as being related without supporting or opposing each other. For example ``America did not sign the Kyoto Protocol'' {\it  relates-to} ``America was right to not sign the Kyoto Protocol''. In the final interface we introduced a ``relates-to'' link type to allow users to connect claims that they thought should be related but which didn't confirm to a simple pro/con relationship. 
 
 Several users got confused by claims that referred to similar events at different points in time. 
-For example, one participant in the first study marked a two claims as opposing each other when each was true at the time that it was written. This is a particular problem when talking about breaking news events, where the facts can change fast. If Think Link is to be effective for describing such events then it will need to have better support associating times with claims and snippets.
+For example, one participant in the first study marked two claims as opposing each other when each was true at the time that it was written. This is a particular problem when talking about breaking news events, where the facts can change fast. If Think Link is to be effective for describing such events then it will need to have better support associating times with claims and snippets.
 
-Several users expressed an interest in being able to mark a claim as disputed without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. In the future we are planning to implement a social voting system to allow users to say what claims they believe are false and see what claims their friends agreed or disagreed with.
+Several users expressed an interest in being able to mark a claim as disputed without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. In the future we are planning to allow users to say what claims they personally believe are true or false and see what claims their friends agreed or disagreed with.
 
 \begin{figure}[tb]
-	\includegraphics[width=8.5cm]{../screenshots/oldpoint_diagram.png}
+	\includegraphics[width=8cm]{../screenshots/oldpoint_diagram.png}
 	\caption{First Prototype Claim Browser}
 	\label{oldbrowser}
 \end{figure}
 
 \begin{figure}[tb]
 \begin{center}
-	\includegraphics[width=5cm]{../screenshots/claimbrowse.png}
+	\includegraphics[width=5.5cm]{../screenshots/claimbrowse.png}
 	\caption{Second Prototype Claim Browser}
 	\label{secondbrowser}
 \end{center}
@@ -491,7 +496,7 @@ We hope that Think Link will make it easier for people to be informed about the 
 
 \section{Acknowledgments}
 
-Acknowledgements omitted for blind submission. Think Link uses icons from the free FamFamFam Silk\footnote{http:\\famfamfam.com} collection.
+Acknowledgements omitted for blind submission. Think Link uses icons from the free FamFamFam Silk\footnote{http://famfamfam.com} collection.
 
 
 \todo{Sort out bad references}

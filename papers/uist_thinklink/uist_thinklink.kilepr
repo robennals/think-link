@@ -17,10 +17,10 @@ QuickBuild=
 
 [item:thinklink.tex]
 archive=true
-column=263
+column=588
 encoding=UTF-8
 highlight=LaTeX
-line=344
+line=457
 open=true
 order=0
 

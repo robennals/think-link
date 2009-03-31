@@ -379,7 +379,7 @@ function tl_margin()
 					that.setHighlightClass(snippet,true);
 					var div = document.createElement("div");
 					if (snippet.claimid && snippet.opposed){
-						div.innerHTML = "<span class='tl_claim_warn'>contentious claim: "+
+						div.innerHTML = "<span class='tl_claim_warn'>disputed claim: "+
 								"</span><span class='tl_claim_text'>"+
 								snippet.claimtext+"</span><span class='tl_claim_click'>"+
 								"(click snippet for more info)</span>";

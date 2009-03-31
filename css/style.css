@@ -379,7 +379,7 @@ a img {
 
 .tl_help_box {
   width: 300px;
-  position:absolute;
+  position:fixed;
   color: #003264;
   font-size: 8pt;
   font-family: verdana, sans-serif;
