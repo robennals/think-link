@@ -205,17 +205,16 @@ function makeWikiInfo(name,panelnum){
 
 function makeNavButtons(panelnum){
 	var navbuttons = $("<div class='navbutons'/>");
-	var left = $("<img class='navleft'/>").attr("src",iconUrl("arrow_left2"))
+	var left = $("<img class='navleft'/>").attr("src",iconUrl("arrow_left6"))
 		.click(function(){
 			scrollToPanel(panelnum-1);
 		})
 		.appendTo(navbuttons);
-	var right = $("<img class='navright'/>").attr("src",iconUrl("arrow_right2"))
+	var right = $("<img class='navright'/>").attr("src",iconUrl("arrow_right6"))
 		.click(function(){
 			scrollToPanel(panelnum);
 		})
 		.appendTo(navbuttons);
-
 	return navbuttons;
 }
 
