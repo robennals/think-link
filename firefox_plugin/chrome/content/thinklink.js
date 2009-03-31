@@ -250,6 +250,7 @@ function thinklink_setCookies(username,password){
 	thinklink_setCookieForUri("http://localhost:3000/",username,password);
 	thinklink_setCookieForUri("http://localhost:8180/",username,password);
 	thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
+	thinklink_setCookieForUri("http://factextract.cs.berkeley.edu/",username,password);
 }
 
 function thinklink_getLogin(){

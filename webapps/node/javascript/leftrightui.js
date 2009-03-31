@@ -61,8 +61,13 @@ function makeTopBar(){
 
 	var rightbar = $("<div class='rightbar'/>").appendTo(topbar);
 
-
-	var searchbox = $("<input class='searchbox'/>")
+	var searchbox = $("<input class='searchbox-empty' value='Search'/>")
+		.focus(function(){
+			if(searchbox.attr("class") == "searchbox-empty"){
+				searchbox.val("");
+				searchbox.attr("class","searchbox");
+			}
+		})
 		.keydown(function(ev){
 			if(ev.keyCode == 13){
 				gotoId("search.js?callback=?&query="+encodeURIComponent(searchbox.val()));
@@ -513,22 +518,22 @@ function makeSuggester(type,verbs,reverse,panel,obj,panelnum){
 			if(global_recentmode){
 				if(type == "topic"){
 					updateRecentSuggestions(panel,
-						"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
+						"/test/test?id="+obj.id+"&callback=?",
 						panelnum,"topic",obj,callback,verbs);
 				}else{ // crappy suggestions for the moment
 					updateRecentSuggestions(panel,
-						"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+						"/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
 						panelnum,type,obj,callback,verbs);
 				}
 
 			}else{
 				if(type == "topic"){
 					updateSuggestions(panel,
-						"http://localhost:8180/test/test?id="+obj.id+"&callback=?",
+						"/test/test?id="+obj.id+"&callback=?",
 						panelnum,"topic",obj,callback,verbs);
 				}else{ // crappy suggestions for the moment
 					updateSuggestions(panel,
-						"http://localhost:8180/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
+						"/thinklink/node/search.js?type="+type+"&query="+encodeURIComponent(obj.text)+"&callback=?",
 						panelnum,type,obj,callback,verbs);
 				}
 			}
@@ -559,7 +564,7 @@ function mergeSuggestions(lists){
 
 function updateTopicSuggestions(panel,text,panelnum,title,obj,callback,verbs){
 	var searchurl = urlbase+"node/search.js?type=topic&callback=?&query="+encodeURIComponent(text);
-	var wikiurl = "http://localhost:8180/test/test?text="+text+"&callback=?";
+	var wikiurl = "/test/test?text="+text+"&callback=?";
 	$.getJSON(searchurl,function(xs){
 		$.getJSON(wikiurl,function(ys){
 			panel.find(".suggestions").remove();
@@ -715,6 +720,8 @@ function verbIcon(type,verb){
 function makeButton(type,verb,textfunc,callback){
 	var icon = verbIcon(type,verb);
 
+	var selected = false;
+
 	var button = $("<img class='addbutton'>")
 		.attr("src",iconUrl(icon+"_grey"))
 		.attr("title","link as "+verb)
@@ -729,10 +736,14 @@ function makeButton(type,verb,textfunc,callback){
 			button.attr("src",iconUrl(icon));
 		})
 		.mouseout(function(){
-			button.attr("src",iconUrl(icon+"_grey"));
+			if(!selected){
+				button.attr("src",iconUrl(icon+"_grey"));
+			}
 		})
 		.click(function(ev){
 				ev.preventDefault(); ev.stopPropagation();			
+				button.attr("src",iconUrl(icon));
+				selected = true;
 				callback(textfunc(),verb);
 		});
 	return button;

@@ -50,7 +50,7 @@ function tl_delayedShowTooltip(innerdiv,x,y){
 	
 	setTimeout(function(){
 		if(box.parentNode){
-			box.className = "help_box";
+			box.className = "tl_help_box";
 //			box.style.top = (mouseY - 30) + "px";
 //			box.style.left = (mouseX + 10) + "px";
 		}
@@ -64,7 +64,7 @@ function tl_showTooltip(text,x,y) {
 		tl_tooltip = document.createElement("div");
 	}
 	var box = tl_tooltip;
-	box.className = "help_box";
+	box.className = "tl_help_box";
 	box.style.top = y+"px";
 	box.style.left = x+"px";
 	box.textContent = text;

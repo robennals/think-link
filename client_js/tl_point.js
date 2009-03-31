@@ -129,7 +129,7 @@ function tl_point_browser() {
 		var close = document.createElement("img");
 		close.style.width = "64px";
 		close.style.paddingTop = "2px";
-		close.setAttribute("src",thinklink_imagebase+"cancel.png");
+		close.setAttribute("src",thinklink_imagebase+"bigcancel.png");
 		buttonBox.appendChild(close);
 		close.addEventListener("click",function(){
 			that.hideMe();
