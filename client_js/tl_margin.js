@@ -149,7 +149,7 @@ function tl_margin()
 		}
 
 	}
-		
+			
 	this.createMarginPull = function() {
 		var that = this;
 		var pull = document.createElement("div");
@@ -197,7 +197,7 @@ function tl_margin()
 		pullimg.setAttribute("src",this.lightbulb_right);
 	}
 
-	this.refresh = function() {		
+	this.refresh = function(force) {		
 		tl_log("refresh");
 		
 		this.removeAllHighlights(); // in case we already have some
@@ -205,7 +205,7 @@ function tl_margin()
 		var scriptID = "tl_margin_ajax";
 		var thinklink_callback;
 		// add items to margin if they aren't there already
-		if (!this.itemsLoaded) {
+		if (!this.itemsLoaded || force) {
 			this.items = [];
 			var urls = ""; // list of url parameters to get snippets for
 			for (var i=0; i<this.urlList.length; i++) {
@@ -218,6 +218,7 @@ function tl_margin()
 				
 				// for each result item, make a new tl_snippet and add it to the margin's array
 				for (var item=0; item< result.length; item++) {
+					if(!that.marginVisible && !result[item].opposed) continue;
 					tl_log("addItem");
 					that.addItem(result[item]);
 					if (result[item].claimid && result[item].opposed) {
@@ -230,7 +231,7 @@ function tl_margin()
 					that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
 				}
 				
-				if(result.length > 0){
+				if(result.length > 0 && !force){
 					that.createMarginPull();
 				}
 								
@@ -346,6 +347,8 @@ function tl_margin()
 		var that = this;
 		tl_showDiv(this.divID);
 		document.body.style.paddingLeft = "215px";
+		this.marginVisible = true;
+		this.refresh(true);
 		
 //		$("#" + this.divID).animate({ width: 'fast', opacity: 'show' }, 'slow');
 //		$("body").css("padding-left",215); // scoot the main document to the right
@@ -358,6 +361,9 @@ function tl_margin()
 	this.hideMargin = function(){
 		document.body.style.paddingLeft = this.leftmargin;
 		tl_hideDiv(this.divID);
+		this.marginVisible = false;
+		this.refresh(true);
+//		this.refresh();
 //		$("body").css("padding-left",this.leftmargin); // scoot the main document back to the left
 //		$("#" + this.divID).animate({ width: 'hide', opacity: 'hide' }, 'slow');
 	}

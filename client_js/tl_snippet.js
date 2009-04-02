@@ -228,5 +228,9 @@ function tl_snippet_dialog(margin) {
 				that.margin.createMarginPull();
 			}
 		});		
+		setTimeout(function(){
+			that.margin.marginVisible = true;
+			that.margin.refresh(true);
+		},500);
 	}
 }
