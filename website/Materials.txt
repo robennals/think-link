@@ -1,0 +1,19 @@
+
+On this page we provide additional informational materials about that readers might find useful.
+
+=== UIST Paper Submission ===
+
+<a href="pubs/thinklink_uist.pdf">Download PDF</a>
+
+Submitted to <a href="http://www.acm.org/uist/uist2009/">UIST 2009</a>.
+
+The paper describes [[Think Link]] as of March 31st 2009.
+
+
+=== Posters from the IRB Open House ===
+
+* <a href="pubs/open_house_1.pdf">PDF of first poster</a>
+* <a href="pubs/open_house_2.pdf">PDF of second poster</a>
+
+On 2nd April 2009, Intel Research Berkeley held an Open House. These are the posters that we presented about this.
+ 

@@ -1,0 +1,8 @@
+
+[[Think Link]] is Open Source, licensed under the <a href="http://www.oss-watch.ac.uk/resources/apache2.xml">Apache License version 2</a>. The Apache license is very liberal and allows you to do whatever you like with the source code. 
+
+Get the latest version of the source code from GitHub here:
+
+<a href="http://github.com/robennals/think-link/tree/master">http://github.com/robennals/think-link/tree/master</a>
+
+

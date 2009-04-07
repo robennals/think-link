@@ -1,0 +1,9 @@
+
+Much of the information on the web consists of opinions, arguments, and beliefs. Examples include news articles, blog posts, message boards, and wikis. The Confrontational Computing project aims to understand how people argue on the web, and to develop tools that make it easier for people to do so.
+
+How do people use the web to help them form beliefs about the world? How do people promote their own opinions to others online? Can we build tools that make it easier for people to understand when and why other people hold opinions different to those that they read? Can we make it easier for people to assemble and promote arguments? Can we create a personalized web that understands what you know or believe already, and tailors the way information is presented accordingly?
+
+=== Think Link ===
+
+Currently, the main result of this project is [[Think Link]], a tool that shows you when information you read is disputed, and helps your find evidence for alternative points of view.
+

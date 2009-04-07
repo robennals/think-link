@@ -1,0 +1,26 @@
+
+=== TG Daily - Confrontational Computing: Empowering all users via the Web ===
+
+A great article about [[Confrontational Computing]], and [[Think Link]] in particular.
+
+Great quote:
+
+<blockquote>
+This is, hands down, the most amazing idea I've ever heard of when it comes to using the web. It's a way to apply the full knowledge of the entire Internet viewing audience to everything that's published.
+</blockquote>
+
+<a href="http://www.tgdaily.com/content/view/41931/113/1/1/">http://www.tgdaily.com/content/view/41931/113/1/1/</a>
+
+=== PC Magazine - Outside Intel Mad Scientists Hard at Work ===
+
+This article about the <a href="http://berkeley.intel-research.net/">Intel Research Berkeley</a> Open House 2009 leads with a piece about [[Think Link]].
+
+Nice opening:
+
+<blockquote>
+A popular Web comic portrays a stick figure feverishly typing at a keyboard. "Are you coming to bed?" he's asked, off-panel. "I can't," he replies. "Someone is wrong on the Internet!"
+
+What if someone else could do that work for you? An Intel project that the company presented at its R&D day at U.C. Berkeley envisioned just that.
+</blockquote>
+
+<a href="http://www.pcmag.com/article2/0,2817,2344467,00.asp">http://www.pcmag.com/article2/0,2817,2344467,00.asp</a>

@@ -1,0 +1,175 @@
+h2, h3, h4 {
+	border-bottom: 1px solid #AAAAAA;
+}
+
+h3 {
+	padding-top: 20px;
+}
+
+h1, h2, h3, h4 {
+	color: #0860A0;
+/*	font-weight: normal; */
+}
+
+h1 {
+	font-size: 188%;
+	font-weight: normal;
+}
+
+p {
+	font-size: 11pt;
+}
+
+blockquote {
+	background-color: #EEEEEE;
+	padding:10px;
+}
+
+.arghead {
+	color: #0860A0;
+	padding-left: 10px;
+}
+
+.argbox {
+/* ckground-color: #F9F9F9; */
+	border: 1px solid #0860A0;
+	padding-left: 10px;
+	margin-left: 10px;
+}
+
+.bigimage {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	max-width: 300px;
+}
+
+.imagebox {
+  padding: 10px;
+  border: 1px solid #AAAAAA;
+  margin-left: 30px;
+  -moz-border-radius: 10px;
+}
+
+/* .imagebox img {
+	padding: 10px;
+} */
+
+.keyword {
+/*	font-style: italic; */
+/* 	font-weight: bold; */
+/*    color: #00008b; */
+	
+/*	color: #006400; */
+	color: #0860A0; 
+}
+
+.argname {
+  color: #0860A0;
+  text-align: right;
+  padding-right: 5px;
+}
+
+.argdesc {
+	padding-left: 5px;
+}
+
+.article_body {
+	width: 500px;
+/*	border-left: thin solid #AAAAAA; */
+}
+
+.headlinks {
+	background-color: #F9F9F9;
+	padding: 10px;
+	border: 1px solid #AAAAAA;
+	margin-bottom:30px;
+}
+
+.headlink {
+	font-size: small;
+	padding-top: 4px;
+}
+
+pre {
+  width: 600px;
+  min-height: 50px;
+  max-height: 400px;
+	overflow: auto;
+	background-color: #FFFFCC;
+	border: 1px solid #AAAAAA;
+	padding: 10px;
+}
+
+.signup {
+	font-weight: bold;
+}
+
+.spacer {
+	padding-top: 10px;
+}
+
+a {
+	text-decoration: none;
+}
+
+.linkhead {
+/*
+	padding-top: 10px;
+*/
+	font-weight: bold;
+}
+
+.minilogo{
+	text-align: left;
+/*	padding-left: 10px; */
+}
+
+.info_column {
+	padding: 10px;
+}
+
+.sidelinks {
+	padding: 10px;
+	-moz-border-radius: 8px;
+	background-color: #EEEEEE;
+	text-align: left;
+}
+
+.linksul {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 10pt;
+}
+
+.linksul li, .headlink {
+  font-size: 10pt;
+}
+
+.link-b {
+	padding-left: 10px; 
+	padding-top: 0px;
+	font-size: small;
+}
+
+.toplogo {
+	background-color:#0860A8;
+	height:50px;
+	margin:0px;
+	padding:0px;
+	width:100%;
+}
+
+td {
+	font-size: 11pt;
+}
+
+
+a img {
+	border: none
+}
+
+body {
+	font: normal 11pt sans-serif;
+	padding-bottom: 100px;
+	margin: 0px;
+}

@@ -1,0 +1,83 @@
+
+Think Link is a tool that helps users know when information they read on the web is disputed. 
+As a user browses the web, Think Link highlights snippets of text that make claims that users have identified as contentious. If a user clicks on a highlighted snippet, Think Link displays an argument graph showing the best evidence for and against the claim the snippet is making.
+
+Users provide all of Think Link's information: they create new claims, mark new snippets, connect snippets to claims, and vote for the best evidence. 
+
+This page gives a simple overview of Think Link. To learn about Think Link in detail, look at the [[Publications]], or the [[Videos]].
+
+=== Usage Scenarios ===
+
+Think Link is designed to support two primary usage scenarios: 
+
+* Activists care strongly about a particular issue and combine Think Link with a search engine to find and mark snippets that make claims that they disagree with
+
+* Sceptical Readers install Think Link as a browser extension to see when statements they read are disputed and find other sources that present alternative viewpoints.
+
+
+=== Browsing the Disputed Web ===
+
+[[image:v2_highlight_shadow.png]]
+
+If a sceptical reader has installed the Think Link browser extension, Think Link will draw attention to snippets that make or imply disputed claims by highlighting them in red. If a user hovers their mouse over a highlighted snippet then Think Link displays a tooltip giving the disputed claim. Clicking on a highlighted snippet reveals a visualization showing the best evidence for and against the claim, as determined by the user community.
+
+[[image:v2_popup_dim2.png]]
+
+Since the purpose of a highlight is to alert the user to claims that they had not realized were contentious, there is little benefit in highlighting snippets that make claims that the user already realizes are contentious. A user can click the "don't highlight this claim again" button to tell Think Link that they are aware of the contentious nature of this claim and do not wish to be alerted about it again.
+
+Normally Think Link will only highlight snippets that make disputed claims that the user has not asked to ignore, and snippets marked by the user themselves. If the user wants to see all snippets on a page then they can do so by opening the Think Link sidebar. 
+
+=== The Argument Graph ===
+
+[[image:v2_panels2_cropright.png]]
+
+Once a sceptical reader has identified a claim that they are interested in, they can use Think Link's claim browser interface to investigate the evidence for and against it, and to see what other contentious claims have been made about related issues. 
+
+The Claim Browser consists of an expanding horizontal array of panels where each panel provides information about the item that is selected in the panel to its left. If a user clicks on a link in a panel then a new panel opens to the right giving more information about the linked node. To emphasize the connection between the panels, the claim browser places an arrow next to each selected item, pointing to the panel that gives more information about that item.
+
+Think Link uses the list of page titles on Wikipedia as a seed-set for its topics. This allows Think Link to use the Wikify! algorithm to automatically suggest topics for snippets and provides us with a comprehensive ready-made set of topics with well-maintained descriptions and synonyms.
+
+== Voting ==
+
+[[image:v2_vote.png]]
+
+The order in which evidence is displayed is determined by user voting. A user can vote for or against a particular piece of evidence by clicking on the voting buttons next to that item. When a user votes for something it will be moved to the top of their list, and also make that item appear earlier for other users.
+
+=== Marking Disputed Information ===
+
+[[image:v2_snipmark.png]]
+
+If an Activist has installed the Think Link browser extension then they can create a snippet by selecting text on a web page and selecting either "This is disputed" or "This is interesting" from the context menu. A user selects "This is disputed" if they believe that readers of that snippet should be alerted that the snippet is making a claim that is disputed. A user selects "This is interesting" if they believe that the snippet contains useful evidence that could be useful for readers investigating a disputed claim. 
+
+[[image:v2_sugsnippet.png]]
+
+Think Link does not require a user to specify the claim a snippet is making at the point at which they mark it. Instead, Think Link encourages a user to gather many snippets and then use the claim browser interface to associate claims with snippets in bulk. 
+One anticipated usage scenario for Think Link is an activist user who uses a search engine to find a large number of snippets that make a claim that they disagree with. 
+In this case, the user can save time by first collecting all their snippets, and then attaching all the snippets to their disputed claim at the same time.
+
+Think Link provides three ways for a user to associate a claim with a snippet:
+
+* Claim first: If a user navigates to a claim and clicks the "add snippet" button, Think Link will suggest unattached snippets that the user created recently and that are textually similar to the wording of the claim or other snippets currently attached to the claim. A user can attach a suggested snippet to the claim by clicking on icons representing "supports", "opposes", or "relates-to" link types. If Think Link does not suggest the right snippets then Think Link can guide the suggestions by entering keywords into the text box above the suggestion list.
+
+[[image:v2_sniptopic.png]]
+
+* Snippet first: If a user selects the "unfiled" tab at the top of the claim browser then Think Link will show a list of all the snippets that they have marked but not yet associated with a claim or a topic. If the user selects an unfiled snippet then Think Link will suggest claims or topics that the user might want to associate with that snippet. As with the claim-first method, a user can guide the suggestions by entering keywords. If the correct claim is not suggested then the user can create a new claim by typing it into the text box and clicking the "add" button.
+
+* Immediate: A user can select a claim for a snippet that they have just marked. When a user marks a snippet, Think Link will initially highlight it in blue to show that the snippet is not currently associated with a claim or topic and will not be shown to other users. If the user clicks on the highlighted snippet, then Think Link will bring up the same suggestion panel used in the "snippet first" method.
+
+=== Future Work: Opinions ===
+
+The information this graph could also be used to answer a number of interesting questions. For example:
+
+* What argument would I find most convincing in favor of this claim, given what I already believe?
+
+* What is the best reading list for this topic?
+
+* How do people's beliefs depend on geographic location?
+
+* Which of my beliefs is most inconsistent with my other beliefs?
+
+* Which of my friends who disagrees with me on this topic would be most persuadeable, and how shoud I persuede them?
+
+
+

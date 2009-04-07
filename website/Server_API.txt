@@ -1,0 +1,8 @@
+
+The [[Think Link]] server has an Open API that other applications can use to retreive information about factual claims and URLs.
+
+The documentation for the API should be online shortly, once we have tidied things up a bit...
+
+
+
+
