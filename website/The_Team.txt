@@ -5,18 +5,18 @@ The following people have contributed to the Confrontational Computing project:
 
 === People at Intel Research ===
 
-* <a href="http://berkeley.intel-research.net/rennals/">Rob Ennals</a> ([[Think Link]] lead)
-* Tad Hirsch
+* <a href="http://berkeley.intel-research.net/rennals/">Rob Ennals</a> - [[Think Link]] lead
+* <a href="http://web.media.mit.edu/~tad/">Tad Hirsch</a>
 * Tye Rattenbury
-* John Mark Agosta 
+* <a href="http://www.agosta.org/">John Mark Agosta</a>
 
 === People at UC Berkeley ===
 
-* Beth Trushkowsky
-* Wes Willet
+* <a href="http://www.cs.berkeley.edu/~trush/">Beth Trushkowsky</a> - 2008 Summer Intern on Think Link
+* <a href="http://www.eecs.berkeley.edu/~willettw/selectpage.html">Wes Willet</a>
 * Nick Kong
+* <a href="http://vis.berkeley.edu/~maneesh/">Maneesh Agrawala</a>
 * Nick Lanham
-* Maneesh Agrawala
 * Christine Robson
 * Jesse Trutna
 

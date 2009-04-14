@@ -23,4 +23,9 @@ Edit.000
 store
 init.d
 *.class
+*~.manager
+scala/.manager
 *~
+pastrevs
+test
+

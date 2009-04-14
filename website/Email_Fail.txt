@@ -1,0 +1,6 @@
+We were not able to send email to the address that you gave us. It may be that the address was malformed or that your server does not accept from our address.
+
+Please try signing up with a different email address.
+
+If problems persist then please <a href='mailto:robert.ennals@intel.com'>contact us</a>.
+

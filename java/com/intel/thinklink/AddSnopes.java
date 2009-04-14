@@ -1,7 +1,6 @@
 package com.intel.thinklink;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class AddSnopes {
 	public static String infile = "/home/rob/git/thinklink/ruby/snopesclaims_text.csv";

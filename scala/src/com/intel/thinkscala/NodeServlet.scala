@@ -46,6 +46,4 @@ class NodeServlet extends HttpServlet {
 //		out.append(Dyn.toJSON(d));
 //	}
 	
-	def dumpObject(out : PrintWriter, info : Dyn, userid : int){
-	}
 }

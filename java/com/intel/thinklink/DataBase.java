@@ -1,6 +1,5 @@
 package com.intel.thinklink;
 
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -221,7 +220,7 @@ public class DataBase {
 	Dyn search(String query) throws SQLException{
 		search_stmt.setString(1, query);
 		ResultSet items = search_stmt.executeQuery();
-		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+		return makeObject("search.js?query="+Util.urlEncode(query),"Search Results for "+query,"search",items); 
 	}
 
 	private PreparedStatement search_type_stmt = con.prepareStatement(
@@ -237,7 +236,7 @@ public class DataBase {
 		search_type_stmt.setString(1, query);
 		search_type_stmt.setString(2,type);
 		ResultSet items = search_type_stmt.executeQuery();
-		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+		return makeObject("search.js?query="+Util.urlEncode(query),"Search Results for "+query,"search",items); 
 	}
 	
 	private PreparedStatement search_snippet = con.prepareStatement(
@@ -250,7 +249,7 @@ public class DataBase {
 		search_snippet.setString(1,query);
 		search_snippet.setInt(2,userid);
 		ResultSet items = search_snippet.executeQuery();
-		return makeObject("search.js?query="+URLEncoder.encode(query)+"&type=snippet","Search Results for "+query,"search",items);
+		return makeObject("search.js?query="+Util.urlEncode(query)+"&type=snippet","Search Results for "+query,"search",items);
 	}
 	
 	private PreparedStatement search_linkto_stmt = con.prepareStatement(
@@ -265,7 +264,7 @@ public class DataBase {
 		search_linkto_stmt.setString(2, query);
 		search_linkto_stmt.setString(3,type);
 		ResultSet items = search_linkto_stmt.executeQuery();
-		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+		return makeObject("search.js?query="+Util.urlEncode(query),"Search Results for "+query,"search",items); 
 	}
 
 	private PreparedStatement search_linkfrom_stmt = con.prepareStatement(
@@ -280,7 +279,7 @@ public class DataBase {
 		search_linkfrom_stmt.setString(2, query);
 		search_linkfrom_stmt.setString(3,type);
 		ResultSet items = search_linkfrom_stmt.executeQuery();
-		return makeObject("search.js?query="+URLEncoder.encode(query),"Search Results for "+query,"search",items); 
+		return makeObject("search.js?query="+Util.urlEncode(query),"Search Results for "+query,"search",items); 
 	}
 	
 	private PreparedStatement url_claim_snippets = con.prepareStatement(

@@ -2,7 +2,6 @@ package com.intel.thinklink;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,11 +21,9 @@ public class WikiRedirects {
 		int linecount = 0;
 		
 		try{
-			HashMap<String,String> links = new HashMap<String,String>();
 			BufferedReader reader = Util.openInFile(wikifile);
 			BufferedWriter writer = Util.openOutFile(outfile);
 			
-			boolean inbody = false;
 			String line;
 			String title = null;
 			while((line = reader.readLine()) != null){

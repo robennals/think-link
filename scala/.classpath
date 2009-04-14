@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/usr/share/tomcat5.5/common/lib/servlet-api.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Think Link"/>
 	<classpathentry kind="lib" path="/home/rob/git/thinklink/java"/>
+	<classpathentry kind="lib" path="/home/rob/Reference/Jars/commons-lang-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

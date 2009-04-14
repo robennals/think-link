@@ -2,8 +2,6 @@ package com.intel.thinklink;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.servlet.ServletException;

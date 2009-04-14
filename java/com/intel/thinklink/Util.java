@@ -7,8 +7,17 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class Util {
+	
+	public static String urlEncode(String str){
+		try{
+			return URLEncoder.encode(str,"UTF-8");
+		}catch(Exception e){
+			return "";
+		}
+	}
 	
 	/**
 	 * Convert ISO-8859-1 format string (which is the default sent by IE to the

@@ -2,7 +2,6 @@ package com.intel.thinklink;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -117,7 +116,7 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			String format = m.group(1);
 			if(format == null || format.equals(".html")){
-				Template.doNodeTemplate(out, userid, "search.js?query="+URLEncoder.encode(req.getParameter("query")));
+				Template.doNodeTemplate(out, userid, "search.js?query="+Util.urlEncode(req.getParameter("query")));
 			}else{
 				outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type"),userid));
 			}

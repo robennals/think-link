@@ -213,7 +213,7 @@ function makeWikiInfo(name,panelnum){
 		.appendTo(info);
 	var iframe = $("<iframe class='wikiframe'/>")
 		.attr("height",	$(".toptable").height())
-		.attr("src","http://en.wikipedia.org/wiki/"+name+"?printable=yes")
+		.attr("src","http://en.m.wikipedia.org/wiki/"+name+"?printable=yes")
 		.appendTo(info);		
 	return info;
 }
