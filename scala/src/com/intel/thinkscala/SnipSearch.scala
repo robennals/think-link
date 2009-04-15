@@ -9,12 +9,26 @@ import scala.xml._;
 import scala.xml.parsing._;
 import scala.io._;
 import org.apache.commons.lang._;
+import scala.concurrent.ops._;
 
+class SnipInfo(val snip: String, val context: String, success : Boolean){
+  def show = {
+    if(success){
+      System.out.println("found: "+snip)
+    }else{
+      System.out.println("not found:"+snip)
+    }
+  }
+}
 
-class SnipRes(val snip: Array[String], val url: String)
+class SnipUrlRes(val snips: Array[SnipInfo], val url: String){
+  def show = {
+    System.out.println("-- "+url+" --")
+    snips.foreach(x => x.show)
+  }
+}
 
 class SnipSearch extends HttpServlet {
-  
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) {
     val claim = req getParameter "claimstr"
     SnipSearch.searchYahoo(claim)
@@ -26,12 +40,14 @@ object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
   val bossSvr = "http://boss.yahooapis.com/ysearch/web/v1";
   
-  def searchYahoo(claim : String) : Seq[SnipRes] = {
+  def searchYahoo(claim : String) : Seq[SnipUrlRes] = {
     val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
     val parser = ConstructingParser.fromSource(Source fromURL url,false)
     val doc = parser.document   
     val results = doc \\ "result"
-    val snips = results map snipForResult
+    val futures = results map (x => future(snipForResult(x)))
+    val snips = futures.map(f => f())
+    snips.foreach(x => x.show)
     return snips;   
   }
  
@@ -40,26 +56,26 @@ object SnipSearch {
 //    var abstext = cleanString((result \ "abstract").text)
 //    var fragments = abstext.split("""\.""").filter(a => a.length > 15)
     val url = (result \ "url").text
-    System.out.println(" --- "+url+" ---")
+//    System.out.println(" --- "+url+" ---")
     try{
 	    val pagetext = htmlToString(download(url))
 	    var expanded = fragments.flatMap(frag => expandSentence(pagetext,trimEnds(frag)))
-	    new SnipRes(expanded,url)
+	    new SnipUrlRes(expanded,url)
     }catch{
       case e => e.printStackTrace(); null
     }
   }
 
-  def expandSentence(pagetext : String, fragment : String) : Array[String] = {
+  def expandSentence(pagetext : String, fragment : String) : Array[SnipInfo] = {
     var start = reduceUnicode(pagetext).indexOf(reduceUnicode(fragment))
     if(start == -1){
-      System.out.println(">> splitting: "+fragment);
+//      System.out.println(">> splitting: "+fragment);
       var parts = fragment.split("\\.").filter(a => a.length > 15)
       if(parts.length > 1){
         return parts.flatMap(frag => expandSentence(pagetext,frag))
       }else{
-        System.out.println("not found: "+fragment);
-        return Array()
+//        System.out.println("not found: "+fragment);
+        return Array(new SnipInfo(fragment,null,false))
       }
     }
     var end = start + fragment.length - 1
@@ -73,8 +89,8 @@ object SnipSearch {
       start+=1;
     }
     val quote = pagetext.substring(start,end)
-    System.out.println("found: "+fragment)
-    return Array(quote)
+//    System.out.println("found: "+fragment)
+    return Array(new SnipInfo(fragment,quote,true))
   }
     
   def isStop(c : Char) = c == '.' || c == '!' || c == '?' || c == '*' || c == '|' || c == ')'

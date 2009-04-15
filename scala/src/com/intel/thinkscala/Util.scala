@@ -8,6 +8,7 @@ import java.net._;
 import scala.io._;
 import scala.xml.parsing._;
 import scala.xml._;
+import org.apache.commons.lang._;
 
 object Util {
  def encode(claim : String) = URLEncoder.encode(claim,"UTF-8");
@@ -50,5 +51,29 @@ object Util {
    str = str.replace('\u201f','"');
    str
  }
+  
+ def printJSON(obj : Any) : String = {
+   obj match{
+     case s : String => "\""+StringEscapeUtils.escapeJavaScript(s)+"\""
+     case m : Map[_,_] => 
+       (m.keySet.map (k => "'"+k+"' : " + printJSON(m(k)))).mkString("{",",","}") 
+     case l : Iterable[_] => (l map printJSON).mkString("[",",","]")
+     case o => o.toString
+   }
+ }
+ 
+// def intersperse[A](l : Iterable[A], sep : A) : List[A] = {
+//   var out : List[A]= List()
+//   var first = true
+//   l.foreach(x => {
+//     if(first){
+//       first = false
+//     }else{
+//       out = sep :: out
+//     }
+//     out = x :: out
+//   })
+//   out.reverse
+// }
  
 }
