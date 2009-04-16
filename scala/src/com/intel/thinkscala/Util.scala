@@ -51,29 +51,59 @@ object Util {
    str = str.replace('\u201f','"');
    str
  }
-  
+
+ def getPath(req : HttpServletRequest) = req.getServletPath() + req.getPathInfo()
+ 
+ def formatpat = """[^\?]\.(\w+)""".r
+ 
+ def getFormat(req : HttpServletRequest) = {
+   val m = formatpat.findAllIn(getPath(req))
+   if(m.hasNext) m.group(1) else null
+ }
+ 
+ // TODO: implement a generic output function
+ def httpOutput(req : HttpServletRequest, res : HttpServletResponse, obj : Any){
+   	res.setContentType("text/html; charset=UTF-8")
+    req.setCharacterEncoding("UTF-8");
+
+    val format = getFormat(req)
+    val writer = res.getWriter
+    format match {
+      case "xml" => writer.append(printXML(obj))
+      case "js" => {
+		    var callback = req getParameter "callback" 
+		    if(callback == null){
+		      callback = "callback"
+		    }
+	        writer.append(callback + "(" + printJSON(obj) + ");")
+        }
+      case _ => writer.append(printJSON(obj))
+    }   
+    writer.close
+ }
+ 
  def printJSON(obj : Any) : String = {
    obj match{
      case s : String => "\""+StringEscapeUtils.escapeJavaScript(s)+"\""
      case m : Map[_,_] => 
        (m.keySet.map (k => "'"+k+"' : " + printJSON(m(k)))).mkString("{",",","}") 
      case l : Iterable[_] => (l map printJSON).mkString("[",",","]")
+     case d : HasData => printJSON(d.data)
+     case null => "null"
      case o => o.toString
    }
- }
- 
-// def intersperse[A](l : Iterable[A], sep : A) : List[A] = {
-//   var out : List[A]= List()
-//   var first = true
-//   l.foreach(x => {
-//     if(first){
-//       first = false
-//     }else{
-//       out = sep :: out
-//     }
-//     out = x :: out
-//   })
-//   out.reverse
-// }
- 
+  }
+
+  def printXML(obj : Any) : String = {
+   obj match{
+     case s : String => "\""+StringEscapeUtils.escapeJavaScript(s)+"\""
+     case m : Map[_,_] => 
+       (m.keySet.map (k => "<"+k+">" + printXML(m(k)) + "</"+k+">")).mkString("\n") 
+     case l : Iterable[_] => 
+       (l.map(x => "<item>"+printXML(x)+"</item>")).mkString("<list>","\n","</list>")
+     case d : HasData => printXML(d.data)
+     case null => ""
+     case o => o.toString
+    }
+  } 
 }

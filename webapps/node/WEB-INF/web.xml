@@ -14,7 +14,6 @@
 	<url-pattern>/link/*</url-pattern>
 	</servlet-mapping>
 
-
 	<servlet-mapping>
 	<servlet-name>node</servlet-name>
 	<url-pattern>/apianon/*</url-pattern>
@@ -30,6 +29,14 @@
 	<url-pattern>/scripthack/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+	<servlet-name>snipsearch</servlet-name>
+	<servlet-class>com.intel.thinkscala.SnipSearch</servlet-class>
+	</servlet>
 
+	<servlet-mapping>
+	<servlet-name>snipsearch</servlet-name>
+	<url-pattern>/snipsearch/*</url-pattern>
+	</servlet-mapping>
 </web-app>
 

@@ -11,30 +11,27 @@ import scala.io._;
 import org.apache.commons.lang._;
 import scala.concurrent.ops._;
 
-class SnipInfo(val snip: String, val context: String, success : Boolean){
-  def show = {
-    if(success){
-      System.out.println("found: "+snip)
-    }else{
-      System.out.println("not found:"+snip)
-    }
-  }
+trait HasData {
+  def data : Any
 }
 
-class SnipUrlRes(val snips: Array[SnipInfo], val url: String){
-  def show = {
-    System.out.println("-- "+url+" --")
-    snips.foreach(x => x.show)
-  }
+class SnipInfo(val snip: String, val context: String, success : Boolean) extends HasData{
+  def data = Map("text" -> snip, "pagetext" -> context)
+}
+
+class SnipUrlRes(val snips: Array[SnipInfo], val url: String, val errormsg: String) extends HasData {
+  def this(snips : Array[SnipInfo], url: String) = this(snips,url,null)
+  def this(ex : Exception, url : String) = this(null,url,ex.getMessage)
+  def data = Map("url" -> url, "snips" -> snips, "error" -> errormsg)
 }
 
 class SnipSearch extends HttpServlet {
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) {
     val claim = req getParameter "claimstr"
-    SnipSearch.searchYahoo(claim)
+    val snips = SnipSearch.searchYahoo(claim)
+    httpOutput(req,res,snips)
   }
 }    
-  // TODO: make HTTP requests concurrently using Futures
  
 object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
@@ -47,34 +44,28 @@ object SnipSearch {
     val results = doc \\ "result"
     val futures = results map (x => future(snipForResult(x)))
     val snips = futures.map(f => f())
-    snips.foreach(x => x.show)
     return snips;   
   }
  
-  def snipForResult(result : Node) = {
+  def snipForResult(result : Node) : SnipUrlRes = {
     var fragments = ((result \ "abstract").text).split("<b>...</b>").map(cleanString)    
-//    var abstext = cleanString((result \ "abstract").text)
-//    var fragments = abstext.split("""\.""").filter(a => a.length > 15)
     val url = (result \ "url").text
-//    System.out.println(" --- "+url+" ---")
     try{
 	    val pagetext = htmlToString(download(url))
 	    var expanded = fragments.flatMap(frag => expandSentence(pagetext,trimEnds(frag)))
 	    new SnipUrlRes(expanded,url)
     }catch{
-      case e => e.printStackTrace(); null
+      case e => e.printStackTrace(); new SnipUrlRes(null,url)
     }
   }
 
   def expandSentence(pagetext : String, fragment : String) : Array[SnipInfo] = {
     var start = reduceUnicode(pagetext).indexOf(reduceUnicode(fragment))
     if(start == -1){
-//      System.out.println(">> splitting: "+fragment);
       var parts = fragment.split("\\.").filter(a => a.length > 15)
       if(parts.length > 1){
         return parts.flatMap(frag => expandSentence(pagetext,frag))
       }else{
-//        System.out.println("not found: "+fragment);
         return Array(new SnipInfo(fragment,null,false))
       }
     }
@@ -89,7 +80,6 @@ object SnipSearch {
       start+=1;
     }
     val quote = pagetext.substring(start,end)
-//    System.out.println("found: "+fragment)
     return Array(new SnipInfo(fragment,quote,true))
   }
     
@@ -137,16 +127,5 @@ object SnipSearch {
     str = StringEscapeUtils.unescapeHtml(str);     
     return str;
   }
-  
-//  def stringForURL(url : String) : String = {
-//    var source = Source.fromURL(url,"UTF-8");
-//    var buf = new StringBuffer;
-//    try{
-//      source.foreach(line => buf append line);
-//    }catch{
-//      case e => buf.toString;
-//    }
-//    buf.toString;
-//  }
 }
 
