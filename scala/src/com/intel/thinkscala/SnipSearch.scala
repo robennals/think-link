@@ -19,10 +19,10 @@ class SnipInfo(val snip: String, val context: String, success : Boolean) extends
   def data = Map("text" -> snip, "pagetext" -> context)
 }
 
-class SnipUrlRes(val snips: Array[SnipInfo], val url: String, val errormsg: String) extends HasData {
-  def this(snips : Array[SnipInfo], url: String) = this(snips,url,null)
-  def this(ex : Exception, url : String) = this(null,url,ex.getMessage)
-  def data = Map("url" -> url, "snips" -> snips, "error" -> errormsg)
+class SnipUrlRes(val snips: Array[SnipInfo], val url: String, val title : String, val errormsg: String) extends HasData {
+  def this(snips : Array[SnipInfo], url: String) = this(snips,url,null,null)
+  def this(ex : Exception, url : String) = this(null,url,null,ex.getMessage)
+  def data = Map("url" -> url, "snips" -> snips, "title" -> title, "error" -> errormsg)
 }
 
 class SnipSearch extends HttpServlet {
@@ -48,17 +48,75 @@ object SnipSearch {
   }
  
   def snipForResult(result : Node) : SnipUrlRes = {
-    var fragments = ((result \ "abstract").text).split("<b>...</b>").map(cleanString)    
+    var fragments = ((result \ "abstract").text).split("""<b>\.\.\.</b>""").map(cleanString).filter(s => s.length > 10)    
     val url = (result \ "url").text
+    val title = cleanString((result \ "title").text)
     try{
 	    val pagetext = htmlToString(download(url))
-	    var expanded = fragments.flatMap(frag => expandSentence(pagetext,trimEnds(frag)))
-	    new SnipUrlRes(expanded,url)
+	    var expanded = fragments.map(frag => findSnipContext(pagetext,trimEnds(frag)))
+	    new SnipUrlRes(expanded,url,title,null)
     }catch{
-      case e => e.printStackTrace(); new SnipUrlRes(null,url)
+      case e : Exception => e.printStackTrace(); new SnipUrlRes(e,url)
     }
   }
 
+  val context_length = 200
+  
+  def findSnipContext(pagetext : String, fragment : String) : SnipInfo = {
+    import java.lang.Math._;
+    findSentence(pagetext,fragment) match {
+      case null => new SnipInfo(fragment,null,false)
+      case (start,end) => {
+        val snip = pagetext.substring(start,end)
+        val extra = (context_length - snip.length) / 2
+        
+        var cstart = max(0,start - extra)
+        var cend = min(pagetext.length,end + extra)       
+        while(cstart < start && pagetext(cstart).isLetterOrDigit) cstart+=1;
+        while(cend > end && pagetext(cend).isLetterOrDigit) cend-=1;
+        val context = pagetext.substring(cstart,cend)
+        return new SnipInfo(snip,context,true)
+      }
+    }
+  }
+  
+  
+  
+  def findSentence(pagetext : String, fragment : String) : (Int,Int) = {   
+    var start = reduceUnicode(pagetext).indexOf(reduceUnicode(fragment))
+    if(start == -1){
+      for(i <- 0 until pagetext.length){
+        val end = findFrom(i,pagetext,fragment)
+        if(end != 0){
+          return (i,end)          
+        }
+      }
+      return null
+    }else{
+      return (start,start+fragment.length)
+    }    
+  }
+
+  def findFrom(start : Int, bigstring : String, smallstring : String) : Int = {
+    var bi = start
+    var si = 0
+    while(si < smallstring.length){
+      if(bi >= bigstring.length) return 0;
+      if(si != 0 && !bigstring(bi).isLetterOrDigit){
+        bi+=1
+      }else if(!smallstring(si).isLetterOrDigit){
+        si+=1
+      }else if(bigstring(bi) != smallstring(si)){
+        return 0
+      }else{
+        bi+=1
+        si+=1
+      }
+    }   
+    return bi    
+  }
+  
+  
   def expandSentence(pagetext : String, fragment : String) : Array[SnipInfo] = {
     var start = reduceUnicode(pagetext).indexOf(reduceUnicode(fragment))
     if(start == -1){
@@ -85,32 +143,32 @@ object SnipSearch {
     
   def isStop(c : Char) = c == '.' || c == '!' || c == '?' || c == '*' || c == '|' || c == ')'
   
-  def firstQuote(str : String) = str.replaceAll("""\.\.\..*""","");
+  def firstQuote(str : String) = str.replaceAll("""\.\.\..*""","")
   
   def trimEnds(str : String) = str.replaceAll("^\\s+","").replaceAll("\\s+$","")
   
   def cleanString(str : String) = 
-    str.replace("<b>","").replace("</b>","").replace("<wbr>","");
+    str.replace("<b>","").replace("</b>","").replace("<wbr>","")
  
-  def htmlToString(html : String) : String = {
-    var str = html;
-    str = str.replaceAll("(?s:<script.*?>.*?</script>)","");
-    str = str.replaceAll("(?s:<style.*?>.*?</style>)","");
-    str = str.replaceAll("</title>",". ");
-    str = str.replaceAll("</h.>",". ");
-    str = str.replaceAll("</?p>",". ");
-    str = str.replaceAll("(?s:<![.*?]]>)","");
-    str = str.replaceAll("(?s:<.*?>)","");
-    str = str.replaceAll("\\s+"," ");
-    str = str.replaceAll("\\.[\\.\\s]+",". ");
-    str = str.replaceAll("\\?[\\.\\s]+","? ");
-    str = str.replaceAll("\\![\\.\\s]+","! ");
-    str = str.replaceAll("\\,[\\.\\s]+",", ");
-    str = StringEscapeUtils.unescapeHtml(str);     
-    return str;
-  }
+//  def htmlToString(html : String) : String = {
+//    var str = html;
+//    str = str.replaceAll("(?s:<script.*?>.*?</script>)","");
+//    str = str.replaceAll("(?s:<style.*?>.*?</style>)","");
+//    str = str.replaceAll("</title>",". ");
+//    str = str.replaceAll("</h.>",". ");
+//    str = str.replaceAll("</?p>",". ");
+//    str = str.replaceAll("(?s:<![.*?]]>)","");
+//    str = str.replaceAll("(?s:<.*?>)","");
+//    str = str.replaceAll("\\s+"," ");
+//    str = str.replaceAll("\\.[\\.\\s]+",". ");
+//    str = str.replaceAll("\\?[\\.\\s]+","? ");
+//    str = str.replaceAll("\\![\\.\\s]+","! ");
+//    str = str.replaceAll("\\,[\\.\\s]+",", ");
+//    str = StringEscapeUtils.unescapeHtml(str);     
+//    return str;
+//  }
 
-  def htmlToNewlineString(html : String) : String = {
+  def htmlToString(html : String) : String = {
     var str = html;
     str = str.replaceAll("(?s:<script.*?>.*?</script>)","");
     str = str.replaceAll("(?s:<style.*?>.*?</style>)","");
@@ -120,10 +178,7 @@ object SnipSearch {
     str = str.replaceAll("</?p>","\n");
     str = str.replaceAll("(?s:<![.*?]]>)","");
     str = str.replaceAll("(?s:<.*?>)","");
-    str = str.replaceAll("\\.[\\.\\s]+",". ");
-    str = str.replaceAll("\\?[\\.\\s]+","? ");
-    str = str.replaceAll("\\![\\.\\s]+","! ");
-    str = str.replaceAll("\\,[\\.\\s]+",", ");
+    str = str.replaceAll("\n+","\n");
     str = StringEscapeUtils.unescapeHtml(str);     
     return str;
   }
