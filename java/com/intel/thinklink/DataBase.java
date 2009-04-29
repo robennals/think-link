@@ -17,23 +17,6 @@ class JSONString{
 }
 
 
-/** really simple connection pool that just grows on demand */
-class ConnectionPool{
-	static Vector<DataBase> pool = new Vector<DataBase>();
-	public static synchronized DataBase get() throws Exception{
-		if(pool.size() == 0){
-			return new DataBase();
-		}else{
-			DataBase el = pool.lastElement();
-			pool.remove(pool.size() - 1);
-			return el;
-		}
-	}
-	public static synchronized void release(DataBase d){
-		pool.add(d);
-	}
-}
-
 public class DataBase {
 	Connection con;
 	
@@ -49,7 +32,7 @@ public class DataBase {
 	
 	private PreparedStatement node_for_text = con.prepareStatement(
 			"SELECT id FROM v2_node WHERE text = ?");
-	int nodeForText(String text) throws SQLException {
+	public int nodeForText(String text) throws SQLException {
 		node_for_text.setString(1, text);
 		ResultSet result = node_for_text.executeQuery();
 		if(result.next()){
@@ -59,21 +42,21 @@ public class DataBase {
 		}
 	}
 	
-	private PreparedStatement get_user = con.prepareStatement("SELECT node_id,password FROM v2_user WHERE email = ?");
-	int getUser(String email, String password) throws SQLException {
+	private PreparedStatement get_user = con.prepareStatement("SELECT node_id,password,name FROM v2_user WHERE email = ?");
+	public User getUser(String email, String password) throws SQLException {
 		get_user.setString(1,email);
 		ResultSet result = get_user.executeQuery();
 		if(result.next() && result.getString(2).equals(password)){
-			return result.getInt(1);				
+			return new User(result.getInt(1),result.getString(3));				
 		}else{
-			return 0;
+			return User.nouser;
 		}
 	}
 	
 	private PreparedStatement get_info = con.prepareStatement(
 			"SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user WHERE id = ? " +
 			"AND v2_node.user_id = v2_user.node_id");
-	Dyn getInfo(int id,int userid) throws SQLException{
+	public Dyn getInfo(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
 		Dyn node = Dyn.one(get_info.executeQuery());
 		node.setJSON("info");
@@ -83,7 +66,7 @@ public class DataBase {
 		logRecent(userid,id);
 		return node;
 	}
-	Dyn getInfo(int id) throws SQLException{
+	public Dyn getInfo(int id) throws SQLException{
 		get_info.setInt(1,id);		
 		Dyn node = Dyn.one(get_info.executeQuery());
 		node.setJSON("info");
@@ -107,7 +90,7 @@ public class DataBase {
 					"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 					"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 					"WHERE dst=? AND src = v2_node.id LIMIT ?");	
-	ResultSet getLinksTo(int id) throws SQLException{
+	public ResultSet getLinksTo(int id) throws SQLException{
 		get_links_to.setInt(1,id);
 		get_links_to.setInt(2,1000);
 		return get_links_to.executeQuery();
@@ -118,7 +101,7 @@ public class DataBase {
 			"WHERE dst=? AND src = v2_node.id "+
 			"AND v2_node.type = ? AND v2_link.type = ? "+
 			"LIMIT ?");	
-	ResultSet getSomeLinksTo(int id,String nodetype, String verb,int count) throws SQLException{
+	public ResultSet getSomeLinksTo(int id,String nodetype, String verb,int count) throws SQLException{
 		get_some_links_to.setInt(1,id);
 		get_some_links_to.setString(2,nodetype);
 		get_some_links_to.setString(3,verb);
@@ -131,7 +114,7 @@ public class DataBase {
 			"WHERE src=? AND dst = v2_node.id "+
 			"AND v2_node.type = ? AND v2_link.type = ? "+
 			"LIMIT ?");	
-	ResultSet getSomeLinksFrom(int id,String nodetype, String verb,int count) throws SQLException{
+	public ResultSet getSomeLinksFrom(int id,String nodetype, String verb,int count) throws SQLException{
 		get_some_links_from.setInt(1,id);
 		get_some_links_from.setString(2,nodetype);
 		get_some_links_from.setString(3,verb);
@@ -143,7 +126,7 @@ public class DataBase {
 			"SELECT v2_node.id,text,opposed,agg_votes,info,v2_node.type AS type, "+
 			"v2_link.type AS linktype,v2_link.id AS linkid FROM v2_node,v2_link "+
 			"WHERE src=? AND dst = v2_node.id LIMIT ?");
-	ResultSet getLinksFrom(int id) throws SQLException{
+	public ResultSet getLinksFrom(int id) throws SQLException{
 		get_links_from.setInt(1,id);
 		get_links_from.setInt(2,1000);
 		return get_links_from.executeQuery();
@@ -151,7 +134,7 @@ public class DataBase {
 	
 	private PreparedStatement get_user_votes = con.prepareStatement(
 			"SELECT link_id,vote from v2_vote WHERE node_id = ? AND user_id = ?");
-	Vector<Dyn> getUserVotes(int id, int userid) throws SQLException{
+	public Vector<Dyn> getUserVotes(int id, int userid) throws SQLException{
 		get_user_votes.setInt(1,id);
 		get_user_votes.setInt(2,userid);
 		return Dyn.list(get_user_votes.executeQuery());		
@@ -163,7 +146,7 @@ public class DataBase {
 			"   AND v2_node.type != 'snippet' " +
 			"	AND v2_history.user_id = ? ORDER BY date DESC " +
 			" 	LIMIT 100");
-	Dyn getRecent(int userid) throws SQLException{
+	public Dyn getRecent(int userid) throws SQLException{
 		get_recent.setInt(1, userid);
 		ResultSet items = get_recent.executeQuery();
 		return makeObject("recent.js","History of Recent Browsing","recent",items);
@@ -175,7 +158,7 @@ public class DataBase {
 			"   AND v2_node.type = ? " +
 			"	AND v2_history.user_id = ? ORDER BY date DESC " +
 			" 	LIMIT 15");
-	Dyn getRecent(int userid, String type) throws SQLException{
+	public Dyn getRecent(int userid, String type) throws SQLException{
 		if(type == null){
 			return getRecent(userid);
 		}
@@ -192,14 +175,14 @@ public class DataBase {
 			"AND v2_node.type != 'snippet' "+
 			"GROUP BY node_id ORDER BY count DESC " +
 			"LIMIT 50");
-	Dyn getHot() throws SQLException{
+	public Dyn getHot() throws SQLException{
 		ResultSet items = get_hot.executeQuery();
 		return makeObject("hot.js","Hot topics and claims","hot",items);
 	}	
 	
 	private PreparedStatement log_recent = con.prepareStatement(
 			"REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)");
-	void logRecent(int userid, int nodeid) throws SQLException{
+	public void logRecent(int userid, int nodeid) throws SQLException{
 		log_recent.setInt(1, userid);
 		log_recent.setInt(2, nodeid);
 		log_recent.executeUpdate();
@@ -209,7 +192,7 @@ public class DataBase {
 			"SELECT v2_node.* FROM v2_node, v2_newsnips "+
 			"WHERE v2_node.id = v2_newsnips.node_id "+
 			"AND v2_newsnips.user_id = ? ORDER BY id DESC LIMIT 100");
-	Dyn getNewSnips(int userid) throws SQLException{
+	public Dyn getNewSnips(int userid) throws SQLException{
 		get_newsnips.setInt(1, userid);
 		ResultSet items = get_newsnips.executeQuery();
 		return makeObject("newsnips.js","Your Unfiled Snippets","newsnips",items);
@@ -217,7 +200,7 @@ public class DataBase {
 	
 	private PreparedStatement search_stmt = con.prepareStatement(
 			"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) AND (type='claim' OR type='topic') LIMIT 100");
-	Dyn search(String query) throws SQLException{
+	public Dyn search(String query) throws SQLException{
 		search_stmt.setString(1, query);
 		ResultSet items = search_stmt.executeQuery();
 		return makeObject("search.js?query="+Util.urlEncode(query),"Search Results for "+query,"search",items); 
@@ -225,7 +208,7 @@ public class DataBase {
 
 	private PreparedStatement search_type_stmt = con.prepareStatement(
 	"SELECT * FROM v2_node WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
-	Dyn search(String query,String type,int userid) throws SQLException{
+	public Dyn search(String query,String type,int userid) throws SQLException{
 		if(type == null){
 			return search(query);
 		}
@@ -245,7 +228,7 @@ public class DataBase {
 		"AND v2_newsnips.user_id = ? " + // only suggest our own snippets
 		"AND v2_node.id = v2_newsnips.node_id " + // only suggest unattached snippets
 		"AND type='snippet'");
-	Dyn searchSnippets(String query,int userid) throws SQLException{
+	public Dyn searchSnippets(String query,int userid) throws SQLException{
 		search_snippet.setString(1,query);
 		search_snippet.setInt(2,userid);
 		ResultSet items = search_snippet.executeQuery();
@@ -256,7 +239,7 @@ public class DataBase {
 	"SELECT v2_node.*,v2_link.type AS verb FROM v2_node " +
 	"LEFT JOIN ON src = v2_node.id AND dst = ? " +
 	"WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
-	Dyn searchLinkto(String query,int dst, String type) throws SQLException{
+	public Dyn searchLinkto(String query,int dst, String type) throws SQLException{
 		if(type == null){
 			return search(query);
 		}
@@ -271,7 +254,7 @@ public class DataBase {
 			"SELECT v2_node.*,v2_link.type AS verb FROM v2_node " +
 			"LEFT JOIN ON src = v2_node.id AND dst = ? " +
 			"WHERE MATCH(text) AGAINST(?) AND type=? LIMIT 10");
-	Dyn searchLinkfrom(String query,int dst, String type) throws SQLException{
+	public Dyn searchLinkfrom(String query,int dst, String type) throws SQLException{
 		if(type == null){
 			return search(query);
 		}
@@ -289,7 +272,7 @@ public class DataBase {
 		"LEFT JOIN v2_node AS snip ON snip.id = v2_snippet.node_id " +
 		"WHERE url_prefix IN (?,?,?,?,?,?,?,?) "
 	);
-	Vector<Dyn> urlClaimSnippets(Vector<String> urls) throws SQLException{	
+	public Vector<Dyn> urlClaimSnippets(Vector<String> urls) throws SQLException{	
 		for(int i = 0; i < 8; i++){
 			if(urls.size() > i){
 				url_claim_snippets.setString(i+1, urls.get(i));
@@ -304,7 +287,7 @@ public class DataBase {
 	private PreparedStatement url_snippets = con.prepareStatement(
 			"SELECT v2_node.* FROM v2_node, v2_snippet WHERE "+
 			"v2_snippet.node_id = v2_node.id AND v2_snippet.url_prefix IN (?,?,?,?,?,?,?,?)");
-	Vector<Dyn> urlSnippets(Vector<String> urls) throws SQLException{
+	public Vector<Dyn> urlSnippets(Vector<String> urls) throws SQLException{
 		for(int i = 0; i < 8; i++){
 			if(urls.size() > i){
 				url_snippets.setString(i+1, urls.get(i));
@@ -319,7 +302,7 @@ public class DataBase {
 	private PreparedStatement add_node = con.prepareStatement(
 			"INSERT INTO v2_node (text,user_id,type,info,opposed,avg_order) VALUES (?,?,?,?,0,'')",
 			Statement.RETURN_GENERATED_KEYS);
-	int addNode(String text,int user_id,String type,String info) throws SQLException{
+	public int addNode(String text,int user_id,String type,String info) throws SQLException{
 		add_node.setString(1,text);
 		add_node.setInt(2, user_id);
 		add_node.setString(3, type);
@@ -331,7 +314,7 @@ public class DataBase {
 		"INSERT INTO v2_snippet (url_prefix,node_id,page_text) VALUES (?,?,?)");
 	private PreparedStatement add_newsnip = con.prepareStatement(
 		"INSERT INTO v2_newsnips (user_id,node_id) VALUES (?,?)");
-	int addSnippet(int userid, String text, String url, String realurl, String title, String pagetext) throws SQLException{
+	public int addSnippet(int userid, String text, String url, String realurl, String title, String pagetext) throws SQLException{
 		Dyn info = new Dyn();
 		info.put("title", title);
 		info.put("url",url);
@@ -358,14 +341,14 @@ public class DataBase {
 	 "UPDATE v2_node SET opposed = true WHERE id IN (SELECT DISTINCT (dst) FROM `v2_link` WHERE TYPE = 'opposes')");
 	private PreparedStatement update_opposed_off = con.prepareStatement(
 	 "UPDATE v2_node SET opposed = false WHERE NOT id IN (SELECT DISTINCT (dst) FROM `v2_link` WHERE TYPE = 'opposes')");
-	void updateOpposed() throws SQLException{
+	public void updateOpposed() throws SQLException{
 		update_opposed_on.executeUpdate();
 		update_opposed_off.executeUpdate();
 	}
 	
 	private PreparedStatement set_opposed = con.prepareStatement(
 			"UPDATE v2_node SET opposed = ? WHERE id = ?");
-	void setOpposed(int id, boolean val) throws SQLException {
+	public void setOpposed(int id, boolean val) throws SQLException {
 		set_opposed.setBoolean(1, val);
 		set_opposed.setInt(2,id);
 		set_opposed.executeUpdate();
@@ -373,7 +356,7 @@ public class DataBase {
 	
 	private PreparedStatement add_link = con.prepareStatement(
 			"INSERT INTO v2_link (src,dst,type,user_id) VALUES (?,?,?,?)");
-	void addLink(int src, int dst, String verb, int userid) throws SQLException{
+	public void addLink(int src, int dst, String verb, int userid) throws SQLException{
 		add_link.setInt(1,src);
 		add_link.setInt(2,dst);
 		add_link.setString(3,verb);
@@ -388,7 +371,7 @@ public class DataBase {
 	
 	private PreparedStatement set_vote = con.prepareStatement(
 			"REPLACE INTO v2_vote (user_id,node_id,link_id,vote) VALUES (?,?,?,?)");
-	void setVote(int nodeid, int linkid, int vote, int userid) throws SQLException{
+	public void setVote(int nodeid, int linkid, int vote, int userid) throws SQLException{
 		set_vote.setInt(1,userid);
 		set_vote.setInt(2,nodeid);
 		set_vote.setInt(3,linkid);
@@ -398,7 +381,7 @@ public class DataBase {
 	
 	private PreparedStatement  count_votes = con.prepareStatement(
 			"SELECT SUM(vote) FROM v2_vote WHERE link_id = 3006");
-	int countVotes(int linkid) throws SQLException{
+	public int countVotes(int linkid) throws SQLException{
 		count_votes.setInt(1,linkid);
 		ResultSet result = count_votes.executeQuery();
 		if(result.next()){
@@ -412,7 +395,7 @@ public class DataBase {
 			"UPDATE v2_link SET agg_votes = " +
 			"	(SELECT SUM(vote) FROM v2_vote WHERE link_id = ?) " +
 			"WHERE id = ?");
-	void updateAggVotes(int linkid) throws SQLException {
+	public void updateAggVotes(int linkid) throws SQLException {
 		update_agg_votes.setInt(1,linkid);
 		update_agg_votes.setInt(2,linkid);
 		update_agg_votes.executeUpdate();
@@ -460,7 +443,7 @@ public class DataBase {
 		}
 	}
 			
-	Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
+	public Dyn makeObject(String id, String text, String type, ResultSet children) throws SQLException{
 		Dyn tomap = new Dyn();
 		tomap.put("colitem", Dyn.list(children,"info"));
 		Dyn d = new Dyn();
@@ -481,7 +464,7 @@ public class DataBase {
 		return key;
 	}
 	
-	Dyn getLinks(int id, int userid) throws SQLException{
+	public Dyn getLinks(int id, int userid) throws SQLException{
 		Dyn d = getInfo(id,userid);
 		d.put("from",map_links(Dyn.list(getLinksFrom(id))));
 		d.put("to",map_links(Dyn.list(getLinksTo(id))));
@@ -491,7 +474,7 @@ public class DataBase {
 		logRecent(userid,id);
 		return d;
 	}
-	Dyn map_links(Vector<Dyn> links){
+	public Dyn map_links(Vector<Dyn> links){
 		HashMap<String,Vector<Dyn>> hsh = new HashMap<String,Vector<Dyn>>();
 		for(Dyn d : links){
 			String verb = d.getString("linktype");

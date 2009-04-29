@@ -52,6 +52,7 @@ function tl_margin()
 	this.lightbulb_left = thinklink_imagebase+"lightbulb_left.png";
 	
 	this.init = function() {
+		tl_log("margin init");
 		var that = this;
 		this.urlList.push(this.url);
 		this.urlList.push(this.normTool.normalizeUrl(this.url));
@@ -197,6 +198,50 @@ function tl_margin()
 		pullimg.setAttribute("src",this.lightbulb_right);
 	}
 
+	this.refreshNoLoad = function(){
+		var that = this;
+		tl_log("refreshNoLoad");
+		var result = this.snippets;
+		if(!result){
+			tl_log("no snippets");
+			return;
+		}
+		this.removeAllHighlights(); // in case we already have some
+		
+				// for each result item, make a new tl_snippet and add it to the margin's array
+		for (var item=0; item< result.length; item++) {
+			if(!that.marginVisible && !result[item].opposed) continue;
+			tl_log("addItem");
+			that.addItem(result[item]);
+			if (result[item].claimid && result[item].opposed) {
+				that.haveOpposedPoint = true; 
+			}
+		}
+		
+		if (that.haveOpposedPoint) {
+			that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
+			that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
+		}
+								
+		//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
+		that.itemsLoaded=true;
+//				that.highlightSnippets(); } // highlight everything by default
+		
+		// add set title/author buttons if this is thinklink pdf document
+		if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
+			scriptID = "tl_get_doc";
+			var shorturl = that.url.substring(0,that.url.lastIndexOf("/")+1); // shortened url
+			tl_doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
+				tl_log(result);
+				if (result.length >0) {
+					that.docTitle = result[0]['title'];
+					that.docAuthor = result[0]['author'];
+				}
+				that.showSetTitleAndAuthor(shorturl);
+			});
+		}
+	}
+
 	this.refresh = function(force) {		
 		tl_log("refresh");
 		
@@ -215,50 +260,59 @@ function tl_margin()
 			
 			tl_doAJAX(scriptID,this.snippetURL+"?"+urls,function(result){
 				tl_log("doAjax callback");
-				
-				// for each result item, make a new tl_snippet and add it to the margin's array
-				for (var item=0; item< result.length; item++) {
-					if(!that.marginVisible && !result[item].opposed) continue;
-					tl_log("addItem");
-					that.addItem(result[item]);
-					if (result[item].claimid && result[item].opposed) {
-						that.haveOpposedPoint = true; 
-					}
-				}
-				
-				if (that.haveOpposedPoint) {
-					that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
-					that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
-				}
+				that.snippets = result;
+				that.refreshNoLoad();
 				
 				if(result.length > 0 && !force){
 					that.createMarginPull();
 				}
-								
-				//document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
-				that.itemsLoaded=true;
-//				that.highlightSnippets(); } // highlight everything by default
+
+				//// for each result item, make a new tl_snippet and add it to the margin's array
+				//for (var item=0; item< result.length; item++) {
+					//if(!that.marginVisible && !result[item].opposed) continue;
+					//tl_log("addItem");
+					//that.addItem(result[item]);
+					//if (result[item].claimid && result[item].opposed) {
+						//that.haveOpposedPoint = true; 
+					//}
+				//}
 				
-				// add set title/author buttons if this is thinklink pdf document
-				if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
-					scriptID = "tl_get_doc";
-					var shorturl = that.url.substring(0,that.url.lastIndexOf("/")+1); // shortened url
-					tl_doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
-						tl_log(result);
-						if (result.length >0) {
-							that.docTitle = result[0]['title'];
-							that.docAuthor = result[0]['author'];
-						}
-						that.showSetTitleAndAuthor(shorturl);
-					});
-				}
+				//if (that.haveOpposedPoint) {
+					//that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
+					//that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
+				//}
+				
+				//if(result.length > 0 && !force){
+					//that.createMarginPull();
+				//}
+								
+				////document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
+				//that.itemsLoaded=true;
+////				that.highlightSnippets(); } // highlight everything by default
+				
+				//// add set title/author buttons if this is thinklink pdf document
+				//if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
+					//scriptID = "tl_get_doc";
+					//var shorturl = that.url.substring(0,that.url.lastIndexOf("/")+1); // shortened url
+					//tl_doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
+						//tl_log(result);
+						//if (result.length >0) {
+							//that.docTitle = result[0]['title'];
+							//that.docAuthor = result[0]['author'];
+						//}
+						//that.showSetTitleAndAuthor(shorturl);
+					//});
+				//}
 
 			});
 
+		}else{
+			tl_log("items already loaded");
 		}
 	}
 
 	this.setHeight = function() {
+		tl_log("set height");
 		
 		//$("#" + this.divID).hide(); // don't include margin in height evaluation
 		var docHeight = this.findMaxHeight(document.body,document.body.offsetHeight); //$("body").height();//$("#tl_document").height();
@@ -431,6 +485,8 @@ function tl_margin()
 	
 	this.addItem = function(snippet){
 		var that = this;
+		tl_log("EK!!!");
+		tl_log("addItem : "+snippet.text);
 		
 		var highlightclass;
 		if(snippet.claimid && snippet.opposed){
@@ -441,7 +497,11 @@ function tl_margin()
 			highlightclass = "tl_highlight";
 		}
 		snippet.spanList = tl_mark_snippet(snippet.text,highlightclass);
-		if(!snippet.spanList) return;
+		if(!snippet.spanList){
+			tl_log("could not find snippet: "+snippet.text);
+			return;
+		}
+		tl_log("marked");
 		this.addSnippetClickHandler(snippet);
 		var position = tl_findPos(snippet.spanList[0]); // get position of the first span element
 		position[1] = this.getSafeItemPosition(position,snippet.id,this.items.length); // make sure vertical position is kosher

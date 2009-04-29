@@ -9,7 +9,28 @@ public class Template {
 	
 	static PrintWriter w;
 
-	static void doTopTemplate(PrintWriter writer,String username,int userid, Dyn panela, Dyn panelb){
+
+	static void doHomeTemplate(PrintWriter writer){
+		w = writer;
+		p("	<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
+		p("	\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+		p("	<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+		p("		<head>");
+		p("			<meta http-equiv=\"Content-Type\" content=\"text/html;");
+		p("			charset=UTF-8\" />");
+		p("			<meta http-equiv=\"Content-Language\" content=\"en-us\" />");
+		p("			<title>Think Link</title>");
+		p("			<link href=\"/thinklink/stylesheets/leftright.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />");
+		p("      </head>");
+		p("		<body id=\"body\">");
+		p("    <h1>Think Link<h1>");
+		p("    <a href='/thinklink/node/'>Argument Browser</a>");
+		p("    </body>");
+		p("</html>");
+	}
+	
+	
+	static void doTopTemplate(PrintWriter writer,String username,int userid){
 		w = writer;
 		p("	<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
 		p("	\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -23,11 +44,14 @@ public class Template {
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/leftrightui.js\"></script>");
-		p("			<script type='text/javascript' src='http://www.getfirebug.com/firebug/firebugx.js'></script>");
+		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/searchsnips.js\"></script>");
+//		p("			<script type='text/javascript' src='http://www.getfirebug.com/firebug/firebugx.js'></script>");
 		p("      </head>");
 		p("		<body id=\"body\">");
 		p("			<div id='container'></div>");
 		p("			<script type='text/javascript'>");
+		p("			var global_username = '"+username+"';");
+		p("			var global_userid = "+userid+";");
 		p("			var urlbase = '/thinklink/';");
 		p("			makeUI('hot.js',true);");
 		p("			</script>");
@@ -35,7 +59,7 @@ public class Template {
 		p("</html>");
 	}
 
-	static void doNodeTemplate(PrintWriter writer,int userid, String id){
+	static void doNodeTemplate(PrintWriter writer,String username, int userid, String id){
 		w = writer;
 		p("	<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
 		p("	\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -49,12 +73,14 @@ public class Template {
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/jquery-1.2.3.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/robjson.js\"></script>");
 		p("			<script type=\"text/javascript\" src=\"/thinklink/javascript/leftrightui.js\"></script>");
-		p("			<script type='text/javascript' src='http://www.getfirebug.com/firebug/firebugx.js'></script>");
+//		p("			<script type='text/javascript' src='http://www.getfirebug.com/firebug/firebugx.js'></script>");
 		p("      </head>");
 		p("		<body id=\"body\">");
 		p("			<div id='container'></div>");
 		p("			<script type='text/javascript'>");
 		p("			var urlbase = '/thinklink/';");
+		p("			var global_username = '"+username+"';");
+		p("			var global_userid = "+userid+";");
 		p("			makeUI('"+id+"',false);");
 		p("			</script>");
 		p("     </body>");

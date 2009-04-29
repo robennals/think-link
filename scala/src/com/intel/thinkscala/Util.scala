@@ -9,8 +9,12 @@ import scala.io._;
 import scala.xml.parsing._;
 import scala.xml._;
 import org.apache.commons.lang._;
+import scala.collection.Map;
 
 object Util {
+  
+ def log(s : String) = System.out.println(s) 
+  
  def encode(claim : String) = URLEncoder.encode(claim,"UTF-8");
  
  def readToString(reader : BufferedReader) : String = {
@@ -18,6 +22,7 @@ object Util {
    var line = reader.readLine(); 
    while(line != null){
      buf.append(line);
+     buf.append("\n")
      line = reader.readLine();
    }
    return buf.toString;   
@@ -105,5 +110,10 @@ object Util {
      case null => ""
      case o => o.toString
     }
-  } 
+  }
+
+  def printCSV(l : Iterable[Map[String,String]], keys : Iterable[String]) : String = 
+    keys.mkString(",") + "\n" + 
+    l.map(m => keys.map(k => StringEscapeUtils.escapeCsv(m(k))).mkString(",")).mkString("\n")
+  
 }

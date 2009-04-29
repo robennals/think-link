@@ -38,5 +38,16 @@
 	<servlet-name>snipsearch</servlet-name>
 	<url-pattern>/snipsearch/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+	<servlet-name>main</servlet-name>
+	<servlet-class>com.intel.thinkscala.MainServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
 </web-app>
 

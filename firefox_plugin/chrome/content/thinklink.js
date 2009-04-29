@@ -69,89 +69,93 @@ var thinklink_winlistener = {
 		}
 	},	
 
-	registerFrameEventHandlers: function(frame){
-		var doc = thinklink_winlistener.getDoc();
-		frame.addEventListener("thinklink-close",function(){
-			doc.location.href = "javascript:mySnip.close()";	
-		},false);
-	},
+	//registerFrameEventHandlers: function(frame){
+		//var doc = thinklink_winlistener.getDoc();
+		//frame.addEventListener("thinklink-close",function(){
+			//doc.location.href = "javascript:mySnip.close()";	
+		//},false);
+	//},
 	
-	onStateChange: function(progress, request, flags, status){
-		try{
+	//refreshSnipHighlights: function(){
+		//var doc = thinklink_winlistener.getDoc();
+		//doc.location.href = "javascript:tl_myMargin.refreshNoLoad()";	
+	//},
 	
-			try{
-				thinklink_msg("flags="+flags+" status="+status);
-				if(content.document && content.document.body && content.document.body.textContent){
-					thinklink_msg("text loaded");
-				}
-			}catch(e){
-			}
+	//onStateChange: function(progress, request, flags, status){
+		//try{
 	
-			var states = Components.interfaces.nsIWebProgressListener;
+			//try{
+				//thinklink_msg("flags="+flags+" status="+status);
+				//if(content.document && content.document.body && content.document.body.textContent){
+					//thinklink_msg("text loaded");
+				//}
+			//}catch(e){
+			//}
+	
+			//var states = Components.interfaces.nsIWebProgressListener;
 
-			var doc = this.getDoc();	
+			//var doc = this.getDoc();	
 			
-		  if(doc != progress.DOMWindow.document){
-		  	this.registerFrameEventHandlers(progress.DOMWindow.document);
-		  	return;
-		  }
+		  //if(doc != progress.DOMWindow.document){
+		  	//this.registerFrameEventHandlers(progress.DOMWindow.document);
+		  	//return;
+		  //}
 
 			
-			if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-	 			this.injectScripts();
-			}
+			//if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
+	 			//this.injectScripts();
+			//}
 							 
-	 	}catch(e){
-	 		thinklink_error("onStateChange",e);
-	 	}
+	 	//}catch(e){
+	 		//thinklink_error("onStateChange",e);
+	 	//}
  
-		return;
+		//return;
 		
-	},
+	//},
 	
-	onLocationChange: function(progress){		
-		if(!content.document.body && content.frames.length == 0) return;
-	  var doc = this.getDoc();
+	//onLocationChange: function(progress){		
+		//if(!content.document.body && content.frames.length == 0) return;
+	  //var doc = this.getDoc();
 
-	  if(doc != progress.DOMWindow.document){
-	  	this.registerFrameEventHandlers(progress.DOMWindow.document);
-	  	return;
-	  }
-	  if(!doc.thinklink_injected){
-	  	this.injectScripts();
-	  }
-	},
-	onProgressChange: function(){return 0;},
-	onStatusChange: function(){return 0;},
-	onSecurityChange: function(){return 0;},
-	onLinkIconAvailable: function(){return 0;},
+	  //if(doc != progress.DOMWindow.document){
+	  	//this.registerFrameEventHandlers(progress.DOMWindow.document);
+	  	//return;
+	  //}
+	  //if(!doc.thinklink_injected){
+	  	//this.injectScripts();
+	  //}
+	//},
+	//onProgressChange: function(){return 0;},
+	//onStatusChange: function(){return 0;},
+	//onSecurityChange: function(){return 0;},
+	//onLinkIconAvailable: function(){return 0;},
 	
-	injectScripts: function(){		
-    var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-		var apipath = "http://durandal.cs.berkeley.edu/tl";
-		var scriptpath = "http://durandal.cs.berkeley.edu/tlbits";
-		if(prefs.prefHasUserValue("extensions.thinklink.javascript")){
-			scriptpath = prefs.getCharPref("extensions.thinklink.javascript");
+	
+	injectScripts: function(){
+		var doc = this.getDoc();
+		if(doc.thinklink_injected){
+			return;
 		}
-    if(prefs.prefHasUserValue("extensions.thinklink.api")){
+	   	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+		var apipath = "http://durandal.cs.berkeley.edu/tl";
+	    if(prefs.prefHasUserValue("extensions.thinklink.api")){
 			apipath = prefs.getCharPref("extensions.thinklink.api");
 		}	
-
-		var doc = this.getDoc();
 		
-		this.injectLiteralScript(
-			"var thinklink_scriptpath = '"+scriptpath+"'\n"+
-			"var thinklink_apipath = '"+apipath+"'\n",doc);
-
+		this.injectLiteralScript("var thinklink_apipath = '"+apipath+"'\n",doc);
+		// DEBUG
+		
+		//for(var i in thinklink_scriptUrls){
+			//this.injectScript("http://localhost:8180/thinklink/client_js/"+thinklink_scriptUrls[i],doc);
+		//}
+		
 		for(var i in thinklink_scriptUrls){
-			var scripturl = thinklink_scriptUrls[i];
-			this.injectScript(scriptpath+"/client_js/"+scripturl,doc);
+			this.injectFetchedScript(thinklink_scriptUrls[i]);
 		}
-		this.injectStyle(scriptpath+"/css/style.css",doc);
-
+		this.injectStyleSheet();
 		
 		doc.thinklink_injected = true;
-	
 		try{			
 			if(doc.onmousedown){
 				doc.onmousedown = null;
@@ -162,6 +166,25 @@ var thinklink_winlistener = {
 		}catch(e){
 //			thinklink_error("Error clearing mouse events",e);
 		}
+
+	},
+	
+	injectFetchedScript: function(file){
+		var doc = this.getDoc();
+		var req = new XMLHttpRequest();
+		req.overrideMimeType("text/javascript");
+		req.open("GET","chrome://thinklink/content/client_js/"+file,false);
+		req.send(null);
+		this.injectLiteralScript(req.responseText,doc);
+	},
+
+	injectStyleSheet: function(){
+		var doc = this.getDoc();
+		var req = new XMLHttpRequest();
+		req.overrideMimeType("text/css");
+		req.open("GET","chrome://thinklink/content/css/style.css",false);
+		req.send(null);
+		this.injectLiteralStyle(req.responseText,doc);
 	},
 
 	getDoc: function(){
@@ -183,28 +206,16 @@ var thinklink_winlistener = {
 		}
 	},
 
-	injectStyle: function(styleurl,doc){
-		var tag = doc.createElement("link");
-		tag.href = styleurl;
-		tag.rel = "stylesheet";
+	injectLiteralStyle: function(text,doc){
+		var tag = doc.createElement("style");
+		tag.textContent = text;
 		tag.type = "text/css";
 		try{
 			doc.getElementsByTagName("head")[0].appendChild(tag);
 		}catch(e){
-			thinklink_error("could not insert script tag",e);
+			thinklink_error("could not insert style tag",e);
 		}
 	},	
-
-	injectScript: function(scripturl,doc){
-		var scripttag = doc.createElement("script");
-		scripttag.src = scripturl;
-		scripttag.type = "text/javascript";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(scripttag);
-		}catch(e){
-			thinklink_error("could not insert script tag",e);
-		}
-	},
 	
 	injectLiteralScript: function(text,doc){
 		var scripttag = doc.createElement("script");
@@ -215,7 +226,18 @@ var thinklink_winlistener = {
 		}catch(e){
 			thinklink_error("could not insert script tag",e);
 		}		
-	}	
+	},
+	
+	injectScript: function(scripturl,doc){
+		var scripttag = doc.createElement("script");
+		scripttag.src = scripturl;
+		scripttag.type = "text/javascript";
+		try{
+			doc.getElementsByTagName("head")[0].appendChild(scripttag);
+		}catch(e){
+			thinklink_error("could not insert script tag",e);
+		}	
+	}
 };
 
 
@@ -266,11 +288,11 @@ function thinklink_getLogin(){
 	thinklink_setCookies(username,password); 
 }
 
-function thinklink_init(){
-	gBrowser.addProgressListener(thinklink_winlistener,
-	  	Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-	thinklink_getLogin();
-}
+//function thinklink_init(){
+	//gBrowser.addProgressListener(thinklink_winlistener,
+	  	//Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+	//thinklink_getLogin();
+//}
 
 function thinklink_login(){
 	var username = document.getElementById("thinklink-username").value;
@@ -279,6 +301,14 @@ function thinklink_login(){
 }
 
 window.addEventListener("load", function(){
-		thinklink_init();
+	window.addEventListener("DOMContentLoaded",function(){
+		thinklink_getLogin();
+		thinklink_winlistener.injectScripts();
 	},false);
-	
+},false);
+		
+//window.addEventListener("DOMContentLoaded",function(){
+	//alert("hello");
+	//thinklink_getLogin();
+	//this.injectScripts();
+//},false);

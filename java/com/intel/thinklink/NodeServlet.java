@@ -33,6 +33,7 @@ public class NodeServlet extends HttpServlet {
 //	Pattern addLinkPath = Pattern.compile("/node/addlink");
 	Pattern addLinkPath = Pattern.compile("/node/(\\d+)/addlink");
 	Pattern votePath = Pattern.compile("/node/(\\d+)/vote");
+	Pattern loginPath = Pattern.compile("/node/login");
 ;
 	static String getCookie(HttpServletRequest req, String key){
 		Cookie[] cookies = req.getCookies();
@@ -92,7 +93,7 @@ public class NodeServlet extends HttpServlet {
 		}
 	}
 	
-	private void dispatchGet(DataBase base, PrintWriter out, int userid, HttpServletRequest req) throws Exception{
+	private void dispatchGet(DataBase base, PrintWriter out, String username, int userid, HttpServletRequest req) throws Exception{
 		String path = req.getServletPath();
 		String pathinfo = req.getPathInfo();
 		req.setCharacterEncoding("UTF-8");
@@ -105,7 +106,7 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			String format = m.group(2);
 			if(format == null || format.equals(".html")){
-				Template.doNodeTemplate(out, userid, m.group(1)+".js");
+				Template.doNodeTemplate(out, username, userid, m.group(1)+".js");
 			}else{
 				outputNode(out,req,format,userid,base.getLinks(Integer.parseInt(m.group(1)), userid));
 			}
@@ -116,7 +117,7 @@ public class NodeServlet extends HttpServlet {
 		if(m.find()){
 			String format = m.group(1);
 			if(format == null || format.equals(".html")){
-				Template.doNodeTemplate(out, userid, "search.js?query="+Util.urlEncode(req.getParameter("query")));
+				Template.doNodeTemplate(out, username, userid, "search.js?query="+Util.urlEncode(req.getParameter("query")));
 			}else{
 				outputNode(out,req,format,userid,base.search(req.getParameter("query"),req.getParameter("type"),userid));
 			}
@@ -168,13 +169,18 @@ public class NodeServlet extends HttpServlet {
 //			outputNode(out,req,format,userid,base.getPrefix)
 //		}
 		
-		if(path.equals("/node/") || path.equals("node") || path.equals("/index.html")){
-			Template.doTopTemplate(out, null, userid, base.getRecent(userid), base.getNewSnips(userid));
+		if(path.equals("/index.html")){
+			Template.doHomeTemplate(out);
+			return;
+		}
+		
+		if(path.equals("/node/") || path.equals("/node") || path.equals("/index.html")){
+			Template.doTopTemplate(out, username, userid);
 			return;
 		}
 		
 		if(path.equals("/node/old")){
-			Template.doTopTemplateOld(out, null, userid, base.getRecent(userid), base.getNewSnips(userid));
+			Template.doTopTemplateOld(out, username, userid, base.getRecent(userid), base.getNewSnips(userid));
 			return;
 		}
 
@@ -188,8 +194,8 @@ public class NodeServlet extends HttpServlet {
 		try{
 			DataBase base = ConnectionPool.get();
 			try{
-				int userid = base.getUser(getCookie(req,"email"), getCookie(req,"password"));
-				dispatchPost(base,out,userid,req);
+				User user = base.getUser(getCookie(req,"email"), getCookie(req,"password"));
+				dispatchPost(base,out,user.userid,req);
 			}finally{
 				ConnectionPool.release(base);
 			}
@@ -209,8 +215,8 @@ public class NodeServlet extends HttpServlet {
 		try{
 			DataBase base = ConnectionPool.get();
 			try{
-				int userid = base.getUser(getCookie(req,"email"), getCookie(req,"password"));
-				dispatchGet(base,out,userid,req);
+				User user = base.getUser(getCookie(req,"email"), getCookie(req,"password"));
+				dispatchGet(base,out,user.username,user.userid,req);
 			}finally{
 				ConnectionPool.release(base);
 			}

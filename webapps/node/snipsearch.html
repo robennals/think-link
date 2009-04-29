@@ -14,14 +14,24 @@ function doSearch(){
 </script>
 </head>
 <body>
+
+<script type="text/javascript">
+	var urlbase = "/thinklink/";
+	var topbar = makeTopBar();
+	topbar.appendTo(document.body);
+</script>
+
+<div id="content" style='padding-top:32px'>
+<div id='recentsearch' style="float:left; width:200px; border:1px solid black">
+hello
+</div>
+
+<div style="float:left">
 <input id="claiminput" type="text" name="claimstr"/>
 <input type="submit" value="find snippets" onclick="doSearch()"/>
 <div id="sniptarget">
 </div>
-
-<script type="text/javascript">
-	var urlbase = "/thinklink/";
-//	makeSearchUI('sniptarget');
-</script>
+</div>
+</div>
 </body>
 </html>

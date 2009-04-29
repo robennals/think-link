@@ -14,7 +14,7 @@ function makeUrlSnippets(target,urlsnips){
 	if(!urlsnips) return;
 	var urlbox = $("<div class='urlbox'>");
 	$("<h3 class='urltitle'/>").text(urlsnips.title).appendTo(urlbox);
-	$("<a class='url'/>").text(urlsnips.url).attr("href",urlsnips.url).appendTo(urlbox);
+	$("<a class='snippet-url'/>").text(urlsnips.url).attr("href",urlsnips.url).appendTo(urlbox);
 	if(urlsnips.snips){
 		for(var i = 0; i < urlsnips.snips.length; i++){
 				urlbox.append(makeFoundSnippet(urlsnips.snips[i]));
@@ -27,21 +27,16 @@ function makeUrlSnippets(target,urlsnips){
 
 function makeFoundSnippet(snip){	
 	var div = $("<div class='snippet-box'/>");
-//	div.append(makeSnipContext(snip.text,snip.pagetext));
 	var add = $("<span class='greenadd'>add</span>")
 		.click(function(){
 			div.css("opacity",1);
 			div.css("background-color","#EEFFEE");
 			div.animate({borderWidth:"5px"},500);
-//			div.remove();
 		});
 	var ignore = $("<span class='redbutton'>ignore</span>")
 		.click(function(){
 			div.animate({opacity:0.5},200);
 			div.css("border-width",1);
-//			div.animate({opacity:0},200).animate({opacity:0,height:0},300);
-//			div.fadeOut();
-//			div.remove();
 		});
 	div.append(makeHBox([makeSnipContext(snip),add,ignore]));
 	return div;

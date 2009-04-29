@@ -13,7 +13,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-thinklink_imagebase = thinklink_scriptpath+"/images/";
+thinklink_imagebase = thinklink_apipath+"/images/";
 
 var thinklink_urlbase = thinklink_apipath+"/";
 var thinklink_pointbase = thinklink_apipath+"/node/";

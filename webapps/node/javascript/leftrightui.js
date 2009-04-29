@@ -27,13 +27,13 @@ function makeUI(id,withtop){
 		global_miniui = false;
 	}
 	if(!id){
-		id = "hot.js";
+		id = "node/hot.js";
 	}
 	$(document.body).append(topbar);
 	global_panelbox = $("<tr class='panelbox'/>");
 	$(document.body).append($("<table class='toptable'>").append(global_panelbox));
 	widthpad = $("<div class='widthpad'/>").appendTo(document.body);	
-	getPanel(0,id);
+	getPanel(0,"node/"+id);
 	if(global_miniui){
 		$(".toptable").css("margin-top",0);
 	}else{
@@ -48,7 +48,9 @@ function doLayout(){
 }
 
 function makeTopBar(){
-	var topbar = $("<div class='topbar'/>");
+	var backbar = $("<div class='topbackbar'/>");
+	
+	var topbar = $("<div class='topbar'/>").appendTo(backbar);
 
 	var leftbar = $("<div class='leftbar'/>").appendTo(topbar);
 	
@@ -57,22 +59,22 @@ function makeTopBar(){
 	var home = $("<span class='topbut'>Home</span>").appendTo(leftbar);
 	var hot = $("<span class='topbut'>Hot</span>")
 		.click(function(){
-			gotoId("hot.js");
+			gotoId("node/hot.js");
 		})
 		.appendTo(leftbar);
 		// TODO - show count beside unfiled if have unfiled snippets
 	var unfiled = $("<span class='topbut'>Unfiled</span>")
 		.click(function(){
-			gotoId("newsnips.js");
+			gotoId("node/newsnips.js");
 		})
 		.appendTo(leftbar);
-	var me = $("<span class='topbut'>Profile</span>").appendTo(leftbar);
+	//var me = $("<span class='topbut'>Profile</span>").appendTo(leftbar);
 	var recent = $("<span class='topbut'>History</span>")
 		.click(function(){
-			gotoId("recent.js");
+			gotoId("node/recent.js");
 		})
 		.appendTo(leftbar);
-	var friends = $("<span class='topbut'>Friends</span>").appendTo(leftbar);
+	//var friends = $("<span class='topbut'>Friends</span>").appendTo(leftbar);
 
 	var rightbar = $("<div class='rightbar'/>").appendTo(topbar);
 
@@ -85,18 +87,27 @@ function makeTopBar(){
 		})
 		.keydown(function(ev){
 			if(ev.keyCode == 13){
-				gotoId("search.js?callback=?&query="+encodeURIComponent(searchbox.val()));
+				gotoId("node/search.js?callback=?&query="+encodeURIComponent(searchbox.val()));
 			}
 		})
 		.appendTo(rightbar);
 	var searchbut = $("<img class='searchbut'/>")
 		.attr("src",iconUrl("magnifier"))
 		.click(function(){
-			gotoId("search.js?callback=?&query="+encodeURIComponent(searchbox.val()));
+			gotoId("node/search.js?callback=?&query="+encodeURIComponent(searchbox.val()));
 		})
 		.appendTo(rightbar);
 	
-	return topbar;
+	if(global_userid){
+		var userbit = $("<span class='thisuser'/>")
+			.text(global_username)
+			.appendTo(backbar);
+	}else{
+		var login = $("<a class='login' href='/thinklink/login'>log in</a>")
+			.appendTo(backbar);
+	}
+	
+	return backbar;
 }
 
 function gotoId(id){
@@ -105,7 +116,7 @@ function gotoId(id){
 	scrollToPanel(0);
 }
 
-function getPanel(panelnum,nodeid,name){
+function getPanel(panelnum,nodeid,name,parentobj){
 	if($(".toptable").width() > widthpad.width()){
 		widthpad.css("width",$(".toptable").width());
 	}
@@ -113,7 +124,7 @@ function getPanel(panelnum,nodeid,name){
 	for(var i = panelnum; $("#panel-"+i).length != 0; i++){
 		$("#panel-"+i).remove();		
 	}
-	panel = makePanel(panelnum,nodeid,name);
+	panel = makePanel(panelnum,nodeid,name,parentobj);
 	global_panelbox.append(panel);
 	doLayout();
 }
@@ -154,26 +165,29 @@ function updateArrowPos(panelnum){
 }
 
 
-function makePanel(panelnum,nodeid,name){
+function makePanel(panelnum,nodeid,name,parentobj){
 	var panel = $("<td class='panel'/>").attr("id","panel-"+panelnum);
 	$("<div class='filler'>Loading...</div>").appendTo(panel);
-	loadObject(panel,nodeid,panelnum,name);
+	loadObject(panel,nodeid,panelnum,name,parentobj);
 	return panel;
 }
 
 function makePanelUrl(nodeid,name){
 	var url;
 	if(nodeid.indexOf("?") == -1){
-		url = urlbase+"node/"+nodeid+"?callback=?";
+		url = urlbase+nodeid+"?callback=?";
 	}else{
-		url = urlbase+"node/"+nodeid+"&callback=?";
+		url = urlbase+nodeid+"&callback=?";
 	}
 	return url;	
 }
 
-function loadObject(panel,nodeid,panelnum,name){
+function loadObject(panel,nodeid,panelnum,name,parentobj){
 	var url = makePanelUrl(nodeid,name);
-	if(nodeid == "0.js"){ // wikipedia-only topic
+	if(name == "findsnip"){
+		panel.empty();
+		panel.append(makeSnipFinder(parentobj,panelnum));
+	}else if(nodeid == "node/0"){ // wikipedia-only topic
 		panel.empty();
 		panel.append(makeWikiInfo(name,panelnum));	
 		panel.attr("class","wikipanel");	
@@ -346,6 +360,10 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 		infopanel.append(makeUserLink(obj,panelnum));
 	}
 	
+	if(obj.type == "claim" && global_userid){
+		infopanel.append(makeFindSnipLink(obj,panelnum));
+	}
+	
 	var relates = [];
 	if(obj.to['relates to']){
 		relates = relates.concat(obj.to['relates to']);
@@ -393,6 +411,30 @@ function refreshInfoPanel(infopanel,obj,panelnum){
 			infopanel.append(makeSubGroup(null,obj.to.colitem,panelnum,obj,null,true));
 			break;
 	}
+}
+
+function makeSnipFinder(obj,panelnum){
+	var info = $("<div class='info'/>");
+	title = $("<h2 class='title'>Snippet Finder</h2>");
+	if(panelnum != 0){
+		info.append(makeNavButtons(panelnum));
+		var closebutton = $("<img class='closebutton'/>").attr("src",iconUrl("cancel_grey")).appendTo(info);
+		closebutton.click(function(){
+			removeArrows(panelnum-1);
+			scrollToPanel(panelnum-1);
+		});
+	}
+	title.appendTo(info);
+
+	var searchbox = $("<input id='claiminput' type='text' name='claimstr' class='addtxt'/>")
+		.attr("value",obj.text)
+		.appendTo(info);
+	var submit = $("<input type='submit' value='search'/>").appendTo(info);
+	var target = $("<div id='sniptarget'>").appendTo(info);
+
+	submit.click(function(){searchSnippets(target,searchbox.val())});
+	
+	return info;
 }
 
 function makeInfo(obj,panelnum){
@@ -453,23 +495,25 @@ function makeInfo(obj,panelnum){
 
 	refreshInfoPanel(infopanel,obj,panelnum);	
 	
-	var add = $("<div class='addbox'></div>").appendTo(body);;
-	var addpanel = $("<div class='addpanel'/>");
-	
-	if(obj.type == "claim"){
-		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
-		add.append(makeSuggester("claim",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
-		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
-	}else if(obj.type == "snippet"){
-		add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
-		add.append(makeSuggester("claim",["supports","opposes","relates to"],false,addpanel,obj,panelnum));
-	}else if(obj.type == "topic"){
-		add.append(makeSuggester("topic",["relates to"],false,addpanel,obj,panelnum));
-		add.append(makeSuggester("claim",["about"],true,addpanel,obj,panelnum));
-		add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
-	}
+	if(global_userid){	
+		var add = $("<div class='addbox'></div>").appendTo(body);;
+		var addpanel = $("<div class='addpanel'/>");
+		
+		if(obj.type == "claim"){
+			add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+			add.append(makeSuggester("claim",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+			add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+		}else if(obj.type == "snippet"){
+			add.append(makeSuggester("topic",["about"],false,addpanel,obj,panelnum));
+			add.append(makeSuggester("claim",["supports","opposes","relates to"],false,addpanel,obj,panelnum));
+		}else if(obj.type == "topic"){
+			add.append(makeSuggester("topic",["relates to"],false,addpanel,obj,panelnum));
+			add.append(makeSuggester("claim",["about"],true,addpanel,obj,panelnum));
+			add.append(makeSuggester("snippet",["supports","opposes","relates to"],true,addpanel,obj,panelnum));
+		}
 
-	addpanel.appendTo(body);	
+		addpanel.appendTo(body);	
+	}
 	return info;
 }
 
@@ -781,7 +825,7 @@ function makeSuggestion(type,obj,panelnum,callback,verbs){
 		.attr("tl_panel",panelnum)
 		.click(function(ev){
 			ev.preventDefault();
-			selectItem(item,obj.id,panelnum,obj.text);
+			selectItem(item,"node/"+obj.id+".js",panelnum,obj.text);
 			return false;
 		});
 	
@@ -803,12 +847,31 @@ function makeSuggestion(type,obj,panelnum,callback,verbs){
 	return sugg;
 }
 
+function makeFindSnipLink(obj,panelnum){
+	var count = 400; // DEBUG
+	var item = $("<div class='item'/>");
+	$("<span class='instancecount'/>")
+		.text(count+" instances on the web")
+		.appendTo(item);
+	$("<span class='more'/>")
+		.text("find more")
+		.appendTo(item);
+	
+	item.click(function(ev){
+		ev.preventDefault();
+		selectItem(item,"node/"+obj.id+"/findsnip.js",panelnum,"findsnip",obj);
+		return false;
+	});	
+		
+	return item;
+}
+
 function makeUserLink(obj,panelnum){
 	var item = $("<a class='item'/>")
 		.attr("href",urlbase+"user/"+obj.user_id)
 		.click(function(ev){
 			ev.preventDefault();
-			selectItem(item,obj.user_id,panelnum,obj.username);
+			selectItem(item,"user/"+obj.user_id+".js",panelnum,obj.username);
 			return false;
 		});		
 
@@ -870,7 +933,7 @@ function makeLink(obj,panelnum,parentobj,verb,novote){
 		.attr("tl_panel",panelnum)
 		.click(function(ev){
 			ev.preventDefault();
-			selectItem(item,obj.id,panelnum);
+			selectItem(item,"node/"+obj.id+".js",panelnum);
 			return false;
 			});		
 	
@@ -889,7 +952,7 @@ function makeLink(obj,panelnum,parentobj,verb,novote){
 		site.appendTo(text);		
 	}
 	
-	if(!novote){
+	if(!novote && global_userid){
 		var votebox = $("<nobr class='votebox'/>").appendTo(text);
 		
 		var up = $("<img class='vote' title='Vote up'/>").attr("src",iconUrl(getVoteUpIcon(obj,false)))
@@ -990,7 +1053,7 @@ function updateWidthPad(){
 	}
 }
 
-function selectItem(item,id,panelnum,text){
+function selectItem(item,id,panelnum,text,parentobj){
 	try{
 		updateWidthPad();
 			
@@ -1005,7 +1068,7 @@ function selectItem(item,id,panelnum,text){
 		selection[panelnum] = item;
 		selectionid[panelnum] = id;
 		global_panelbox.append(makeArrow(panelnum,item));
-		getPanel(panelnum+1,""+id+".js",text);
+		getPanel(panelnum+1,id,text,parentobj);
 		scrollToPanel(panelnum+1);
 	}catch(ex){
 		console.error(ex);

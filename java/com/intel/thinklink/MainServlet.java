@@ -59,8 +59,8 @@ public class MainServlet extends HttpServlet {
 				obj.put("from", new Vector());	
 				obj.put("to", tomap);
 	
-				int userid = base.getUser(NodeServlet.getCookie(req,"email"), NodeServlet.getCookie(req,"password"));
-				NodeServlet.outputNode(out, req, ".js", userid, obj);
+				User user = base.getUser(NodeServlet.getCookie(req,"email"), NodeServlet.getCookie(req,"password"));
+				NodeServlet.outputNode(out, req, ".js", user.userid, obj);
 	
 			}finally{
 				ConnectionPool.release(base);

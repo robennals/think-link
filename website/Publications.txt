@@ -1,11 +1,9 @@
 
 On this page we provide additional informational materials about that readers might find useful.
 
-=== UIST Paper Submission ===
+=== Recent Paper Submission ===
 
-<a href="pubs/thinklink_uist_submission.pdf">Download PDF</a>
-
-Submitted to <a href="http://www.acm.org/uist/uist2009/">UIST 2009</a>.
+<a href="pubs/thinklink_submission.pdf">Download PDF</a>
 
 The paper describes [[Think Link]] as of March 31st 2009.
 

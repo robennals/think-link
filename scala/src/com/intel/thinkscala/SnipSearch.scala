@@ -44,19 +44,29 @@ object SnipSearch {
     val results = doc \\ "result"
     val futures = results map (x => future(snipForResult(x)))
     val snips = futures.map(f => f())
+    // DEBUG
+//    val snips = results map snipForResult                                                          
     return snips;   
   }
  
   def snipForResult(result : Node) : SnipUrlRes = {
     var fragments = ((result \ "abstract").text).split("""<b>\.\.\.</b>""").map(cleanString).filter(s => s.length > 10)    
     val url = (result \ "url").text
+    log("fetching: "+url)
     val title = cleanString((result \ "title").text)
     try{
 	    val pagetext = htmlToString(download(url))
 	    var expanded = fragments.map(frag => findSnipContext(pagetext,trimEnds(frag)))
 	    new SnipUrlRes(expanded,url,title,null)
     }catch{
-      case e : Exception => e.printStackTrace(); new SnipUrlRes(e,url)
+      case e : FileNotFoundException => {
+        log("URL failed: "+e.getMessage);
+        new SnipUrlRes(e,url)
+      }
+      case e : Exception => {
+        e.printStackTrace(); 
+        new SnipUrlRes(e,url)
+       }
     }
   }
 
@@ -176,8 +186,8 @@ object SnipSearch {
     str = str.replaceAll("</title>","\n");
     str = str.replaceAll("</h.>","\n");
     str = str.replaceAll("</?p>","\n");
-    str = str.replaceAll("(?s:<![.*?]]>)","");
-    str = str.replaceAll("(?s:<.*?>)","");
+    str = str.replaceAll("(?s:<![.*?]]>)"," ");
+    str = str.replaceAll("(?s:<.*?>)"," ");
     str = str.replaceAll("\n+","\n");
     str = StringEscapeUtils.unescapeHtml(str);     
     return str;

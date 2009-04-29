@@ -13,10 +13,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+var tl_mymargin = null;
+
 if (document.getElementById("tl_margin") == null) {
 
 	// initialize margin object
 	var myMargin = new tl_margin();
+	tl_mymargin = myMargin;
 	var mySnip = new tl_snippet_dialog(myMargin);
 	myMargin.init();
 	myMargin.refresh();
@@ -31,6 +34,8 @@ if (document.getElementById("tl_margin") == null) {
 
 	// add listener to recompute margin height if the browser is resized
 	window.addEventListener('resize',function(){myMargin.setHeight();},true);
+	
+	window.addEventListener("load",function(){myMargin.refreshNoLoad();},true);
 	
 	// set some global vars for mouse coordinates
 	var mouseX;
@@ -47,4 +52,5 @@ if (document.getElementById("tl_margin") == null) {
 	if(document.onmouseup){
 		document.onmouseup = null;
 	}
+	
 }
