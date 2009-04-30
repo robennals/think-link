@@ -56,7 +56,7 @@ function makeTopBar(){
 	
 	var title = $("<span class='thinklinktitle'>Think Link</span>").appendTo(leftbar);
 	
-	var home = $("<span class='topbut'>Home</span>").appendTo(leftbar);
+	//var home = $("<span class='topbut'>Home</span>").appendTo(leftbar);
 	var hot = $("<span class='topbut'>Hot</span>")
 		.click(function(){
 			gotoId("node/hot.js");
@@ -101,6 +101,8 @@ function makeTopBar(){
 	if(global_userid){
 		var userbit = $("<span class='thisuser'/>")
 			.text(global_username)
+			.appendTo(backbar);
+		var logout = $("<a class='logout' href='/thinklink/logout'>log out</a>")
 			.appendTo(backbar);
 	}else{
 		var login = $("<a class='login' href='/thinklink/login'>log in</a>")

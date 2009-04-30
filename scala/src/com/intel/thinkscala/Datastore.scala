@@ -37,16 +37,17 @@ class Datastore {
   Class.forName("com.mysql.jdbc.Driver")
   var con = DriverManager.getConnection(
     "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
-    "thinklink","thinklink")
+    "thinklink","zofleby")
     
   def stmt(s : String) = new SqlStatement(con,s)
   def mkinsert(table : String, fields : String*) = SqlStatement.mkInsert(con,table,fields)
 
-  val get_user = stmt("SELECT node_id,password,name FROM v2_user WHERE email = ?");
+  val get_user = stmt("SELECT id,password,name FROM v2_user WHERE email = ?");
   def getUser(email : String, password : String) : User = 
-    get_user.queryOne(email,password) match {
-      case Some(row) => new User(email,row.getInt("node_id")) 
-      case None => User.nouser
+    get_user.queryOne(email) match {
+      case Some(row) if row.getStr("password") equals password => 
+        new User(email,row.getInt("id"))
+      case _ => User.nouser
     }  
   
   val get_info = stmt("SELECT v2_node.*, v2_user.name AS username "+

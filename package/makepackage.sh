@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 pushd ../firefox_plugin/chrome
 zip -r thinklink.jar content skin

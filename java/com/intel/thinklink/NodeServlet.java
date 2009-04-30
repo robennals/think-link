@@ -2,6 +2,7 @@ package com.intel.thinklink;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -40,7 +41,7 @@ public class NodeServlet extends HttpServlet {
 		if(cookies == null) return null;
 		for(Cookie c : cookies){
 			if(c.getName().equals(key)){
-				return c.getValue();
+				return Util.urlDecode(c.getValue());
 			}
 		}
 		return null;

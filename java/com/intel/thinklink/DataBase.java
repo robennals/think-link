@@ -27,7 +27,7 @@ public class DataBase {
 		Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
-				"thinklink","thinklink");
+				"thinklink","zofleby");
 	}
 	
 	private PreparedStatement node_for_text = con.prepareStatement(
@@ -42,7 +42,7 @@ public class DataBase {
 		}
 	}
 	
-	private PreparedStatement get_user = con.prepareStatement("SELECT node_id,password,name FROM v2_user WHERE email = ?");
+	private PreparedStatement get_user = con.prepareStatement("SELECT id,password,name FROM v2_user WHERE email = ?");
 	public User getUser(String email, String password) throws SQLException {
 		get_user.setString(1,email);
 		ResultSet result = get_user.executeQuery();
@@ -54,8 +54,8 @@ public class DataBase {
 	}
 	
 	private PreparedStatement get_info = con.prepareStatement(
-			"SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user WHERE id = ? " +
-			"AND v2_node.user_id = v2_user.node_id");
+			"SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user WHERE v2_node.id = ? " +
+			"AND v2_node.user_id = v2_user.id");
 	public Dyn getInfo(int id,int userid) throws SQLException{
 		get_info.setInt(1,id);		
 		Dyn node = Dyn.one(get_info.executeQuery());

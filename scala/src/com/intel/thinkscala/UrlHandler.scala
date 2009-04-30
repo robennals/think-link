@@ -7,6 +7,7 @@ import com.intel.thinklink._;
 import scala.util.matching._;
 import scala.util.matching.Regex._;
 import com.intel.thinkscala.Util._
+import scala.xml.NodeSeq;
 
 class ReqContext(m : Match, req : HttpServletRequest, res : HttpServletResponse){
   def base = ConnectionPool.get
@@ -17,7 +18,7 @@ class ReqContext(m : Match, req : HttpServletRequest, res : HttpServletResponse)
   def userid = user.userid
   
   def output(d : Dyn) {
-    res.setContentType("text/html; charset=UTF-8");
+    res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly
     val writer = res.getWriter
     val format = getFormat(req)
     format match {
@@ -34,6 +35,26 @@ class ReqContext(m : Match, req : HttpServletRequest, res : HttpServletResponse)
     writer.close
   }
   
+  def outputHtml(html : NodeSeq){
+    res.setContentType("text/html; charset=UTF-8")
+    val writer = res.getWriter
+    writer.append("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">""");
+    writer.append(html.toString)
+    writer.close
+  }
+  
+  def redirect(url : String){
+    res.sendRedirect(url)
+  }
+  
+  def goBack(default : String){
+    req.getHeader("Referer") match{
+      case null => redirect(default)
+      case referer => redirect(referer)
+    }
+  }
+  
   def getCookie(key : String) : String = {
 		val cookies = req.getCookies();
 		if(cookies == null) return null;
@@ -46,7 +67,7 @@ class ReqContext(m : Match, req : HttpServletRequest, res : HttpServletResponse)
 	}
   
   def setCookie(key : String, value : String, path : String){
-    val c = new Cookie(key,value)
+    val c = new Cookie(key,com.intel.thinklink.Util.urlEncode(value))
     c.setPath(path)
     res.addCookie(c)
   }

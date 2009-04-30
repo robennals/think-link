@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 public class Util {
@@ -14,6 +15,14 @@ public class Util {
 	public static String urlEncode(String str){
 		try{
 			return URLEncoder.encode(str,"UTF-8");
+		}catch(Exception e){
+			return "";
+		}
+	}
+	
+	public static String urlDecode(String str){
+		try{
+			return URLDecoder.decode(str,"UTF-8");
 		}catch(Exception e){
 			return "";
 		}

@@ -138,7 +138,7 @@ var thinklink_winlistener = {
 			return;
 		}
 	   	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-		var apipath = "http://durandal.cs.berkeley.edu/tl";
+		var apipath = "http://factextract.cs.berkeley.edu/thinklink";
 	    if(prefs.prefHasUserValue("extensions.thinklink.api")){
 			apipath = prefs.getCharPref("extensions.thinklink.api");
 		}	
@@ -285,7 +285,7 @@ function thinklink_getLogin(){
     if(prefs.prefHasUserValue("extensions.thinklink.password")){
 			password = prefs.getCharPref("extensions.thinklink.password");
 		}	
-	thinklink_setCookies(username,password); 
+	thinklink_setCookies(encodeURIComponent(username),encodeURIComponent(password)); 
 }
 
 //function thinklink_init(){
