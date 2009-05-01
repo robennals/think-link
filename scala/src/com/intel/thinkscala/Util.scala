@@ -15,7 +15,8 @@ object Util {
   
  def log(s : String) = System.out.println(s) 
   
- def encode(claim : String) = URLEncoder.encode(claim,"UTF-8");
+ def encode(claim : String) = URLEncoder.encode(claim,"UTF-8")
+ def decode(claim : String) = URLDecoder.decode(claim,"UTF-8")
  
  def readToString(reader : BufferedReader) : String = {
    val buf = new StringBuffer("");
@@ -64,6 +65,12 @@ object Util {
  def getFormat(req : HttpServletRequest) = {
    val m = formatpat.findAllIn(getPath(req))
    if(m.hasNext) m.group(1) else null
+ }
+ 
+ def trimString(s : String, maxlen : Int) = if(s.length > maxlen){
+   s.substring(0,maxlen) + "..."
+ }else{
+   s
  }
  
  // TODO: implement a generic output function

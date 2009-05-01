@@ -36,10 +36,10 @@ object MakeTurkCSV {
         thisreq = new HashMap[String,String]
         nthitem=1
       }
-      val (front,back) = splitContext(r.getStr("pagetext"),r.getStr("abstract"))
+      val (front,back) = splitContext(r.str("pagetext"),r.str("abstract"))
       thisreq("front"+nthitem) = front
       thisreq("back"+nthitem) = back
-      thisreq("snip"+nthitem) = r.getStr("abstract")        
+      thisreq("snip"+nthitem) = r.str("abstract")        
       nthitem+=1
     })
     return turkdata

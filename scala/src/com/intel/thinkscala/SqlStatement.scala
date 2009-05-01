@@ -10,11 +10,15 @@ import java.sql.Statement;
 import scala.collection.mutable.ArrayBuffer;
 import scala.collection.mutable.HashMap;
 import scala.collection.Map;
-
+import scala.util.parsing.json.JSON;
 
 class SqlRow extends HashMap[String,Any]{
-  def getInt(key : String) = apply(key).asInstanceOf[Int]
-  def getStr(key : String) = apply(key).asInstanceOf[String]
+  def int(key : String) = apply(key).asInstanceOf[Int]
+  def str(key : String) = apply(key).asInstanceOf[String]
+  def jsonMap(key : String) : Map[String,String] = JSON.parseFull(str(key)) match {
+    case Some(m : Map[_,_]) => m.asInstanceOf[Map[String,String]] 
+    case _ => HashMap()
+  } 
 }
 
 class SqlStatement(con : Connection, s : String){

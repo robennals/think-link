@@ -21,11 +21,6 @@
 
 	<servlet-mapping>
 	<servlet-name>node</servlet-name>
-	<url-pattern>/index.html</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-	<servlet-name>node</servlet-name>
 	<url-pattern>/scripthack/*</url-pattern>
 	</servlet-mapping>
 
@@ -51,9 +46,33 @@
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
+	<url-pattern>/index.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
 	<url-pattern>/logout/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/search/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/claim/*</url-pattern>
+	</servlet-mapping>
+	
+    <servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/user/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/topic/*</url-pattern>
+	</servlet-mapping>
 
 </web-app>
 
