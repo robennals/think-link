@@ -29,10 +29,18 @@ class SqlStatement(con : Connection, s : String){
     readResults(stmt.executeQuery())
   }
   
-  def queryOne(args : Any*) : Option[SqlRow] = {
+  def queryMaybe(args : Any*) : Option[SqlRow] = {
     setArgs(args)
     readOneResult(stmt.executeQuery);
   }
+
+  def queryOne(args : Any*) : SqlRow = {
+    queryMaybe(args : _*) match {
+      case Some(x) => x
+      case None => throw new NotFound
+    }
+  }
+
   
   def insert(args : Any*) : Int = {
     setArgs(args)

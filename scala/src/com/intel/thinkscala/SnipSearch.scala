@@ -25,6 +25,8 @@ class SnipUrlRes(val snips: Array[SnipInfo], val url: String, val title : String
   def data = Map("url" -> url, "snips" -> snips, "title" -> title, "error" -> errormsg)
 }
 
+class BossUrl(val url : String, val title : String, val snips : Array[String])
+
 class SnipSearch extends HttpServlet {
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) {
     val claim = req getParameter "claimstr"
@@ -36,6 +38,15 @@ class SnipSearch extends HttpServlet {
 object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
   val bossSvr = "http://boss.yahooapis.com/ysearch/web/v1";
+
+  def searchBoss(claim : String) : Seq[BossUrl] = {
+    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
+    val xmltext = download(url)
+    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
+    val doc = parser.document   
+    val results = doc \\ "result"
+    return results map absForResult
+  }
   
   def searchYahoo(claim : String) : Seq[SnipUrlRes] = {
     val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
@@ -47,6 +58,13 @@ object SnipSearch {
     // DEBUG
 //    val snips = results map snipForResult                                                          
     return snips;   
+  }
+  
+  def absForResult(result : Node) : BossUrl = {
+    var fragments = ((result \ "abstract").text).split("""<b>\.\.\.</b>""").map(cleanString).filter(s => s.length > 10)    
+    val url = (result \ "url").text
+    val title = cleanString((result \ "title").text)
+    return new BossUrl(url,title,fragments)
   }
  
   def snipForResult(result : Node) : SnipUrlRes = {

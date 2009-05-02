@@ -7,6 +7,11 @@
 a {
 	text-decoration: none;
 	color: #105CB6;
+	cursor: pointer;
+}
+
+a:hover, a h1:hover{
+	text-decoration: underline;
 }
 
 body {
@@ -23,8 +28,69 @@ h1 {
 	font-size: 20px;
 }
 
-.content, #claim {
-	margin: 40px;
+.content, #claim, #topic, #user, #findsnippets {
+	margin: 40px;	
+}
+
+#claim, #topic, #user{
+	margin-left: 150px;
+	max-width: 500px;
+}
+
+#findsnippets {
+	margin-left: 240px;
+	max-width: 450px;
+}
+
+#findsnippets h1 {
+	margin-bottom: 5px;
+}
+
+#findsnippets .subtitle {
+	padding-left: 50px;
+	font-weight: bold;
+	padding-bottom: 15px;
+	font-size: 17px;
+}
+
+#findsnippets #urls {
+	position: absolute;
+	top: 65px;
+	left: 10px;
+	background-color: white;
+	-moz-border-radius: 8px;
+	padding: 4px;
+	width: 200px;
+}
+
+
+#claim .instances {
+	display: block;
+	text-align: right;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.instances a {
+	font-size: 15px;
+}
+
+#topics {
+	position: absolute;
+	top: 65px;
+	left: 10px;
+	width: 115px;
+	background-color: white;
+	-moz-border-radius: 8px;
+	padding: 4px;
+}
+
+#topics h2 {
+	margin-top: 0px;
+}
+
+#topics a {
+	display: block;
 }
 
 #claimlist {
@@ -34,16 +100,21 @@ h1 {
 	padding: 8px;
 }
 
+#claimlist .title {
+	font-weight: bold;
+}
+
 .count {
 	font-weight: bold;
 }
 
 .claim {
-	margin: 4px;
+	background-color: white;
+	padding: 4px;
 }
 
 .claim .title {
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
 }
 
@@ -51,13 +122,28 @@ h1 {
 	text-decoration: underline;
 }
 
-.claim instances {
+.claim .user, .claim .instances, .claim .aggree, .claim .disagree {
+	margin: 3px;
 
 }
 
-.snippet {
-	background-color: white;
+#supports, #opposed, #related-claims, #created, #instance {
+	background-color: #ECEFF5;
+	border: 1px solid grey;
+	margin-top: 4px;
+	max-width: 400px;
+}
+
+#supports h2, #opposed h2, #related-claims h2, #created h2, #instance h2 {
+	background-color: #ECEFF5;
 	padding: 4px;
+	margin: 0px;
+	padding-bottom: 0px;
+}
+
+.snippet {
+	padding: 4px;
+	background-color: white;
 }
 
 .snippet .title {
@@ -80,19 +166,29 @@ h1 {
 	right: 30px;
 }
 
-#homesearch {
+#bigsearch, #snipsearch {
 	background-color: #FFFFAA;
 	width: 600px;
 	padding: 8px;
 	-moz-border-radius: 10px;
 }
 
-#homesearch .query {
+#snipsearch {
+	width: 500px;
+}
+
+#bigsearch .query {
 	width: 526px;
 	padding: 4px;
 }
 
-#homesearch .submit {
+#snipsearch .query {
+	width: 426px;
+	padding: 4px;
+}
+
+
+#bigsearch .submit, #snipsearch .submit {
 	padding: 3px;
 }
 
@@ -103,7 +199,7 @@ h1 {
 #topbar {
 	width: 100%;
 	background-color: #5867A2;
-	padding: 4px;
+	padding: 1px;
 }
 
 #topbar a {
@@ -124,3 +220,63 @@ h1 {
 	display: block;
 }
 
+.searchbox {
+	display: inline;
+	margin-left: 30px;
+}
+
+.searchbox .query {
+	border-width: 1px 0 1px 1px;
+	margin: 1px;
+	margin-bottom: 2px;
+}
+
+.icon {
+	vertical-align: middle;
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	cursor: pointer;
+}
+
+.bossurl {
+	padding: 4px;
+}
+
+.bossurl .title {
+	font-weight: bold;
+}
+
+.bossurl .snippets {
+	margin-left: 20px;
+}
+
+.searchcontent {
+	background-color: #C3D9FF;
+	-moz-border-radius: 8px;
+}
+
+.searchcontent .snippet {
+	background-color: #E0ECFF;
+}
+
+.snippet {
+	position: relative;
+	margin-top: 4px;
+}
+
+.snippet .text {
+	width: 300px;
+}
+
+.snippet .add {
+	position: absolute;
+	right: 50px;
+	top: 5px;
+}
+
+.snippet .ignore {
+	position: absolute;
+	right: 3px;
+	top: 5px;
+}

@@ -8,6 +8,10 @@ import scala.util.matching.Regex._;
 import com.intel.thinkscala.Util._
 import com.intel.thinkscala._
 import scala.xml.NodeSeq;
+import com.intel.thinkscala.view.Template
+import com.intel.thinkscala.view.Page
+
+class NotFound extends Exception
 
 class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
@@ -34,17 +38,18 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
     writer.close
   }
   
-  def outputHtml(html : NodeSeq){
-    res.setContentType("text/html; charset=UTF-8")
-    val writer = res.getWriter
-    writer.append("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">""")
-    writer.append(html.toString)
-    writer.close
+  def outputHtml(title : String, html : NodeSeq){
+    UrlHandler.outputHtml(res,Template.normal(this,title,html),true)
   }
   
-  def notFound(html : NodeSeq) {
+  def outputFragment(html : NodeSeq){
+    UrlHandler.outputHtml(res,html,false)
+  }
+  
+  
+  def notFound() {
     res.setStatus(HttpServletResponse.SC_NOT_FOUND)    
-    outputHtml(html)
+    outputHtml("Not found",Page.notfound)
   }
   
   def redirect(url : String){
@@ -86,7 +91,14 @@ class UrlHandler(pat : String, func : ReqContext => unit){
   val r = pat.r
   def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse) : Boolean = {
     r.findFirstMatchIn(path) match {
-      case Some(m) => func(new ReqContext(store,m,req,res)); true
+      case Some(m) => 
+        val c = new ReqContext(store,m,req,res)
+        try{
+          func(new ReqContext(store,m,req,res))
+        }catch{
+          case e : NotFound => c.notFound
+        }
+        true
       case None => false
     }
   }
@@ -107,7 +119,7 @@ object UrlHandler{
     handlers.foreach(h => {      
      if(h.tryForUrl(store,path,req,res)){
        return;
-     }
+     }     
     })
   }  
   
@@ -117,8 +129,20 @@ object UrlHandler{
     try{
        innerRunHandler(store,handlers,req,res);
     } catch {
-      case e : Exception => e.printStackTrace()
+      case e : Exception => 
+        e.printStackTrace() 
+        val w = res.getWriter
+        e.printStackTrace(w)
+        w.close
     }
     Pool.release(store)
+  }
+  
+  def outputHtml(res : HttpServletResponse, html : NodeSeq,hdr : Boolean){
+    res.setContentType("text/html; charset=UTF-8")
+    val writer = res.getWriter
+    if(hdr) writer.append("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">""")
+    writer.append(html.toString)
+    writer.close
   }
 }
