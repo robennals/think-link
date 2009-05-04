@@ -72,8 +72,8 @@ object Render {
   def bossSnip(snip : String, bu : BossUrl) =
     <div class="snippet">
        <div class="text">{snip}</div>
-       <a class="add">add</a>
-       <a class="ignore">ignore</a>
+       <a class="add" onclick="doAdd(this)">add</a>
+       <a class="ignore" onclick="doIgnore(this)">ignore</a>
     </div>    
     
   def topicref(row : SqlRow) = 
@@ -152,6 +152,7 @@ object Template {
       <title>{title}</title>
       <link rel="icon" type="image/png" href="/thinklink/images/lightbulb_red.png" />
       <link rel="stylesheet" href="/thinklink/stylesheets/normal.css" media="screen"/>
+      <script src="/thinklink/javascript/jquery-1.2.3.js" type="text/javascript"/>
       <script src="/thinklink/javascript/standard.js" type="text/javascript"/>
     </head>
     <body>

@@ -280,3 +280,18 @@ h1 {
 	right: 3px;
 	top: 5px;
 }
+
+.searchcontent .snippet-added {
+	opacity: 0.5;
+	background-color: #E0FFEC;
+}
+.searchcontent .snippet-ignored {
+	opacity: 0.5;
+	background-color: #FFECEC;
+}
+.snippet-added .add{
+	color: black;
+}
+.snippet-ignored .ignore{
+	color: black;
+}
