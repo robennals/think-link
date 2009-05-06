@@ -28,6 +28,11 @@ h1 {
 	font-size: 20px;
 }
 
+#login h1 {
+	margin-left: 40px;
+}
+
+
 .content, #claim, #topic, #user, #findsnippets {
 	margin: 40px;	
 }
@@ -53,7 +58,7 @@ h1 {
 	font-size: 17px;
 }
 
-#findsnippets #urls {
+#findsnippets #queries {
 	position: absolute;
 	top: 65px;
 	left: 10px;
@@ -62,6 +67,10 @@ h1 {
 	padding: 4px;
 	width: 200px;
 }
+
+.query .score {
+	margin-left: 10px;
+}	
 
 
 #claim .instances {
@@ -276,6 +285,12 @@ h1 {
 }
 
 .snippet .ignore {
+	position: absolute;
+	right: 3px;
+	top: 5px;
+}
+
+.snippet .mustlogin {
 	position: absolute;
 	right: 3px;
 	top: 5px;

@@ -46,7 +46,7 @@ object SnipSearch {
     val doc = parser.document   
     val results = doc \\ "result"
     return results map absForResult
-  }
+  }  
   
   def searchYahoo(claim : String) : Seq[SnipUrlRes] = {
     val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"

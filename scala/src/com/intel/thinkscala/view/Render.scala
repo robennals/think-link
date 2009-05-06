@@ -49,32 +49,47 @@ object Render {
     
   def userref(id : Int, name : String, message : String) =
     <span class="user">{message} <a href={Urls.user(id)}>{name}</a></span>
-        
-  def searchUrl(row : SqlRow) = 
-    <div class="url">
-    <a onclick={"setSearchUrl("+row("searchtext")+")"}>{row("searchtext")}</a>
-    <div>
+            
+ def searchQueryList(c : ReqContext, claimid : Int) = 
+    c.store.searchQueries(claimid) flatMap (Render.searchQuery(_,claimid))
+    
+  def searchQuery(row : SqlRow, claimid : Int) : NodeSeq = 
+    <div class="query">
+    <a href={Urls.findsnippets(claimid,row.str("searchtext"))}>{row("searchtext")}</a>
+    <div class="score">
     <span class="yes">{row("marked_yes")} marked</span>
     <span class="no">{row("marked_no")} ignored</span>
     </div>
     </div>
 
     // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl) = 
+  def bossUrl(bu : BossUrl, position : Int)(implicit c : ReqContext) = 
     <div class="bossurl">
     <span class="title">{bu.title}</span>
     <a href={bu.url}>{bu.url}</a>
     <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu))}
+      {bu.snips flatMap (s => bossSnip(s,bu,position))}
     </div>
     </div>
     
-  def bossSnip(snip : String, bu : BossUrl) =
-    <div class="snippet">
+  def bossSnip(snip : String, bu : BossUrl, position : Int)(implicit c : ReqContext) = {
+    val mode = c.store.existingSnippet(bu.url,c.arg("query"),snip) match {
+      case Some(row) if(row("state") == "true") => "added"
+      case Some(row) if(row("state") == "false") => "ignored"
+      case _ => "undecided"
+    }
+    <div class={"snippet snippet-"+mode}>
+       <input type="hidden" class="position" value={""+position}/>
        <div class="text">{snip}</div>
-       <a class="add" onclick="doAdd(this)">add</a>
-       <a class="ignore" onclick="doIgnore(this)">ignore</a>
+       {if(c.user.realuser){
+       <a class="add" onclick="doAdd(this)">{if(mode == "added") "added" else "add"}</a>
+       <a class="ignore" onclick="doIgnore(this)">{if(mode == "ignored") "ignored" else "ignore"}</a>
+         }else{
+       <a class="mustlogin" href={Urls.login}>login to add</a>
+         }
+       }         
     </div>    
+    }
     
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>

@@ -63,6 +63,7 @@ class SqlStatement(con : Connection, s : String){
       arg match {
         case s:String => stmt.setString(i+1,s)
         case n:Int => stmt.setInt(i+1,n)
+        case b:Boolean => stmt.setBoolean(i+1,b)
         case null => stmt.setString(i+1,"")
       }
     }

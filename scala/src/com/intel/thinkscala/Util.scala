@@ -57,6 +57,9 @@ object Util {
    str = str.replace('\u201f','"');
    str
  }
+ 
+ def normalizeString(str : String) = 
+   str.replaceAll("\\s+"," ").replaceAll("^\\s*","").replaceAll("\\s*$","") 
 
  def getPath(req : HttpServletRequest) = req.getServletPath() + req.getPathInfo()
  
@@ -71,6 +74,19 @@ object Util {
    s.substring(0,maxlen) + "..."
  }else{
    s
+ }
+
+ def flatMapWithIndex[A,B](l : Seq[A], f : (A,Int) => Iterable[B]) : Seq[B] = 
+       zipWithIndex(l) flatMap {case (b,i) => f(b,i)}
+ 
+ def zipWithIndex[A](l : Seq[A]) : Seq[(A,Int)] = {
+   var res = List[(A,Int)]()
+   var i = 0;
+   l.foreach( x => {
+     res = (x,i) :: res
+     i+=1
+   })
+   res
  }
  
  // TODO: implement a generic output function

@@ -12,13 +12,15 @@ import com.intel.thinkscala.view.Template
 import com.intel.thinkscala.view.Page
 
 class NotFound extends Exception
+class NoLogin extends Exception
 
 class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
   def argInt(name : String) = Integer.parseInt(req.getParameter(name))
   def arg(name : String) = req.getParameter(name)
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
-  def userid = user.userid
+  def userid = if(user.realuser) user.userid else throw new NoLogin
+  def maybe_userid = user.userid
   
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly

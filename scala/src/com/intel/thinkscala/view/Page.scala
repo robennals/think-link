@@ -65,17 +65,21 @@ object Page {
         {c.store.linkedToNodes(row.int("id"),"about","topic",0,10) flatMap topicref}
       </div>
     </div>
+ 
     
-  def findsnippets(c : ReqContext, row : SqlRow, query : String, bossurls : Seq[BossUrl]) = 
+  def findsnippets(row : SqlRow, query : String, bossurls : Seq[BossUrl])(implicit c : ReqContext) = 
     <div id="findsnippets">
+      <input type="hidden" id="data-query" value={query}/>
+      <input type="hidden" id="data-claim" value={""+row("id")}/>
       <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
       <div class="subtitle">Find snippets on the web that make this claim</div> 
-      <div id="urls">
-        <h2>Previous Search URLs</h2>
-        {c.store.searchUrls(row.int("id")) flatMap Render.searchUrl}
+      <div id="queries">
+        <h2>Previous Search Queries</h2>
+        {searchQueryList(c,row.int("id"))}
       </div>
       {simpleSearch("snipsearch", Urls.findsnippets(row("id")), query, 
-      bossurls flatMap bossUrl)}
+      flatMapWithIndex(bossurls,bossUrl))
+      }
     </div>
     
   def topic(c : ReqContext, row : SqlRow) = 

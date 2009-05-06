@@ -69,7 +69,9 @@ class Datastore {
                         "WHERE v2_node.id=? "+
                         "AND v2_node.user_id = v2_user.id")
   def getInfo(id : Int, userid : Int) = {
-    logRecent(userid,id)
+    if(userid != 0){
+      logRecent(userid,id)
+    }
     get_info.queryOne(id)
   }
 
@@ -85,7 +87,7 @@ class Datastore {
                        "WHERE v2_node.id = v2_history.node_id "+
                        "AND type = 'claim' AND opposed = true "+
                        "AND v2_user.id = v2_node.user_id "+
-                       "GROUP BY id ORDER BY 'date' DESC LIMIT 10")
+                       "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 10")
   def getHotClaims = get_hot.queryRows()
 
   val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
@@ -156,8 +158,8 @@ class Datastore {
   def userLinkCount(userid : Int, typ : String, offset : Int, limit : Int) = user_link_count.queryRows(userid,typ,limit,offset)
   
   // === Snippet Search - read ===
-  val search_urls = stmt("SELECT * FROM v2_snipsearch WHERE claim_id = ?")
-  def searchUrls(claimid : Int) = search_urls.queryRows(claimid)
+  val search_queries = stmt("SELECT * FROM v2_snipsearch WHERE claim_id = ? ORDER BY marked_yes DESC,searchtext")
+  def searchQueries(claimid : Int) = search_queries.queryRows(claimid)
   
   // === Snippet Search - Write ===
   
@@ -170,6 +172,32 @@ class Datastore {
   val mk_result = mkinsert("v2_searchresult","search_id","url_id","position","abstract","pagetext")
   def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String) =
     mk_result.insert(searchid,urlid,position,abstr,pagetext)    
+  
+  val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
+                             "VALUES (?,?,?,?)")
+  val set_snip_state = stmt("UPDATE v2_searchresult SET state = ? WHERE id=?")
+  def setSnipVote(resultid : Int, searchid : Int, userid : Int, vote : Boolean) = {
+    set_snip_vote.update(resultid,searchid,userid,vote)
+    set_snip_state.update(""+vote,resultid)
+    updateSearchCounts(searchid)
+  }
+  
+  val update_search_counts = stmt("UPDATE v2_snipsearch SET "+
+                                    "marked_yes = (SELECT COUNT(result_id) FROM v2_searchvote "+
+                                        "WHERE search_id = v2_snipsearch.id AND vote=1), "+ 
+                                    "marked_no = (SELECT COUNT(result_id) FROM v2_searchvote "+
+                                        "WHERE search_id = v2_snipsearch.id AND vote=0) " +
+                                    "WHERE v2_snipsearch.id = ?")
+  def updateSearchCounts(searchid : Int) = update_search_counts.update(searchid)
+
+  val existing_snippet = stmt("SELECT * FROM v2_searchresult,v2_searchurl,v2_snipsearch "+
+                                "WHERE v2_searchurl.id = v2_searchresult.url_id "+
+                                "AND v2_snipsearch.id = v2_searchresult.search_id "+
+                                "AND v2_searchurl.url = ? "+
+                                "AND v2_snipsearch.searchtext = ? "+
+                                "AND v2_searchresult.abstract = ?")
+  def existingSnippet(url : String, query : String, abstr : String) = 
+    existing_snippet.queryMaybe(url,query,abstr)  
   
   // === Nodes ===
   
