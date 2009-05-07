@@ -7,7 +7,7 @@ object Render {
   def claim(row : SqlRow) = 
     <div class="claim">
       <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
-      <div class="description">{row("desc")}</div>
+      <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"found by")}
       - <a href={Urls.findsnippets(row("id"))} class="instances">seen <span class="count">{row("instance_count")}</span> times on the web</a>  
 <!--      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>

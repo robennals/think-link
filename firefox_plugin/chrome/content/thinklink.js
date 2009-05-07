@@ -44,17 +44,17 @@ function thinklink_new_snippet(){
 	doc.location.href = "javascript:thinklink_newSnippet()";
 }
 
-function thinklink_show(button){
-	var doc = thinklink_winlistener.getDoc();
-	if(button.checked){
-		doc.location.href = "javascript:myMargin.hideMargin()";
-	}else{
-		doc.location.href = "javascript:myMargin.showMargin()";
-	}
-	button.checked = !button.checked;
-	doc.thinklink_checked = button.checked;
-	thinklink_open = button.checked;
-}
+//function thinklink_show(button){
+	//var doc = thinklink_winlistener.getDoc();
+	//if(button.checked){
+		//doc.location.href = "javascript:myMargin.hideMargin()";
+	//}else{
+		//doc.location.href = "javascript:myMargin.showMargin()";
+	//}
+	//button.checked = !button.checked;
+	//doc.thinklink_checked = button.checked;
+	//thinklink_open = button.checked;
+//}
 
 var thinklink_winlistener = {
 	QueryInterface: function(iid){
@@ -68,124 +68,7 @@ var thinklink_winlistener = {
 			throw Components.results.NS_NOINTERFACE;
 		}
 	},	
-
-	//registerFrameEventHandlers: function(frame){
-		//var doc = thinklink_winlistener.getDoc();
-		//frame.addEventListener("thinklink-close",function(){
-			//doc.location.href = "javascript:mySnip.close()";	
-		//},false);
-	//},
 	
-	//refreshSnipHighlights: function(){
-		//var doc = thinklink_winlistener.getDoc();
-		//doc.location.href = "javascript:tl_myMargin.refreshNoLoad()";	
-	//},
-	
-	//onStateChange: function(progress, request, flags, status){
-		//try{
-	
-			//try{
-				//thinklink_msg("flags="+flags+" status="+status);
-				//if(content.document && content.document.body && content.document.body.textContent){
-					//thinklink_msg("text loaded");
-				//}
-			//}catch(e){
-			//}
-	
-			//var states = Components.interfaces.nsIWebProgressListener;
-
-			//var doc = this.getDoc();	
-			
-		  //if(doc != progress.DOMWindow.document){
-		  	//this.registerFrameEventHandlers(progress.DOMWindow.document);
-		  	//return;
-		  //}
-
-			
-			//if((flags & states.STATE_STOP) && (flags & states.STATE_IS_WINDOW)){
-	 			//this.injectScripts();
-			//}
-							 
-	 	//}catch(e){
-	 		//thinklink_error("onStateChange",e);
-	 	//}
- 
-		//return;
-		
-	//},
-	
-	//onLocationChange: function(progress){		
-		//if(!content.document.body && content.frames.length == 0) return;
-	  //var doc = this.getDoc();
-
-	  //if(doc != progress.DOMWindow.document){
-	  	//this.registerFrameEventHandlers(progress.DOMWindow.document);
-	  	//return;
-	  //}
-	  //if(!doc.thinklink_injected){
-	  	//this.injectScripts();
-	  //}
-	//},
-	//onProgressChange: function(){return 0;},
-	//onStatusChange: function(){return 0;},
-	//onSecurityChange: function(){return 0;},
-	//onLinkIconAvailable: function(){return 0;},
-	
-	
-	injectScripts: function(){
-		var doc = this.getDoc();
-		if(doc.thinklink_injected){
-			return;
-		}
-	   	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-		var apipath = "http://factextract.cs.berkeley.edu/thinklink";
-	    if(prefs.prefHasUserValue("extensions.thinklink.api")){
-			apipath = prefs.getCharPref("extensions.thinklink.api");
-		}	
-		
-		this.injectLiteralScript("var thinklink_apipath = '"+apipath+"'\n",doc);
-		// DEBUG
-		
-		//for(var i in thinklink_scriptUrls){
-			//this.injectScript("http://localhost:8180/thinklink/client_js/"+thinklink_scriptUrls[i],doc);
-		//}
-		
-		for(var i in thinklink_scriptUrls){
-			this.injectFetchedScript(thinklink_scriptUrls[i]);
-		}
-		this.injectStyleSheet();
-		
-		doc.thinklink_injected = true;
-		try{			
-			if(doc.onmousedown){
-				doc.onmousedown = null;
-			}
-			if(doc.onmouseup){
-				doc.onmouseup = null;
-			}
-		}catch(e){
-//			thinklink_error("Error clearing mouse events",e);
-		}
-
-	},
-	
-	injectFetchedScript: function(file){
-		var doc = this.getDoc();
-		var req = new XMLHttpRequest();
-		req.overrideMimeType("text/javascript");
-		req.open("GET","chrome://thinklink/content/client_js/"+file,false);
-		req.send(null);
-		this.injectLiteralScript(req.responseText,doc);
-	},
-
-	injectStyleSheet: function(){
-		var doc = this.getDoc();
-		var req = new XMLHttpRequest();
-		req.overrideMimeType("text/css");
-		req.open("GET","chrome://thinklink/content/css/style.css",false);
-		req.send(null);
-		this.injectLiteralStyle(req.responseText,doc);
-	},
 
 	getDoc: function(){
 		if(content.document.body && content.document.body.tagName != "FRAMESET"){
@@ -204,39 +87,6 @@ var thinklink_winlistener = {
 		}else{
 			return null;
 		}
-	},
-
-	injectLiteralStyle: function(text,doc){
-		var tag = doc.createElement("style");
-		tag.textContent = text;
-		tag.type = "text/css";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(tag);
-		}catch(e){
-			thinklink_error("could not insert style tag",e);
-		}
-	},	
-	
-	injectLiteralScript: function(text,doc){
-		var scripttag = doc.createElement("script");
-		scripttag.text = text;
-		scripttag.type = "text/javascript";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(scripttag);
-		}catch(e){
-			thinklink_error("could not insert script tag",e);
-		}		
-	},
-	
-	injectScript: function(scripturl,doc){
-		var scripttag = doc.createElement("script");
-		scripttag.src = scripturl;
-		scripttag.type = "text/javascript";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(scripttag);
-		}catch(e){
-			thinklink_error("could not insert script tag",e);
-		}	
 	}
 };
 
@@ -288,12 +138,6 @@ function thinklink_getLogin(){
 	thinklink_setCookies(encodeURIComponent(username),encodeURIComponent(password)); 
 }
 
-//function thinklink_init(){
-	//gBrowser.addProgressListener(thinklink_winlistener,
-	  	//Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-	//thinklink_getLogin();
-//}
-
 function thinklink_login(){
 	var username = document.getElementById("thinklink-username").value;
 	var password = document.getElementById("thinklink-password").value;
@@ -303,12 +147,7 @@ function thinklink_login(){
 window.addEventListener("load", function(){
 	window.addEventListener("DOMContentLoaded",function(){
 		thinklink_getLogin();
-		thinklink_winlistener.injectScripts();
+		mark_snippets();
+//		thinklink_winlistener.injectScripts();
 	},false);
 },false);
-		
-//window.addEventListener("DOMContentLoaded",function(){
-	//alert("hello");
-	//thinklink_getLogin();
-	//this.injectScripts();
-//},false);

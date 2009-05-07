@@ -114,7 +114,7 @@ object Util {
    obj match{
      case s : String => "\""+StringEscapeUtils.escapeJavaScript(s)+"\""
      case m : Map[_,_] => 
-       (m.keySet.map (k => "'"+k+"' : " + printJSON(m(k)))).mkString("{",",","}") 
+       (m.keySet.map (k => "\""+k+"\" : " + printJSON(m(k)))).mkString("{",",","}") 
      case l : Iterable[_] => (l map printJSON).mkString("[",",","]")
      case d : HasData => printJSON(d.data)
      case null => "null"

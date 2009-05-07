@@ -31,6 +31,9 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
       case "js" => {
 		    var callback = req getParameter "callback" 
 		    if(callback == null){
+		      callback = req getParameter "cb" 
+		    }
+		    if(callback == null){
 		      callback = "callback"
 		    }
 	        writer.append(callback + "(" + printJSON(obj) + ");")
@@ -52,6 +55,10 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def notFound() {
     res.setStatus(HttpServletResponse.SC_NOT_FOUND)    
     outputHtml("Not found",Page.notfound)
+  }
+  
+  def needLogin() {
+    outputHtml("You need to log in to do that",Page.login("You need to log in to do that"))
   }
   
   def redirect(url : String){
@@ -99,6 +106,7 @@ class UrlHandler(pat : String, func : ReqContext => unit){
           func(new ReqContext(store,m,req,res))
         }catch{
           case e : NotFound => c.notFound
+          case e : NoLogin => c.needLogin 
         }
         true
       case None => false

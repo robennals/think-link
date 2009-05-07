@@ -2,6 +2,14 @@
 
 Several of these articles are also syndicated by other publications.
 
+=== ITWire - Intel Making it easier to argue online ===
+
+Jake Widman - May 2nd, 2009
+
+A short article about Think Link.
+
+<a href="http://www.itwire.com/content/view/24779/1231/">http://www.itwire.com/content/view/24779/1231/</a>
+
 === CNet - Intel's Think Link is a Paradise for Fact Trolls ===
 
 Josh Lowenson - April 30th, 2009

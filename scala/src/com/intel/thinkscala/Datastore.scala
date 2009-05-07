@@ -169,17 +169,17 @@ class Datastore {
   val mk_url = mkinsert("v2_searchurl","url","title")
   def mkUrl(url : String, title : String) = mk_url.insert(url,title)
                                                   
-  val mk_result = mkinsert("v2_searchresult","search_id","url_id","position","abstract","pagetext")
-  def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String) =
-    mk_result.insert(searchid,urlid,position,abstr,pagetext)    
+  val mk_result = mkinsert("v2_searchresult","search_id","url_id","position","abstract","pagetext","claim_id")
+  def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String,claimid : Int) =
+    mk_result.insert(searchid,urlid,position,abstr,pagetext,claimid)    
   
   val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
                              "VALUES (?,?,?,?)")
   val set_snip_state = stmt("UPDATE v2_searchresult SET state = ? WHERE id=?")
-  def setSnipVote(resultid : Int, searchid : Int, userid : Int, vote : Boolean) = {
+  def setSnipVote(claimid : Int, resultid : Int, searchid : Int, userid : Int, vote : Boolean) = {
     set_snip_vote.update(resultid,searchid,userid,vote)
     set_snip_state.update(""+vote,resultid)
-    updateSearchCounts(searchid)
+    updateSearchCounts(claimid, searchid)
   }
   
   val update_search_counts = stmt("UPDATE v2_snipsearch SET "+
@@ -188,7 +188,13 @@ class Datastore {
                                     "marked_no = (SELECT COUNT(result_id) FROM v2_searchvote "+
                                         "WHERE search_id = v2_snipsearch.id AND vote=0) " +
                                     "WHERE v2_snipsearch.id = ?")
-  def updateSearchCounts(searchid : Int) = update_search_counts.update(searchid)
+  val update_instance_count = stmt("UPDATE v2_node SET instance_count = "+
+                                     "(SELECT SUM(marked_yes) FROM v2_snipsearch WHERE claim_id = v2_node.id) "+
+                                     "WHERE id = ?")
+  def updateSearchCounts(claimid : Int, searchid : Int) = {
+    update_search_counts.update(searchid)
+    update_instance_count.update(claimid)    
+  }
 
   val existing_snippet = stmt("SELECT * FROM v2_searchresult,v2_searchurl,v2_snipsearch "+
                                 "WHERE v2_searchurl.id = v2_searchresult.url_id "+
@@ -212,7 +218,12 @@ class Datastore {
       case None => mkNode(text, user.userid, typ, "")
       case Some(row) => row.int("id")
     }
-                                                     
+            
+  val make_claim = stmt("INSERT INTO v2_node (text,description,user_id,type) "+
+                         "VALUES (?,?,?,'claim')")
+  def makeClaim(text : String, desc : String, userid : Int) =
+	  make_claim.insert(text,desc,userid)
+  
   def getClaim(text : String,user : User) = getNode(text,"claim",user)                                                     
   
   val results_for_claim = stmt("SELECT * FROM v2_snipsearch, v2_searchresult "+
@@ -220,5 +231,13 @@ class Datastore {
                                  """AND pagetext != "" """)
   def resultsForClaim(claimid : Int) = results_for_claim.queryRows(claimid)
   
+  // === URL Snippets ===
+  
+  val url_snippets = stmt("SELECT abstract AS text,claim_id AS id,v2_node.text AS claimtext "+
+                            "FROM v2_searchurl, v2_searchresult, v2_node "+
+                            "WHERE v2_searchurl.url = ? "+
+                            "AND v2_node.id = v2_searchresult.claim_id "+
+                            "AND v2_searchresult.url_id = v2_searchurl.id")
+  def urlSnippets(url : String) = url_snippets.queryRows(url)
                                                      
 }

@@ -28,21 +28,41 @@ object Page {
       <h1>Search Results</h1>
       <form id="bigsearch" action="search" method="GET">        
         <input type="text" class="query" name="query" value={c.arg("query")}/>
-            <input type="submit" class="submit" value="Search"/>
-	      </form>
-        <div id="claimlist">
-          {c.store.searchClaims(c.arg("query")) flatMap Render.claim}
-        </div>
+        <input type="submit" class="submit" value="Search"/>
+	  </form>
+      <div id="newclaim">Don't see your claim? - 
+    		  <a href={Urls.createClaim(c.arg("query"))}>Create a new claim</a>
+      </div>
+      <div id="claimlist">
+         {c.store.searchClaims(c.arg("query")) flatMap Render.claim}
+      </div>
     </div>
-      
+  
+  def newClaim(c : ReqContext, query : String) =
+    <div class="content">
+    	<h1>Create a New Disputed Claim</h1>
+    	<div class="message">This should be a disputed claim that is made on web sites. 
+    		Once you have created a disputed claim, you can identify instances of this claim
+    		on the web, and associate the claim with evidence on either side.
+    	</div>
+    	<form id="newsnippet" action="new" method="POST">
+          <label for="name">Claim</label>
+          <input type="text" id="name" name="name" value={query}/>
+          <label for="descr">Optional Description</label>
+          <textarea rows="5" id="descr" name="descr"></textarea>    
+          <input type="submit" value="Create New Claim"/>
+        </form>
+    </div>
+    
   def claim(c : ReqContext, row : SqlRow) =
     <div id="claim">
-      <h1>{row("text")}</h1>
-      <span class="instances">seen <span class="count">{row("instance_count")}</span> times on the web
-        <a href={Urls.findsnippets(row("id"))}>find more</a>
-      </span>   
-
-      <div class="description">{row("desc")}</div>
+      <div class="topclaim">
+	      <h1>{row("text")}</h1>
+	      <span class="instances">seen <span class="count">{row("instance_count")}</span> times on the web
+	        <a href={Urls.findsnippets(row("id"))}>find more</a>
+	      </span>   
+      </div>
+      <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"found by ")}
       <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
       <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
@@ -85,7 +105,7 @@ object Page {
   def topic(c : ReqContext, row : SqlRow) = 
     <div id="topic">
       <h1>{row("text")}</h1>
-      <div class="description">{row("desc")}</div>
+      <div class="description">{row("description")}</div>
       <div id="claims">
          <h2>Claims about this topic</h2>
          {c.store.linkedNodes("claim","about",row.int("id"),0,20) flatMap Render.claim}
@@ -113,12 +133,13 @@ object Page {
     <div class="error">
     </div>
     
-  val login =
+  def login(title : String) =
     <div class="content">
-	    <div class="message">
-	      Enter the email address and password that you used to register with Think Link
-	    </div>
+    	<h1>{title}</h1>
 	    <form id="login" action="login" method="POST">
+		    <div class="message">
+		      Enter the email address and password that you used to register with Think Link
+		    </div>		
 	        <p><label for="email">email</label><input type="text" id="email" name="email"/></p>
 	        <p><label for="password">password</label><input type="password" id="password" name="password"/></p>
 	        <input type="submit" value="Login"/>

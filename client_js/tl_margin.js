@@ -210,10 +210,10 @@ function tl_margin()
 		
 				// for each result item, make a new tl_snippet and add it to the margin's array
 		for (var item=0; item< result.length; item++) {
-			if(!that.marginVisible && !result[item].opposed) continue;
+			//if(!that.marginVisible && !result[item].opposed) continue;
 			tl_log("addItem");
 			that.addItem(result[item]);
-			if (result[item].claimid && result[item].opposed) {
+			if (result[item].claimid) {
 				that.haveOpposedPoint = true; 
 			}
 		}
@@ -266,44 +266,6 @@ function tl_margin()
 				if(result.length > 0 && !force){
 					that.createMarginPull();
 				}
-
-				//// for each result item, make a new tl_snippet and add it to the margin's array
-				//for (var item=0; item< result.length; item++) {
-					//if(!that.marginVisible && !result[item].opposed) continue;
-					//tl_log("addItem");
-					//that.addItem(result[item]);
-					//if (result[item].claimid && result[item].opposed) {
-						//that.haveOpposedPoint = true; 
-					//}
-				//}
-				
-				//if (that.haveOpposedPoint) {
-					//that.lightbulb_right = thinklink_imagebase+"lightbulb_right_red.png";
-					//that.lightbulb_left = thinklink_imagebase+"lightbulb_left_red.png";
-				//}
-				
-				//if(result.length > 0 && !force){
-					//that.createMarginPull();
-				//}
-								
-				////document.getElementsByTagName("head")[0].removeChild(document.getElementById(scriptID));
-				//that.itemsLoaded=true;
-////				that.highlightSnippets(); } // highlight everything by default
-				
-				//// add set title/author buttons if this is thinklink pdf document
-				//if (that.url.search("http://mashmaker.intel-research.net/rob/server/pdfs") >=0) { 
-					//scriptID = "tl_get_doc";
-					//var shorturl = that.url.substring(0,that.url.lastIndexOf("/")+1); // shortened url
-					//tl_doAJAX(scriptID,that.getdocInfoURL+"?url="+shorturl,function(result){
-						//tl_log(result);
-						//if (result.length >0) {
-							//that.docTitle = result[0]['title'];
-							//that.docAuthor = result[0]['author'];
-						//}
-						//that.showSetTitleAndAuthor(shorturl);
-					//});
-				//}
-
 			});
 
 		}else{
@@ -484,27 +446,25 @@ function tl_margin()
 	
 	
 	this.addItem = function(snippet){
-		var that = this;
-		tl_log("EK!!!");
-		tl_log("addItem : "+snippet.text);
+		var that = this;	
+		snippet.opposed = true; // HACK
 		
-		var highlightclass;
-		if(snippet.claimid && snippet.opposed){
-			highlightclass = "tl_highlight_con";
-		}else if(!snippet.claimid){
-			highlightclass = "tl_highlight_free";
-		}else{
-			highlightclass = "tl_highlight";
-		}
+		var highlightclass = "tl_highlight_con";
+		//if(snippet.claimid && snippet.opposed){
+			//highlightclass = "tl_highlight_con";
+		//}else if(!snippet.claimid){
+			//highlightclass = "tl_highlight_free";
+		//}else{
+			//highlightclass = "tl_highlight";
+		//}
 		snippet.spanList = tl_mark_snippet(snippet.text,highlightclass);
 		if(!snippet.spanList){
 			tl_log("could not find snippet: "+snippet.text);
 			return;
 		}
-		tl_log("marked");
 		this.addSnippetClickHandler(snippet);
 		var position = tl_findPos(snippet.spanList[0]); // get position of the first span element
-		position[1] = this.getSafeItemPosition(position,snippet.id,this.items.length); // make sure vertical position is kosher
+		position[1] = this.getSafeItemPosition(position,snippet,this.items.length); // make sure vertical position is kosher
 		snippet.position = position;
 		var numItems = this.items.push(snippet); // add to margin's array
 		
@@ -514,13 +474,13 @@ function tl_margin()
 		}else{
 			showtxt = "no claim associated - click to pick a claim";
 		}
-		var opposed= false;
-		var claimid = null;
-		if(snippet.claimid){
-			opposed = snippet.opposed;		
-			claimid = snippet.claimid;
-		}
-		snippet.opposed = opposed;
+		var opposed= true;
+		var claimid = snippet.claimid;
+		//if(snippet.claimid){
+			//opposed = snippet.opposed;		
+			//claimid = snippet.claimid;
+		//}
+		//snippet.opposed = opposed;
 		
 		var margin_item = document.createElement("div");
 		margin_item.textContent = showtxt;
@@ -545,67 +505,7 @@ function tl_margin()
 		margin_item.addEventListener("click",function(){
 			myBrowser.viewFrame(snippet);
 		},true);
-		document.getElementById(this.divID).appendChild(margin_item);
-				
-		// make the margin item header
-		var deleteButton = document.createElement("img"); deleteButton.setAttribute("src",thinklink_imagebase+"bin_closed.png");
-		deleteButton.addEventListener('click', function(e){ 
-			e.cancelBubble=true;
-			tl_doAJAX("tl_delete",that.deleteURL+"?snippet="+snippet.id,function(result){
-				tl_log("mark deleted: "+ snippet.id+ ", "+result);
-				tl_removeSpans(snippet.spanList);
-				snippet.spanList = null;
-				document.getElementById(that.divID).removeChild(document.getElementById("margin"+snippet.id));
-			});
-
-			},true);
-		var saveButton = document.createElement("img");
-		saveButton.addEventListener('click', function(e){ 
-			e.cancelBubble=true;
-			if (bookmarked==null) {
-				tl_doAJAX("tl_bookmark",that.bookmarkURL+"?snippet="+snippet.id,function(result){
-					tl_log("bookmarked: "+ snippet.id+ ", "+result);
-					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png");
-					margin_item.addClass("tl_margin_item_bookmarked").removeClass("tl_margin_item");
-					bookmarked=snippet.id;
-				});
-			}
-			else {
-				tl_doAJAX("tl_bookmark",that.unbookmarkURL+"?snippet="+snippet.id,function(result){
-					tl_log("unbookmarked: "+ snippet.id+ ", "+result);
-					saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png");
-					margin_item.addClass("tl_margin_item").removeClass("tl_margin_item_bookmarked");
-					bookmarked=null;
-				});	
-			}
-			},true);
-			
-			
-		// show fancy shmancy stuff if the snippet has been bookmarked
-		if (snippet.bookmarked == null) { 
-			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb_off.png"); 
-//			margin_item.addClass("tl_margin_item");
-			if (opposed){
-				margin_item.className = "tl_margin_item_con";
-			}else{
-				margin_item.className = "tl_margin_item";
-			}
-		}
-		else { 
-			saveButton.setAttribute("src",thinklink_imagebase+"lightbulb.png"); 
-			if (opposed){
-				margin_item.className = "tl_margin_item_con";
-			}else{
-				margin_item.className = "tl_margin_item_bookmarked";
-			}
-		}
-		var buttonBox = document.createElement("span");
-		buttonBox.style.float = "right";
-		buttonBox.style.marginLeft = "2px";
-//		var buttonBox = $("<span/>").css("float","right").css("margin-left","2px");
-		buttonBox.appendChild(saveButton);
-		buttonBox.appendChild(deleteButton);
-//		buttonBox.append($(saveButton)); buttonBox.append($(deleteButton));
+		document.getElementById(this.divID).appendChild(margin_item);			
 	}
 
 }

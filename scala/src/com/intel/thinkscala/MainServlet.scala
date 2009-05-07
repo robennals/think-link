@@ -18,6 +18,7 @@ object Urls {
   def user(id : Any) = base + "/user/" + id
   def findsnippets(id : Any) = claim(id) + "/findsnippets"
   def findsnippets(id : Any, query : String) = claim(id) + "/findsnippets?query="+encode(query)
+  def createClaim(query : String) = base+"/claim/new?query="+encode(query)
 }
 
 object FragUrls {
@@ -35,10 +36,16 @@ class MainServlet extends HttpServlet {
       if(user.realuser){
         c.setCookie("email",email)
         c.setCookie("password",password)        
-        c.redirect("/thinklink/")					// TODO: remember where the login started
+        c.redirect(Urls.base)					// TODO: remember where the login started
       }else{
-        c.outputHtml("Login Failed - Please Try Again",(<div id="login"><h1>Login Failed</h1>{Page.login}</div>))
+        c.outputHtml("Login Failed - Please Try Again",Page.login("Login Failed"))
       }
+    }),
+    UrlHandler("/claim/new", c => {
+      val name = c.arg("name")
+      val descr = c.arg("descr")
+      val claimid = c.store.makeClaim(name,descr,c.userid)
+      c.redirect(Urls.claim(claimid))
     }),
     UrlHandler("/claim/(\\d*)/setsnippet", c => {
       val claimid = c.urlInt(1)
@@ -50,17 +57,20 @@ class MainServlet extends HttpServlet {
       val position = c.argInt("position")
       val searchid = c.store.mkSearch(claimid,query)
       val urlid = c.store.mkUrl(url,title)
-      val resultid = c.store.mkResult(searchid,urlid,position,text,"")
-      c.store.setSnipVote(resultid,searchid,c.userid,vote == "true")
+      val resultid = c.store.mkResult(searchid,urlid,position,text,"",claimid)
+      c.store.setSnipVote(claimid,resultid,searchid,c.userid,vote == "true")
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     })
   ) 
   
   val gethandlers = List(
-    new UrlHandler("/index.html",c => {
+    UrlHandler("/apianon/search", c => {
+      c.output(c.store.urlSnippets(c.arg("url")))
+    }),
+    UrlHandler("/index.html",c => {
       c.outputHtml("Welcome to Think Link",Page.home(c))
     }),
-    new UrlHandler("/search",c => { 	// TODO: provide API access
+    UrlHandler("/search",c => { 	// TODO: provide API access
       val title = c.arg("query")+" - Think Link Claim Search"
       c.outputHtml(title,Page.search(c))
     }),
@@ -72,6 +82,9 @@ class MainServlet extends HttpServlet {
       if(query == null) query = claim.str("text")
       val bossUrls = SnipSearch.searchBoss(query)      
       c.outputHtml(title,Page.findsnippets(claim,query,bossUrls))
+    }),
+    UrlHandler("/claim/new",c => {
+      c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
     }),
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
@@ -88,10 +101,10 @@ class MainServlet extends HttpServlet {
       val title = row("name") + " - Think Link User"
       c.outputHtml(title,Page.user(c,row))
     }),   
-    new UrlHandler("/login",c => {
-      c.outputHtml("Login",(<div id="login"><h1>Login</h1>{Page.login}</div>))
+    UrlHandler("/login",c => {
+      c.outputHtml("Login",(<div>{Page.login("Login")}</div>))
     }),
-    new UrlHandler("/logout",c => {
+    UrlHandler("/logout",c => {
       c.setCookie("email","")
       c.setCookie("password","")
       c.redirect("/thinklink/")

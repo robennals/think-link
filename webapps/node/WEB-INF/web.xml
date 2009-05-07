@@ -16,11 +16,6 @@
 
 	<servlet-mapping>
 	<servlet-name>node</servlet-name>
-	<url-pattern>/apianon/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-	<servlet-name>node</servlet-name>
 	<url-pattern>/scripthack/*</url-pattern>
 	</servlet-mapping>
 
@@ -72,6 +67,11 @@
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
 	<url-pattern>/topic/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/apianon/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

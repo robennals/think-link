@@ -37,7 +37,7 @@ object GenerateTurkData {
       var urlid = store.mkUrl(us.url, us.title)
       if(us.snips != null){
 	      us.snips.foreach(s => {        
-	        store.mkResult(searchid,urlid,position,s.snip,s.context)
+	        store.mkResult(searchid,urlid,position,s.snip,s.context,claimid)
 	        position += 1
 	      })
       }

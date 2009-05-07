@@ -32,7 +32,6 @@ h1 {
 	margin-left: 40px;
 }
 
-
 .content, #claim, #topic, #user, #findsnippets {
 	margin: 40px;	
 }
@@ -73,7 +72,7 @@ h1 {
 }	
 
 
-#claim .instances {
+.topclaim .instances {
 	display: block;
 	text-align: right;
 	font-size: 15px;
@@ -107,11 +106,39 @@ h1 {
 	max-width: 600px;
 	-moz-border-radius: 10px;
 	padding: 8px;
+	margin-top: 10px;
 }
 
 #claimlist .title {
 	font-weight: bold;
 }
+
+#newsnippet, #login {
+	background-color: #FFFFAA;
+	-moz-border-radius: 10px;
+	padding: 10px;
+	width: 520px;
+}
+
+#newsnippet label, #newsnippet input, #newsnippet textarea {
+	display: block;
+}
+
+#newsnippet #name, #newsnippet textarea {
+	width: 500px;
+	font-size: 15px;	
+	font-weight: bold;
+	padding: 4px;
+	margin-bottom: 10px;
+}
+
+#newsnippet input{
+	padding: 4px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+
 
 .count {
 	font-weight: bold;
@@ -119,12 +146,27 @@ h1 {
 
 .claim {
 	background-color: white;
+	color: #666;
 	padding: 4px;
 }
 
 .claim .title {
 	font-size: 13px;
 	font-weight: bold;
+	color: black;
+}
+
+.claim .description {
+	margin-left: 20px;
+}
+
+#newclaim {
+	font-size: 20px;
+	margin-left: 60px;	
+}
+
+#newclaim a {
+	font-size: 20px;
 }
 
 .claim .title:hover{
@@ -133,7 +175,6 @@ h1 {
 
 .claim .user, .claim .instances, .claim .aggree, .claim .disagree {
 	margin: 3px;
-
 }
 
 #supports, #opposed, #related-claims, #created, #instance {
@@ -167,6 +208,9 @@ h1 {
 
 .tagline {
 	font-size: 20px;
+	margin-top: -7px;
+	margin-left: 117px;
+	margin-bottom: 20px;
 }
 
 .install {
@@ -178,8 +222,10 @@ h1 {
 #bigsearch, #snipsearch {
 	background-color: #FFFFAA;
 	width: 600px;
-	padding: 8px;
+	padding: 10px;
 	-moz-border-radius: 10px;
+	margin-bottom: 15px;
+	margin-top: 10px;
 }
 
 #snipsearch {
@@ -187,8 +233,10 @@ h1 {
 }
 
 #bigsearch .query {
-	width: 526px;
+	width: 520px;
 	padding: 4px;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 #snipsearch .query {
@@ -202,7 +250,14 @@ h1 {
 }
 
 .message {
-	max-width: 600px;
+	max-width: 500px;
+	color: #555;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.message p {
+	margin: 0px;
 }
 
 #topbar {
