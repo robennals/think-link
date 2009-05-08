@@ -246,6 +246,7 @@ class Datastore {
   val url_snippets = stmt("SELECT v2_searchresult.id, abstract AS text,claim_id AS claimid,v2_node.text AS claimtext "+
                             "FROM v2_searchurl, v2_searchresult, v2_node "+
                             "WHERE v2_searchurl.url = ? "+
+                            "AND v2_searchresult.state = 'true' "+
                             "AND v2_node.id = v2_searchresult.claim_id "+
                             "AND v2_searchresult.url_id = v2_searchurl.id")
   def urlSnippets(url : String) = url_snippets.queryRows(url)

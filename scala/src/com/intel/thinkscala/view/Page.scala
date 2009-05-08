@@ -98,7 +98,7 @@ object Page {
         {searchQueryList(c,row.int("id"))}
       </div>
       {simpleSearch("snipsearch", Urls.findsnippets(row("id")), query, 
-      flatMapWithIndex(bossurls,bossUrl))
+      flatMapWithIndex(bossurls,(bossUrl(_ : BossUrl,_,query))))
       }
     </div>
     

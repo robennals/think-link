@@ -63,17 +63,17 @@ object Render {
     </div>
 
     // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl, position : Int)(implicit c : ReqContext) = 
+  def bossUrl(bu : BossUrl, position : Int,query : String)(implicit c : ReqContext) = 
     <div class="bossurl">
     <span class="title">{bu.title}</span>
     <a href={bu.url}>{bu.url}</a>
     <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu,position))}
+      {bu.snips flatMap (s => bossSnip(s,bu,position,query))}
     </div>
     </div>
     
-  def bossSnip(snip : String, bu : BossUrl, position : Int)(implicit c : ReqContext) = {
-    val mode = c.store.existingSnippet(bu.url,c.arg("query"),snip) match {
+  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String)(implicit c : ReqContext) = {
+    val mode = c.store.existingSnippet(bu.url,query,snip) match {
       case Some(row) if(row("state") == "true") => "added"
       case Some(row) if(row("state") == "false") => "ignored"
       case _ => "undecided"

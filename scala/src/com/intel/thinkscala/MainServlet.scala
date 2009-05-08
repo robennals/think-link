@@ -113,7 +113,7 @@ class MainServlet extends HttpServlet {
     new UrlHandler("/fragment/snipsearch", c => {
       implicit val ctx = c
       val bossUrls = SnipSearch.searchBoss(c.arg("query"))
-      c.outputFragment(flatMapWithIndex(bossUrls,Render.bossUrl))
+      c.outputFragment(flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,c.arg("query"))))
     })
   )
  

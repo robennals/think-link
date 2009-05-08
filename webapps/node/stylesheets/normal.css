@@ -353,11 +353,19 @@ h1 {
 
 .searchcontent .snippet-added {
 	opacity: 0.5;
+	background-color: #FFD3D3;
+/*
 	background-color: #E0FFEC;
+*/
 }
 .searchcontent .snippet-ignored {
 	opacity: 0.5;
-	background-color: #FFECEC;
+	background-color: #CCCCCC;	
+
+/*
+	background-color: #E0FFEC;
+*/
+/*	background-color: #FFECEC; */
 }
 .snippet-added .add{
 	color: black;
