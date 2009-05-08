@@ -90,51 +90,21 @@ object Render {
        }         
     </div>    
     }
-    
+
+  def bossResults(query : String,page : Int)(implicit c : ReqContext) : (Int,NodeSeq) = {
+      val (max,bossUrls) = SnipSearch.searchBoss(query,page)      
+      return (max,Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query)))
+  }
+  
+  def snipSearchResults(query : String)(implicit c : ReqContext) = 
+    Widgets.pagedList(bossResults(query,_))
+  
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>
 }      
 
 
-object Widgets {
-  def greyInput(cls : String, id : String, previewtext : String) = 
-    <input id={id} name={id} class={cls} style="color:grey" onfocus="ungrey(this)" value={previewtext}/>
-    
-  def action(row : SqlRow, action : String, name : String) =
-    <a class={"action-"+action} href={"/thinklink/api/action?id="+row("id")}>{name}</a>
 
-  def tabs(param : String, options : Array[String], selected : String) = 
-    <div class="tabs">
-      options map (s => if(s equals selected){
-        <a class="selected">s</a>
-      }else{
-        <a>s</a>
-      }) 
-    </div>  
-    
-  def ajaxSearch(id : String, fragurl : String, initquery : String, content : NodeSeq) =
-    <div id={id}>
-	  <form onsubmit={"ajaxSearch("+fragurl+","+id+")"}>        
-        <input type="text" class="query" name="query" value={initquery}/>
-        <input type="submit" class="submit" value="Search"/>
-	  </form>
-      <div class="ajaxcontent">
-        {content}
-      </div>
-   </div>    
-   
-  def simpleSearch(id : String, url : String, initquery : String, content : NodeSeq) =
-    <div>
-	  <form id={id} method="GET" action={url}>        
-        <input type="text" class="query" name="query" value={initquery}/>
-        <input type="submit" class="submit" value="Search"/>
-	  </form>
-      <div class="searchcontent">
-        {content}
-      </div>
-   </div>    
-
-}
 
 
 object Images {

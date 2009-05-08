@@ -373,3 +373,8 @@ h1 {
 .snippet-ignored .ignore{
 	color: black;
 }
+
+.pageselector {
+	text-align: right;
+	padding: 8px;
+}

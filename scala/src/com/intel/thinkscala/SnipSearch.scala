@@ -39,13 +39,14 @@ object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
   val bossSvr = "http://boss.yahooapis.com/ysearch/web/v1";
 
-  def searchBoss(claim : String) : Seq[BossUrl] = {
-    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
+  def searchBoss(claim : String, page : Int) : (Int,Seq[BossUrl]) = {
+    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&start="+(page*10)
     val xmltext = download(url)
     val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
     val doc = parser.document   
     val results = doc \\ "result"
-    return results map absForResult
+    val totalhits = doc \\ "resultset_web" \ "@totalhits"
+    return (Integer.parseInt(totalhits.toString)/10,results map absForResult)
   }  
   
   def searchYahoo(claim : String) : Seq[SnipUrlRes] = {

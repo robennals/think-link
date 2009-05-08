@@ -18,6 +18,10 @@ object Util {
  def encode(claim : String) = URLEncoder.encode(claim,"UTF-8")
  def decode(claim : String) = URLDecoder.decode(claim,"UTF-8")
  
+ def mkUrl(path : String, args : Map[String,Any]) = 
+    path + (args map {case (key,value) => key + "=" + encode(value.toString)}).mkString("?","&","")  
+
+ 
  def readToString(reader : BufferedReader) : String = {
    val buf = new StringBuffer("");
    var line = reader.readLine(); 

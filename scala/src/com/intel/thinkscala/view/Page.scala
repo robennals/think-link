@@ -87,7 +87,7 @@ object Page {
     </div>
  
     
-  def findsnippets(row : SqlRow, query : String, bossurls : Seq[BossUrl])(implicit c : ReqContext) = 
+  def findsnippets(row : SqlRow, query : String)(implicit c : ReqContext) = 
     <div id="findsnippets">
       <input type="hidden" id="data-query" value={query}/>
       <input type="hidden" id="data-claim" value={""+row("id")}/>
@@ -98,7 +98,7 @@ object Page {
         {searchQueryList(c,row.int("id"))}
       </div>
       {simpleSearch("snipsearch", Urls.findsnippets(row("id")), query, 
-      flatMapWithIndex(bossurls,(bossUrl(_ : BossUrl,_,query))))
+              Render.snipSearchResults(query))
       }
     </div>
     

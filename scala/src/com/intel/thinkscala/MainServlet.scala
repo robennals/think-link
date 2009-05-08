@@ -80,8 +80,7 @@ class MainServlet extends HttpServlet {
       val title = claim("text") + "Find Instances with Think Link"
       var query = c.arg("query")
       if(query == null) query = claim.str("text")
-      val bossUrls = SnipSearch.searchBoss(query)      
-      c.outputHtml(title,Page.findsnippets(claim,query,bossUrls))
+      c.outputHtml(title,Page.findsnippets(claim,query))
     }),
     UrlHandler("/claim/new",c => {
       c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
@@ -112,8 +111,7 @@ class MainServlet extends HttpServlet {
     
     new UrlHandler("/fragment/snipsearch", c => {
       implicit val ctx = c
-      val bossUrls = SnipSearch.searchBoss(c.arg("query"))
-      c.outputFragment(flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,c.arg("query"))))
+      c.outputFragment(Render.snipSearchResults(c.arg("query")))
     })
   )
  

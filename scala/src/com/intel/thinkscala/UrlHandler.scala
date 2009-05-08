@@ -10,17 +10,35 @@ import com.intel.thinkscala._
 import scala.xml.NodeSeq;
 import com.intel.thinkscala.view.Template
 import com.intel.thinkscala.view.Page
+import scala.collection.immutable.HashMap
+//import scala.collection.Map
+// import java.util.Iterator;
 
 class NotFound extends Exception
 class NoLogin extends Exception
 
-class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse){
+class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
+  def hasNext = it.hasMoreElements
+  def next = it.nextElement
+}  
+
+class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse, path : String){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
   def argInt(name : String) = Integer.parseInt(req.getParameter(name))
+  def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
   def arg(name : String) = req.getParameter(name)
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
   def maybe_userid = user.userid
+  lazy val params = getParams
+  
+  def getParams : Map[String,String] = {
+    val keys : Iterator[String] = new Enum(req.getParameterNames.asInstanceOf[java.util.Enumeration[String]])
+    val maps : Iterator[(String,String)] = keys map (key => (key,req.getParameterValues(key)(0)))
+    return HashMap(maps.collect : _*)
+  }
+  
+  def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.update(key,value))  
   
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly
@@ -50,8 +68,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def outputFragment(html : NodeSeq){
     UrlHandler.outputHtml(res,html,false)
   }
-  
-  
+    
   def notFound() {
     res.setStatus(HttpServletResponse.SC_NOT_FOUND)    
     outputHtml("Not found",Page.notfound)
@@ -101,9 +118,9 @@ class UrlHandler(pat : String, func : ReqContext => unit){
   def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse) : Boolean = {
     r.findFirstMatchIn(path) match {
       case Some(m) => 
-        val c = new ReqContext(store,m,req,res)
+        val c = new ReqContext(store,m,req,res,path)
         try{
-          func(new ReqContext(store,m,req,res))
+          func(new ReqContext(store,m,req,res,path))
         }catch{
           case e : NotFound => c.notFound
           case e : NoLogin => c.needLogin 
