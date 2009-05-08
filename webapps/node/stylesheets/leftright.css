@@ -14,6 +14,10 @@
  *  limitations under the License.
  */
 
+* {
+	font-size: 13px;
+}
+
 body {
 	margin: 0px;
 /*	background: white; */
@@ -276,6 +280,11 @@ a img {
 .disputed-title {
 	background-color: darkRed;
 	color: #efd7c2;
+}
+
+h2 a{
+	color: white;
+	margin-left: 20px;
 }
 
 .context-br{

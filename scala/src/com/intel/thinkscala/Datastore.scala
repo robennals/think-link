@@ -90,8 +90,13 @@ class Datastore {
                        "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 10")
   def getHotClaims = get_hot.queryRows()
 
+  val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
+                            "WHERE v2_user.id = v2_node.user_id "+
+                            "ORDER BY instance_count DESC LIMIT 10") 
+  def getFrequentClaims = get_frequent.queryRows()
+  
   val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
-                     "WHERE type = 'claim' "+
+                     "WHERE type = 'claim' "+                             
                      "AND v2_user.id = v2_node.user_id "+
                      "AND MATCH(text) AGAINST(?) "+
                      "LIMIT 20")
@@ -166,9 +171,14 @@ class Datastore {
   val mk_search = mkinsert("v2_snipsearch","claim_id","searchtext")
   def mkSearch(claimid : Int, searchtext : String) = mk_search.insert(claimid,searchtext)
   
-  val mk_url = mkinsert("v2_searchurl","url","title")
-  def mkUrl(url : String, title : String) = mk_url.insert(url,title)
-                                                  
+  val mk_url = stmt("INSERT INTO v2_searchurl (url,title,url_hash) "+
+                      "VALUES (?,?,CRC32(?)) "+
+                      "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)")
+  def mkUrl(url : String, title : String) = mk_url.insert(url,title,url)                      
+  
+//  val find_url = stmt("SELECT * FROM v2_searchurl WHERE url_hash = ? AND url = ?")
+//  val add_url = stmt(")
+                          
   val mk_result = mkinsert("v2_searchresult","search_id","url_id","position","abstract","pagetext","claim_id")
   def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String,claimid : Int) =
     mk_result.insert(searchid,urlid,position,abstr,pagetext,claimid)    
@@ -219,8 +229,8 @@ class Datastore {
       case Some(row) => row.int("id")
     }
             
-  val make_claim = stmt("INSERT INTO v2_node (text,description,user_id,type) "+
-                         "VALUES (?,?,?,'claim')")
+  val make_claim = stmt("INSERT INTO v2_node (text,description,user_id,type,info) "+
+                         "VALUES (?,?,?,'claim','')")
   def makeClaim(text : String, desc : String, userid : Int) =
 	  make_claim.insert(text,desc,userid)
   
@@ -233,7 +243,7 @@ class Datastore {
   
   // === URL Snippets ===
   
-  val url_snippets = stmt("SELECT abstract AS text,claim_id AS id,v2_node.text AS claimtext "+
+  val url_snippets = stmt("SELECT v2_searchresult.id, abstract AS text,claim_id AS claimid,v2_node.text AS claimtext "+
                             "FROM v2_searchurl, v2_searchresult, v2_node "+
                             "WHERE v2_searchurl.url = ? "+
                             "AND v2_node.id = v2_searchresult.claim_id "+

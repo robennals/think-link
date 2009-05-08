@@ -69,6 +69,66 @@ var thinklink_winlistener = {
 		}
 	},	
 	
+	injectStricts: function(){
+		// DEBUG
+		this.injectScript("http://localhost:8180/thinklink/client_js/showsnippet.js",doc);
+		// this.injectFetchedScript("showsnippet.js");		
+	},
+	
+	//injectScripts: function(){
+		//var doc = this.getDoc();
+		//if(doc.thinklink_injected){
+			//return;
+		//}
+	   	//var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+		//var apipath = "http://factextract.cs.berkeley.edu/thinklink";
+	    //if(prefs.prefHasUserValue("extensions.thinklink.api")){
+			//apipath = prefs.getCharPref("extensions.thinklink.api");
+		//}	
+		
+		//this.injectLiteralScript("var thinklink_apipath = '"+apipath+"'\n",doc);
+		//// DEBUG
+		
+		//for(var i in thinklink_scriptUrls){
+			//this.injectScript("http://localhost:8180/thinklink/client_js/"+thinklink_scriptUrls[i],doc);
+		//}
+		
+		////for(var i in thinklink_scriptUrls){
+			////this.injectFetchedScript(thinklink_scriptUrls[i]);
+		////}
+		//this.injectStyleSheet();
+		
+		//doc.thinklink_injected = true;
+		//try{			
+			//if(doc.onmousedown){
+				//doc.onmousedown = null;
+			//}
+			//if(doc.onmouseup){
+				//doc.onmouseup = null;
+			//}
+		//}catch(e){
+////			thinklink_error("Error clearing mouse events",e);
+		//}
+
+	//},
+	
+	injectFetchedScript: function(file){
+		var doc = this.getDoc();
+		var req = new XMLHttpRequest();
+		req.overrideMimeType("text/javascript");
+		req.open("GET","chrome://thinklink/content/client_js/"+file,false);
+		req.send(null);
+		this.injectLiteralScript(req.responseText,doc);
+	},
+
+	//injectStyleSheet: function(){
+		//var doc = this.getDoc();
+		//var req = new XMLHttpRequest();
+		//req.overrideMimeType("text/css");
+		//req.open("GET","chrome://thinklink/content/css/style.css",false);
+		//req.send(null);
+		//this.injectLiteralStyle(req.responseText,doc);
+	//},
 
 	getDoc: function(){
 		if(content.document.body && content.document.body.tagName != "FRAMESET"){
@@ -87,6 +147,39 @@ var thinklink_winlistener = {
 		}else{
 			return null;
 		}
+	},
+
+	//injectLiteralStyle: function(text,doc){
+		//var tag = doc.createElement("style");
+		//tag.textContent = text;
+		//tag.type = "text/css";
+		//try{
+			//doc.getElementsByTagName("head")[0].appendChild(tag);
+		//}catch(e){
+			//thinklink_error("could not insert style tag",e);
+		//}
+	//},	
+	
+	injectLiteralScript: function(text,doc){
+		var scripttag = doc.createElement("script");
+		scripttag.text = text;
+		scripttag.type = "text/javascript";
+		try{
+			doc.getElementsByTagName("head")[0].appendChild(scripttag);
+		}catch(e){
+			thinklink_error("could not insert script tag",e);
+		}		
+	},
+	
+	injectScript: function(scripturl,doc){
+		var scripttag = doc.createElement("script");
+		scripttag.src = scripturl;
+		scripttag.type = "text/javascript";
+		try{
+			doc.getElementsByTagName("head")[0].appendChild(scripttag);
+		}catch(e){
+			thinklink_error("could not insert script tag",e);
+		}	
 	}
 };
 

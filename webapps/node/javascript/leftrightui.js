@@ -469,6 +469,13 @@ function makeInfo(obj,panelnum){
 	}else{
 		title = $("<h2/>").append(obj.type).appendTo(info);
 	}
+	
+	if(obj.type == "claim"){
+		$("<a target='_blank'>more info</a>")
+		.attr("href","/thinklink/claim/"+obj.id)
+		.appendTo(title);
+	}
+	
 
 	if(obj.type == "claim" || obj.type == "snippet" || obj.type == "topic"){
 		title.prepend($("<img class='panelicon'/>").attr("src",getIcon(obj)));

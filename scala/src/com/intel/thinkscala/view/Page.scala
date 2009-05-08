@@ -10,7 +10,7 @@ object Page {
     <div class="content">
       <h1 class="logo">Think Link</h1>
       <div class="tagline">Are you being duped?</div>
-      <a class="install" href="/thinklink/install">Install The Think Link Firefox Extension</a> 
+      <a class="install" href="http://confront.intel-research.net/thinklink.xpi">Install The Think Link Firefox Extension</a> 
       <div class="message">{Messages.pitch}</div>
 
       <form id="bigsearch" action="search" method="GET">        
@@ -19,7 +19,7 @@ object Page {
       </form>
       <div id="claimlist">
         <div class="title">Hot Claims</div>
-        {c.store.getHotClaims flatMap Render.claim}
+        {c.store.getFrequentClaims flatMap Render.claim}
       </div>
   </div>
     
