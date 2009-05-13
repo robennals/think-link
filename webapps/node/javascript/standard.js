@@ -8,6 +8,22 @@ function ungrey(obj){
 	}
 }
 
+function onInput(textbox,callback){
+	textbox.keyup(function(ev){
+		var text = textbox.val();
+		if(ev.which == 32){
+			callback(text);
+		}else{
+			setTimeout(function(){
+				if(text == textbox.val()){
+					callback(text);
+				}
+			},200);
+		}
+	});
+}
+
+
 function doAdd(obj){
 	$(obj).text("added")
 	var snip = $(obj).parent();

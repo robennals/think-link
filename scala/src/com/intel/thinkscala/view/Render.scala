@@ -8,12 +8,20 @@ object Render {
     <div class="claim">
       <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
       <div class="description">{row("description")}</div>
-      {userref(row.int("user_id"),row.str("username"),"found by")}
+      {userref(row.int("user_id"),row.str("username"),"created by")}
       - <a href={Urls.findsnippets(row("id"))} class="instances">seen <span class="count">{row("instance_count")}</span> times on the web</a>  
 <!--      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
       - <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
 -->
   </div>  
+
+  def topic(row : SqlRow) =
+    <div class="claim">
+      <a class="title" href={Urls.topic(row("id"))}>{row("text")}</a>
+      <div class="description">{row("description")}</div>
+      {userref(row.int("user_id"),row.str("username"),"created by")}
+      - <span class="claimcount"><span class="count">{row("instance_count")}</span> claims in this topic</span>
+    </div>
   
   def userLinkCount(row : SqlRow) = 
     <div class="linkcount">
@@ -91,9 +99,9 @@ object Render {
     </div>    
     }
 
-  def bossResults(query : String,page : Int)(implicit c : ReqContext) : (Int,NodeSeq) = {
-      val (max,bossUrls) = SnipSearch.searchBoss(query,page)      
-      return (max,Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query)))
+  def bossResults(query : String,page : Int)(implicit c : ReqContext) : NodeSeq = {
+      val bossUrls = SnipSearch.searchBoss(query,page,10)      
+      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query))}</div>
   }
   
   def snipSearchResults(query : String)(implicit c : ReqContext) = 

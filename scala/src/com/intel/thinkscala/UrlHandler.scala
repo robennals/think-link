@@ -24,13 +24,19 @@ class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
 
 class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse, path : String){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
-  def argInt(name : String) = Integer.parseInt(req.getParameter(name))
+  def argInt(name : String) = 
+    if(req.getParameter(name) != null){
+      Integer.parseInt(req.getParameter(name))
+     }else 0
+  
   def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
   def arg(name : String) = req.getParameter(name)
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
   def maybe_userid = user.userid
   lazy val params = getParams
+  lazy val format = getFormat(req)
+  lazy val ishtml = format == null || format == "html" || format == "htm"
   
   def getParams : Map[String,String] = {
     val keys : Iterator[String] = new Enum(req.getParameterNames.asInstanceOf[java.util.Enumeration[String]])
@@ -43,7 +49,6 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly
     val writer = res.getWriter
-    val format = getFormat(req)
     format match {
       case "xml" => writer.append(printXML(obj))
       case "js" => {
@@ -63,6 +68,10 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   
   def outputHtml(title : String, html : NodeSeq){
     UrlHandler.outputHtml(res,Template.normal(this,title,html),true)
+  }
+  
+  def outputRawHtml(html : NodeSeq){
+    UrlHandler.outputHtml(res,html,true)
   }
   
   def outputFragment(html : NodeSeq){
@@ -113,14 +122,18 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   } 
 }
 
-class UrlHandler(pat : String, func : ReqContext => unit){
+class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any){
   val r = pat.r
   def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse) : Boolean = {
     r.findFirstMatchIn(path) match {
       case Some(m) => 
         val c = new ReqContext(store,m,req,res,path)
         try{
-          func(new ReqContext(store,m,req,res,path))
+          if(c.ishtml || datafunc == null){
+        	  func(c)
+          }else if(datafunc != null){
+        	  c.output(datafunc(c))
+          }
         }catch{
           case e : NotFound => c.notFound
           case e : NoLogin => c.needLogin 
@@ -133,7 +146,8 @@ class UrlHandler(pat : String, func : ReqContext => unit){
 }
 
 object UrlHandler{
-  def apply(pat : String, func : ReqContext => unit) = new UrlHandler(pat,func)
+  def apply(pat : String, func : ReqContext => unit) = new UrlHandler(pat,func,null)
+  def apply(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any) = new UrlHandler(pat,func,datafunc)
   
   def innerRunHandler(store: Datastore, handlers : List[UrlHandler],
                      req : HttpServletRequest, res : HttpServletResponse){
@@ -144,10 +158,12 @@ object UrlHandler{
 		path+=pathinfo
 	}
     handlers.foreach(h => {      
-     if(h.tryForUrl(store,path,req,res)){
+     if(h.tryForUrl(store,path,req,res)){       
        return;
      }     
     })
+    val c = new ReqContext(store,null,req,res,path);
+    c.notFound
   }  
   
   def runMatchingHandler(handlers : List[UrlHandler],

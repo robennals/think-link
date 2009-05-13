@@ -89,18 +89,20 @@ class Datastore {
                        "AND v2_user.id = v2_node.user_id "+
                        "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 10")
   def getHotClaims = get_hot.queryRows()
-
+  
   val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                             "WHERE v2_user.id = v2_node.user_id "+
+                            "AND type=? "+
                             "ORDER BY instance_count DESC LIMIT 10") 
-  def getFrequentClaims = get_frequent.queryRows()
+  def getFrequentClaims = get_frequent.queryRows("claim")
+  def getBigTopics = get_frequent.queryRows("topic")
   
   val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                      "WHERE type = 'claim' "+                             
                      "AND v2_user.id = v2_node.user_id "+
                      "AND MATCH(text) AGAINST(?) "+
-                     "LIMIT 20")
-  def searchClaims(query : String) = search_claims.queryRows(query)
+                     "LIMIT 20 OFFSET ?")
+  def searchClaims(query : String, offset : Int) = search_claims.queryRows(query,offset * 20)
   
   
   // === Follow links ===
@@ -116,6 +118,16 @@ class Datastore {
   def linkedNodes(typ : String, rel : String, target : Int, offset : Int, limit : Int) = 
     linked_nodes.queryRows(typ,rel,target,limit,offset)
 
+  val topic_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
+                            "WHERE v2_link.src = v2_node.id "+
+                            "AND v2_node.type = 'claim' "+
+                            "AND v2_link.type = 'about' "+
+                            "AND v2_link.dst = ? "+
+                            "AND v2_node.user_id = v2_user.id "+
+                            "ORDER BY instance_count DESC "+
+                            "LIMIT 20 OFFSET ?")
+  def topicClaims(topicid : Int, offset : Int) = topic_claims.queryRows(topicid,offset)                            
+  
   val linkedto_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.dst = v2_node.id "+
                             "AND v2_node.type = ? "+
@@ -205,7 +217,14 @@ class Datastore {
     update_search_counts.update(searchid)
     update_instance_count.update(claimid)    
   }
+  
+  val update_topic_counts = stmt("UPDATE v2_node SET instance_count = "+
+                                   "(SELECT COUNT(src) FROM v2_link "+
+                                		   "WHERE dst = v2_node.id) "+
+                                		   "WHERE type='topic')")
+  def updateTopicCounts = update_topic_counts.update()
 
+  
   val existing_snippet = stmt("SELECT * FROM v2_searchresult,v2_searchurl,v2_snipsearch "+
                                 "WHERE v2_searchurl.id = v2_searchresult.url_id "+
                                 "AND v2_snipsearch.id = v2_searchresult.search_id "+

@@ -6,7 +6,7 @@ import scala.xml._
 object Page {
   import Widgets._
   import Render._
-  def home(c : ReqContext) =
+  def home(implicit c : ReqContext) =
     <div class="content">
       <h1 class="logo">Think Link</h1>
       <div class="tagline">Are you being duped?</div>
@@ -18,12 +18,17 @@ object Page {
         <input type="submit" class="submit" value="Search"/>
       </form>
       <div id="claimlist">
-        <div class="title">Hot Claims</div>
-        {c.store.getFrequentClaims flatMap Render.claim}
+        {Widgets.tabs(
+          "Hot Claims" -> (() => c.store.getFrequentClaims flatMap Render.claim),
+          "Hot Topics" -> (() => c.store.getBigTopics flatMap Render.topic)
+        )}
       </div>
   </div>
-    
-  def search(c : ReqContext) = 
+      
+  def searchResults(query : String, page : Int, c : ReqContext) : NodeSeq =
+     c.store.searchClaims(query,page).toSeq flatMap Render.claim
+   
+  def search(implicit c : ReqContext) = 
     <div class="content">
       <h1>Search Results</h1>
       <form id="bigsearch" action="search" method="GET">        
@@ -34,7 +39,7 @@ object Page {
     		  <a href={Urls.createClaim(c.arg("query"))}>Create a new claim</a>
       </div>
       <div id="claimlist">
-         {c.store.searchClaims(c.arg("query")) flatMap Render.claim}
+        {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_).toSeq flatMap Render.claim)}
       </div>
     </div>
   
@@ -97,18 +102,18 @@ object Page {
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
       </div>
-      {simpleSearch("snipsearch", Urls.findsnippets(row("id")), query, 
-              Render.snipSearchResults(query))
-      }
+      {simpleSearch(Urls.findsnippets(row("id")), query, "Enter a search string")}
+      {Render.snipSearchResults(query)}
     </div>
     
   def topic(c : ReqContext, row : SqlRow) = 
     <div id="topic">
       <h1>{row("text")}</h1>
       <div class="description">{row("description")}</div>
-      <div id="claims">
+      {simpleSearch(Urls.topic(row("id")), c.arg("query"), "Search within this topic")}
+      <div id="claimlist">
          <h2>Claims about this topic</h2>
-         {c.store.linkedNodes("claim","about",row.int("id"),0,20) flatMap Render.claim}
+         {c.store.topicClaims(row.int("id"),0) flatMap Render.claim}
       </div>
 	    <div id="topics">
 	       <h2>Related Topics</h2>

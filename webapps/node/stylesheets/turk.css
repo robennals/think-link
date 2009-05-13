@@ -1,0 +1,150 @@
+
+body .tabs {
+	padding: 10px;
+}
+
+.disabled {
+	color: #777;
+	cursor: default;
+}
+
+.disabled:hover{
+	text-decoration: none;
+}
+
+#claimlist div {
+	margin: 4px;
+	margin-top: 8px;
+	font-size: 14px;
+}
+
+#claimlist {
+	width: 600px;
+}
+
+#claimlist h2 {
+	margin: 0px;
+}
+
+#claimsearch {
+	font-size: 15px;
+	background-color: #FFFFAA;
+	padding: 10px;
+	width: 600px;
+	-moz-border-radius: 8px;
+}
+
+#claimsearch input, #claimsearch button {
+	font-size: 15px;
+	padding: 4px;
+}
+
+#claiminput {
+	width: 380px;
+}
+
+#claimsearch button {
+	margin-left: 8px;
+}
+
+#searchbox {
+	font-size: 15px;
+	background-color: #FFFFAA;
+	padding: 10px;
+	width: 390px;
+	-moz-border-radius: 8px;
+}
+
+#searchbox input{
+	width: 220px;
+	font-size: 14px;
+	padding: 4px;
+}
+
+#searchbox button{
+	font-size: 14px;
+	padding: 4px;
+}
+
+#theclaim {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+#bigbox {
+	position: relative;
+}
+
+#collection {
+	width: 320px;
+	position: absolute;
+	left: 435px;
+	top: 0px;
+}
+
+#searcher {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 414px;
+	padding: 10px;
+}
+
+.bossurl a {
+	display: block;
+}
+
+.snippet a {
+	display: block;
+}
+
+.snipadd {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+#snipresults {
+	margin-top: 10px;
+}
+
+#snippets {
+	padding: 8px;
+	-moz-border-radius: 8px;
+	border: 1px solid #666;
+	margin-top: 10px;
+}
+
+#next {
+	font-size: 15px;
+	font-weight: bold;
+	margin: 4px;
+	padding: 4px;
+}
+
+#evform {
+	font-size: 15px;
+	background-color: #FFFFAA;
+	padding: 10px;
+	width: 400px;
+	-moz-border-radius: 8px;
+}
+
+#evform label, #evform input, #evform textarea, #evform button {
+	display: block;
+	font-size: 15px;
+	padding: 4px;
+}
+
+#evform input, #evform textarea {
+	width: 350px;
+}
+
+#evform label {
+	padding-left: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+}
+
+#quotelab, #evform button {
+	margin-top: 10px;
+}

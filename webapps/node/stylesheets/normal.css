@@ -182,13 +182,29 @@ h1 {
 	border: 1px solid grey;
 	margin-top: 4px;
 	max-width: 400px;
+	-moz-border-radius: 8px;
+	padding-bottom: 8px;
 }
 
 #supports h2, #opposed h2, #related-claims h2, #created h2, #instance h2 {
 	background-color: #ECEFF5;
+	-moz-border-radius-topleft: 8px;
+	-moz-border-radius-topright: 8px;
 	padding: 4px;
 	margin: 0px;
-	padding-bottom: 0px;
+	padding-bottom: 4px;
+}
+
+#supports h2, #opposed h2 {
+	background-color: transparent;
+}
+
+#supports {
+	background-color: #E0FFEC;
+}
+
+#opposed {
+	background-color: #FFD3D3;
 }
 
 .snippet {
@@ -219,7 +235,7 @@ h1 {
 	right: 30px;
 }
 
-#bigsearch, #snipsearch {
+#bigsearch, #snipsearch, #search {
 	background-color: #FFFFAA;
 	width: 600px;
 	padding: 10px;
@@ -228,7 +244,7 @@ h1 {
 	margin-top: 10px;
 }
 
-#snipsearch {
+#snipsearch, #search {
 	width: 500px;
 }
 
@@ -239,13 +255,13 @@ h1 {
 	font-weight: bold;
 }
 
-#snipsearch .query {
+#snipsearch .query, #search .query {
 	width: 426px;
 	padding: 4px;
 }
 
 
-#bigsearch .submit, #snipsearch .submit {
+#bigsearch .submit, #snipsearch .submit, #search .submit {
 	padding: 3px;
 }
 
@@ -377,4 +393,38 @@ h1 {
 .pageselector {
 	text-align: right;
 	padding: 8px;
+}
+
+/*
+.tabs .header span {
+	border-color: #ccc;
+	border-width: 1px 1px medium;
+	border-style: solid solid none;
+	padding: 2px 6px 3px;
+}*/
+
+.tabs .header{
+	padding: 4px;
+	padding-bottom: 8px;
+	padding-left: 0px;
+}
+
+.tabs .header span, .tabs .header a {
+	margin: 4px;
+	padding: 4px;	
+	-moz-border-radius: 4px;	
+}
+
+.tabs .header span, .tabs .header .active {
+	background-color: grey;
+	color: white;
+}
+
+.tabs .header .active:hover {
+	text-decoration: none;
+}
+
+.tabs .header a {
+	margin: 4px;
+	border: 1px solid grey;
 }

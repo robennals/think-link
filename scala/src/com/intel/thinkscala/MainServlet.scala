@@ -19,7 +19,23 @@ object Urls {
   def findsnippets(id : Any) = claim(id) + "/findsnippets"
   def findsnippets(id : Any, query : String) = claim(id) + "/findsnippets?query="+encode(query)
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
+  def searchclaims(query : String) = "/claim/search?query="+encode(query)
 }
+
+object TurkGetUrls {
+  val base = Urls.base + "/turk/"
+  def turker(turkid : Int) = base + turkid
+  def searchClaims(turkid : Int) = turker(turkid) + "/search"
+  def setClaim(turkid : Int) = turker(turkid) + "/setclaim"
+}
+
+object TurkPostUrls {
+  val base = Urls.base + "/turk"
+  def turksession(turkid : Int) = base
+  def setClaim(turkid : Int) = base 
+}
+
+
 
 object FragUrls {
   val base = Urls.base + "/fragment/"
@@ -62,8 +78,16 @@ class MainServlet extends HttpServlet {
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     })
   ) 
-  
+   
   val gethandlers = List(
+    UrlHandler("/turk/searchboss", c=> {
+    },c => {
+      SnipSearch.searchBoss(c.arg("query"),0,20)   
+    }),
+    UrlHandler("/turk/(\\d*)",c => {
+      val turkid = c.urlInt(1)
+      c.outputRawHtml(Turk.turkClaim(turkid))
+    }),
     UrlHandler("/apianon/search", c => {
       c.output(c.store.urlSnippets(c.arg("url")))
     }),
@@ -73,14 +97,16 @@ class MainServlet extends HttpServlet {
     UrlHandler("/search",c => { 	// TODO: provide API access
       val title = c.arg("query")+" - Think Link Claim Search"
       c.outputHtml(title,Page.search(c))
-    }),
+    },c => {
+      c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
+    }    
+    ),
     UrlHandler("""/claim/(\d*)/findsnippets""", c => {
-      implicit val ctx = c
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + "Find Instances with Think Link"
       var query = c.arg("query")
       if(query == null) query = claim.str("text")
-      c.outputHtml(title,Page.findsnippets(claim,query))
+      c.outputHtml(title,Page.findsnippets(claim,query)(c))
     }),
     UrlHandler("/claim/new",c => {
       c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
@@ -109,9 +135,8 @@ class MainServlet extends HttpServlet {
       c.redirect("/thinklink/")
     }),
     
-    new UrlHandler("/fragment/snipsearch", c => {
-      implicit val ctx = c
-      c.outputFragment(Render.snipSearchResults(c.arg("query")))
+    UrlHandler("/fragment/snipsearch", c => {
+      c.outputFragment(Render.snipSearchResults(c.arg("query"))(c))
     })
   )
  

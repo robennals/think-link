@@ -24,9 +24,9 @@ class SqlRow extends HashMap[String,Any]{
 class SqlStatement(con : Connection, s : String){
   val stmt = con.prepareStatement(s,Statement.RETURN_GENERATED_KEYS)
   
-  def queryRows(args : Any*) : Iterable[SqlRow] = {
+  def queryRows(args : Any*) : Seq[SqlRow] = {
     setArgs(args)
-    readResults(stmt.executeQuery())
+    readResults(stmt.executeQuery()).toSeq
   }
   
   def queryMaybe(args : Any*) : Option[SqlRow] = {

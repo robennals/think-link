@@ -1,1 +1,9 @@
+Snippet Match For/Against/Relates/Ignore
+
+Which web snippets make a given claim?
+
+Given a claim (e.g. "The moon is made of cheese") and a selection of text snippets, tell us which ones are making that claim.
+
+english, meaning, text, identification, snippet, natural language
+
 
