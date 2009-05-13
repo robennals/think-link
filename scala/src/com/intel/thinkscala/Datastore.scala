@@ -1,27 +1,31 @@
 package com.intel.thinkscala
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import scala.collection.mutable.ArrayBuffer;
-import scala.collection.mutable.HashMap;
-import scala.collection.mutable.Queue;
-import scala.collection.Map;
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.sql.Statement
+import java.util.Date
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Queue
+import scala.collection.Map
 
 object Pool{
   import Util._
   var size = 0
   val pool = new Queue[Datastore]
+  val minute = 1000*60
   def tryget() : Option[Datastore] = synchronized {
     if(pool.isEmpty) None else Some(pool.dequeue)
   }
   def get() : Datastore = {    
     log("get - pool size = "+pool.size+" total="+size)
+    val now = new Date getTime;
     tryget match {
-      case Some(s) => s
+      case Some(s) if now - s.connectdate < 10*minute => s
+      case Some(s) => s.con.close; new Datastore
       case None => new Datastore 
     }
   }
@@ -40,11 +44,15 @@ class User(val name : String, val userid : Int){
 object User {
   val autoimport = new User("autoimport",0)
   val nouser = new User("no user",0)
+  val turk = new User("turk",2)
 }
 
 
 
 class Datastore {  
+  
+  val connectdate = new Date getTime 
+  
   Class.forName("com.mysql.jdbc.Driver")
   var con = DriverManager.getConnection(
     "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
@@ -106,6 +114,9 @@ class Datastore {
   
   
   // === Follow links ===
+
+  val get_evidence = stmt("SELECT * FROM evidence WHERE claim_id=? AND verb = ?")
+  def evidence(claimid : Int, verb : String) = get_evidence.queryRows(claimid,verb)
   
   val linked_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.src = v2_node.id "+
@@ -247,7 +258,12 @@ class Datastore {
       case None => mkNode(text, user.userid, typ, "")
       case Some(row) => row.int("id")
     }
-            
+           
+  val make_evidence = stmt("INSERT INTO evidence (user_id,claim_id,text,url,title,verb) "+
+                             "VALUES (?,?,?,?,?,?)")
+  def makeEvidence(userid : Int, claimid : Int, text : String, url : String, title : String, verb : String) =
+	  make_evidence.insert(userid, claimid,text,url,title,verb)
+                                                  
   val make_claim = stmt("INSERT INTO v2_node (text,description,user_id,type,info) "+
                          "VALUES (?,?,?,'claim','')")
   def makeClaim(text : String, desc : String, userid : Int) =
@@ -269,5 +285,18 @@ class Datastore {
                             "AND v2_node.id = v2_searchresult.claim_id "+
                             "AND v2_searchresult.url_id = v2_searchurl.id")
   def urlSnippets(url : String) = url_snippets.queryRows(url)
-                                                     
+        
+  // === Turk ===
+
+  val set_turk_response = stmt("INSERT INTO turk_claim (hit_id,node_id,ev_id,turker_id,jsonsnips) "+
+                                 "VALUES (?,?,?,?,?)")
+  def setTurkResponse(turkid : Int, claimid : Int, evid : Int, turkerid : Int, jsonsnips : String) =
+	  set_turk_response.insert(turkid, claimid, evid,turkerid,jsonsnips)
+ 
+  val get_turk_response = stmt("SELECT v2_node.text AS claim,evidence.url AS evurl, evidence.text as evquote, jsonsnips AS jsonsnips FROM turk_claim,v2_node,evidence "+
+                            	"WHERE hit_id = ? "+
+                                "AND v2_node.id = turk_claim.node_id "+
+                                "AND evidence.id = turk_claim.ev_id")
+  def turkResponse(hitid : Int) = get_turk_response.queryMaybe(hitid)
+  
 }

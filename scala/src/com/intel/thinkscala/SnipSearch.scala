@@ -29,6 +29,10 @@ class BossUrl(val url : String, val title : String, val snips : Array[String]) e
   def data = Map("url" -> url, "title" -> title, "snips" -> snips)
 }
 
+class TurkBoss(val url : String, val title : String, val abstr : String) extends HasData{
+  def data = Map("url" -> url, "title" -> title, "abstr" -> abstr)
+}
+
 
 class SnipSearch extends HttpServlet {
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) {
@@ -42,6 +46,22 @@ object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
   val bossSvr = "http://boss.yahooapis.com/ysearch/web/v1";
 
+  def turkSearchBoss(claim : String) : Seq[TurkBoss] = {
+    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&count=20"
+    val xmltext = download(url)
+    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
+    val doc = parser.document   
+    val results = doc \\ "result"
+    return results map turkForResult    
+  }
+  
+  def turkForResult(result : Node) : TurkBoss = {
+    var abstr = result \ "abstract" text
+    val url = result \ "url" text
+    val title = cleanString(result \ "title" text)
+    return new TurkBoss(url,title,abstr)
+  }
+  
   def searchBoss(claim : String, page : Int, count : Int) : Seq[BossUrl] = {
     val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&start="+(page*count)+"&count="+count
     val xmltext = download(url)

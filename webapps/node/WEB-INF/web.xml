@@ -74,7 +74,6 @@
 	<url-pattern>/turk/*</url-pattern>
 	</servlet-mapping>
 
-
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
 	<url-pattern>/apianon/*</url-pattern>

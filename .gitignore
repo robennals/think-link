@@ -29,3 +29,5 @@ scala/.manager
 pastrevs
 test
 *#
+backup_database.sh
+

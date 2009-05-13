@@ -31,12 +31,10 @@ object Render {
   
       
   def snippet(row : SqlRow) : NodeSeq = {
-   val infomap = row.jsonMap("info")
-   val url = infomap.getOrElse("realurl","")
     (<div class="snippet">
-        <span class="title">{infomap.getOrElse("title","")}</span>
+        <span class="title">{row.getOrElse("title","")}</span>
         <div class="text">{row("text")}</div>
-        <a class="url" href={url}>{url}</a>                                                     
+        <a class="url" href={row.str("url")}>{row("url")}</a>                                                     
     </div>)
    }
      

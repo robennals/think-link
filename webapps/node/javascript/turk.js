@@ -23,12 +23,15 @@ function makeTurkUi(){
 }
 
 // DEBUG HACK
-var global_claim = "global warming does not exist";
+// var global_claim = "global warming does not exist";
+var global_claim = null;
 var global_snippets = [];
 var global_urls = {};
-var global_evidence = null;
+var global_evurl = null;
+var global_evquote = null;
 
-var url_base = "/thinklink/";
+
+var url_base = "/thinklink";
 
 var url_search_claims = url_base+"/claim/search.json"
 var url_search_snippets = url_base+"/turk/searchboss.json"
@@ -63,7 +66,7 @@ function setActiveTab(tab,panel){
 
 function showClaimPanel(){
 	var panel = $("<div class='panel'/>");
-	$("<div class='message'>Enter a disputed claim that is not currently in our database</div>").appendTo(panel); 
+	$("<div class='message'>Enter a disputed claim that is not currently in our database</div>").appendTo(panel); 	
 	var bigsearch = $("<div id='claimsearch'/>").appendTo(panel);
 	var textbox = $("<input id='claiminput' class='query' type='text'/>").appendTo(bigsearch);
 	var search = $("<button>Search</button>").appendTo(bigsearch);
@@ -86,6 +89,8 @@ function showClaimPanel(){
 	var suggestions = $("<div id='claimlist'/>").appendTo(panel);	
 	suggestions.text("existing claims will appear here when you enter a claim above");
 
+	panel.append(makeHelpPanel());
+
 	//$("<div class='message'>As you enter words, the list box above will show similar claims that we already know. Try a couple of alternative wordings to make sure we haven't got the claim already</div>").appendTo(panel); 
 
 	onInput(textbox,updateClaimSuggestions);
@@ -93,6 +98,30 @@ function showClaimPanel(){
 	setActiveTab(global_claimtab,panel);
 }
 
+
+function makeHelpPanel(){
+	var help = $("<div id='help'/>");
+	$("<p>"+
+		"For this HIT we need you to do three things:"+
+		"<ol> "+
+		"  <li>Identify a factual claim that is often made on web pages, but which may not be true</li>"+
+		"  <li>Use our Yahoo search tool to mark 10 snippets on the web that make this claim</li> "+
+		"  <li>Give us a URL for a web site that argues that the claim is false, and include a representative quote</li>"+
+		"</ol>"+
+		"</p>").appendTo(help); 
+				
+	$("<p>A disputed claim can be about anything. Examples include "+
+		"'global warming does not exist', 'margarine is healthier than butter', "+
+		"'capital punishment deters crime', 'NASA is a waste of money', "+
+		"'firefox is more secure than internet explorer', or 'the existance of jesus is a historical fact'.</p>").appendTo(help);
+	$("<p>"+
+		"To perform multiple HITs in this group efficiently we recommend that you "+
+		"choose disputed claims in an area that you have a personal interest in "+
+		"and that you start with a trustworthy source document that you can use as "+
+		"evidence against multiple claims</p>").appendTo(help);			
+
+	return help;
+}
 
 
 var global_last_search = null;
@@ -109,7 +138,7 @@ function showMarkPanel(){
 	};
 
 	$("<h1/>").text(global_claim).appendTo(panel);
-	$("<div class='message'>Use the Yahoo search interface to find ten snippets on the web that suggest or imply that this claim is true.</div>").appendTo(panel);
+	$("<div class='message'>Use the Yahoo search interface below to find ten snippets on the web that suggest or imply that this claim is true.</div>").appendTo(panel);
 
 	if(!global_last_search){
 		global_last_search = global_claim;
@@ -121,7 +150,7 @@ function showMarkPanel(){
 	var textbox = $("<input type='text'/>").appendTo(searchbox).val(global_last_search);	
 	global_snipsearchbox = textbox;
 		
-	var button = $("<button class='submit'>Search Yahoo</button>").appendTo(searchbox);
+	var button = $("<button>Search Yahoo</button>").appendTo(searchbox);
 	var results = $("<div id='snipresults'/>").appendTo(searcher);
 		
 	var collection = $("<div id='collection'/>").appendTo(bigbox);
@@ -150,15 +179,13 @@ function showMarkPanel(){
 	updateSnippetSuggestions();
 }
 
-var global_evurl = null;
-var global_evquote = null;
 
 function showEvPanel(){
 	var panel = $("<div id='addevidence'/>");
+	setActiveTab(global_evtab,panel);
 
 	if(!global_claim){
 		$("<div class='message'>You need to create a disputed claim first</div>").appendTo(panel);	
-		setActiveTab(global_evtab,panel);
 		return;
 	};
 
@@ -166,18 +193,45 @@ function showEvPanel(){
 	$("<div class='message'>Please provide evidence that this claim may not be true. Provide the URL of a page that argues against this claim being true, and a representative quote from that web page.</div>").appendTo(panel);
 	var form = $("<div id='evform'/>").appendTo(panel);
 	$("<label for='url'>url</label>").appendTo(form);
-	var url = $("<input style='color:grey' name='url' type='text' value='Enter url for a page that provides evidence that this claim is false'/>").appendTo(form);
+	var url = $("<input name='url' type='text'/>").appendTo(form);
 	
 	$("<label for='quote' id='quotelab'>quote</label>").appendTo(form);
-	var quote = $("<textarea style='color:grey' name='quote' rows=4>Copy and paste a short, representative, quote from the source web site</textarea>").appendTo(form);
+	var quote = $("<textarea name='quote' rows=4/>").appendTo(form);
 
-	var submit = $("<button class='submit'>Submit</button>").appendTo(form);
+	if(global_evquote){
+		quote.val(global_evquote);
+	}else{
+		quote.css("color","grey");
+		quote.val("Copy and paste a short, representative, quote from the source web site");
+		quote.focus(function(){ungrey(quote.get(0))});
+	}
 
-	setActiveTab(global_evtab,panel);
+	if(global_evurl){
+		url.val(global_evurl);
+	}else{
+		url.css("color","grey");
+		url.val("Enter url for a page that provides evidence that this claim is false");
+		url.focus(function(){ungrey(url.get(0))});
+	}
+
+	var submit = $("<button class='submit'>Submit HIT</button>").appendTo(form);
+
+	var help = $("<div id='help'>"+
+		"<p>It is okay to use the same evidence URL for several different claims that relate to the same topic, but the quote should be different.</p> "+
+	  "</div>").appendTo(panel);
+
 	
 	url.focus(function(){ungrey(url.get(0))});
 	quote.focus(function(){ungrey(quote.get(0))});	
 	submit.click(function(){
+		if(url.css("color") == "grey"){
+			alert("You need to enter a URL");
+			return;
+		}
+		if(quote.css("color") == "grey"){
+			alert("You need to paste a quote from the evidence page");
+			return;
+		}
 		global_evurl = url.val();
 		global_evquote = quote.val();
 		submitData();
@@ -193,7 +247,7 @@ function submitData(){
 		$("<div class='message'>You need to create a disputed claim first</div>").appendTo(panel);	
 		return;
 	};
-	if(!global_snippets.length < 10){
+	if(global_snippets.length < 10){
 		$("<div class='message'>You need to find ten snippets that make the disputed claim first</div>").appendTo(panel);	
 		return;
 	};
@@ -204,23 +258,27 @@ function submitData(){
 	};
 		
 	var data = {};
+	data.turkid = global_turk_id;
 	data.claim = global_claim;
 	data.evurl = global_evurl;
 	data.evquote = global_evquote;
+	data.jsonsnips = makeJSONString(global_snippets);
 	for(var i = 0; i < global_snippets.length; i++){
 		data["url-"+i]=global_snippets[i].url;
 		data["title-"+i]=global_snippets[i].title;
 		data["text-"+i]=global_snippets[i].text;
+		data["query-"+i]=global_snippets[i].query;
+		data["position-"+i]=global_snippets[i].position;
 	}
 	
 	var sending = $("<div class='message'>Please wait while we submit your data to our server</div>").appendTo(panel);
 	
 	$.post(url_submit,data,function(){
-		sending.remove;
-		$("<div id='thanks'>Thank you!</div").appendTo(panel);
-		$("<div class='message'>This task has now been completed. Please click the Turk submit button to finish.</div>").appendTo(panel);
+		sending.remove();
+		$("<div id='thanks'>Thank you!</div>").appendTo(panel);
+		$("<div class='done'>This task has now been completed. Please click the Turk submit button to finish.</div>").appendTo(panel);
 		
-		$("<div class='message'>If you submitted in error, you can edit your submission and submit again</div").appendTo(panel);
+		$("<div class='message'>If you submitted in error, you can edit your submission and submit again</div>").appendTo(panel);
 	});	
 }
 
@@ -238,7 +296,7 @@ function updateSnippetSuggestions(){
 			if(global_urls[row.url]) continue;
 			var bossurl = $("<div class='bossurl'/>").appendTo(results);
 			$("<span class='title'/>").text(row.title).appendTo(bossurl);
-			$("<a/>").attr("href",row.url).text(row.url).appendTo(bossurl);
+			$("<a target='_blank'/>").attr("href",row.url).text(row.url).appendTo(bossurl);
 			var snippets = $("<div class='snippets'/>").appendTo(bossurl);
 
 			for(var j = 0; j < row.snips.length && j < 1; j++){
@@ -246,7 +304,7 @@ function updateSnippetSuggestions(){
 				$("<div class='text'/>").text(row.snips[j]).appendTo(snippet);
 				var add = $("<a class='add'>add</a>").appendTo(snippet);
 				var ignore = $("<a class='ignore'>ignore</a>").appendTo(snippet);
-				setupAdd(add,ignore,snippet,bossurl,row.snips[j],row.url,row.title);
+				setupAdd(add,ignore,snippet,bossurl,row.snips[j],row.url,row.title,query,i);
 			}			
 		}
 
@@ -257,9 +315,9 @@ function updateSnippetSuggestions(){
 	})
 }
 
-function setupAdd(add,ignore,snippet,bossurl,text,url,title){
+function setupAdd(add,ignore,snippet,bossurl,text,url,title,query,position){
 	add.click(function(){
-		global_snippets.push({text:text,url:url,title:title});
+		global_snippets.push({text:text,url:url,title:title,query:query,position:position});
 		global_urls[url] = true;
 		//bossurl.addClass("snippet-added");
 		//add.text("added");

@@ -31,8 +31,9 @@ object TurkGetUrls {
 
 object TurkPostUrls {
   val base = Urls.base + "/turk"
-  def turksession(turkid : Int) = base
-  def setClaim(turkid : Int) = base 
+  val submit = Urls.base + "/turk/submit"
+//  def turksession(turkid : Int) = base
+//  def setClaim(turkid : Int) = base 
 }
 
 
@@ -76,17 +77,37 @@ class MainServlet extends HttpServlet {
       val resultid = c.store.mkResult(searchid,urlid,position,text,"",claimid)
       c.store.setSnipVote(claimid,resultid,searchid,c.userid,vote == "true")
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
+    }),
+    
+    // TODO: batch process to fill in evidence URL titles
+    UrlHandler("/turk/submit", c=> {
+      val turkid = c.argInt("turkid")
+      val claimid = c.store.makeClaim(c.arg("claim"),"",User.turk.userid)
+      val evid = c.store.makeEvidence(User.turk.userid,claimid,c.arg("evquote"),c.arg("evurl"),"","opposes")
+
+   	  c.store.setTurkResponse(turkid,claimid,evid,0,c.arg("jsonsnips"))
+
+      var i = 0
+      while(c.arg("url-"+i) != null){
+    	  val searchid = c.store.mkSearch(claimid,c.arg("query-"+i))
+    	  val urlid = c.store.mkUrl(c.arg("url-"+i),c.arg("title-"+i))
+    	  val resultid = c.store.mkResult(searchid,urlid,c.argInt("position-"+i),c.arg("text-"+i),"",claimid)
+    	  c.store.setSnipVote(claimid,resultid,searchid,User.turk.userid,true)
+    	  i+=1
+      }
+
+      c.output(true)      
     })
   ) 
    
   val gethandlers = List(
     UrlHandler("/turk/searchboss", c=> {
     },c => {
-      SnipSearch.searchBoss(c.arg("query"),0,20)   
+      SnipSearch.turkSearchBoss(c.arg("query"))   
     }),
     UrlHandler("/turk/(\\d*)",c => {
       val turkid = c.urlInt(1)
-      c.outputRawHtml(Turk.turkClaim(turkid))
+      c.outputRawHtml(Turk.turkClaim(turkid,c.store.turkResponse(turkid)))
     }),
     UrlHandler("/apianon/search", c => {
       c.output(c.store.urlSnippets(c.arg("url")))

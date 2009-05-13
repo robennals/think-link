@@ -125,7 +125,7 @@ body .tabs {
 	font-size: 15px;
 	background-color: #FFFFAA;
 	padding: 10px;
-	width: 400px;
+	width: 480px;
 	-moz-border-radius: 8px;
 }
 
@@ -136,7 +136,7 @@ body .tabs {
 }
 
 #evform input, #evform textarea {
-	width: 350px;
+	width: 450px;
 }
 
 #evform label {
@@ -147,4 +147,31 @@ body .tabs {
 
 #quotelab, #evform button {
 	margin-top: 10px;
+}
+
+.submit {
+	font-weight: bold;
+	}
+
+#help {
+	background-color: lightGrey;
+	padding: 10px;
+	margin-top: 35px;
+	margin-left: 100px;
+	-moz-border-radius: 8px;
+	width: 500px;
+}
+#addevidence #help {
+	width: 370px;
+}
+
+#thanks {
+	font-size: 20px;
+	font-weight: bold;
+	margin-left: 40px;
+}
+
+#done {
+	font-size: 20px;
+	color: #555555;
 }

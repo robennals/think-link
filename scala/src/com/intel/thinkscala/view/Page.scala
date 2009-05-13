@@ -72,13 +72,13 @@ object Page {
       <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
       <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
       <div id="evidence">
+   	      <div id="opposed">
+	        <h2>Opposing Evidence</h2>
+            {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
+	      </div>
 	      <div id="supports">
 	        <h2>Supporting Evidence</h2>
-            {c.store.linkedNodes("snippet","supports",row.int("id"),0,4) flatMap Render.snippet}
-	      </div>
-	      <div id="opposed">
-	        <h2>Opposing Evidence</h2>
-            {c.store.linkedNodes("snippet","opposes",row.int("id"),0,4) flatMap Render.snippet}
+            {c.store.evidence(row.int("id"),"supports") flatMap Render.snippet}
 	      </div>
       </div>
       <div id="related-claims">
