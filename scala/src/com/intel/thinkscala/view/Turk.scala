@@ -1,4 +1,5 @@
 package com.intel.thinkscala.view
+import scala.xml._
 
 object Turk {
    import org.apache.commons.lang.StringEscapeUtils._
@@ -20,12 +21,13 @@ object Turk {
 	    <body>
           {current match {
            case Some(r) =>
-              <script type="text/javascript">
-                 var global_claim = '{escapeJavaScript(r.str("claim"))}';
-                 var global_snippets = {r.str("jsonsnips")};
-                 var global_evurl = '{escapeJavaScript(r.str("evurl"))}';
-                 var global_evquote = '{escapeJavaScript(r.str("evquote"))}';
-                 var global_urls = mkUrlHash(global_snippets);
+              <script type="text/javascript">{new PCData( "\n "+
+                 "var global_claim = '"+escapeJavaScript(r.str("claim"))+"'; \n"+
+                 "var global_snippets = "+r.str("jsonsnips")+";\n"+
+                 "var global_evurl = '"+escapeJavaScript(r.str("evurl"))+"';"+
+                 "var global_evquote = '"+escapeJavaScript(r.str("evquote"))+"';\n"+
+                 "var global_urls = mkUrlHash(global_snippets); \n"
+                 )}
               </script>
 	       case None => 
 	   	      <script type="text/javascript">   	      	

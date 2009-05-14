@@ -166,12 +166,14 @@ body .tabs {
 }
 
 #thanks {
-	font-size: 20px;
+	font-size: 60px;
 	font-weight: bold;
 	margin-left: 40px;
+	margin-top: 20px;
 }
 
-#done {
+.done {
 	font-size: 20px;
 	color: #555555;
+	width: 360px;
 }

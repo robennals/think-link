@@ -37,6 +37,14 @@ var url_search_claims = url_base+"/claim/search.json"
 var url_search_snippets = url_base+"/turk/searchboss.json"
 var url_submit = url_base+"/turk/submit"
 
+function mkUrlHash(snippets){
+	var hash = {};
+	for(var i = 0; i < snippets.length; i++){
+		hash[snippets[i].url] = true;
+	}
+	return hash;
+}
+
 function resetTabStatus(){
 	global_claimtab.attr("class","");
 	global_marktab.attr("class","");
@@ -129,7 +137,7 @@ var global_last_search = null;
 var global_snipsearchbox = null;
 
 function showMarkPanel(){	
-	var panel = $("<div id='marksnippets'>");
+	var panel = $("<div id='marksnippets'/>");
 
 	if(!global_claim){
 		$("<div class='message'>You need to create a disputed claim first</div>").appendTo(panel);	
@@ -298,14 +306,21 @@ function updateSnippetSuggestions(){
 			$("<span class='title'/>").text(row.title).appendTo(bossurl);
 			$("<a target='_blank'/>").attr("href",row.url).text(row.url).appendTo(bossurl);
 			var snippets = $("<div class='snippets'/>").appendTo(bossurl);
+			var snippet = $("<div class='snippet'/>").appendTo(snippets);
+			
+			$("<div class='text'>"+row.abstr+"</div>").appendTo(snippet);
+			var add = $("<a class='add'>add</a>").appendTo(snippet);
+			var ignore = $("<a class='ignore'>ignore</a>").appendTo(snippet);
+			setupAdd(add,ignore,snippet,bossurl,row.abstr,row.url,row.title,query,i);
+	
 
-			for(var j = 0; j < row.snips.length && j < 1; j++){
-				var snippet = $("<div class='snippet'/>").appendTo(snippets);
-				$("<div class='text'/>").text(row.snips[j]).appendTo(snippet);
-				var add = $("<a class='add'>add</a>").appendTo(snippet);
-				var ignore = $("<a class='ignore'>ignore</a>").appendTo(snippet);
-				setupAdd(add,ignore,snippet,bossurl,row.snips[j],row.url,row.title,query,i);
-			}			
+			//for(var j = 0; j < row.snips.length && j < 1; j++){
+				//var snippet = $("<div class='snippet'/>").appendTo(snippets);
+				//$("<div class='text'/>").text(row.snips[j]).appendTo(snippet);
+				//var add = $("<a class='add'>add</a>").appendTo(snippet);
+				//var ignore = $("<a class='ignore'>ignore</a>").appendTo(snippet);
+				//setupAdd(add,ignore,snippet,bossurl,row.snips[j],row.url,row.title,query,i);
+			//}			
 		}
 
 		var box = $("#snipresults");
