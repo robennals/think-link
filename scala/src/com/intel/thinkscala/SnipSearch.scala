@@ -47,7 +47,7 @@ object SnipSearch {
   val bossSvr = "http://boss.yahooapis.com/ysearch/web/v1";
 
   def turkSearchBoss(claim : String) : Seq[TurkBoss] = {
-    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&count=20"
+    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&count=50"
     val xmltext = download(url)
     val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
     val doc = parser.document   
@@ -56,7 +56,7 @@ object SnipSearch {
   }
   
   def turkForResult(result : Node) : TurkBoss = {
-    var abstr = result \ "abstract" text
+    var abstr = cleanString(result \ "abstract" text)
     val url = result \ "url" text
     val title = cleanString(result \ "title" text)
     return new TurkBoss(url,title,abstr)

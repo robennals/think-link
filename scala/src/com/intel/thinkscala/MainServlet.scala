@@ -107,7 +107,9 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("/turk/(\\d*)",c => {
       val turkid = c.urlInt(1)
-      c.outputRawHtml(Turk.turkClaim(turkid,c.store.turkResponse(turkid)))
+      c.outputRawHtml(Turk.turkClaim(turkid,c.arg("mode")))
+    }, c => {
+      c.store.turkResponse(c.urlInt(1))
     }),
     UrlHandler("/apianon/search", c => {
       c.output(c.store.urlSnippets(c.arg("url")))

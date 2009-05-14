@@ -170,10 +170,12 @@ body .tabs {
 	font-weight: bold;
 	margin-left: 40px;
 	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .done {
 	font-size: 20px;
 	color: #555555;
 	width: 360px;
+	margin-top: 20px;
 }

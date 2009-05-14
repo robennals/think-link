@@ -121,6 +121,8 @@ object Util {
        (m.keySet.map (k => "\""+k+"\" : " + printJSON(m(k)))).mkString("{",",","}") 
      case l : Iterable[_] => (l map printJSON).mkString("[",",","]")
      case d : HasData => printJSON(d.data)
+     case Some(s) => printJSON(s)
+     case None => "null"
      case null => "null"
      case o => o.toString
    }

@@ -5,6 +5,8 @@ var global_evtab;
 var global_subtab;
 var global_body;
 
+
+
 function makeTurkUi(){
 	var tabs = $("<div class='tabs'/>");
 	var header = $("<div class='header'/>").appendTo(tabs);
@@ -31,11 +33,27 @@ var global_evurl = null;
 var global_evquote = null;
 
 
+
 var url_base = "/thinklink";
 
 var url_search_claims = url_base+"/claim/search.json"
 var url_search_snippets = url_base+"/turk/searchboss.json"
 var url_submit = url_base+"/turk/submit"
+
+function loadTurkUi(){
+	$.getJSON(url_base+"/turk/"+global_turk_id+".json",function(data){
+		if(data){
+			global_claim = data.claim;
+			global_snippets = parseJSON(data.jsonsnips);
+			global_evquote = data.evquote;
+			global_evurl = data.evurl;
+			global_urls = mkUrlHash(global_snippets);
+		}
+		makeTurkUi();
+	});
+}
+
+
 
 function mkUrlHash(snippets){
 	var hash = {};
@@ -378,7 +396,7 @@ function updateCurrentSnippets(){
 		var snippet = $("<div class='snippet'/>");
 		$("<span class='title'>").text(row.title).appendTo(snippet);
 		$("<a/>").attr("href",row.url).text(row.url).appendTo(snippet);
-		$("<div class='text'/>").text(row.text).appendTo(snippet);
+		$("<div class='text'>"+row.text+"</div>").appendTo(snippet);
 		var remove = $("<a class='remove'>remove</a>").appendTo(snippet);
 		setupRemove(remove,i);				
 		snippets.append(snippet);
