@@ -101,7 +101,7 @@ function showClaimPanel(){
 	if(global_claim){
 		textbox.val(global_claim);
 	}else{
-		textbox.css("color","grey");
+		textbox.css("color","gray");
 		textbox.val("Enter a disputed claim");
 		textbox.focus(function(){ungrey(textbox.get(0))});
 	}
@@ -128,11 +128,11 @@ function showClaimPanel(){
 function makeHelpPanel(){
 	var help = $("<div id='help'/>");
 	$("<p>"+
-		"For this HIT we need you to do three things:"+
+		"<b>For this HIT we need you to do three things</b>:"+
 		"<ol> "+
 		"  <li>Identify a factual claim that is often made on web pages, but which may not be true</li>"+
 		"  <li>Use our Yahoo search tool to mark 10 snippets on the web that make this claim</li> "+
-		"  <li>Give us a URL for a web site that argues that the claim is false, and include a representative quote</li>"+
+		"  <li>Give us a URL for a web site that argues that the claim is false, and include a representative quote from that page</li>"+
 		"</ol>"+
 		"</p>").appendTo(help); 
 				
@@ -142,9 +142,9 @@ function makeHelpPanel(){
 		"'firefox is more secure than internet explorer', or 'the existance of jesus is a historical fact'.</p>").appendTo(help);
 	$("<p>"+
 		"To perform multiple HITs in this group efficiently we recommend that you "+
-		"choose disputed claims in an area that you have a personal interest in "+
-		"and that you start with a trustworthy source document that you can use as "+
-		"evidence against multiple claims</p>").appendTo(help);			
+		"choose disputed claims in an area that you have a personal interest in. "+
+		"We also recommend that you start with a trustworthy source document that you can use as "+
+		"evidence against several claims.</p>").appendTo(help);			
 
 	return help;
 }
@@ -227,7 +227,7 @@ function showEvPanel(){
 	if(global_evquote){
 		quote.val(global_evquote);
 	}else{
-		quote.css("color","grey");
+		quote.css("color","gray");
 		quote.val("Copy and paste a short, representative, quote from the source web site");
 		quote.focus(function(){ungrey(quote.get(0))});
 	}
@@ -235,7 +235,7 @@ function showEvPanel(){
 	if(global_evurl){
 		url.val(global_evurl);
 	}else{
-		url.css("color","grey");
+		url.css("color","gray");
 		url.val("Enter url for a page that provides evidence that this claim is false");
 		url.focus(function(){ungrey(url.get(0))});
 	}
@@ -250,11 +250,11 @@ function showEvPanel(){
 	url.focus(function(){ungrey(url.get(0))});
 	quote.focus(function(){ungrey(quote.get(0))});	
 	submit.click(function(){
-		if(url.css("color") == "grey"){
+		if(url.css("color") == "gray"){
 			alert("You need to enter a URL");
 			return;
 		}
-		if(quote.css("color") == "grey"){
+		if(quote.css("color") == "gray"){
 			alert("You need to paste a quote from the evidence page");
 			return;
 		}

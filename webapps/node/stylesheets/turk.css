@@ -154,7 +154,7 @@ body .tabs {
 	}
 
 #help {
-	background-color: lightGrey;
+	background-color: #CCCCCC;
 	padding: 10px;
 	margin-top: 35px;
 	margin-left: 100px;
@@ -178,4 +178,9 @@ body .tabs {
 	color: #555555;
 	width: 360px;
 	margin-top: 20px;
+}
+
+button {
+	width: auto;
+	overflow: visible;
 }

@@ -4,7 +4,7 @@ import scala.collection.mutable.HashMap
 
 object Widgets {
   def greyInput(cls : String, id : String, previewtext : String) = 
-    <input name={id} class={cls} style="color:grey" onfocus="ungrey(this)" value={previewtext}/>
+    <input name={id} class={cls} style="color:gray" onfocus="ungrey(this)" value={previewtext}/>
     
   def action(row : SqlRow, action : String, name : String) =
     <a class={"action-"+action} href={"/thinklink/api/action?id="+row("id")}>{name}</a>

@@ -43,7 +43,6 @@ object FragUrls {
   def snipsearch(id : Any) = base+"snipsearch?claim="+id
 }
 
-
 class MainServlet extends HttpServlet { 
   val posthandlers = List(
     UrlHandler("/login",c => {
@@ -106,8 +105,12 @@ class MainServlet extends HttpServlet {
       SnipSearch.turkSearchBoss(c.arg("query"))   
     }),
     UrlHandler("/turk/(\\d*)",c => {
-      val turkid = c.urlInt(1)
-      c.outputRawHtml(Turk.turkClaim(turkid,c.arg("mode")))
+      try{
+    	  val turkid = c.urlInt(1)
+    	  c.outputRawHtml(Turk.turkClaim(turkid,c.arg("mode")))
+      }catch{
+        case _ => c.outputRawHtml(Turk.turkClaim(0,null)) 
+      }
     }, c => {
       c.store.turkResponse(c.urlInt(1))
     }),

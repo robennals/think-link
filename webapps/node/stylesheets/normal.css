@@ -179,7 +179,7 @@ h1 {
 
 #supports, #opposed, #related-claims, #created, #instance {
 	background-color: #ECEFF5;
-	border: 1px solid grey;
+	border: 1px solid gray;
 	margin-top: 4px;
 	max-width: 400px;
 	-moz-border-radius: 8px;
@@ -416,7 +416,7 @@ h1 {
 }
 
 .tabs .header span, .tabs .header .active {
-	background-color: grey;
+	background-color: gray;
 	color: white;
 }
 
@@ -426,5 +426,5 @@ h1 {
 
 .tabs .header a {
 	margin: 4px;
-	border: 1px solid grey;
+	border: 1px solid gray;
 }

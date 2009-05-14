@@ -2,7 +2,7 @@
 var url_base = "/thinklink/";
 
 function ungrey(obj){
-	if(obj.style.color == "grey"){
+	if(obj.style.color == "gray"){
 		obj.style.color = "black";
 		obj.value = "";		
 	}
