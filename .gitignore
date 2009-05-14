@@ -19,7 +19,6 @@ Edit.000
 *.bbl
 *.blg
 *.tps
-*.sql
 store
 init.d
 *.class
@@ -29,5 +28,6 @@ scala/.manager
 pastrevs
 test
 *#
+backup-db
 backup_database.sh
 
