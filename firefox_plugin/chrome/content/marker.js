@@ -15,9 +15,9 @@ function get_api_path(){
 	return apipath;
 }
 
-function mark_snippets(){
+function mark_snippets(doc){
 	tl_log("mark snippets");
-	var targeturl = content.document.location.href;
+	var targeturl = doc.location.href;
 	var apipath = get_api_path();
 	var url = apipath+"/apianon/search.json?url="+encodeURIComponent(targeturl);
 	tl_log(url);
@@ -29,11 +29,43 @@ function mark_snippets(){
 			var frags = snip.text.split(/[\.\n\?\!]/)
 			for(var j = 0; j < frags.length; j++){
 				if(frags[j].length > 10){
-					mark_snippet(normalise(frags[j]),snip.claimid,snip.claimtext,content.document.body);			
+					mark_snippet(normalise(frags[j]),snip.claimid,snip.claimtext,doc.body);			
 				}
 			}
 		}
+		if(snippets.length > 0){
+			showMessage("This page contains disputed claims (highlighted in pink)",doc);
+		}
 	})
+}
+
+function findBrowser(doc){
+	for(var i = 0; i < gBrowser.browsers.length; i++){
+		if(gBrowser.browsers[i].contentDocument == doc){
+			return gBrowser.browsers[i];
+		}
+	}
+}
+
+function showMessage(message,doc){
+	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
+	var notification =
+		notificationBox.getNotificationWithValue("thinklink-disputed");
+	if (notification) {
+		notification.label = message;
+	}else {
+		var buttons = [];
+		//{
+			//label: "ping",
+			//accessKey: "K",
+			//popup: "blockedPopupOptions",
+			//callback: null
+		 //}];
+
+		const priority = notificationBox.PRIORITY_INFO_MEDIUM;
+		notificationBox.appendNotification(message, "thinklink-disputed",
+		"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
+	}
 }
 
 function normalise(str){

@@ -238,9 +238,9 @@ function thinklink_login(){
 }
 
 window.addEventListener("load", function(){
-	window.addEventListener("DOMContentLoaded",function(){
+	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
-		mark_snippets();
+		mark_snippets(ev.target);
 //		thinklink_winlistener.injectScripts();
 	},false);
 },false);
