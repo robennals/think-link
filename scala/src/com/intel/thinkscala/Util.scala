@@ -10,6 +10,8 @@ import scala.xml.parsing._;
 import scala.xml._;
 import org.apache.commons.lang._;
 import scala.collection.Map;
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashMap
 
 object Util {
   
@@ -140,9 +142,84 @@ object Util {
      case o => o.toString
     }
   }
-
+  
   def printCSV(l : Iterable[Map[String,String]], keys : Iterable[String]) : String = 
     keys.mkString(",") + "\n" + 
     l.map(m => keys.map(k => StringEscapeUtils.escapeCsv(m(k))).mkString(",")).mkString("\n")
+  
+  def turkUnescapeCsv(str : String) = 
+    StringEscapeUtils.unescapeCsv(str).replaceAll("^\"","").replaceAll("\"$","")
+  
+   
+  def parseCsvRows(filename : String) : ArrayBuffer[ArrayBuffer[String]] = {
+    val source = Source.fromFile(filename)
+    val lines = new ArrayBuffer[ArrayBuffer[String]]   
+    var inquote = false
+    var curline = new ArrayBuffer[String]
+    var curstr = new StringBuffer
+    source.foreach(c => {
+     if(c == '"') inquote = !inquote
+     if(!inquote && (c == ',')){
+        curline += turkUnescapeCsv(curstr.toString)
+        curstr = new StringBuffer
+      }else if(!inquote && c == '\n'){
+        curline += turkUnescapeCsv(curstr.toString)
+        curstr = new StringBuffer
+        lines += curline
+        curline = new ArrayBuffer[String]
+      }else{
+        curstr.append(c)
+      }
+    })
+    return lines
+  }
+  
+  def parseCsvFile(filename : String) : ArrayBuffer[Map[String,String]] = {
+    val rows = parseCsvRows(filename)
+    val header = rows(0)
+    val result = new ArrayBuffer[Map[String,String]]();
+    for(i <- 1 until rows.length){
+      val item = new HashMap[String,String]
+      for(j <- 0 until rows(i).length){
+        item(header(j)) = rows(i)(j)
+      }
+      result += item
+    }
+    return result
+  }
+  
+  def parseCsvFile2(filename : String) : ArrayBuffer[Map[String,String]] = {
+    val source = Source.fromFile(filename)
+    val lines = source.getLines
+    val header = Util.parseCsvLine(lines.next)
+    val result = new ArrayBuffer[Map[String,String]]()
+    lines.foreach(line => {
+      val item = new HashMap[String,String]()
+      val row = parseCsvLine(line)
+      for(i <- 0 until row.length){
+        item(header(i)) = row(i)
+      }                
+      item +: result
+    })
+    return result
+  }
+  
+ def parseCsvLine(line : String) : Seq[String] = {
+	var strings = new ArrayBuffer[String]()
+	var lastpos = 0
+    var inquote = false
+    for(pos <- 0 until line.length){
+      val c = line.charAt(pos)
+      if(c == '"'){
+        inquote = !inquote
+      }
+      if(!inquote && c == ','){
+    	strings += turkUnescapeCsv(line.substring(lastpos,pos))
+        lastpos = pos+1
+      }
+    }
+    return strings
+  }
+
   
 }

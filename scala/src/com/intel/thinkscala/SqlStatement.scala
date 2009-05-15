@@ -12,6 +12,8 @@ import scala.collection.mutable.HashMap;
 import scala.collection.Map;
 import scala.util.parsing.json.JSON;
 
+case class TruncString(val s : String, val max : Int)
+
 class SqlRow extends HashMap[String,Any]{
   def int(key : String) = apply(key).asInstanceOf[Int]
   def str(key : String) = apply(key).asInstanceOf[String]
@@ -61,7 +63,10 @@ class SqlStatement(con : Connection, s : String){
     for(i <- 0 until args.length){
       val arg = args(i)
       arg match {
+        case s:String if s.length > 510 => stmt.setString(i+1,s.substring(0,510))
         case s:String => stmt.setString(i+1,s)
+        case TruncString(s,max) if s.length > max => stmt.setString(i+1,s.substring(0,max))
+        case TruncString(s,max) => stmt.setString(i+1,s)
         case n:Int => stmt.setInt(i+1,n)
         case b:Boolean => stmt.setBoolean(i+1,b)
         case null => stmt.setString(i+1,"")

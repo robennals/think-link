@@ -11,16 +11,19 @@ object MakeTurkCSV {
   // questions per task
   val PERTASK = 10
 
+//  val cols = List("claim") ++ ((1 to PERTASK) flatMap 
+//    (n => List("front","snip","back") map (v => v+n)))
+  
   val cols = List("claim") ++ ((1 to PERTASK) flatMap 
-    (n => List("front","snip","back") map (v => v+n)))
-  
-  def splitContext(context : String, snip : String) : (String,String) = {
-    val startpos = context indexOf snip
-    if(startpos == -1) return ("","") 
-    else
-      return (context.substring(0,startpos),context.substring(startpos + snip.length))
-  }
-  
+    (n => List("snip") map (v => v+n)))
+
+                                    //  def splitContext(context : String, snip : String) : (String,String) = {
+//    val startpos = context indexOf snip
+//    if(startpos == -1) return ("","") 
+//    else
+//      return (context.substring(0,startpos),context.substring(startpos + snip.length))
+//  }
+//  
   def makeWorkUnits(claim : String) : ArrayBuffer[HashMap[String,String]] = {
     val turkdata = new ArrayBuffer[HashMap[String,String]]
     var thisreq = new HashMap[String,String]
@@ -36,9 +39,9 @@ object MakeTurkCSV {
         thisreq = new HashMap[String,String]
         nthitem=1
       }
-      val (front,back) = splitContext(r.str("pagetext"),r.str("abstract"))
-      thisreq("front"+nthitem) = front
-      thisreq("back"+nthitem) = back
+//      val (front,back) = splitContext(r.str("pagetext"),r.str("abstract"))
+//      thisreq("front"+nthitem) = front
+//      thisreq("back"+nthitem) = back
       thisreq("snip"+nthitem) = r.str("abstract")        
       nthitem+=1
     })
@@ -51,7 +54,7 @@ object MakeTurkCSV {
     val requests = GenerateTurkData.requests
     requests.foreach(req => {
       val turkdata = makeWorkUnits(req.claim)
-      val outfile = new FileWriter(mkFileName(req.claim))
+      val outfile = new FileWriter(mkFileName("newbatch_"+req.claim))
       outfile.write(printCSV(turkdata,cols))
     })
   }

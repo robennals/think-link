@@ -13,7 +13,7 @@ function makeTurkUi(){
 	global_claimtab = $("<a id='tab-create' class='active'>1. Create Disputed Claim</a>").appendTo(header);
 	global_marktab = $("<a id='tab-mark'>2. Find Snippets</a>").appendTo(header);
 	global_evtab = $("<a id='tab-evidence'>3. Add Opposing Evidence</a>").appendTo(header);
-	global_subtab = $("<a id='tab-submit'>4. Submit</a>").appendTo(header);
+	global_subtab = $("<a id='tab-submit'>4. Finish</a>").appendTo(header);
 	global_body = $("<div id='#body' class='body'/>").appendTo(tabs);
 	$(document.body).append(tabs);
 	showClaimPanel();
@@ -176,13 +176,13 @@ function showMarkPanel(){
 	var textbox = $("<input type='text'/>").appendTo(searchbox).val(global_last_search);	
 	global_snipsearchbox = textbox;
 		
-	var button = $("<button>Search Yahoo</button>").appendTo(searchbox);
+	var button = $("<button>New Search</button>").appendTo(searchbox);
+	var collection = $("<div id='collection'/>").appendTo(searcher);
 	var results = $("<div id='snipresults'/>").appendTo(searcher);
 		
-	var collection = $("<div id='collection'/>").appendTo(bigbox);
 	//$("<h2>Snippets found so far</h2>").appendTo(collection);
 	//var removeall = $("<button class='submit'>remove all</button>").appendTo(collection);
-	var snippets = $("<div id='snippets'>Snippets will appear here when you add them</snippets>").appendTo(collection);
+//	var snippets = $("<div id='snippets'>Snippets will appear here when you add them</snippets>").appendTo(collection);
 				
 	global_body.empty();
 	global_body.append(panel);
@@ -240,7 +240,7 @@ function showEvPanel(){
 		url.focus(function(){ungrey(url.get(0))});
 	}
 
-	var submit = $("<button class='submit'>Submit HIT</button>").appendTo(form);
+	var submit = $("<button class='submit'>Set Evidence</button>").appendTo(form);
 
 	var help = $("<div id='help'>"+
 		"<p>It is okay to use the same evidence URL for several different claims that relate to the same topic, but the quote should be different.</p> "+
@@ -377,12 +377,11 @@ function updateClaimSuggestions(text){
 }
 
 function updateCurrentSnippets(){
-	var snippets = $("#snippets");
+	var snippets = $("#collection");
 	snippets.empty();
 	
 	if(global_snippets.length < 10){
-		$("<div class='snipstatus'>found <strong>"+global_snippets.length+"</strong> snippets</div>").appendTo(snippets);
-		$("<div class='snipstatus'>add <strong>"+(10-global_snippets.length)+"</strong> more to complete</div>").appendTo(snippets);
+		$("<div class='snipstatus'>found <strong>"+global_snippets.length+"</strong> add <strong>"+(10-global_snippets.length)+"</strong> more to complete</div>").appendTo(snippets);
 	}else{
 		$("<div class='snipstatus'>Snippet target reached</div>").appendTo(snippets);
 		$("<button id='next'>Go To Next Step</button>").appendTo(snippets)
@@ -391,16 +390,16 @@ function updateCurrentSnippets(){
 			});				
 	}
 	
-	for(var i = 0; i < global_snippets.length; i++){
-		var row = global_snippets[i];
-		var snippet = $("<div class='snippet'/>");
-		$("<span class='title'>").text(row.title).appendTo(snippet);
-		$("<a/>").attr("href",row.url).text(row.url).appendTo(snippet);
-		$("<div class='text'>"+row.text+"</div>").appendTo(snippet);
-		var remove = $("<a class='remove'>remove</a>").appendTo(snippet);
-		setupRemove(remove,i);				
-		snippets.append(snippet);
-	}
+	//for(var i = 0; i < global_snippets.length; i++){
+		//var row = global_snippets[i];
+		//var snippet = $("<div class='snippet'/>");
+		//$("<span class='title'>").text(row.title).appendTo(snippet);
+		//$("<a/>").attr("href",row.url).text(row.url).appendTo(snippet);
+		//$("<div class='text'>"+row.text+"</div>").appendTo(snippet);
+		//var remove = $("<a class='remove'>remove</a>").appendTo(snippet);
+		//setupRemove(remove,i);				
+		//snippets.append(snippet);
+	//}
 }
 
 function removeAll(){

@@ -22,6 +22,13 @@ object Urls {
   def searchclaims(query : String) = "/claim/search?query="+encode(query)
 }
 
+object PostUrls { 
+  val base = Urls.base
+  def addClaimTopic(id : Any) = Urls.claim(id) +"/addtopic"
+}
+
+
+
 object TurkGetUrls {
   val base = Urls.base + "/turk/"
   def turker(turkid : Int) = base + turkid

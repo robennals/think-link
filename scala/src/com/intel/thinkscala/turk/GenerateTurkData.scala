@@ -31,13 +31,14 @@ object GenerateTurkData {
   def doSearch(claimid : Int, search : String){
     log(search)
     val searchid = store.mkSearch(claimid,search)
-    val urlsnips = SnipSearch.searchYahoo(search)
+//    val urlsnips = SnipSearch.searchYahoo(search)
+    val urlsnips = SnipSearch.searchBoss(search,0,50) ++ SnipSearch.searchBoss(search,1,50)
     urlsnips.foreach(us => {
       var position = 0
       var urlid = store.mkUrl(us.url, us.title)
       if(us.snips != null){
-	      us.snips.foreach(s => {        
-	        store.mkResult(searchid,urlid,position,s.snip,s.context,claimid)
+	      us.snips.foreach(snip => {        
+	        store.mkResult(searchid,urlid,position,snip,"",claimid)
 	        position += 1
 	      })
       }

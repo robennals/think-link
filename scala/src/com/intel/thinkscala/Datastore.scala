@@ -204,7 +204,7 @@ class Datastore {
                           
   val mk_result = mkinsert("v2_searchresult","search_id","url_id","position","abstract","pagetext","claim_id")
   def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String,claimid : Int) =
-    mk_result.insert(searchid,urlid,position,abstr,pagetext,claimid)    
+    mk_result.insert(searchid,urlid,position,abstr,new TruncString(pagetext,2048),claimid)    
   
   val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
                              "VALUES (?,?,?,?)")
@@ -232,7 +232,7 @@ class Datastore {
   val update_topic_counts = stmt("UPDATE v2_node SET instance_count = "+
                                    "(SELECT COUNT(src) FROM v2_link "+
                                 		   "WHERE dst = v2_node.id) "+
-                                		   "WHERE type='topic')")
+                                		   "WHERE type='topic'")
   def updateTopicCounts = update_topic_counts.update()
 
   
@@ -272,13 +272,12 @@ class Datastore {
   def getClaim(text : String,user : User) = getNode(text,"claim",user)                                                     
   
   val results_for_claim = stmt("SELECT * FROM v2_snipsearch, v2_searchresult "+
-                                 "WHERE v2_snipsearch.id = search_id AND claim_id = ? "+
-                                 """AND pagetext != "" """)
+                                 "WHERE v2_snipsearch.id = search_id AND v2_snipsearch.claim_id = ? ")
   def resultsForClaim(claimid : Int) = results_for_claim.queryRows(claimid)
   
   // === URL Snippets ===
   
-  val url_snippets = stmt("SELECT v2_searchresult.id, abstract AS text,claim_id AS claimid,v2_node.text AS claimtext "+
+  val url_snippets = stmt("SELECT v2_searchresult.id, abstract AS text,v2_searchresult.claim_id AS claimid,v2_node.text AS claimtext "+
                             "FROM v2_searchurl, v2_searchresult, v2_node "+
                             "WHERE v2_searchurl.url = ? "+
                             "AND v2_searchresult.state = 'true' "+
@@ -286,7 +285,7 @@ class Datastore {
                             "AND v2_searchresult.url_id = v2_searchurl.id")
   def urlSnippets(url : String) = url_snippets.queryRows(url)
         
-  // === Turk ===
+  // === Turk Claim Creation ===
 
   val set_turk_response = stmt("INSERT INTO turk_claim (hit_id,node_id,ev_id,turker_id,jsonsnips) "+
                                  "VALUES (?,?,?,?,?)")
@@ -299,4 +298,15 @@ class Datastore {
                                 "AND evidence.id = turk_claim.ev_id")
   def turkResponse(hitid : Int) = get_turk_response.queryMaybe(hitid)
   
+  // === Turk Snippet Marking ===
+  
+  val set_turk_result = stmt("INSERT INTO v2_turkresult (turkuser,hit_id,question,vote) "+
+		  					"VALUES (?,?,?,?)")
+  def setTurkResult(turkuser : Int, hitid : Int, question : Int, vote : Boolean) = 
+	  set_turk_result.insert(turkuser,hitid,question,vote)
+  
+  val get_user_stats = stmt("SELECT FROM v2_turkresult AS this, v2_turkresult AS that,")
+                            
+                            
+	  
 }

@@ -75,12 +75,14 @@ body .tabs {
 	position: relative;
 }
 
+/*
 #collection {
 	width: 320px;
 	position: absolute;
 	left: 435px;
 	top: 0px;
 }
+*/
 
 #searcher {
 	position: absolute;
@@ -183,4 +185,12 @@ body .tabs {
 button {
 	width: auto;
 	overflow: visible;
+}
+
+.message {
+	font-size:15px;
+}
+
+.snipstatus, .snipstatus strong {
+	font-size: 20px;
 }
