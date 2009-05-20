@@ -46,11 +46,11 @@ h1 {
 	max-width: 450px;
 }
 
-#findsnippets h1 {
+h1 {
 	margin-bottom: 5px;
 }
 
-#findsnippets .subtitle {
+.subtitle {
 	padding-left: 50px;
 	font-weight: bold;
 	padding-bottom: 15px;
@@ -128,8 +128,14 @@ h1 {
 	display: block;
 	width: 500px;
 	font-size: 15px;	
+/*
 	font-weight: bold;
+*/
 	padding: 4px;
+}
+
+.form label {
+	font-weight: bold;
 }
 
 .form input, .form textarea {
@@ -465,4 +471,11 @@ h1 {
 .tabs .header a {
 	margin: 4px;
 	border: 1px solid gray;
+}
+
+#evidence .add {
+	margin-bottom: 0px;
+	margin-top: 10px;
+	margin-left: 4px;
+	text-align: right;
 }

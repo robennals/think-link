@@ -10,7 +10,7 @@ object Page {
     <div class="content">
       <h1 class="logo">Think Link</h1>
       <div class="tagline">Are you being duped?</div>
-      <a class="install" href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install The Think Link Firefox Extension</a> 
+      <a class="install" href={Urls.extension}>Install The Think Link Firefox Extension</a> 
       <div class="message">{Messages.pitch}</div>
 
       <form id="bigsearch" action="search" method="GET">        
@@ -54,12 +54,12 @@ object Page {
     		Once you have created a disputed claim, you can identify instances of this claim
     		on the web, and associate the claim with evidence on either side.
     	</div>
-    	<form id="newsnippet" action="new" method="POST">
+    	<form class='form' id="newsnippet" action="new" method="POST">
           <label for="name">Claim</label>
           <input type="text" id="name" name="name" value={query}/>
           <label for="descr">Optional Description</label>
           <textarea rows="5" id="descr" name="descr"></textarea>    
-          <input type="submit" value="Create New Claim"/>
+          <input class='submit' type="submit" value="Create New Claim"/>
         </form>
     </div>
     
@@ -79,10 +79,12 @@ object Page {
    	      <div id="opposed">
 	        <h2>Opposing Evidence</h2>
             {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
+            <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
 	      </div>
 	      <div id="supports">
 	        <h2>Supporting Evidence</h2>
             {c.store.evidence(row.int("id"),"supports") flatMap Render.snippet}
+            <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
 	      </div>
       </div>
       <div id="related-claims">
@@ -95,6 +97,26 @@ object Page {
       </div>
     </div>
  
+  def addEvidence(claimid : Int, claimtxt : String, rel : String, text : String)(implicit c : ReqContext) =    
+    <div class='content'>
+        <a href={Urls.claim(claimid)}><h1>{claimtxt}</h1></a>
+        <div class='subtitle'>Add Evidence that supports or opposes this claim</div>
+        <div class='message'>
+           The easiest way to add evidence to a claim is to use the <a href={Urls.extension}>Firefox Extension</a>.
+           If for some reason you cannot use the Firefox extension, you can also add evidence using the form below:
+        </div>
+        <form class='form' method='post' action={PostUrls.addEvidence(claimid)}>
+           <label for='url'>Url for evidence page:</label>
+           {Widgets.greyInput("input","url","Paste the URL of the page with evidence")}
+           This evidence <select name='rel'>
+             <option selected={if(rel=="supports") "selected" else null}>supports</option>
+             <option selected={if(rel=="opposes") "selected" else null}>opposes</option>
+           </select> the claim "{claimtxt}"
+           <label for='snip'>Copy and paste a representative quote below:</label>
+           <textarea rows="5" name="text"></textarea>    
+           <input class='submit' type="submit" value="Add Evidence"/>
+        </form>
+    </div>
     
   def findsnippets(row : SqlRow, query : String)(implicit c : ReqContext) = 
     <div id="findsnippets">
@@ -145,15 +167,17 @@ object Page {
   def login(title : String) =
     <div class="content">
     	<h1>{title}</h1>
-	    <form class='form' id="login" action="login" method="POST">
-		    <div class="message">
-		      Enter the email address and password that you used to register with Think Link.
-		    </div>		
-		    <div class='message'>
-              If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
-            </div>
-	        <p><label for="email">email</label><input type="text" id="email" name="email"/></p>
-	        <p><label for="password">password</label><input type="password" id="password" name="password"/></p>
+		<div class="message">
+	      Enter the email address and password that you used to register with Think Link.
+	    </div>		
+	    <div class='message'>
+          If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
+        </div>
+	    <form class='form' id="login" action="login" method="POST">	   
+	        <label for="email">email</label>
+	        {Widgets.greyInput(null,"email","Enter the email address you signed up with")}
+	        <p><label for="password">password</label>
+	        	<input type="password" id="password" name="password"/></p>
 	        <input class='submit' type="submit" value="Login"/>
 	    </form>
     </div>

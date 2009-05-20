@@ -15,6 +15,7 @@ object FixedUrls {
 object Urls {
   val base = "/thinklink"
   val home = base
+  val extension = "https://addons.mozilla.org/en-US/firefox/addon/11712"
   val login = base+"/login"
   val logout = base+"/logout"
   val signup = base+"/signup"
@@ -27,13 +28,14 @@ object Urls {
   def findsnippets(id : Any, query : String) = claim(id) + "/findsnippets?query="+encode(query)
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
   def searchclaims(query : String) = "/claim/search?query="+encode(query)
+  def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
 }
 
 object PostUrls { 
   val base = Urls.base
-  def addClaimTopic(id : Any) = Urls.claim(id) +"/addtopic"
+  def addClaimTopic(id : Any) = Urls.claim(id) + "/addtopic"
+  def addEvidence(id : Any) = Urls.claim(id) + "/addevidence"
 }
-
 
 
 object TurkGetUrls {
@@ -108,7 +110,14 @@ class MainServlet extends HttpServlet {
       c.store.setSnipVote(claimid,resultid,searchid,c.userid,vote == "true")
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     }),
-    
+    UrlHandler("/claim/(\\d*)/addevidence", c => {
+      val claimid = c.urlInt(1)
+      val url = c.arg("url")
+      val text = c.arg("text")
+      val rel = c.arg("rel")
+      c.store.makeEvidence(c.userid,claimid,text,url,"",rel)
+	  c.redirect(Urls.claim(claimid))      
+    }),    
     // TODO: batch process to fill in evidence URL titles
     UrlHandler("/turk/submit", c=> {
       val turkid = c.argInt("turkid")
@@ -166,7 +175,15 @@ class MainServlet extends HttpServlet {
       c.outputHtml(title,Page.findsnippets(claim,query)(c))
     }),
     UrlHandler("/claim/new",c => {
+      c.userid
       c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
+    }),
+    UrlHandler("""/claim/(\d*)/addevidence""",c=>{
+      val claimid = c.urlInt(1)
+      val claim = c.store.getInfo(claimid,c.maybe_userid)
+      val rel = c.arg("rel")
+      val text = c.arg("text")
+      c.outputHtml("Add Evidence",Page.addEvidence(claimid,claim.str("text"),rel,text)(c))
     }),
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)

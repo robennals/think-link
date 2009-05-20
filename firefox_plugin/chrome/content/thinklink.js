@@ -14,19 +14,7 @@
 //  limitations under the License.
 
 
-// these are the scripts that we inject into every page we load
-thinklink_scriptUrls = [
-	"tl_margin.js",
-	"tl_snippet.js",
-	"tl_point.js",
-	"tl_helpers.js",
-	"tl_suggest.js",
-	"tl_url.js",
-	"tl_config.js",
-	"thinklink.js"
-];
-
-var thinklink_name = "ThinkLink";
+var thinklink_name = "Think Link";
 
 
 function thinklink_error(msg,e){
@@ -43,18 +31,6 @@ function thinklink_new_snippet(){
 	var doc = thinklink_winlistener.getDoc();
 	doc.location.href = "javascript:thinklink_newSnippet()";
 }
-
-//function thinklink_show(button){
-	//var doc = thinklink_winlistener.getDoc();
-	//if(button.checked){
-		//doc.location.href = "javascript:myMargin.hideMargin()";
-	//}else{
-		//doc.location.href = "javascript:myMargin.showMargin()";
-	//}
-	//button.checked = !button.checked;
-	//doc.thinklink_checked = button.checked;
-	//thinklink_open = button.checked;
-//}
 
 var thinklink_winlistener = {
 	QueryInterface: function(iid){
@@ -74,44 +50,7 @@ var thinklink_winlistener = {
 		this.injectScript("http://localhost:8180/thinklink/client_js/showsnippet.js",doc);
 		// this.injectFetchedScript("showsnippet.js");		
 	},
-	
-	//injectScripts: function(){
-		//var doc = this.getDoc();
-		//if(doc.thinklink_injected){
-			//return;
-		//}
-	   	//var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-		//var apipath = "http://factextract.cs.berkeley.edu/thinklink";
-	    //if(prefs.prefHasUserValue("extensions.thinklink.api")){
-			//apipath = prefs.getCharPref("extensions.thinklink.api");
-		//}	
 		
-		//this.injectLiteralScript("var thinklink_apipath = '"+apipath+"'\n",doc);
-		//// DEBUG
-		
-		//for(var i in thinklink_scriptUrls){
-			//this.injectScript("http://localhost:8180/thinklink/client_js/"+thinklink_scriptUrls[i],doc);
-		//}
-		
-		////for(var i in thinklink_scriptUrls){
-			////this.injectFetchedScript(thinklink_scriptUrls[i]);
-		////}
-		//this.injectStyleSheet();
-		
-		//doc.thinklink_injected = true;
-		//try{			
-			//if(doc.onmousedown){
-				//doc.onmousedown = null;
-			//}
-			//if(doc.onmouseup){
-				//doc.onmouseup = null;
-			//}
-		//}catch(e){
-////			thinklink_error("Error clearing mouse events",e);
-		//}
-
-	//},
-	
 	injectFetchedScript: function(file){
 		var doc = this.getDoc();
 		var req = new XMLHttpRequest();
@@ -120,15 +59,6 @@ var thinklink_winlistener = {
 		req.send(null);
 		this.injectLiteralScript(req.responseText,doc);
 	},
-
-	//injectStyleSheet: function(){
-		//var doc = this.getDoc();
-		//var req = new XMLHttpRequest();
-		//req.overrideMimeType("text/css");
-		//req.open("GET","chrome://thinklink/content/css/style.css",false);
-		//req.send(null);
-		//this.injectLiteralStyle(req.responseText,doc);
-	//},
 
 	getDoc: function(){
 		if(content.document.body && content.document.body.tagName != "FRAMESET"){
@@ -149,17 +79,6 @@ var thinklink_winlistener = {
 		}
 	},
 
-	//injectLiteralStyle: function(text,doc){
-		//var tag = doc.createElement("style");
-		//tag.textContent = text;
-		//tag.type = "text/css";
-		//try{
-			//doc.getElementsByTagName("head")[0].appendChild(tag);
-		//}catch(e){
-			//thinklink_error("could not insert style tag",e);
-		//}
-	//},	
-	
 	injectLiteralScript: function(text,doc){
 		var scripttag = doc.createElement("script");
 		scripttag.text = text;
@@ -241,6 +160,5 @@ window.addEventListener("load", function(){
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
-//		thinklink_winlistener.injectScripts();
 	},false);
 },false);
