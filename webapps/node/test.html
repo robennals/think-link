@@ -1,0 +1,30 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head></head>
+<body>
+	<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+	
+	<div id="login">
+		<fb:login-button onlogin="onlogin()"></fb:login-button>		
+	</div>
+
+	
+	<script type="text/javascript">
+		function onlogin(){
+			var login = document.getElementById("login")
+			login.innerHTML = 
+			   "<span>"+
+			     "<fb:profile-pic uid='loggedinuser' facebook-logo='true'></fb:profile-pic>"+
+				 "Welcome, <fb:name uid='loggedinuser' useyou='false'></fb:name>"+
+				 "</span>";
+			FB.XFBML.Host.parseDomTree();
+		}
+	</script>
+	
+	<script type="text/javascript">  
+		FB.init("9a300c9b0d241b501002440468ad4c40", "xd_receiver.htm",
+			{"ifUserConnected" : onlogin}); 
+	</script>
+	
+</body>
+</html>

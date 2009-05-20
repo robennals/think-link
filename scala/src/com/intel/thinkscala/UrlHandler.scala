@@ -47,6 +47,8 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   
   def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.update(key,value))  
   
+  def modifiedUrl(changes : (String,Any)*) = mkUrl("/thinklink"+path,params ++ changes)
+  
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly
     val writer = res.getWriter

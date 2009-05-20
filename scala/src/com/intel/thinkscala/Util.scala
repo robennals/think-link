@@ -174,10 +174,10 @@ object Util {
     return lines
   }
   
-  def parseCsvFile(filename : String) : ArrayBuffer[Map[String,String]] = {
+  def parseCsvFile(filename : String) : ArrayBuffer[HashMap[String,String]] = {
     val rows = parseCsvRows(filename)
     val header = rows(0)
-    val result = new ArrayBuffer[Map[String,String]]();
+    val result = new ArrayBuffer[HashMap[String,String]]();
     for(i <- 1 until rows.length){
       val item = new HashMap[String,String]
       for(j <- 0 until rows(i).length){

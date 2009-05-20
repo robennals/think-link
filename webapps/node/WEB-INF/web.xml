@@ -51,6 +51,17 @@
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
+	<url-pattern>/signup/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/confirm/*</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
 	<url-pattern>/search/*</url-pattern>
 	</servlet-mapping>
 

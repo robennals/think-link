@@ -10,7 +10,7 @@ object Page {
     <div class="content">
       <h1 class="logo">Think Link</h1>
       <div class="tagline">Are you being duped?</div>
-      <a class="install" href="http://confront.intel-research.net/thinklink.xpi">Install The Think Link Firefox Extension</a> 
+      <a class="install" href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install The Think Link Firefox Extension</a> 
       <div class="message">{Messages.pitch}</div>
 
       <form id="bigsearch" action="search" method="GET">        
@@ -19,8 +19,12 @@ object Page {
       </form>
       <div id="claimlist">
         {Widgets.tabs(
-          "Hot Claims" -> (() => c.store.getFrequentClaims flatMap Render.claim),
-          "Hot Topics" -> (() => c.store.getBigTopics flatMap Render.topic)
+          "Hot Claims" -> (() => 
+            	Widgets.pagedList(c.store.getFrequentClaims(_).toSeq flatMap Render.claim)),
+          "Hot Topics" -> (() => 
+                Widgets.pagedList(c.store.getBigTopics(_).toSeq flatMap Render.topic)),
+          "Recently Marked Pages" -> (() => 
+                  Widgets.pagedList(c.store.recentMarkedPages(_).toSeq flatMap Render.markedPage))
         )}
       </div>
   </div>
@@ -141,15 +145,102 @@ object Page {
   def login(title : String) =
     <div class="content">
     	<h1>{title}</h1>
-	    <form id="login" action="login" method="POST">
+	    <form class='form' id="login" action="login" method="POST">
 		    <div class="message">
-		      Enter the email address and password that you used to register with Think Link
+		      Enter the email address and password that you used to register with Think Link.
 		    </div>		
+		    <div class='message'>
+              If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
+            </div>
 	        <p><label for="email">email</label><input type="text" id="email" name="email"/></p>
 	        <p><label for="password">password</label><input type="password" id="password" name="password"/></p>
-	        <input type="submit" value="Login"/>
+	        <input class='submit' type="submit" value="Login"/>
 	    </form>
     </div>
+    
+    // TODO: sign up with facebook connect
+  def signup = 
+    <div class='content'>
+    	<h1>Sign up for a Think Link Account</h1>
+           <p>Reasons to sign up for a Think Link account:
+             <ul>
+               <li>Add new claims to Think Link</li>
+               <li>Find more snippets that make disputed claims</li>
+               <li>Tell think link what claims you don't want it to highlight again</li>
+             </ul>
+           </p>
+    	<form class='form' id='signup' action="signup" method="POST">
+            <p>
+               <label for="name">name</label>
+               <input type="text" id="name" name="name"/>
+            </p>
+            <p>
+               <label for="email">email</label>
+               <input type="text" id="email" name="email"/>
+            </p>
+            <p>
+               <label for="password">password</label>
+               <input type="password" id="password" name="password"/>
+            </p>
+            <input class='submit' type="submit" value="Create Account"/>
+    	</form>
+    </div>
+    
+  def sentconfirm = 
+    <div class='content'>
+       <h1>Confirmation Email Sent</h1>
+       <div class='message'>
+          We have sent a confirmation email to the email address you gave.          
+       </div>
+       <div class='message'>
+       	  Please click on the link in that message to activate your account.
+       </div>
+    </div>
+    
+  def badmail =
+    <div class='content'>
+       <h1>Bad Email Adress</h1>
+       <div class='message'>
+          We were not able to send email to the address you gave. Please go back and try again.    
+       </div>
+    </div>
+    
+  def confirmed = 
+    <div class='content'>
+       <h1>Account Confirmed</h1>
+       <div class='message'>
+         Your account has been successfully confirmed. 
+       </div>
+       <div class='message'><a href={Urls.login}>login</a> with your new account.</div>
+    </div>
+    
+  // TODO: support retreiving or changing existing password
+  // OR: support facebook connect for signup
+  def emailregistered = 
+    <div class='content'>
+       <h1>An account already exists with this email address</h1>
+       <div class='message'>
+       	Someone, hopefully you, has already created an account with this email address.
+       </div>
+    </div>
+
+  def nameregistered = 
+    <div class='content'>
+       <h1>An account already exists with this user name</h1>
+       <div class='message'>
+       	Someone has already created an account with this email address. Go back and try a different user name.
+       </div>
+    </div>
+
+    
+  def badconfirm = 
+    <div class='content'>
+       <h1>Account Confirmation Failed</h1>
+       <div class='message'>
+          This confirmation email is either invalid or has expired.
+       </div>
+    </div>
+    
     
   val notfound = 
     <div class="content">

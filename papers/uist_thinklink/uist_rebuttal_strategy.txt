@@ -1,0 +1,49 @@
+
+-- key points to make --
+
+-- novelty --
+
+"It appears to be the first work to make use of Open Hypermedia for
+identifying disputed statements on the web"
+
+
+Annotations are old hat. What makes Think Link interesting is that it is the first to apply annotation to the problem of identifying disputed content, and it makes several interesting adaptions to make this work well.
+
+Certainly you could use an existing link annotation system to mark disputed claims, but it wouldn't work as well since it wouldn't be specialised for the task. In particular:
+
+1.) You don't need to be told about the same disputed claim repeatedly. If you tell Think Link that that you are aware of a disputed claim then it won't highlight it again.
+
+2.) Other tools let you link to a page, but you don't want to link to a page, you want to link to the best evidence, and that will depend on user voting.
+
+3.) 
+
+
+
+Annotations are old hat.
+
+
+-- Repeated issues --
+
+- Why an IBIS graph -
+
+It isn't really an IBIS graph. It's significantly simpler. The reason we compare at length to IBIS is because it is a model people are familiar with. We do not consider our choice of argument graph structure to be an important contribution.
+
+- What are the new contributions -
+
+This is the first open hypermedia system for marking information as being disputed. While you could use an existing annotation system for this purpose, you can make the tool significantly more effective my tailoring it to this task. In particular:
+
+1.) Advise users that this is the purpose of the tool, to discourage them for cluttering things by annotating for other reasons
+2.) Don't tell people about the same claim repeatedly
+3.) Link to the "current best evidence" rather than a fixed page - as would be done with a normal linking system
+4.) Make it easy for people to gather many snippets "in bulk".
+
+- Bootstrapping -
+
+People asked where our initial set of marked snippets come from. Most of them were gathered by workers on Amazon Mechanical Turk, performing a task we set them. 
+
+The initial set of claims is a combination of claims we seeded the tool with, claims added by our users, claims created as part of a mechanical turk task, and claims mined from several other web sites, most notably Snopes.
+
+
+
+
+

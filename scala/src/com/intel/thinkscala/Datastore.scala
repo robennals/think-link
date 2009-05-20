@@ -61,13 +61,46 @@ class Datastore {
   def stmt(s : String) = new SqlStatement(con,s)
   def mkinsert(table : String, fields : String*) = SqlStatement.mkInsert(con,table,fields)
 
-  val get_user = stmt("SELECT id,password,name FROM v2_user WHERE email = ?")
+  val get_user = stmt("SELECT id,password,name FROM v2_user WHERE email = ? AND nonce = 0")
   def getUser(email : String, password : String) : User = 
     get_user.queryMaybe(email) match {
       case Some(row) if row("password") == password => 
         new User(row.str("name"),row.int("id"))
       case _ => User.nouser
     }  
+  
+  val create_user = stmt("INSERT INTO v2_user (email,name,password,nonce) VALUES (?,?,?,?)")
+  def createUser(email : String,name : String,password : String) : (Int,Int) = {
+    import java.util.Random
+    val nonce : Int = new Random nextInt
+    val userid = create_user.insert(email,name,password,nonce)
+    return (userid,nonce)      
+  }                      
+  
+  val email_registered = stmt("SELECT id FROM v2_user WHERE email = ?")
+  def emailRegistered(email : String) = 
+	  email_registered.queryMaybe(email) match {
+	    case Some(_) => true
+	    case _ => false
+	  }
+
+  val name_registered = stmt("SELECT id FROM v2_user WHERE name = ?")
+  def nameRegistered(name : String) = 
+	  name_registered.queryMaybe(name) match {
+	    case Some(_) => true
+	    case _ => false
+	  }
+
+  
+  val check_confirm_user = stmt("SELECT * FROM v2_user WHERE id = ? AND nonce = ?")
+  val confirm_user = stmt("UPDATE v2_user SET nonce = 0 WHERE id = ?")
+  def confirmUser(userid : Int, nonce : Int) = {
+    check_confirm_user.queryMaybe(userid,nonce) match {
+      case Some(_) => confirm_user.update(userid); true
+      case _ => false                                                                                                
+    }
+  }
+                         
   
   val get_user_info = stmt("SELECT * FROM v2_user WHERE id = ?")
   def getUserInfo(id : Int) = get_user_info.queryOne(id)
@@ -87,6 +120,14 @@ class Datastore {
   val log_recent = stmt("REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)")
   def logRecent(userid : Int, nodeid : Int) = log_recent.update(userid,nodeid)
  
+  // === find marked stuff ===
+  
+  val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext "+
+                                   "FROM v2_searchresult, v2_searchurl, v2_node "+
+                                   "WHERE v2_searchurl.id = url_id "+
+                                   "AND v2_node.id = v2_searchresult.claim_id "+
+                                   "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
+  def recentMarkedPages(page : Int) = recent_marked_pages.queryRows(page * 20)
   
   // === find claims ===
   
@@ -101,9 +142,9 @@ class Datastore {
   val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                             "WHERE v2_user.id = v2_node.user_id "+
                             "AND type=? "+
-                            "ORDER BY instance_count DESC LIMIT 10") 
-  def getFrequentClaims = get_frequent.queryRows("claim")
-  def getBigTopics = get_frequent.queryRows("topic")
+                            "ORDER BY instance_count DESC LIMIT 10 OFFSET ?") 
+  def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*10)
+  def getBigTopics(page : Int) = get_frequent.queryRows("topic",page*10)
   
   val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                      "WHERE type = 'claim' "+                             
@@ -270,10 +311,20 @@ class Datastore {
 	  make_claim.insert(text,desc,userid)
   
   def getClaim(text : String,user : User) = getNode(text,"claim",user)                                                     
-  
-  val results_for_claim = stmt("SELECT * FROM v2_snipsearch, v2_searchresult "+
-                                 "WHERE v2_snipsearch.id = search_id AND v2_snipsearch.claim_id = ? ")
+    
+  val results_for_claim = stmt("SELECT * FROM v2_snipsearch, v2_searchresult, v2_searchurl "+
+                                 "WHERE v2_snipsearch.id = search_id "+
+                                 "AND v2_searchurl.id = v2_searchresult.url_id "+
+                                 "AND v2_snipsearch.claim_id = ? ")
   def resultsForClaim(claimid : Int) = results_for_claim.queryRows(claimid)
+  
+  val info_for_snippet = stmt("SELECT * FROM v2_snipsearch, v2_searchresult, v2_searchurl "+
+                                 "WHERE v2_snipsearch.id = search_id "+
+                                 "AND v2_searchurl.id = v2_searchresult.url_id "+
+                                 "AND (v2_searchresult.abstract = ? "+
+                                		 "OR abstract = CONCAT(' ',?)) "+
+                                 "AND v2_snipsearch.claim_id = ? ")
+  def infoForSnippet(claimid : Int, text : String) = info_for_snippet.queryMaybe(text,text,claimid)
   
   // === URL Snippets ===
   

@@ -2,15 +2,22 @@ package com.intel.thinkscala
 import javax.servlet.http._
 import java.io._
 import com.intel.thinkscala.Util._
+import com.intel.thinkscala.util._
 import com.intel.thinkscala.view._
 import scala.xml._
 import com.intel.thinkscala.view.Template
+
+object FixedUrls {
+  val base = "http://factextract.cs.berkeley.edu/thinklink"
+  def confirmUser(id : Int, nonce : Int) = base + "/confirm?userid="+id+"&nonce="+nonce 
+}
 
 object Urls {
   val base = "/thinklink"
   val home = base
   val login = base+"/login"
   val logout = base+"/logout"
+  val signup = base+"/signup"
   val search = base+"/search"
   def profile(id : Any) = base + "/user/"+id
   def claim(id : Any) = base + "/claim/"+id
@@ -63,6 +70,23 @@ class MainServlet extends HttpServlet {
       }else{
         c.outputHtml("Login Failed - Please Try Again",Page.login("Login Failed"))
       }
+    }),
+    UrlHandler("/signup", c => {
+      val email = c.arg("email")
+      val name = c.arg("name")      
+      if(c.store.emailRegistered(email)){
+        c.outputHtml("An account already exists with this email address",Page.emailregistered)
+      }else if(c.store.nameRegistered(name)){
+    	c.outputHtml("An account already exists with this email address",Page.nameregistered)
+      }else{
+          val (userid,nonce) = c.store.createUser(email,name,c.arg("password"))
+	      try{
+	    	  SendMail.sendSignup(email,name,userid,nonce)
+	    	  c.outputHtml("Confirmation Email Sent",Page.sentconfirm)
+	      }catch{
+	        case _ => c.outputHtml("Could Not Send Mail",Page.badmail)
+	      }
+       }
     }),
     UrlHandler("/claim/new", c => {
       val name = c.arg("name")
@@ -161,6 +185,18 @@ class MainServlet extends HttpServlet {
     }),   
     UrlHandler("/login",c => {
       c.outputHtml("Login",(<div>{Page.login("Login")}</div>))
+    }),
+    UrlHandler("/signup",c => {
+      c.outputHtml("Sign up with Think Link",Page.signup)      
+    }),
+    UrlHandler("/confirm",c => {
+      val nonce = c.argInt("nonce")
+      val userid = c.argInt("userid")
+      if(c.store.confirmUser(userid,nonce)){
+    	  c.outputHtml("Account Confirmed",Page.confirmed)
+      }else{
+    	  c.outputHtml("Bad Confirmation",Page.badconfirm)
+      }      
     }),
     UrlHandler("/logout",c => {
       c.setCookie("email","")

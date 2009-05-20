@@ -1,0 +1,40 @@
+
+Reviewers were primarily concerned with two issues: (i) a perceived lack of noverty WRT previous annotation systems and (ii) bootstrapping. We believe that we could easily address both issues with revisions to the paper.
+
+= Novelty =
+
+As reviewer 1 stated: "[Think Link] appears to be the first work to make use of Open Hypermedia for identifying disputed statements on the web".
+
+One could of course use a general-purpose annotation system to do this: if you disagree with something then highlight it, add a comment, or link to opposing evidence.
+
+However this approach raises several issues: Pages could get crowded with noisy "this sucks" comments, users could get frustrated by being told about things they already knew were disputed, and links would not necessarily go to the most useful evidence.
+
+Think Link tries to address these issues by enforcing more structure. A user cannot add an arbitrary comment to a page - instead they must link a snippet to a community-curated claim. A user cannot link a snippet directly to opposing evidence - instead they can add evidence to a claim and hope that the community votes their evidence up. 
+
+This structured approach has several user-visible advantages:
+
+* If a user knows something is disputed then they can ask Think Link to not highlight any snippet that makes this claim again.
+
+* Think Link presents the best evidence as voted for by the community, rather than the favorite link chosen by a single user. Similarly, crowdsourcing is used to filter out low quality claims and snippets
+
+* The argumentation graph allows users to see how a claim fits into a larger argument
+
+* Think Link makes it easy for an activist user to rapidly mark many snippets that make the same claim that they disagree with. A common usage model is to Google a sentence, tab-open all pages that look relevant, quickly highlight a relevant snippet in each page, and then bulk-assign all such snippets to the same disputed claim.
+
+
+= Bootstrapping =
+
+A final version would talk more about bootstrapping.
+
+Our claims are seeded from lists of disputed claims on several websites, including Snopes and several smaller debate web sites. We use Mechanical Turk to produce a seed-set of snippets (4 cents per 10 snippets).
+
+
+= Misc =
+
+Reviewer 5 was concerned that, since a web page saying global warming did not exist was less popular, it would be less likely to be marked than one that said it did exist. In fact the converse is true. Since there are more activists who believe that global warming exists, more people will use search engines to find and highlight pages that say global warming does not exist, and thus such pages are more likely to be highlighted.
+
+We intend to include a link to several videos in the paper.
+
+Yes, the figures should be bigger.
+
+Think Link does not use IBIS. Our argument graph is simpler than IBIS, but we compare to it since readers may be familiar with it. 

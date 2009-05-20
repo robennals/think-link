@@ -45,6 +45,7 @@ object Render {
 	         <a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a>
 	         <a class="logout" href={Urls.logout}>logout</a>
 	     else
+             <a class="signup" href={Urls.signup}>sign up</a>
 	         <a class="login" href={Urls.login}>login</a>           
 	    }
 	    <form class="searchbox" action={Urls.search} method="GET">
@@ -107,6 +108,13 @@ object Render {
   
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>
+    
+  def markedPage(row : SqlRow) = 
+    <div class='claim'>
+       <a class='title' href={row.str("url")}>{row("title")}</a>
+       <a class='url' href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
+       <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
+    </div>
 }      
 
 
@@ -122,7 +130,7 @@ object Images {
 object Messages {
   val pitch = <p>
     Discover when information you read on the web is disputed.
-    Install the <a href="/thinklink/extension">Firefox browser extension</a> to have Think Link
+    Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox browser extension</a> to have Think Link
     highlight disputed claims on pages you read.  
     </p>
 }

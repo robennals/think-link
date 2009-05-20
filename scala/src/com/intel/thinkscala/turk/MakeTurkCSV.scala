@@ -6,6 +6,8 @@ import scala.collection.mutable.HashMap
 import java.io.FileWriter
 
 object MakeTurkCSV {
+  val filename = "v4_hoaxes"
+  
   val store = Pool.get
 
   // questions per task
@@ -15,7 +17,7 @@ object MakeTurkCSV {
 //    (n => List("front","snip","back") map (v => v+n)))
   
   val cols = List("claim") ++ ((1 to PERTASK) flatMap 
-    (n => List("snip") map (v => v+n)))
+    (n => List("snip","url","title","searchtext") map (v => v+n)))
 
                                     //  def splitContext(context : String, snip : String) : (String,String) = {
 //    val startpos = context indexOf snip
@@ -43,6 +45,10 @@ object MakeTurkCSV {
 //      thisreq("front"+nthitem) = front
 //      thisreq("back"+nthitem) = back
       thisreq("snip"+nthitem) = r.str("abstract")        
+      thisreq("url"+nthitem) = r.str("url")
+      thisreq("title"+nthitem) = r.str("title")
+      thisreq("searchtext"+nthitem) = r.str("searchtext")
+      thisreq("position"+nthitem) = r.int("position").toString
       nthitem+=1
     })
     return turkdata
@@ -51,11 +57,12 @@ object MakeTurkCSV {
   def mkFileName(claim : String) = "/home/rob/git/thinklink/turk/input/"+claim+".csv"
   
   def main(args : Array[String]){
+    val outfile = new FileWriter(mkFileName(filename))
     val requests = GenerateTurkData.requests
     requests.foreach(req => {
       val turkdata = makeWorkUnits(req.claim)
-      val outfile = new FileWriter(mkFileName("newbatch_"+req.claim))
       outfile.write(printCSV(turkdata,cols))
     })
+    outfile.close()
   }
 }

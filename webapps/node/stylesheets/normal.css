@@ -113,15 +113,33 @@ h1 {
 	font-weight: bold;
 }
 
-#newsnippet, #login {
+.form {
 	background-color: #FFFFAA;
 	-moz-border-radius: 10px;
 	padding: 10px;
 	width: 520px;
 }
 
-#newsnippet label, #newsnippet input, #newsnippet textarea {
+.form p {
+	margin: 0px;
+}
+
+.form label,.form input,.form textarea {
 	display: block;
+	width: 500px;
+	font-size: 15px;	
+	font-weight: bold;
+	padding: 4px;
+}
+
+.form input, .form textarea {
+	margin-bottom: 10px;
+}
+
+.form .submit {
+	width: auto;
+	margin-top: 20px;
+	margin-bottom: 0px;
 }
 
 #newsnippet #name, #newsnippet textarea {
@@ -137,6 +155,7 @@ h1 {
 	font-size: 15px;
 	font-weight: bold;
 }
+
 
 
 
@@ -177,6 +196,14 @@ h1 {
 	margin: 3px;
 }
 
+.claim .url {
+	display: block;
+	margin-left: 10px;
+}
+
+.says {
+	margin-left: 10px;
+}
 #supports, #opposed, #related-claims, #created, #instance {
 	background-color: #ECEFF5;
 	border: 1px solid gray;
@@ -263,6 +290,7 @@ h1 {
 
 #bigsearch .submit, #snipsearch .submit, #search .submit {
 	padding: 3px;
+	display: inline;
 }
 
 .message {
@@ -296,19 +324,25 @@ h1 {
 */
 }
 
-#login label {
+#login label, #signup label {
 	display: block;
 }
 
 .searchbox {
 	display: inline;
 	margin-left: 30px;
+	background-color: transparent;
+	border: none;
 }
 
 .searchbox .query {
 	border-width: 1px 0 1px 1px;
 	margin: 1px;
 	margin-bottom: 2px;
+	font-size: 12px;
+	display: inline;
+	width: 100px;
+	padding: 0px;
 }
 
 .icon {
@@ -317,6 +351,8 @@ h1 {
 	padding: 0px;
 	margin: 0px;
 	cursor: pointer;
+	width: 16px;
+	display: inline;
 }
 
 .bossurl {
@@ -393,6 +429,8 @@ h1 {
 .pageselector {
 	text-align: right;
 	padding: 8px;
+	padding-top: 0px;
+	margin-top: 0px;
 }
 
 /*

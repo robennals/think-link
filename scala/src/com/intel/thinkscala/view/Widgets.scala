@@ -20,7 +20,7 @@ object Widgets {
 		  <div class="header">
 		    {options flatMap {
 		      case (name,_) if name == selected => <span>{name}</span>
-		      case (name,_) => <a href={c.modifiedUrl("tab",name)}>{name}</a>
+		      case (name,_) => <a href={c.modifiedUrl("tab" -> name, "page" -> 0)}>{name}</a>
 		    }}
 		  </div>
 		  <div class="body">
@@ -92,7 +92,7 @@ object Widgets {
    def pagedList(content : Int => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
      val current = c.argIntDflt("page",0)
      (<div class="pager">
-     	{pageSelector(c.argIntDflt("page",0))}
+        {pageSelector(c.argIntDflt("page",0))}
      	{content(current)}
      	{pageSelector(c.argIntDflt("page",0))}
      </div>)

@@ -1,0 +1,33 @@
+
+The users were primarily concerned with two issues: (i) a perceived lack of novelty (primarily reviewer 1), (ii) worries about bootstrapping
+
+= Novelty =
+
+While web annotation systems are old hat, as reviewer 1 stated: "[Think Link] appears to be the first work to make use of Open Hypermedia for identifying disputed statements on the web"
+
+You could of course use an existing, less structured, annotation system to mark disputed information: either insert a comment saying that you disagree with something, or insert a link to conflicting information.
+
+The key contribution of Think Link is that, by imposing additional structure on annotations, it provides a better experience for finding and marking disputed information. In particular:
+
+* Since Think Link knows when snippets are making the same claim, a user can ask to not be notified about a particular claim again - seeing many annotations about the same claims would be annoying.
+
+* Since Think Link links to an argumentation graph rather than an arbitrary web page, a link will always give a user whatever the community believes to be the best evidence for or against a claim, rather than what a particular user liked.
+
+* Think Link reduces "noise" by not allowing users to add arbitrary text to a page, only allowing a user to link to a structured claim node, and using voting to determine what claims and snippets are actually worth showing to users. 
+
+* Think Link makes it easy for a user to mark many snippets that make the same same claim "in bulk" and suggests claims and topics.
+
+
+= Bootstrapping =
+
+Bootstrapping is an important challenge for a tool such as Think Link and something we could discuss in more depth.
+
+Our set of claims has been bootstrapped by important lists of disputed claims from several existing web sites. Currently we have Snopes and a couple of debate-focussed websites. We also have a task on Amazon Mechanical Turk to tell us more disputed claims.
+
+Our set of snippets has been bootstrapped by using a task on Amazon Mechanical Turk. Turk users are presented with a list of candidate snippets for a claim and asked to tell us which snippets are indeed making the claim. The candidate snippets come from a Yahoo BOSS search. We have found that users will mark up 10 snippets for only 2 cents - allowing us to build data sat very quickly provided 
+
+Our connections between claims are currently entered entirely manually, but in future we plan to bootstrap that using mechanical turk too.
+
+
+Reviewer 5 was concerned that, since a web page saying global warming did not exist was less popular, it would be less likely to be marked than one that said it did exist. In fact the converse is true. Since there are more activists who believe that global warming exists, more people will use search engines to find and highlight pages that say global warming does not exist, and thus such pages are more likely to be highlighted.
+
