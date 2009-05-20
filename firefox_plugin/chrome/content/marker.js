@@ -125,10 +125,12 @@ function addFader(viewframe){
 }	
 
 function viewClaim(id) {
-	var doc = content.document;
-	tl_log("viewclaim");
 	var apipath = get_api_path();
-	var url = apipath+"/node/"+id;	
+	viewFrame(apipath+"/node/"+id);
+}
+
+function viewFrame(url) {
+	var doc = content.document;
 	var that = this;
 	
 	if(doc.getElementById("tl_point_browser")){

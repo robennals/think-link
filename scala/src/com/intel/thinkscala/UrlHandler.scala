@@ -29,6 +29,11 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
     if(req.getParameter(name) != null){
       Integer.parseInt(req.getParameter(name))
      }else 0
+  def argBool(name : String) : Boolean = 
+    if(req.getParameter(name) != null){
+      java.lang.Boolean.parseBoolean(req.getParameter(name))
+     }else false
+
   
   def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
   def arg(name : String) = req.getParameter(name)
@@ -71,6 +76,10 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   
   def outputHtml(title : String, html : NodeSeq){
     UrlHandler.outputHtml(res,Template.normal(this,title,html),true)
+  }
+  
+  def outputMiniHtml(html : NodeSeq){
+    UrlHandler.outputHtml(res,Template.mini(this,html),true)
   }
   
   def outputRawHtml(html : NodeSeq){

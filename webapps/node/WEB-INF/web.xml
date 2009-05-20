@@ -67,6 +67,12 @@
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
+	<url-pattern>/mini/*</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
 	<url-pattern>/claim/*</url-pattern>
 	</servlet-mapping>
 	

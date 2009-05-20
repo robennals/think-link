@@ -27,9 +27,13 @@ function thinklink_msg(msg){
 	cs.logStringMessage(thinklink_name + ": " + msg);
 }
 
-function thinklink_new_snippet(){
-	var doc = thinklink_winlistener.getDoc();
-	doc.location.href = "javascript:thinklink_newSnippet()";
+function thinklink_new_snippet(isdisputed){
+	var text = content.document.getSelection();
+	var apipath = get_api_path();
+	viewFrame(apipath+"/mini/newsnippet?text="+encodeURIComponent(text)+
+		"&url="+encodeURIComponent(content.document.location.href)+
+		"&title="+encodeURIComponent(content.document.title)+
+		"&isdisputed="+isdisputed)
 }
 
 var thinklink_winlistener = {
@@ -154,6 +158,12 @@ function thinklink_login(){
 	var username = document.getElementById("thinklink-username").value;
 	var password = document.getElementById("thinklink-password").value;
 	thinklink_setCookies(username,password);
+}
+
+function autoLogin(){
+	if(content.document.location.href.substring(0,35) == "http://factextract.cs.berkeley.edu/"){
+		
+	}
 }
 
 window.addEventListener("load", function(){

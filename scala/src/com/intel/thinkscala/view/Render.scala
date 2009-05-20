@@ -143,6 +143,9 @@ object Template {
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
     basics(title,topbar(c) ++ body)
   
+  def mini(c : ReqContext, body : NodeSeq) =    
+    basics("Think Link Popup Interface",body)
+  
   def basics(title : String, body : NodeSeq) =
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>

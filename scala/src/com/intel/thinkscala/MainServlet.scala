@@ -4,8 +4,8 @@ import java.io._
 import com.intel.thinkscala.Util._
 import com.intel.thinkscala.util._
 import com.intel.thinkscala.view._
+import com.intel.thinkscala.view.Mini
 import scala.xml._
-import com.intel.thinkscala.view.Template
 
 object FixedUrls {
   val base = "http://factextract.cs.berkeley.edu/thinklink"
@@ -29,6 +29,19 @@ object Urls {
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
   def searchclaims(query : String) = "/claim/search?query="+encode(query)
   def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
+}
+
+object MiniUrls {
+  val base = Urls.base + "/mini"
+  val newsnippet = base + "/newsnippet"
+}
+
+object MiniPostUrls {
+  val base = MiniUrls.base
+  def newsnippet(claimid : Int, disputed : Boolean, text : String, url : String, title : String) =
+    base + "/newsnippet?text="+encode(text)+"&url="+encode(url)+"&title="+encode(title)+
+    		"&claim="+claimid+"&disputed="+disputed
+  def newclaimsnippet = base + "/newclaimsnippet"
 }
 
 object PostUrls { 
@@ -161,12 +174,24 @@ class MainServlet extends HttpServlet {
       c.outputHtml("Welcome to Think Link",Page.home(c))
     }),
     UrlHandler("/search",c => { 	// TODO: provide API access
-      val title = c.arg("query")+" - Think Link Claim Search"
-      c.outputHtml(title,Page.search(c))
-    },c => {
-      c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
-    }    
+	      val title = c.arg("query")+" - Think Link Claim Search"
+	      c.outputHtml(title,Page.search(c))
+	    },c => {
+	      c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
+	    }    
     ),
+    UrlHandler("/mini/newsnippet",c=>{
+      val text = c.arg("text")
+      val url = c.arg("url")
+      val title = c.arg("title")
+      val isdisputed = c.argBool("isdisputed")
+      var query = c.arg("query")
+      if(query == null){
+        query = text;
+      }
+      c.userid
+      c.outputMiniHtml(Mini.newsnippet(text,url,title,isdisputed,query)(c))      
+    }),
     UrlHandler("""/claim/(\d*)/findsnippets""", c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + "Find Instances with Think Link"

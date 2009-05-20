@@ -10,13 +10,34 @@
 
 
 	<toolbarpalette id="BrowserToolbarPalette">
-			<toolbarbutton class="toolbarbutton-1" label="Mark Think Link Snippet" id="thinklink-snipbutton" position="2" 
-	image="chrome://thinklink/skin/comment_add.png" oncommand="thinklink_new_snippet()" tooltiptext="New Think Link Snippet"/>
+			<toolbarbutton class="toolbarbutton-1" label="This is disputed" id="thinklink-disputed" position="2" 
+	image="chrome://thinklink/skin/lightbulb_red.png" oncommand="thinklink_new_snippet(true)" tooltiptext="Mark the selected text as disputed"/>
+				<toolbarbutton class="toolbarbutton-1" label="Use as evidence" id="thinklink-evidence" position="2" 
+	image="chrome://thinklink/skin/lightbulb.png" oncommand="thinklink_new_snippet(false)" tooltiptext="Use the selected text as evidence for or against a claim"/>
+
 	</toolbarpalette>
+
+	<menupopup id="menu_viewPopup">
+		<menuseparator/>
+		<menuitem label="View Think Link" oncommand="window.open('http://factextract.cs.berkeley.edu')" />
+	</menupopup>
+
+    <menupopup id="menu_HelpPopup">
+		<menuseparator/>
+        <menuitem label="Think Link Help" oncommand="window.open('http://confront.intel-research.net')"/>
+    </menupopup>
+
 
 	<popup id="contentAreaContextMenu" insertafter="context-searchselect">
 		<menuseparator/>
 		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb_red.png" label="This is disputed" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet(true)"/>
-		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb.png" label="This is interesting" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet(false)"/>
+		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb.png" label="Use as evidence" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet(false)"/>
 	</popup>
+	
+	<statusbar id="status-bar">
+		<statusbarpanel id="thinklink-status" onclick="window.open('http://factextract.cs.berkeley.edu')">
+			<image id="thinklink-statusicon" src="chrome://thinklink/skin/lightbulb_off.png" tooltiptext='click to open Think Link'/>
+		</statusbarpanel>			
+	</statusbar>
+
 </overlay>

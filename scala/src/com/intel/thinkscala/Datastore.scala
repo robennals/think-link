@@ -116,10 +116,16 @@ class Datastore {
     get_info.queryOne(id)
   }
 
-  
+  // == recent stuff ==
+    
   val log_recent = stmt("REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)")
   def logRecent(userid : Int, nodeid : Int) = log_recent.update(userid,nodeid)
  
+  val get_recent = stmt("SELECT * FROM v2_node,v2_history "+
+                          "WHERE v2_node.id = v2_history.node_id AND v2_history.user_id = ? "+
+  						  "ORDER BY date DESC LIMIT 20")
+  def getRecentClaims(userid : Int) = get_recent.queryRows(userid)
+  
   // === find marked stuff ===
   
   val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext "+
