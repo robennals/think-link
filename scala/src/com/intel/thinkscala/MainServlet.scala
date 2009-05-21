@@ -8,15 +8,16 @@ import com.intel.thinkscala.view.Mini
 import scala.xml._
 
 object FixedUrls {
-  val base = "http://factextract.cs.berkeley.edu/thinklink"
-  def confirmUser(id : Int, nonce : Int) = base + "/confirm?userid="+id+"&nonce="+nonce 
+  val base = "http://factextract.cs.berkeley.edu/"
+  def confirmUser(id : Int, nonce : Int) = base + "confirm/"+nonce 
 }
 
 object Urls {
   val base = "/thinklink"
   val home = base
+  def img(name : String) = base + "/images/"+name + ".png"
   val extension = "https://addons.mozilla.org/en-US/firefox/addon/11712"
-  val login = base+"/login"
+  def login(url : String) = base+"/login+?url="+encode(url)
   val logout = base+"/logout"
   val signup = base+"/signup"
   val search = base+"/search"
@@ -81,9 +82,9 @@ class MainServlet extends HttpServlet {
       if(user.realuser){
         c.setCookie("email",email)
         c.setCookie("password",password)        
-        c.redirect(Urls.base)					// TODO: remember where the login started
+        c.redirect(c.arg("url"))			
       }else{
-        c.outputHtml("Login Failed - Please Try Again",Page.login("Login Failed"))
+        c.outputHtml("Login Failed - Please Try Again",Page.login("Login Failed",c.arg("url")))
       }
     }),
     UrlHandler("/signup", c => {
@@ -180,6 +181,11 @@ class MainServlet extends HttpServlet {
 	      c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
 	    }    
     ),
+    UrlHandler("/mini/claim/(\\d*)",c=>{
+      val claimid = c.urlInt(1)
+      val claim = c.store.getInfo(claimid,c.maybe_userid)
+ 	  c.outputMiniHtml(Mini.claim(claim)(c))      
+    }),
     UrlHandler("/mini/newsnippet",c=>{
       val text = c.arg("text")
       val url = c.arg("url")
@@ -200,10 +206,11 @@ class MainServlet extends HttpServlet {
       c.outputHtml(title,Page.findsnippets(claim,query)(c))
     }),
     UrlHandler("/claim/new",c => {
-      c.userid
+      c.requireLogin
       c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
     }),
     UrlHandler("""/claim/(\d*)/addevidence""",c=>{
+      c.requireLogin
       val claimid = c.urlInt(1)
       val claim = c.store.getInfo(claimid,c.maybe_userid)
       val rel = c.arg("rel")
@@ -226,15 +233,14 @@ class MainServlet extends HttpServlet {
       c.outputHtml(title,Page.user(c,row))
     }),   
     UrlHandler("/login",c => {
-      c.outputHtml("Login",(<div>{Page.login("Login")}</div>))
+      c.outputHtml("Login",(<div>{Page.login("Login",Urls.base)}</div>))
     }),
     UrlHandler("/signup",c => {
       c.outputHtml("Sign up with Think Link",Page.signup)      
     }),
-    UrlHandler("/confirm",c => {
-      val nonce = c.argInt("nonce")
-      val userid = c.argInt("userid")
-      if(c.store.confirmUser(userid,nonce)){
+    UrlHandler("/confirm/(\\d*)",c => {
+      val nonce = c.urlInt(1)
+      if(c.store.confirmUser(nonce)){
     	  c.outputHtml("Account Confirmed",Page.confirmed)
       }else{
     	  c.outputHtml("Bad Confirmation",Page.badconfirm)

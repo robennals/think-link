@@ -17,9 +17,6 @@
       <preferences>
       	<preference id="ThinkLink-pref-username" name="extensions.thinklink.username" type="string"/>
       	<preference id="ThinkLink-pref-password" name="extensions.thinklink.password" type="string"/>
-      	<preference id="ThinkLink-pref-javascript" name="extensions.thinklink.javascript" type="string"/>
-      	<preference id="ThinkLink-pref-api" name="extensions.thinklink.api" type="string"/>
-
       </preferences>
 	
       <groupbox>
@@ -35,44 +32,15 @@
 		        		<label value="Password:"/>
 		        		<textbox id="thinklink-password" preference="ThinkLink-pref-password" class="padded" flex="1" type="password"/>
 							</row>
-							<row>
-								<spacer/>
-								<hbox>
-									<spacer flex="1"/>
-									<button id="thinklink-login" label="Login" oncommand="thinklink_login()"/>
-								</hbox>
-							</row>
-						</rows>
-
+					</rows>
     			</grid>
       </groupbox>
                            
           <hbox align="center">
               <label value="Don't have an account yet?"/>
-              <button label="Sign Up for a Think Link Account" oncommand="window.open('http://confront.intel-research.net/Sign_Up.html')"/>
+              <button label="Sign Up for a Think Link Account" oncommand="window.open('http://factextract.cs.berkeley.edu/thinklink/signup')"/>
           </hbox>
       
-      <separator/>
-      
-			<groupbox>
-				<caption label="Developer Options"/>
-          <grid>
-      		<columns><column/><column flex="1"/></columns>
-      		<rows>
-      		<row align="center">
-		        <label value="Javascript Path:"/>
-    		    <textbox id="thinklink-javascript" preference="ThinkLink-pref-javascript" class="padded" flex="1" type="string"/>
-    		  </row>
-	        <row align="center">
-        		<label value="API Path:"/>
-        		<textbox id="thinklink-api" preference="ThinkLink-pref-api" class="padded" flex="1" type="string"/>
-					</row>
-					</rows>
-
-				</grid>
-			</groupbox>
-      
-
     </prefpane>
   </prefwindow>
 </overlay>

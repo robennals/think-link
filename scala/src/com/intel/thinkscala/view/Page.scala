@@ -10,7 +10,6 @@ object Page {
     <div class="content">
       <h1 class="logo">Think Link</h1>
       <div class="tagline">Are you being duped?</div>
-      <a class="install" href={Urls.extension}>Install The Think Link Firefox Extension</a> 
       <div class="message">{Messages.pitch}</div>
 
       <form id="bigsearch" action="search" method="GET">        
@@ -73,9 +72,7 @@ object Page {
       </div>
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"found by ")}
-      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
-      <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
-      <div id="evidence">
+      <div class="evidence">
    	      <div id="opposed">
 	        <h2>Opposing Evidence</h2>
             {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
@@ -164,7 +161,7 @@ object Page {
     <div class="error">
     </div>
     
-  def login(title : String) =
+  def login(title : String, path : String) =
     <div class="content">
     	<h1>{title}</h1>
 		<div class="message">
@@ -174,6 +171,7 @@ object Page {
           If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
         </div>
 	    <form class='form' id="login" action="login" method="POST">	   
+            <input class='hidden' type='hidden' name='url' value={path}/>
 	        <label for="email">email</label>
 	        {Widgets.greyInput(null,"email","Enter the email address you signed up with")}
 	        <p><label for="password">password</label>
@@ -235,7 +233,7 @@ object Page {
        <div class='message'>
          Your account has been successfully confirmed. 
        </div>
-       <div class='message'><a href={Urls.login}>login</a> with your new account.</div>
+       <div class='message'><a href={Urls.login(Urls.base)}>login</a> with your new account.</div>
     </div>
     
   // TODO: support retreiving or changing existing password

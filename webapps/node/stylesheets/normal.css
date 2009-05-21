@@ -14,7 +14,7 @@ a:hover, a h1:hover{
 	text-decoration: underline;
 }
 
-body {
+.body {
 	background-color: #eeeeee;
 	margin: 0px;
 	padding: 0px;
@@ -128,10 +128,13 @@ h1 {
 	display: block;
 	width: 500px;
 	font-size: 15px;	
-/*
 	font-weight: bold;
-*/
 	padding: 4px;
+}
+
+.form .hidden {
+	padding: 0px;
+	margin: 0px;
 }
 
 .form label {
@@ -146,6 +149,18 @@ h1 {
 	width: auto;
 	margin-top: 20px;
 	margin-bottom: 0px;
+}
+
+#login {
+	width: 300px;
+}
+
+#login input {
+	width: 280px;
+}
+
+#login .submit {
+	width: auto;
 }
 
 #newsnippet #name, #newsnippet textarea {
@@ -262,8 +277,21 @@ h1 {
 
 .install {
 	position: absolute;
-	top: 30px;
-	right: 30px;
+	top: 28px;
+	right: 6px;
+	font-weight: bold;
+	font-size: 14px;
+	background-color: #FFFFAA;
+	padding:4px;
+	-moz-border-radius: 4px;
+	color: black;
+}
+
+.hasextension {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	color: white;
 }
 
 #bigsearch, #snipsearch, #search {
@@ -435,6 +463,7 @@ h1 {
 	padding: 8px;
 	padding-top: 0px;
 	margin-top: 0px;
+	background-color: white;
 }
 
 /*
@@ -471,7 +500,7 @@ h1 {
 	border: 1px solid gray;
 }
 
-#evidence .add {
+.evidence .add {
 	margin-bottom: 0px;
 	margin-top: 10px;
 	margin-left: 4px;
@@ -487,15 +516,54 @@ h1 {
 	margin-bottom: 4px;
 }
 
+/* == Mini Interface == */
+
 .minicontent #claimlist {
 	margin-top: 4px;
 }
 
 .minicontent {
 	padding: 8px;
+	background-color: #eeeeee;
+	-moz-border-radius: 8px;
+
 }
 
 .minicontent h1 {
 	margin-top: 0px;
 	font-size: 16px;
+}
+
+.miniform {
+	background-color: #FFFFAA;
+	-moz-border-radius: 10px;
+	padding: 4px;
+}
+
+.miniform input, .miniform label, .miniform textarea{
+	display: block;
+	width: 400px;
+}
+
+.miniform label {
+	margin-top: 10px;
+}
+
+.miniform .submit {
+	margin-top: 10px;
+	width: auto;
+}
+
+.minititle {
+	font-size: 16px;
+	margin-bottom: 6px;
+	display: block;
+	font-weight: bold;
+}
+
+img {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	vertical-align: middle;
 }

@@ -34,7 +34,7 @@ object Render {
     (<div class="snippet">
         <span class="title">{row.getOrElse("title","")}</span>
         <div class="text">{row("text")}</div>
-        <a class="url" href={row.str("url")}>{row("url")}</a>                                                     
+        <a target="_blank" class="url" href={row.str("url")}>{row("url")}</a>                                                     
     </div>)
    }
      
@@ -46,12 +46,12 @@ object Render {
 	         <a class="logout" href={Urls.logout}>logout</a>
 	     else
              <a class="signup" href={Urls.signup}>sign up</a>
-	         <a class="login" href={Urls.login}>login</a>           
+	         <a class="login" href={Urls.login(c.getUrl)}>login</a>           
 	    }
 	    <form class="searchbox" action={Urls.search} method="GET">
            {greyInput("query","query","Search")}
            <input class="icon" type="image" src={Images.search} alt="search"/>
-        </form>
+        </form>         
     </div>
     
   def userref(id : Int, name : String, message : String) =
@@ -92,7 +92,7 @@ object Render {
        <a class="add" onclick="doAdd(this)">{if(mode == "added") "added" else "add"}</a>
        <a class="ignore" onclick="doIgnore(this)">{if(mode == "ignored") "ignored" else "ignore"}</a>
          }else{
-       <a class="mustlogin" href={Urls.login}>login to add</a>
+       <a class="mustlogin" href={Urls.login(c.getUrl)}>login to add</a>
          }
        }         
     </div>    
@@ -111,10 +111,17 @@ object Render {
     
   def markedPage(row : SqlRow) = 
     <div class='claim'>
-       <a class='title' href={row.str("url")}>{row("title")}</a>
-       <a class='url' href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
+       <a class='title' target="_blank" href={row.str("url")}>{row("title")}</a>
+       <a class='url' target="_blank" href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
        <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
     </div>
+  
+  def extension(c : ReqContext) = 
+    if(c.getCookie("extension") == "true"){
+    	<div class='hasextension'>extension installed</div>     
+    }else{
+        <a class='install' href={Urls.extension}>Install the FireFox extension</a>
+    }
 }      
 
 
@@ -141,10 +148,10 @@ object Template {
   import Render._
   
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(title,topbar(c) ++ body)
+    basics(title,(<body class='body'>{topbar(c) ++ extension(c) ++ body}</body>))
   
   def mini(c : ReqContext, body : NodeSeq) =    
-    basics("Think Link Popup Interface",body)
+    basics("Think Link Popup Interface",(<body class='minibody'>{body}</body>))
   
   def basics(title : String, body : NodeSeq) =
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -157,8 +164,6 @@ object Template {
       <script src="/thinklink/javascript/jquery-1.2.3.js" type="text/javascript"/>
       <script src="/thinklink/javascript/standard.js" type="text/javascript"/>
     </head>
-    <body>
       {body}
-    </body>
     </html>  
 }

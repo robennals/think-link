@@ -107,6 +107,15 @@ var thinklink_winlistener = {
 };
 
 
+function thinklink_setCookie(url,name,value){
+	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
+	var uri = ios.newURI(url, null, null);
+	var cookies = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
+
+	cookies.setCookieString(uri, null, name+"="+value+";",null)
+}
+
+
 function thinklink_setCookieWithPaths(cookieSvc,cookieUri,name,value,path){
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/node", null);
   cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/scripthack", null);
@@ -166,9 +175,28 @@ function autoLogin(){
 	}
 }
 
+
 window.addEventListener("load", function(){
+	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
+	thinklink_setCookie("http://localhost:8180/","extension","true");
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
 	},false);
 },false);
+
+//window.addEventListener("load", function(){
+	//var appcontent = document.getElementById("appcontent")
+	//var tabcontent = document.getElementById("content")
+	//if(!appcontent && tabcontent){
+		//appcontent = tabcontent.parentNode;	
+	//}
+
+	//thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
+	//thinklink_setCookie("http://localhost:8180/","extension","true");
+	//appcontent.addEventListener("DOMContentLoaded",function(ev){
+		//thinklink_getLogin();
+		//var doc = ev.target.defaultView.content.document;
+		//mark_snippets(doc);
+	//},false);
+//},false);

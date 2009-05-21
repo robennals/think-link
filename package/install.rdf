@@ -4,7 +4,7 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
     <Description about="urn:mozilla:install-manifest">
         <em:id>thinklink@intel.com</em:id>
-        <em:version>0.15</em:version>
+        <em:version>0.16</em:version>
         <em:type>2</em:type>
         
         <em:targetApplication>
@@ -20,6 +20,6 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
         <em:description>See when information you read is disputed</em:description>
         <em:creator>Rob Ennals and Beth Trushkowski</em:creator>
         <em:homepageURL>http://confront.intel-research.net</em:homepageURL>
-        <em:iconURL>chrome://thinklink/skin/lightbulb.png</em:iconURL>
+        <em:iconURL>chrome://thinklink/skin/lightbulb_red.png</em:iconURL>
     </Description>
 </RDF>

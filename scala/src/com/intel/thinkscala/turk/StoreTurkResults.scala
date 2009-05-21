@@ -7,7 +7,7 @@ import scala.util.Sorting
 import Util._
 
 object StoreTurkResults { 
-  val filename = "/home/rob/git/thinklink/turk/output/carbon_dioxide_warming_expanded.csv"
+  val filename = "/home/rob/git/thinklink/turk/output/hoaxes.csv"
   
   val store = Pool.get
   

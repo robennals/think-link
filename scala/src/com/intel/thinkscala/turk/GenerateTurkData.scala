@@ -85,7 +85,7 @@ object GenerateTurkData {
   def main(args : Array[String]){
     requests.foreach(req => {
       log("= "+req.claim+" =")
-      val claimid = store.getClaim(req.claim,User.autoimport)
+      val claimid = store.getClaim(req.claim,User.turk)
       req.searches.foreach(search => doSearch(claimid,search))
     })
   }

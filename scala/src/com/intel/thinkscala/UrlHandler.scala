@@ -39,6 +39,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def arg(name : String) = req.getParameter(name)
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
+  def requireLogin = userid
   def maybe_userid = user.userid
   lazy val params = getParams
   lazy val format = getFormat(req)
@@ -53,6 +54,16 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.update(key,value))  
   
   def modifiedUrl(changes : (String,Any)*) = mkUrl("/thinklink"+path,params ++ changes)
+  
+  def getUrl = {
+        var reqUrl = req.getRequestURL toString
+        val queryString = req.getQueryString
+        if (queryString != null) {
+            reqUrl += "?"+queryString;
+        };
+        reqUrl
+    }
+
   
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly
@@ -96,7 +107,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   }
   
   def needLogin() {
-    outputHtml("You need to log in to do that",Page.login("You need to log in to do that"))
+    outputHtml("You need to log in to do that",Page.login("You need to log in to do that",getUrl))
   }
   
   def redirect(url : String){

@@ -42,7 +42,7 @@ class User(val name : String, val userid : Int){
 }
 
 object User {
-  val autoimport = new User("autoimport",0)
+  val autoimport = new User("autoimport",2)
   val nouser = new User("no user",0)
   val turk = new User("turk",2)
 }
@@ -72,7 +72,7 @@ class Datastore {
   val create_user = stmt("INSERT INTO v2_user (email,name,password,nonce) VALUES (?,?,?,?)")
   def createUser(email : String,name : String,password : String) : (Int,Int) = {
     import java.util.Random
-    val nonce : Int = new Random nextInt
+    val nonce : Int = Math.abs(new Random nextInt)
     val userid = create_user.insert(email,name,password,nonce)
     return (userid,nonce)      
   }                      
@@ -92,11 +92,11 @@ class Datastore {
 	  }
 
   
-  val check_confirm_user = stmt("SELECT * FROM v2_user WHERE id = ? AND nonce = ?")
-  val confirm_user = stmt("UPDATE v2_user SET nonce = 0 WHERE id = ?")
-  def confirmUser(userid : Int, nonce : Int) = {
-    check_confirm_user.queryMaybe(userid,nonce) match {
-      case Some(_) => confirm_user.update(userid); true
+  val check_confirm_user = stmt("SELECT * FROM v2_user WHERE nonce = ?")
+  val confirm_user = stmt("UPDATE v2_user SET nonce = 0 WHERE nonce = ?")
+  def confirmUser(nonce : Int) = {
+    check_confirm_user.queryMaybe(nonce) match {
+      case Some(_) => confirm_user.update(nonce); true
       case _ => false                                                                                                
     }
   }
@@ -132,6 +132,7 @@ class Datastore {
                                    "FROM v2_searchresult, v2_searchurl, v2_node "+
                                    "WHERE v2_searchurl.id = url_id "+
                                    "AND v2_node.id = v2_searchresult.claim_id "+
+                                   "AND v2_searchresult.state = 'true' "+
                                    "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
   def recentMarkedPages(page : Int) = recent_marked_pages.queryRows(page * 20)
   

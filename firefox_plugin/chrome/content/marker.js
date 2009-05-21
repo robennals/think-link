@@ -15,6 +15,8 @@ function get_api_path(){
 	return apipath;
 }
 
+var global_marked = false;
+
 function mark_snippets(doc){
 	tl_log("mark snippets");
 	var targeturl = doc.location.href;
@@ -23,6 +25,7 @@ function mark_snippets(doc){
 	tl_log(url);
 	ajaxRequest(url,function(snippets){
 		tl_log("received "+snippets.length+" snippets");
+		global_marked = false;
 		for(var i = 0; i < snippets.length; i++){
 			var snip = snippets[i];
 			tl_log(snip.text);
@@ -34,7 +37,12 @@ function mark_snippets(doc){
 			}
 		}
 		if(snippets.length > 0){
-			showMessage("This page contains disputed claims (highlighted in pink)",doc);
+			if(global_marked == true){
+				showMessage("This page contains disputed claims (highlighted in pink)",doc);
+			}else{
+				// TODO: cope better when can't find disputed claim
+				showMessage("This url was tagged with disputed claims, but we can't find them on the page anymore",doc);
+			}
 		}
 	})
 }
@@ -82,6 +90,7 @@ function mark_snippet(text,claimid,claimtext,node){
 		node.parentNode.addEventListener("click",function(){
 			viewClaim(claimid);
 		},true);
+		global_marked = true;
 	}else{
 		for(var i = 0; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
@@ -126,7 +135,7 @@ function addFader(viewframe){
 
 function viewClaim(id) {
 	var apipath = get_api_path();
-	viewFrame(apipath+"/node/"+id);
+	viewFrame(apipath+"/mini/claim/"+id);
 }
 
 function viewFrame(url) {
@@ -149,7 +158,7 @@ function viewFrame(url) {
 	win.style.position = "fixed";
 	win.style.top = "50px";
 	win.style.left = "200px";
-	win.style.width = "435px";
+	win.style.width = "458px";
 	
 	var titleBar = doc.createElement("div");
 	win.appendChild(titleBar);
@@ -166,16 +175,16 @@ function viewFrame(url) {
 	buttonBox.style.right = "4px";
 	titleBar.appendChild(buttonBox);
 	
-	var ignoreButton = doc.createElement("input");
-	ignoreButton.className = "tl_openbutton";
-	ignoreButton.setAttribute("type","button");
-	ignoreButton.setAttribute("value","Don't highlight again");
-	buttonBox.appendChild(ignoreButton);
-	ignoreButton.addEventListener("click",function(){
-		that.hideMe();
-		tl_doAJAX("tl_ignore","scripthack/ignoreclaim.js"+
-			"?claim="+snippet.claimid,function(){});					
-	},true);
+	//var ignoreButton = doc.createElement("input");
+	//ignoreButton.className = "tl_openbutton";
+	//ignoreButton.setAttribute("type","button");
+	//ignoreButton.setAttribute("value","Don't highlight again");
+	//buttonBox.appendChild(ignoreButton);
+	//ignoreButton.addEventListener("click",function(){
+		//that.hideMe();
+		//tl_doAJAX("tl_ignore","scripthack/ignoreclaim.js"+
+			//"?claim="+snippet.claimid,function(){});					
+	//},true);
 
 	var close = doc.createElement("img");
 	close.style.width = "64px";
@@ -192,6 +201,7 @@ function viewFrame(url) {
 	// add actual content
 	var frameholder = doc.createElement("div");
 	frameholder.style.height = "430px";
+	frameholder.style.width = "430px";
 	frameholder.style.marginTop = "26px";
 
 	var pointframe = doc.createElement("iframe");
@@ -203,7 +213,7 @@ function viewFrame(url) {
 	pointframe.setAttribute("id","tl_point_frame");
 	pointframe.setAttribute("allowtransparency","true");
 	frameholder.appendChild(pointframe);
-	frameholder.style.width="100%";
+//	frameholder.style.width="100%";
 	win.appendChild(frameholder);
 
 	win.style.visibility = "visible";

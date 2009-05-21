@@ -2,6 +2,49 @@ package com.intel.thinkscala.view
 import com.intel.thinkscala._
 
 object Mini {
+  def claim(row : SqlRow)(implicit c : ReqContext) =
+    <div class="minicontent">
+      <h1>Disputed Claim:</h1>
+      <div><a class='minititle' target="_blank" href={Urls.claim(row("id"))}>{row("text")}
+      <img src={Urls.img("application_go")}/>
+      </a></div>
+      
+      {Widgets.tabs(
+          "Opposing Evidence" -> (() =>
+	  	      <div class='evidence' id="opposed">
+		        <h2>Opposing Evidence</h2>
+	            {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
+	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
+		      </div>
+            ),
+          "Supporting Evidence" -> (() =>
+	   	      <div class='evidence' id="supports">
+		        <h2>Supporting Evidence</h2>
+	            {c.store.evidence(row.int("id"),"supports") flatMap Render.snippet}
+	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
+		      </div>
+            )
+//          "Related Claims" -> (() => 
+//		      <div id="related-claims">
+//		        <h2>Related Claims</h2>
+//		            {c.store.linkedEitherAnyNodes(row.int("id"),"claim",0,4) flatMap Render.claim}
+//		      </div>            
+//            ),
+//          "Topics" -> (() => 
+//              <div id="minitopics">
+//		        <h2>Topics</h2>
+//		        {c.store.linkedToNodes(row.int("id"),"about","topic",0,10) flatMap Render.topicref}
+//		      </div>
+//            ),
+//          "Instance" -> (() =>
+//             <div id="instances">
+//               <span>seen <span class="count">{row("instance_count")}</span> times on the web
+//               	<a target="_blank" href={Urls.findsnippets(row("id"))}>find more</a></span>
+//             </div>
+             )
+         }
+  </div>
+  
   def newsnippet(text : String, url : String, title : String, disputed : Boolean, query : String)(implicit c : ReqContext) =
     <div class="minicontent">
       {if(disputed)
@@ -47,7 +90,7 @@ object Mini {
      
    def createNewClaim(implicit c : ReqContext) = 
      <div>
-   		<form class='miniform' id="newsnippet" action={MiniPostUrls.newclaimsnippet} method="POST">
+   		<form class='miniform' action={MiniPostUrls.newclaimsnippet} method="POST">
           <label for="name">Claim</label>
           <input type="text" id="name" name="name"/>
           <label for="descr">Optional Description</label>

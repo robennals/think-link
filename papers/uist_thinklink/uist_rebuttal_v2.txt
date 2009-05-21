@@ -1,5 +1,5 @@
 
-Reviewers were primarily concerned with two issues: (i) a perceived lack of noverty WRT previous annotation systems and (ii) bootstrapping. We believe that we could easily address both issues with revisions to the paper.
+Reviewers were primarily concerned with two issues: (i) a perceived lack of novelty WRT previous annotation systems and (ii) bootstrapping. We believe that we could easily address both issues with revisions to the paper.
 
 = Novelty =
 
@@ -15,7 +15,7 @@ This structured approach has several user-visible advantages:
 
 * If a user knows something is disputed then they can ask Think Link to not highlight any snippet that makes this claim again.
 
-* Think Link presents the best evidence as voted for by the community, rather than the favorite link chosen by a single user. Similarly, crowdsourcing is used to filter out low quality claims and snippets
+* Think Link presents the best evidence as voted for by the community, rather than the favourite link chosen by a single user. Similarly, crowd-sourcing is used to filter out low quality claims and snippets
 
 * The argumentation graph allows users to see how a claim fits into a larger argument
 
