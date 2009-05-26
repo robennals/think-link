@@ -57,3 +57,23 @@ function setSnipStatus(snip,vote){
 		}
 	)
 }
+
+function submitForm(formid,fieldname,fieldval){
+	var form = document.forms[formid];
+	form[fieldname].value = fieldval;
+	form.submit();		
+}
+
+function submitNewClaim(){
+	var claimform = document.forms.newclaimform;
+	var snipform = document.forms.newsnippet;
+	snipform.name.value = claimform.name.value;
+	snipform.descr.value = claimform.descr.value;
+	snipform.submit();
+}
+
+function closePopupWindow(){
+    var ev = document.createEvent("Events");
+    ev.initEvent("thinklink-close-popup", true, false);
+    document.body.dispatchEvent(evt);	
+}

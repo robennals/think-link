@@ -3,7 +3,9 @@ package com.intel.thinkscala.turk
 import com.intel.thinkscala._
 import com.intel.thinkscala.Util._
 
-class TurkRequest(val claim : String, val searches : List[String])
+class TurkRequest(val claim : String, val searches : List[String]){
+  def this(claim : String) = this(claim,List(claim))
+}
 
 object GenerateTurkData {
   val store = Pool.get
@@ -44,27 +46,66 @@ object GenerateTurkData {
 //    ))
 //  )
 
-// Batch 3
-  val requests = List(
-     new TurkRequest("Margarine is healthier than butter",List(
-     	"margarine is healthier than butter",
-        "margarine heart healthy",
-        "margarine saturated fat")
-     ),
-     new TurkRequest("The moon landings were faked",List(
-     	"the moon landings were faxed")
-     ),
-     new TurkRequest("Obama's stimulus package will not work",List(
-        "Obama's stimulus package will not work")
-     ),
-     new TurkRequest("9-11 was a hoax",List(
-                     "9-11 was a hoax")
-     ),
-     new TurkRequest("Marilyn Monroe was murdered",List(
-     				"Marilyn Monroe was murdered")
-     )
-  )
+//// Batch 3
+//  val requests = List(
+//     new TurkRequest("Margarine is healthier than butter",List(
+//     	"margarine is healthier than butter",
+//        "margarine heart healthy",
+//        "margarine saturated fat")
+//     ),
+//     new TurkRequest("The moon landings were faked",List(
+//     	"the moon landings were faxed")
+//     ),
+//     new TurkRequest("Obama's stimulus package will not work",List(
+//        "Obama's stimulus package will not work")
+//     ),
+//     new TurkRequest("9-11 was a hoax",List(
+//                     "9-11 was a hoax")
+//     ),
+//     new TurkRequest("Marilyn Monroe was murdered",List(
+//     				"Marilyn Monroe was murdered")
+//     )
+//  )
+    
+// Batch 4 - Travel                      
+//  val requests = List(
+//    new TurkRequest("It is rude to make eye contact in Japan"),
+//    new TurkRequest("Venice is sinking"),
+//    new TurkRequest("Toilet water swirls in the opposite direction in the southern hemisphere"),    
+//    new TurkRequest("England gets a lot of rain",List(
+//    		"England gets a lot of rain","England rains a lot","England is always raining"
+//    )),
+//    new TurkRequest("food is good in france"),
+//    new TurkRequest("British food is bad")
+//  )    
+
+// Batch 5
+//  val requests = List(
+//    new TurkRequest("genetically modified foods are dangerous",List(
+//    	"genetically modified foods dangerous","genetically modified food unsafe")),
+//    new TurkRequest("addiction is just an excuse used by criminals"),
+//    new TurkRequest("affirmative action is bad",List(
+//    	"affirmative action is bad","affirmative action is immoral","affirmative action is racist")),
+//    new TurkRequest("aid to Africa has failed"),
+//    new TurkRequest("universal healthcare in the US would be bad",List(
+//    	"socialized healthcare","government run healthcare")),
+//    new TurkRequest("genetically modified foods are essential in order to feed the world",List(
+//    	"genetically modified foods feed the world", 
+//    	"genetically modified food starvation")),
+//    new TurkRequest("birth control is a human right")    
+//  )
+
+  val requests = SpeechTopics.requests.take(40)
   
+  // Batch 6 - me. Politics
+//  val topics = List(
+//		  "Barack Obama is a socialist",
+//		  "Guantanamo Bay should be closed",
+//		  "The Iraq war war a mistake",
+//		  "American politicians are corrupt",
+//		  "
+//  )
+//  
   def doSearch(claimid : Int, search : String){
     log(search)
     val searchid = store.mkSearch(claimid,search)

@@ -36,7 +36,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
 
   
   def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
-  def arg(name : String) = req.getParameter(name)
+  def arg(name : String) = com.intel.thinklink.Util.toUTF8(req.getParameter(name))
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
   def requireLogin = userid

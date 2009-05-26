@@ -15,17 +15,17 @@ function get_api_path(){
 	return apipath;
 }
 
-var global_marked = false;
+var global_marked = [];
 
 function mark_snippets(doc){
 	tl_log("mark snippets");
 	var targeturl = doc.location.href;
 	var apipath = get_api_path();
-	var url = apipath+"/apianon/search.json?url="+encodeURIComponent(targeturl);
+	var url = apipath+"/apianon/search.json?url="+encodeURIComponent(targeturl);	
 	tl_log(url);
 	ajaxRequest(url,function(snippets){
 		tl_log("received "+snippets.length+" snippets");
-		global_marked = false;
+		global_marked = [];
 		for(var i = 0; i < snippets.length; i++){
 			var snip = snippets[i];
 			tl_log(snip.text);
@@ -37,14 +37,25 @@ function mark_snippets(doc){
 			}
 		}
 		if(snippets.length > 0){
-			if(global_marked == true){
+			if(global_marked.length == 0){
 				showMessage("This page contains disputed claims (highlighted in pink)",doc);
 			}else{
 				// TODO: cope better when can't find disputed claim
 				showMessage("This url was tagged with disputed claims, but we can't find them on the page anymore",doc);
 			}
 		}
+		doc.thinklink_marked = global_marked;
 	})
+}
+
+function update_highlights(){
+	var marked = content.document.thinklink_marked;
+	if(marked){
+		for(var i = 0; i < marked.length; i++){
+			unmark_snippet(marked[i]);
+		}	
+	}
+	mark_snippets(content.document);
 }
 
 function findBrowser(doc){
@@ -80,23 +91,38 @@ function normalise(str){
 	return str.replace(/[^\w]/g,"")
 }
 
+function unmark_snippet(node){
+	node.style.backgroundColor = "";
+	node.style.cursor = "";
+	node.setAttribute("title","");
+	node.removeEventListener("click",showClaimPopup,true);
+}
+
 function mark_snippet(text,claimid,claimtext,node){
 	if(node.nodeName == "#comment" || normalise(node.textContent).indexOf(text) == -1){
 		return;			
 	}else if (node.nodeName == "#text") {
 		node.parentNode.style.backgroundColor = "#FFD3D3";
 		node.parentNode.style.cursor = "pointer";
-		node.parentNode.setAttribute("title",claimtext);		
-		node.parentNode.addEventListener("click",function(){
-			viewClaim(claimid);
-		},true);
-		global_marked = true;
+		node.parentNode.setAttribute("title",claimtext);
+		node.parentNode.setAttribute("thinklink_claimid",claimid);				
+		node.parentNode.addEventListener("click",showClaimPopup,true);
+		//node.parentNode.addEventListener("click",function(){
+			//viewClaim(claimid);
+		//},true);
+		global_marked.push(node.parentNode);
 	}else{
 		for(var i = 0; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
 			mark_snippet(text,claimid,claimtext,child);
 		}
 	}
+}
+
+function showClaimPopup(ev){
+	var node = ev.target;
+	var claimid = node.getAttribute("thinklink_claimid");
+	viewClaim(claimid);
 }
 
 function ajaxRequest(url,callback){
@@ -128,6 +154,7 @@ function addFader(viewframe){
 	fader.addEventListener("click",function(ev){
 		content.document.body.removeChild(fader);
 		content.document.body.removeChild(viewframe);
+		update_highlights();
 	},true);
 	content.document.body.appendChild(fader);
 	return fader;
@@ -165,9 +192,9 @@ function viewFrame(url) {
 	titleBar.setAttribute("id","tl_pb_title");
 	titleBar.style.marginBottom = "0px";
 	titleBar.style.cursor = "move";
-	titleBar.addEventListener("mousedown",function(ev){
-		tl_dragStart(ev,that.divID,"tl_point_frame");
-	},true);
+	//titleBar.addEventListener("mousedown",function(ev){
+		//tl_dragStart(ev,that.divID,"tl_point_frame");
+	//},true);
 	titleBar.className = "tl_dialog_title";
 	
 	var buttonBox = doc.createElement("span");
@@ -196,11 +223,12 @@ function viewFrame(url) {
 	close.addEventListener("click",function(){
 		content.document.body.removeChild(win);
 		content.document.body.removeChild(fader);
+		update_highlights();
 	},true);
 	
 	// add actual content
 	var frameholder = doc.createElement("div");
-	frameholder.style.height = "430px";
+	frameholder.style.height = "460px";
 	frameholder.style.width = "430px";
 	frameholder.style.marginTop = "26px";
 

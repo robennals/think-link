@@ -36,118 +36,12 @@ function thinklink_new_snippet(isdisputed){
 		"&isdisputed="+isdisputed)
 }
 
-var thinklink_winlistener = {
-	QueryInterface: function(iid){
-		var ifaces = Components.interfaces;
-
-		if(iid.equals(ifaces.nsIWebProgressListener) || 
-				iid.equals(ifaces.nsISupportsWeakReference) ||
-				iid.equals(ifaces.nsISupports)){
-			return this;
-		}else{
-			throw Components.results.NS_NOINTERFACE;
-		}
-	},	
-	
-	injectStricts: function(){
-		// DEBUG
-		this.injectScript("http://localhost:8180/thinklink/client_js/showsnippet.js",doc);
-		// this.injectFetchedScript("showsnippet.js");		
-	},
-		
-	injectFetchedScript: function(file){
-		var doc = this.getDoc();
-		var req = new XMLHttpRequest();
-		req.overrideMimeType("text/javascript");
-		req.open("GET","chrome://thinklink/content/client_js/"+file,false);
-		req.send(null);
-		this.injectLiteralScript(req.responseText,doc);
-	},
-
-	getDoc: function(){
-		if(content.document.body && content.document.body.tagName != "FRAMESET"){
-			return content.document;
-		}else if(content.frames.length > 0){
-			var maxwidth = 0;
-			var maxframe = null;
-			for(var i = 0; i < content.frames.length; i++){
-				var frame = content.frames[i];
-				if(frame.document.body.offsetWidth > maxwidth){
-					maxwidth = frame.document.body.offsetWidth;
-					maxframe = frame;
-				}
-			}
-			return frame.document;
-		}else{
-			return null;
-		}
-	},
-
-	injectLiteralScript: function(text,doc){
-		var scripttag = doc.createElement("script");
-		scripttag.text = text;
-		scripttag.type = "text/javascript";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(scripttag);
-		}catch(e){
-			thinklink_error("could not insert script tag",e);
-		}		
-	},
-	
-	injectScript: function(scripturl,doc){
-		var scripttag = doc.createElement("script");
-		scripttag.src = scripturl;
-		scripttag.type = "text/javascript";
-		try{
-			doc.getElementsByTagName("head")[0].appendChild(scripttag);
-		}catch(e){
-			thinklink_error("could not insert script tag",e);
-		}	
-	}
-};
-
-
 function thinklink_setCookie(url,name,value){
 	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
 	var uri = ios.newURI(url, null, null);
 	var cookies = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
 
 	cookies.setCookieString(uri, null, name+"="+value+";",null)
-}
-
-
-function thinklink_setCookieWithPaths(cookieSvc,cookieUri,name,value,path){
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/node", null);
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/scripthack", null);
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/node", null);
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/tl/scripthack", null);
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/thinklink/node", null);
-  cookieSvc.setCookieString(cookieUri, null, name+"="+value+"; path=/thinklink/scripthack", null);
-}
-
-
-function thinklink_setCookieForUri(uri,username,password){
-  var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
-  var cookieUri = ios.newURI(uri, null, null);
-  var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-  username = username.replace("@",".");
-  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"username",username);
-  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"email",username);
-  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"password",password);
-  thinklink_setCookieWithPaths(cookieSvc,cookieUri,"pluginversion","firefox-1");
-}
-
-function thinklink_setCookies(username,password){
-	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);   
-	var cookieUri = ios.newURI("http://mashmaker.intel-research.net/", null, null);
-	var cookieSvc = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-	cookieSvc.setCookieString(cookieUri, null, "username="+username, null);
-	cookieSvc.setCookieString(cookieUri, null, "password="+password, null);
-	thinklink_setCookieForUri("http://mashmaker.intel-research.net:3000/",username,password);
-	thinklink_setCookieForUri("http://localhost:3000/",username,password);
-	thinklink_setCookieForUri("http://localhost:8180/",username,password);
-	thinklink_setCookieForUri("http://durandal.cs.berkeley.edu/",username,password);
-	thinklink_setCookieForUri("http://factextract.cs.berkeley.edu/",username,password);
 }
 
 function thinklink_getLogin(){
@@ -160,13 +54,7 @@ function thinklink_getLogin(){
     if(prefs.prefHasUserValue("extensions.thinklink.password")){
 			password = prefs.getCharPref("extensions.thinklink.password");
 		}	
-	thinklink_setCookies(encodeURIComponent(username),encodeURIComponent(password)); 
-}
-
-function thinklink_login(){
-	var username = document.getElementById("thinklink-username").value;
-	var password = document.getElementById("thinklink-password").value;
-	thinklink_setCookies(username,password);
+	//thinklink_setCookies(encodeURIComponent(username),encodeURIComponent(password)); 
 }
 
 function autoLogin(){
@@ -175,13 +63,16 @@ function autoLogin(){
 	}
 }
 
-
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://localhost:8180/","extension","true");
+    
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
+		//ev.addEventListener("thinklirnk-close-popup",function(e){
+			//alert("close popup");return false
+		//},false,true);
 	},false);
 },false);
 

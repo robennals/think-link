@@ -463,7 +463,6 @@ h1 {
 	padding: 8px;
 	padding-top: 0px;
 	margin-top: 0px;
-	background-color: white;
 }
 
 /*
@@ -516,6 +515,10 @@ h1 {
 	margin-bottom: 4px;
 }
 
+#minisearch .query {
+	width: 300px;
+}
+
 /* == Mini Interface == */
 
 .minicontent #claimlist {
@@ -537,12 +540,12 @@ h1 {
 .miniform {
 	background-color: #FFFFAA;
 	-moz-border-radius: 10px;
-	padding: 4px;
+	padding: 8px;
 }
 
 .miniform input, .miniform label, .miniform textarea{
 	display: block;
-	width: 400px;
+	width: 380px;
 }
 
 .miniform label {
@@ -566,4 +569,21 @@ img {
 	margin: 0px;
 	padding: 0px;
 	vertical-align: middle;
+}
+
+.claimbutton {
+	display: block;
+	padding: 4px;
+}
+
+.claimbutton:hover {
+	text-decoration: none;
+	background-color: #EEEEEE;
+	-moz-border-radius: 4px;
+}
+
+.minicontent #claimlist {
+	overflow: auto;
+	max-height: 290px;
+	margin-bottom: 2px;
 }

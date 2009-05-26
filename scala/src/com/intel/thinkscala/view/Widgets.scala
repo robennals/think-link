@@ -23,7 +23,7 @@ object Widgets {
 		      case (name,_) => <a href={c.modifiedUrl("tab" -> name, "page" -> 0)}>{name}</a>
 		    }}
 		  </div>
-		  <div class="body">
+		  <div class="tabbody">
 		    {options flatMap {
 		      case (name,func) if name == selected => func()
 		      case _ => NodeSeq.Empty 

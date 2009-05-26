@@ -270,8 +270,11 @@ class Datastore {
                                         "WHERE search_id = v2_snipsearch.id AND vote=0) " +
                                     "WHERE v2_snipsearch.id = ?")
   val update_instance_count = stmt("UPDATE v2_node SET instance_count = "+
-                                     "(SELECT SUM(marked_yes) FROM v2_snipsearch WHERE claim_id = v2_node.id) "+
+                                     "(SELECT COUNT(*) FROM v2_searchresult WHERE claim_id = v2_node.id AND state = 'true') "+
                                      "WHERE id = ?")
+//  val update_instance_count = stmt("UPDATE v2_node SET instance_count = "+
+//                                     "(SELECT SUM(marked_yes) FROM v2_snipsearch WHERE claim_id = v2_node.id) "+
+//                                     "WHERE id = ?")
   def updateSearchCounts(claimid : Int, searchid : Int) = {
     update_search_counts.update(searchid)
     update_instance_count.update(claimid)    

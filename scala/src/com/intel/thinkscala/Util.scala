@@ -19,9 +19,9 @@ object Util {
   
  def encode(claim : String) = URLEncoder.encode(claim,"UTF-8")
  def decode(claim : String) = URLDecoder.decode(claim,"UTF-8")
- 
+  
  def mkUrl(path : String, args : Map[String,Any]) = 
-    path + (args map {case (key,value) => key + "=" + encode(value.toString)}).mkString("?","&","")  
+    path + (args map {case (key,value) => key + "=" + encode(com.intel.thinklink.Util.toUTF8(value.toString))}).mkString("?","&","")  
 
  
  def readToString(reader : BufferedReader) : String = {

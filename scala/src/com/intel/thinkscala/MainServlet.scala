@@ -17,7 +17,7 @@ object Urls {
   val home = base
   def img(name : String) = base + "/images/"+name + ".png"
   val extension = "https://addons.mozilla.org/en-US/firefox/addon/11712"
-  def login(url : String) = base+"/login+?url="+encode(url)
+  def login(url : String) = base+"/login?url="+encode(url)
   val logout = base+"/logout"
   val signup = base+"/signup"
   val search = base+"/search"
@@ -39,9 +39,9 @@ object MiniUrls {
 
 object MiniPostUrls {
   val base = MiniUrls.base
-  def newsnippet(claimid : Int, disputed : Boolean, text : String, url : String, title : String) =
+  def newsnippet(claimid : Int, isdisputed : Boolean, text : String, url : String, title : String) =
     base + "/newsnippet?text="+encode(text)+"&url="+encode(url)+"&title="+encode(title)+
-    		"&claim="+claimid+"&disputed="+disputed
+    		"&claim="+claimid+"&isdisputed="+isdisputed
   def newclaimsnippet = base + "/newclaimsnippet"
 }
 
@@ -103,6 +103,29 @@ class MainServlet extends HttpServlet {
 	        case _ => c.outputHtml("Could Not Send Mail",Page.badmail)
 	      }
        }
+    }),
+    UrlHandler("/mini/newsnippet", c => {
+      var claimid = c.argInt("claimid")
+      val name = c.arg("name")
+      val descr = c.arg("descr")
+      val disputed = c.argBool("isdisputed")
+	  val opposed = c.argBool("opposed")
+      val text = c.arg("text")
+      val title = c.arg("title")
+	  val url = c.arg("url")
+	  val rel = c.arg("rel")
+      if(claimid == 0){
+        claimid = c.store.makeClaim(name,descr,c.userid)
+      }      
+	  if(disputed){
+	  	val urlid = c.store.mkUrl(url,title)
+	  	val resultid = c.store.mkResult(0,urlid,0,text,"",claimid)
+	  	c.store.setSnipVote(claimid,resultid,0,c.userid,true)
+        c.outputMiniHtml(Mini.marked(claimid))
+	  }else{
+	    c.store.makeEvidence(c.userid,claimid,text,url,title,rel)
+        c.outputMiniHtml(Mini.addedEvidence(claimid))
+	  }
     }),
     UrlHandler("/claim/new", c => {
       val name = c.arg("name")

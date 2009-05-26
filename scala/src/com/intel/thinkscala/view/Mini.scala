@@ -47,18 +47,31 @@ object Mini {
   
   def newsnippet(text : String, url : String, title : String, disputed : Boolean, query : String)(implicit c : ReqContext) =
     <div class="minicontent">
-      {if(disputed)
+      <form id='newsnippet' action={MiniUrls.newsnippet} method="POST">        
+     {if(disputed)
         <h1>What claim is this snippet making?</h1>
       else
-        <h1>What claim is this evidence for?</h1>
-      }
-        {Widgets.tabs(
-          "Suggested Claims" -> (() => searchForClaims(query)),
-          "Recent Claims" -> (() => 
-            	<div id='claimlist'>{c.store.getRecentClaims(c.userid) flatMap claimButton}</div>),
-          "Create New Claim" -> (() =>
-                createNewClaim)
-        )}
+        (<div><h1>What claim is this evidence for?</h1>
+        This evidence <select name="rel">
+            <option selected={if(c.arg("rel")=="opposes") "selected" else null}>opposes</option>
+            <option selected={if(c.arg("rel")=="supports") "selected" else null}>supports</option>
+       </select> the claim:</div>)     
+     }  
+        <input type='hidden' name='text' value={c.arg("text")}/>
+        <input type='hidden' name='title' value={c.arg("title")}/>
+        <input type='hidden' name='url' value={c.arg("url")}/>
+        <input type='hidden' name='isdisputed' value={c.arg("isdisputed")}/>
+        <input type='hidden' name='claimid' id='claimid' value="0"/>
+        <input type='hidden' name='name'/>
+        <input type='hidden' name='descr'/>
+      </form>
+	    {Widgets.tabs(
+	      "Search Claims" -> (() => searchForClaims(query)),
+	      "Recent Claims" -> (() => 
+	        	<div id='claimlist'>{c.store.getRecentClaims(c.userid) flatMap claimButton}</div>),
+	      "Create New Claim" -> (() =>
+	            createNewClaim)
+	    )}
    </div>
 
    def searchForClaims(query : String)(implicit c : ReqContext) =
@@ -67,7 +80,7 @@ object Mini {
         <input type='hidden' name='text' value={c.arg("text")}/>
         <input type='hidden' name='title' value={c.arg("title")}/>
         <input type='hidden' name='url' value={c.arg("url")}/>
-        <input type='hidden' name='disputed' value={c.arg("disputed")}/>
+        <input type='hidden' name='isdisputed' value={c.arg("isdisputed")}/>
         {   if(c.arg("query") != null){
 	          <input type="text" class="query" name="query" value={c.arg("query")}/>
 	        }else{
@@ -76,29 +89,47 @@ object Mini {
         }
         <input type="submit" class="submit" value="Search"/>
 	  </form>   
-      <div id='claimlist'>
-      {c.store.searchClaims(query,0) flatMap claimButton}    
+      <div id="claimlist">
+      	{c.store.searchClaims(query,0) flatMap claimButton}    
       </div>
     </div>
 
-   
+
    def claimButton(row : SqlRow)(implicit c : ReqContext) = 
-     <div class='claimbutton'>
-       <a class='title' target="_blank" href={Urls.claim(row("id"))}>{row("text")}</a>
-       <div class='add' href={MiniPostUrls.newsnippet(row.int("id"),c.argBool("disputed"),c.arg("text"),c.arg("url"),c.arg("title"))}>choose claim</div> 
-     </div>
-     
+     <a class='claimbutton' title="choose this claim" onclick={"submitForm('newsnippet','claimid',"+row("id")+")"}>
+         {row("text")}</a>
+          
    def createNewClaim(implicit c : ReqContext) = 
      <div>
-   		<form class='miniform' action={MiniPostUrls.newclaimsnippet} method="POST">
+   		<form class='miniform' id="newclaimform">
+          <input type='hidden' name='text' value={c.arg("text")}/>
+          <input type='hidden' name='title' value={c.arg("title")}/>
+          <input type='hidden' name='url' value={c.arg("url")}/>
+          <input type='hidden' name='isdisputed' value={c.arg("isdisputed")}/>
+          <input type='hidden' name='rel' value="opposes"/>
           <label for="name">Claim</label>
           <input type="text" id="name" name="name"/>
           <label for="descr">Optional Description</label>
           <textarea rows="5" id="descr" name="descr"></textarea>   
-          <input type='hidden' name='text' value={c.arg("text")}/>
-          <input type='hidden' name='title' value={c.arg("title")}/>
-          <input type='hidden' name='url' value={c.arg("url")}/>
-          <input class='submit' type="submit" value="Create New Claim"/>
+          <button class='submit' type='button' onclick="submitNewClaim(); return false">Create New Claim</button>
         </form>
     </div>
+    
+    def marked(claimid : Int) =
+      <div class='minicontent'>
+      	<h1>Snippet has now been saved</h1>      	
+        <a href={Urls.claim(claimid)} target="_blank">go to claim</a>
+      </div>
+
+    def addedEvidence(claimid : Int) =
+      <div class='minicontent'>
+      	<h1>Evidence has now been saved</h1>      	
+        <a href={Urls.claim(claimid)} target="_blank">go to claim</a>
+      </div>
+
+    
+    def closewindow = 
+      <script type='text/javascript'>
+         closePopupWindow();
+      </script>
 }

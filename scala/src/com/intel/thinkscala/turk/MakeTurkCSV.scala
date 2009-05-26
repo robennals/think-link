@@ -6,7 +6,7 @@ import scala.collection.mutable.HashMap
 import java.io.FileWriter
 
 object MakeTurkCSV {
-  val filename = "v4_hoaxes"
+  val filename = "v4_tye_first"
   
   val store = Pool.get
 
