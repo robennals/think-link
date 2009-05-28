@@ -1,0 +1,19 @@
+
+-- tomcat --
+
+conf/server.xml
+
+Connector needs URIEncoding="UTF-8"
+	Otherwise UTF-8 characters in snippets get mangled
+
+-- mysql --
+
+/etc/mysql/my.conf
+
+[mysqld]
+ft_min_word_len = 3
+	Otherwise full text search ignores short words like "sun" and "IRS"
+
+
+
+

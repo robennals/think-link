@@ -62,31 +62,37 @@ object Page {
         </form>
     </div>
     
-  def claim(c : ReqContext, row : SqlRow) =
+  def claim(row : SqlRow)(implicit c : ReqContext) =
     <div id="claim">
       <div class="topclaim">
-	      <h1>{row("text")}</h1>
-	      <span class="instances">seen <span class="count">{row("instance_count")}</span> times on the web
+	      <h1>Claim: {row("text")}</h1>
+	      <span class="instances"><a href={Urls.findsnippets(row("id"))}>seen <span class="count">{row("instance_count")}</span> times on the web</a>
 	        <a href={Urls.findsnippets(row("id"))}>find more</a>
 	      </span>   
       </div>
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"found by ")}
-      <div class="evidence">
-   	      <div id="opposed">
-	        <h2>Opposing Evidence</h2>
-            {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
-            <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
-	      </div>
-	      <div id="supports">
-	        <h2>Supporting Evidence</h2>
-            {c.store.evidence(row.int("id"),"supports") flatMap Render.snippet}
-            <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
-	      </div>
-      </div>
-      <div id="related-claims">
-        <h2>Related Claims</h2>
-            {c.store.linkedEitherAnyNodes(row.int("id"),"claim",0,4) flatMap Render.claim}
+       <div id="claimlist">
+        {Widgets.tabs(
+          "Opposing Evidence" -> (() => 
+ 	  	      <div class='evidence' id="opposed">
+		        <h2>Opposing Evidence</h2>
+            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_).toSeq flatMap Render.snippet)}
+                <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
+              </div>),
+          "Supporting Evidence" -> (() => 
+  	  	      <div class='evidence' id="supports">
+		        <h2>Supporting Evidence</h2>
+               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.snippet)}
+                <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
+              </div>),
+          "Related Claims" -> (() => 
+              <div id='related-claims'>
+                <h2>Related Claims</h2>
+                {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
+                <a class='add' href={Urls.addlinks(row.int("id"),"claim")}>add related claim</a>                  
+              </div>)
+        )}
       </div>
       <div id="topics">
         <h2>Topics</h2>
@@ -131,7 +137,7 @@ object Page {
     
   def topic(c : ReqContext, row : SqlRow) = 
     <div id="topic">
-      <h1>{row("text")}</h1>
+      <h1>Topic: {row("text")}</h1>
       <div class="description">{row("description")}</div>
       {simpleSearch(Urls.topic(row("id")), c.arg("query"), "Search within this topic")}
       <div id="claimlist">
@@ -140,21 +146,22 @@ object Page {
       </div>
 	    <div id="topics">
 	       <h2>Related Topics</h2>
-	       {c.store.linkedEitherNodes(row.int("id"),"about","topic",0,10) flatMap topicref}
+	       {c.store.linkedTopics(row.int("id"),0) flatMap topicref}
 	    </div>
     </div>
     
-  def user(c : ReqContext, row : SqlRow) = 
+  def user(row : SqlRow)(implicit c : ReqContext) = 
     <div id="user">
-      <h1>{row("name")}</h1>
-      <div id="created">
-         <h2>Claims created by {row("name")}</h2>
-         {c.store.nodesByUser("claim",row.int("id"),0,25) flatMap Render.claim}
+      <h1>User: {row("name")}</h1>
+     <div id="claimlist">
+        {Widgets.tabs(
+          "Claims Created" -> (() => 
+            	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_).toSeq flatMap Render.claim)),
+          "Pages Marked" -> (() => 
+                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_).toSeq flatMap Render.markedPage))
+        )}
       </div>
-      <div id="instance">
-        <h2>Claim Instances found by {row("name")}</h2>
-        {c.store.userLinkCount(row.int("id"),"snippet",0,25) flatMap Render.userLinkCount}
-      </div>
+
     </div>
 
   def error(e : Exception) = 

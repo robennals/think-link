@@ -37,11 +37,12 @@ function mark_snippets(doc){
 			}
 		}
 		if(snippets.length > 0){
-			if(global_marked.length == 0){
+			if(global_marked.length > 0){
 				showMessage("This page contains disputed claims (highlighted in pink)",doc);
 			}else{
 				// TODO: cope better when can't find disputed claim
-				showMessage("This url was tagged with disputed claims, but we can't find them on the page anymore",doc);
+				claimMessage(snippets[0].claimtext,snippets[0].claimid);
+//				showMessage("This url was tagged with disputed claims, but we can't find them on the page anymore",doc);
 			}
 		}
 		doc.thinklink_marked = global_marked;
@@ -65,6 +66,31 @@ function findBrowser(doc){
 		}
 	}
 }
+
+function claimMessage(claimtext,id,doc){
+	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
+	var notification =
+		notificationBox.getNotificationWithValue("thinklink-disputed");
+	var buttons = [{
+		label: "More Info",
+		callback: function(){viewClaim(id);},
+		accessKey: "I",
+		popup: null
+		}];
+	//{
+		//label: "ping",
+		//accessKey: "K",
+		//popup: "blockedPopupOptions",
+		//callback: null
+	 //}];
+	 
+	var message = "disputed claim: "+claimtext;
+
+	const priority = notificationBox.PRIORITY_INFO_MEDIUM;
+	notificationBox.appendNotification(message, "thinklink-disputed",
+	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
+}
+
 
 function showMessage(message,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));

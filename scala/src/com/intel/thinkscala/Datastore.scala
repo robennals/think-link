@@ -135,6 +135,16 @@ class Datastore {
                                    "AND v2_searchresult.state = 'true' "+
                                    "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
   def recentMarkedPages(page : Int) = recent_marked_pages.queryRows(page * 20)
+
+  val user_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext "+
+                                   "FROM v2_searchresult, v2_searchurl, v2_node "+
+                                   "WHERE v2_searchurl.id = url_id "+
+                                   "AND v2_node.id = v2_searchresult.claim_id "+
+                                   "AND v2_node.user_id = ? "+
+                                   "AND v2_searchresult.state = 'true' "+
+                                   "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
+  def userMarkedPages(userid : Int, page : Int) = user_marked_pages.queryRows(userid, page * 20)
+
   
   // === find claims ===
   
@@ -143,13 +153,13 @@ class Datastore {
                        "WHERE v2_node.id = v2_history.node_id "+
                        "AND type = 'claim' AND opposed = true "+
                        "AND v2_user.id = v2_node.user_id "+
-                       "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 10")
+                       "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 20")
   def getHotClaims = get_hot.queryRows()
   
   val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                             "WHERE v2_user.id = v2_node.user_id "+
                             "AND type=? "+
-                            "ORDER BY instance_count DESC LIMIT 10 OFFSET ?") 
+                            "ORDER BY instance_count DESC LIMIT 20 OFFSET ?") 
   def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*10)
   def getBigTopics(page : Int) = get_frequent.queryRows("topic",page*10)
   
@@ -163,8 +173,8 @@ class Datastore {
   
   // === Follow links ===
 
-  val get_evidence = stmt("SELECT * FROM evidence WHERE claim_id=? AND verb = ?")
-  def evidence(claimid : Int, verb : String) = get_evidence.queryRows(claimid,verb)
+  val get_evidence = stmt("SELECT * FROM evidence WHERE claim_id=? AND verb = ? LIMIT 20 OFFSET ?")
+  def evidence(claimid : Int, verb : String, page : Int) = get_evidence.queryRows(claimid,verb,page * 20)
   
   val linked_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.src = v2_node.id "+
@@ -197,34 +207,44 @@ class Datastore {
                             "LIMIT ? OFFSET ?")
   def linkedToNodes(source : Int, rel : String, typ : String, offset : Int, limit : Int) = 
     linkedto_nodes.queryRows(typ,rel,source,limit,offset)
-  
-  val linked_either_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
-                            "WHERE v2_node.type = ? AND "+
-                               "((v2_link.dst = v2_node.id  AND v2_link.src = ?) "+
-                               "OR (v2_link.src = v2_node.id AND v2_link.dst = ?)) "+
-                            "AND v2_link.type = ? "+
-                            "AND v2_node.user_id = v2_user.id "+
-                            "GROUP BY v2_node.id "+
-                            "LIMIT ? OFFSET ?")
-  def linkedEitherNodes(source : Int, rel : String, typ : String, offset : Int, limit : Int) = 
-    linked_either_nodes.queryRows(typ,source,source,rel,limit,offset)
 
-  val linked_either_any_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
-                            "WHERE v2_node.type = ? AND "+
-                               "((v2_link.dst = v2_node.id  AND v2_link.src = ?) "+
-                               "OR (v2_link.src = v2_node.id AND v2_link.dst = ?)) "+
-                            "AND v2_node.user_id = v2_user.id "+
-                            "GROUP BY v2_node.id "+
-                            "LIMIT ? OFFSET ?")
-  def linkedEitherAnyNodes(source : Int, typ : String, offset : Int, limit : Int) = 
-    linked_either_any_nodes.queryRows(typ,source,source,limit,offset)
+//  val linked_either_nodes2 = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
+//                            "WHERE v2_node.type = ? AND "+
+//                               "((v2_link.dst = v2_node.id  AND v2_link.src = ?) "+
+//                               "OR (v2_link.src = v2_node.id AND v2_link.dst = ?)) "+
+//                            "AND v2_link.type = ? "+
+//                            "AND v2_node.user_id = v2_user.id "+
+//                            "GROUP BY v2_node.id "+
+//                            "LIMIT ? OFFSET ?")
+  val linked_topics = stmt("SELECT v2_node.text,v2_node.id,v2_node.instance_count,v2_node.description,user_id,v2_user.name AS username FROM "+
+                    " ((select src AS id FROM v2_link WHERE dst = ?) "+
+                         "UNION (select dst AS id FROM v2_link WHERE src = ?)) "+
+                    "AS lnks, v2_node, v2_user "+
+                    "WHERE lnks.id = v2_node.id "+
+                    "AND v2_node.type = 'topic' "+
+                    "AND v2_user.id = v2_node.user_id "+
+  					"LIMIT 20 OFFSET ?")
+  def linkedTopics(node : Int, page : Int) = linked_topics.queryRows(node,node,page * 20)  					
+//  
+//  def linkedEitherNodes(source : Int, rel : String, typ : String, offset : Int, limit : Int) = 
+//    linked_either_nodes.queryRows(typ,source,source,rel,limit,offset)
 
   
+  val linked_claims = stmt("SELECT v2_node.text,v2_node.id,v2_node.instance_count,v2_node.description,user_id,v2_user.name AS username FROM "+
+                    " ((select src AS id FROM v2_link WHERE dst = ?) "+
+                         "UNION (select dst AS id FROM v2_link WHERE src = ?)) "+
+                    "AS lnks, v2_node, v2_user "+
+                    "WHERE lnks.id = v2_node.id "+
+                    "AND v2_node.type = 'claim' "+
+                    "AND v2_user.id = v2_node.user_id "+
+  					"LIMIT 20 OFFSET ?")
+  def linkedClaims(claim : Int, page : Int) = linked_claims.queryRows(claim,claim,page*20)
+    
   val nodes_by_user = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                            "WHERE v2_node.type = ? AND v2_node.user_id = ? "+
                            "AND v2_node.user_id = v2_user.id "+ 
-                           "LIMIT ? OFFSET ?")
-  def nodesByUser(typ : String, userid : Int, offset : Int, limit : Int) = nodes_by_user.queryRows(typ,userid,limit,offset)
+                           "LIMIT 20 OFFSET ?")
+  def nodesByUser(typ : String, userid : Int, page : Int) = nodes_by_user.queryRows(typ,userid,page*20)
   
   val user_link_count = stmt("SELECT v2_node.*,COUNT(v2_link.src) AS count FROM v2_node,v2_link "+
                                "WHERE v2_link.dst = v2_node.id "+
@@ -234,7 +254,7 @@ class Datastore {
   def userLinkCount(userid : Int, typ : String, offset : Int, limit : Int) = user_link_count.queryRows(userid,typ,limit,offset)
   
   // === Snippet Search - read ===
-  val search_queries = stmt("SELECT * FROM v2_snipsearch WHERE claim_id = ? ORDER BY marked_yes DESC,searchtext")
+  val search_queries = stmt("SELECT * FROM v2_snipsearch WHERE claim_id = ? ORDER BY marked_yes DESC")
   def searchQueries(claimid : Int) = search_queries.queryRows(claimid)
   
   // === Snippet Search - Write ===

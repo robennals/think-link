@@ -1,0 +1,41 @@
+
+The reviewers were primarily concerned with two issues: 
+(i) How is Think Link better than using a general-purpose annotation system to mark disputed claims?
+(ii) how can we bootstrap our set of disputed snippets to a big enough size to attract users? 
+
+We believe that we can address both issues, as we discuss below.
+We will also be happy to address the other helpful suggestions, such as making the figures larger.
+
+
+= Why additional structure is important =
+
+As reviewer 1 stated: "[Think Link] appears to be the first work to make use of Open Hypermedia for identifying disputed statements on the web". 
+
+As several reviewers noted, one could use a general-purpose annotation system for this purpose. You could highlight disputed statements, write comments saying things were disputed, or provide links to things you thought were useful evidence. 
+
+Think Link is a more specialized tool. Rather than allowing a user to highlight, comment, or link in arbitrary ways, Think Link only permits a user to link a snippet to a claim, link a claim to evidence, link a claim to a related claim, and vote on the quality of links provided by other users.  
+
+
+We believe that this more structured approach provides an improved user experience. In particular:
+
+* Since Think Link knows what canonical claim each snippet is making, it can avoid highlighting disputed claims that the user already knows about and has requested not be marked again. 
+
+* When a user clicks on a highlighted claim, they see the best evidence for and against that claim, as determined by the votes of the entire community - rather than the favourite link of one user.
+
+* The argumentation links allow a user to see how a claim fits into a larger argument.
+
+* Voting allows Think Link to filter out lower quality claims/links/snippets and focus on ones the community judged to be more interesting.
+
+* Think Link makes it easier for an activist user to rapidly mark many snippets that make the same claim. A common usage model is to Google a claim you disagree with, tab-open all pages that look relevant, quickly mark a relevant snippet in each page, and then bulk-assign all marked snippets to the same disputed claim. 
+
+
+= Bootstrapping =
+
+If a user installed Think Link but didn't see anything highlighted then they it is likely they would get bored and stop using it. It is thus important to bootstrap with an initial data set that has reasonable coverage.
+
+This has been problem for previous annotation systems in which the database contained personal annotations specific to particular pages. Fortunately we have found Think Link's restricted domain makes building a data set easier:
+
+Several existing web sites maintain lists of disputed claims. So far we have imported all claims from Snopes and merged in lists taken from several debate websites. 
+
+We have found we can pay Mechanical Turk workers 4 cents to mark 10 snippets (using a tool) and 20 cents to create a new disputed claim with snippets and evidence.
+

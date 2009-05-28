@@ -30,6 +30,7 @@ object Urls {
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
   def searchclaims(query : String) = "/claim/search?query="+encode(query)
   def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
+  def addlinks(id : Any, typ: String) = claim(id)+"/addlinks?typ="+encode(typ)
 }
 
 object MiniUrls {
@@ -243,7 +244,7 @@ class MainServlet extends HttpServlet {
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + " - Think Link Claim"
-      c.outputHtml(title,Page.claim(c,claim))
+      c.outputHtml(title,Page.claim(claim)(c))
     }),
     UrlHandler("""/topic/(\d*)""",c => {
       val row = c.store.getInfo(c.urlInt(1),c.maybe_userid)
@@ -253,7 +254,7 @@ class MainServlet extends HttpServlet {
     UrlHandler("""/user/(\d*)""",c => {
       val row = c.store.getUserInfo(c.urlInt(1))
       val title = row("name") + " - Think Link User"
-      c.outputHtml(title,Page.user(c,row))
+      c.outputHtml(title,Page.user(row)(c))
     }),   
     UrlHandler("/login",c => {
       c.outputHtml("Login",(<div>{Page.login("Login",Urls.base)}</div>))

@@ -63,31 +63,32 @@ function autoLogin(){
 	}
 }
 
+function initCookieCatcher(){
+	var cookieCatcher = {
+		  observe: function(subject,topic,state){
+			  var ht = subject.QueryInterface(Components.interfaces.nsIHttpChannel);                       
+  			  tl_log(ht.name);
+			  if((ht.name.substring(0,42) == "http://factextract.cs.berkeley.edu/apianon")
+			  || (ht.name.substring(0,39) == "http://localhost:8180/thinklink/apianon")){
+				tl_log("caught");
+				 subject.setRequestHeader("Cookie","",false);
+			 }
+		  }
+	  };
+
+  var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+  observerService.addObserver(cookieCatcher, "http-on-modify-request",false);
+}
+
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://localhost:8180/","extension","true");
+	initCookieCatcher();
     
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
-		//ev.addEventListener("thinklirnk-close-popup",function(e){
-			//alert("close popup");return false
-		//},false,true);
 	},false);
 },false);
 
-//window.addEventListener("load", function(){
-	//var appcontent = document.getElementById("appcontent")
-	//var tabcontent = document.getElementById("content")
-	//if(!appcontent && tabcontent){
-		//appcontent = tabcontent.parentNode;	
-	//}
 
-	//thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
-	//thinklink_setCookie("http://localhost:8180/","extension","true");
-	//appcontent.addEventListener("DOMContentLoaded",function(ev){
-		//thinklink_getLogin();
-		//var doc = ev.target.defaultView.content.document;
-		//mark_snippets(doc);
-	//},false);
-//},false);

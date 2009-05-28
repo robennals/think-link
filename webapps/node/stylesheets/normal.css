@@ -227,7 +227,9 @@ h1 {
 	background-color: #ECEFF5;
 	border: 1px solid gray;
 	margin-top: 4px;
+/*
 	max-width: 400px;
+*/
 	-moz-border-radius: 8px;
 	padding-bottom: 8px;
 }
@@ -458,11 +460,28 @@ h1 {
 	color: black;
 }
 
-.pageselector {
+.selectortop {
+	position: absolute;
+	top: 4px;
+	right: 5px;
+}
+
+.selectorbottom {
+	position: absolute;
+	bottom: 4px;
+	right: 5px;
+}
+
+.evidence, #claimlist, #related-claims {
+	position: relative;
+}
+
+/*
 	text-align: right;
 	padding: 8px;
 	padding-top: 0px;
 	margin-top: 0px;
+*/
 }
 
 /*
@@ -479,6 +498,11 @@ h1 {
 	padding-left: 0px;
 }
 
+.header {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
 .tabs .header span, .tabs .header a {
 	margin: 4px;
 	padding: 4px;	
@@ -488,6 +512,10 @@ h1 {
 .tabs .header span, .tabs .header .active {
 	background-color: gray;
 	color: white;
+}
+
+.tabbody {
+	padding-top: 6px;
 }
 
 .tabs .header .active:hover {

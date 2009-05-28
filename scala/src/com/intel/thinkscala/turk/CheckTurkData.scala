@@ -11,7 +11,7 @@ class User(val id : String, val total : Int, val agree : Int, val disagree : Int
 
 
 object CheckTurkData { 
-  val filename = "/home/rob/git/thinklink/turk/output/hoaxes.csv"
+  val filename = "/home/rob/git/thinklink/turk/output/tye_first.csv"
 
   def main(args : Array[String]){
     val rows = Util.parseCsvFile(filename)

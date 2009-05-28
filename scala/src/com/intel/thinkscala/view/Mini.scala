@@ -13,35 +13,17 @@ object Mini {
           "Opposing Evidence" -> (() =>
 	  	      <div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-	            {c.store.evidence(row.int("id"),"opposes") flatMap Render.snippet}
+	            {c.store.evidence(row.int("id"),"opposes",0) flatMap Render.snippet}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
 		      </div>
             ),
           "Supporting Evidence" -> (() =>
 	   	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-	            {c.store.evidence(row.int("id"),"supports") flatMap Render.snippet}
+	            {c.store.evidence(row.int("id"),"supports",0) flatMap Render.snippet}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
 		      </div>
-            )
-//          "Related Claims" -> (() => 
-//		      <div id="related-claims">
-//		        <h2>Related Claims</h2>
-//		            {c.store.linkedEitherAnyNodes(row.int("id"),"claim",0,4) flatMap Render.claim}
-//		      </div>            
-//            ),
-//          "Topics" -> (() => 
-//              <div id="minitopics">
-//		        <h2>Topics</h2>
-//		        {c.store.linkedToNodes(row.int("id"),"about","topic",0,10) flatMap Render.topicref}
-//		      </div>
-//            ),
-//          "Instance" -> (() =>
-//             <div id="instances">
-//               <span>seen <span class="count">{row("instance_count")}</span> times on the web
-//               	<a target="_blank" href={Urls.findsnippets(row("id"))}>find more</a></span>
-//             </div>
-             )
+            ))
          }
   </div>
   
