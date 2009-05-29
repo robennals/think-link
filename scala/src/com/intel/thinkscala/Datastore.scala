@@ -116,15 +116,36 @@ class Datastore {
     get_info.queryOne(id)
   }
 
+  val top_users = stmt("SELECT * FROM v2_user WHERE id != 2 ORDER BY snipcount DESC LIMIT 10")
+  def topUsers = top_users.queryRows()
+  
   // == recent stuff ==
     
   val log_recent = stmt("REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)")
   def logRecent(userid : Int, nodeid : Int) = log_recent.update(userid,nodeid)
  
-  val get_recent = stmt("SELECT * FROM v2_node,v2_history "+
-                          "WHERE v2_node.id = v2_history.node_id AND v2_history.user_id = ? "+
+  val get_recent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
+                          "WHERE v2_node.id = v2_history.node_id AND type='claim' AND v2_history.user_id = ? "+
+                          "AND v2_node.user_id = v2_user.id "+
   						  "ORDER BY date DESC LIMIT 20")
   def getRecentClaims(userid : Int) = get_recent.queryRows(userid)
+
+  val get_recent_topics = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
+                          "WHERE v2_node.id = v2_history.node_id AND type='topic' AND v2_history.user_id = ? "+
+                          "AND v2_node.user_id = v2_user.id "+
+  						  "ORDER BY date DESC LIMIT 20")
+  def getRecentTopics(userid : Int) = get_recent_topics.queryRows(userid)
+  
+  val recent_linked = stmt("SELECT v2_node.id, v2_node.text, v2_link.id AS linkid "+
+                     "FROM v2_history, v2_node LEFT JOIN v2_link ON "+
+                             "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
+  					 "WHERE v2_node.type = ? "+
+                     "AND v2_node.id != ? "+
+                     "AND v2_history.node_id = v2_node.id "+
+                     "AND v2_history.user_id = ? "+
+                     "ORDER BY date DESC "+
+                     "LIMIT 20 OFFSET ?") 
+  def recentLinked(linkedto : Int, typ : String, userid : Int, page : Int) = recent_linked.queryRows(linkedto,linkedto,typ,linkedto,userid,page*20)
   
   // === find marked stuff ===
   
@@ -170,6 +191,39 @@ class Datastore {
                      "LIMIT 20 OFFSET ?")
   def searchClaims(query : String, offset : Int) = search_claims.queryRows(query,offset * 20)
   
+  val search_linked = stmt("SELECT v2_node.id, v2_node.text, v2_link.id AS linkid "+
+                     "FROM v2_node LEFT JOIN v2_link ON "+
+                             "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
+  					 "WHERE v2_node.type = ? "+
+                     "AND v2_node.id != ? "+
+  	                 "AND MATCH(text) AGAINST(?) "+
+                     "LIMIT 20 OFFSET ?")    
+  def searchLinked(query : String, typ : String, linkedto : Int, offset : Int) = 
+	  	search_linked.queryRows(linkedto,linkedto,typ,linkedto,query,offset*20)
+  
+  val search_topics = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
+                     "WHERE type = 'topic' "+                             
+                     "AND v2_user.id = v2_node.user_id "+
+                     "AND MATCH(text) AGAINST(?) "+
+                     "LIMIT 20 OFFSET ?")
+  def searchTopics(query : String, offset : Int) = search_topics.queryRows(query,offset * 20)
+  
+  // === add and break links ==
+  
+  val add_link = stmt("INSERT INTO v2_link (src,dst,type,user_id) VALUES (?,?,'relates to',?)")
+  def addLink(src : Int, dst : Int, userid : Int) = {
+    add_link.update(src,dst,userid)
+    updateTopicCount(dst)
+  }
+  
+  val break_link = stmt("DELETE FROM v2_link WHERE src = ? and dst = ?")
+  val remember_link = stmt("INSERT INTO deleted_link (src,dst,user_id) VALUES (?,?,?)")
+  def breakLink(src : Int, dst : Int, userid : Int) = {
+    break_link.update(src,dst)
+    remember_link.update(src,dst,userid)
+  }
+  
+                                                                                                                         
   
   // === Follow links ===
 
@@ -225,7 +279,8 @@ class Datastore {
                     "AND v2_user.id = v2_node.user_id "+
   					"LIMIT 20 OFFSET ?")
   def linkedTopics(node : Int, page : Int) = linked_topics.queryRows(node,node,page * 20)  					
-//  
+
+  //  
 //  def linkedEitherNodes(source : Int, rel : String, typ : String, offset : Int, limit : Int) = 
 //    linked_either_nodes.queryRows(typ,source,source,rel,limit,offset)
 
@@ -237,6 +292,7 @@ class Datastore {
                     "WHERE lnks.id = v2_node.id "+
                     "AND v2_node.type = 'claim' "+
                     "AND v2_user.id = v2_node.user_id "+
+                    "ORDER BY instance_count DESC "+
   					"LIMIT 20 OFFSET ?")
   def linkedClaims(claim : Int, page : Int) = linked_claims.queryRows(claim,claim,page*20)
     
@@ -277,9 +333,15 @@ class Datastore {
   val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
                              "VALUES (?,?,?,?)")
   val set_snip_state = stmt("UPDATE v2_searchresult SET state = ? WHERE id=?")
+  val set_user_snip_count = stmt("UPDATE v2_user SET snipcount = "+
+                                   "(SELECT COUNT(result_id) FROM v2_searchvote WHERE vote=true AND user_id = v2_user.id) "+
+  									"WHERE id = ?")
   def setSnipVote(claimid : Int, resultid : Int, searchid : Int, userid : Int, vote : Boolean) = {
     set_snip_vote.update(resultid,searchid,userid,vote)
     set_snip_state.update(""+vote,resultid)
+    if(vote){
+      set_user_snip_count.update(userid)
+    }
     updateSearchCounts(claimid, searchid)
   }
   
@@ -300,11 +362,13 @@ class Datastore {
     update_instance_count.update(claimid)    
   }
   
-  val update_topic_counts = stmt("UPDATE v2_node SET instance_count = "+
+  
+  // TODO: this is a hack
+  val update_topic_count = stmt("UPDATE v2_node SET instance_count = "+
                                    "(SELECT COUNT(src) FROM v2_link "+
                                 		   "WHERE dst = v2_node.id) "+
-                                		   "WHERE type='topic'")
-  def updateTopicCounts = update_topic_counts.update()
+                                		   "WHERE type='topic' AND id = ?")
+  def updateTopicCount(id : Int) = update_topic_count.update(id)
 
   
   val existing_snippet = stmt("SELECT * FROM v2_searchresult,v2_searchurl,v2_snipsearch "+
@@ -315,6 +379,11 @@ class Datastore {
                                 "AND v2_searchresult.abstract = ?")
   def existingSnippet(url : String, query : String, abstr : String) = 
     existing_snippet.queryMaybe(url,query,abstr)  
+  
+  val found_snippets = stmt("SELECT state,abstract,url,title FROM v2_searchresult,v2_searchurl "+
+                              "WHERE claim_id = ? AND search_id = 0 AND url_id = v2_searchurl.id "+
+                              "LIMIT 20 OFFSET ?")
+  def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
   
   // === Nodes ===
   
@@ -334,11 +403,24 @@ class Datastore {
                              "VALUES (?,?,?,?,?,?)")
   def makeEvidence(userid : Int, claimid : Int, text : String, url : String, title : String, verb : String) =
 	  make_evidence.insert(userid, claimid,text,url,title,verb)
-                                                  
+                
+  val set_user_claim_count = stmt("UPDATE v2_user SET claimcount = "+
+                                  "(SELECT COUNT(id) FROM v2_node WHERE type='claim' AND user_id = v2_user.id) "+
+  									"WHERE id = ?")  
   val make_claim = stmt("INSERT INTO v2_node (text,description,user_id,type,info) "+
                          "VALUES (?,?,?,'claim','')")
-  def makeClaim(text : String, desc : String, userid : Int) =
-	  make_claim.insert(text,desc,userid)
+  def makeClaim(text : String, desc : String, userid : Int) : Int = { 
+	  val id = make_claim.insert(text,desc,userid)
+      set_user_claim_count.update(userid)
+      return id
+  }
+
+  val make_topic = stmt("INSERT INTO v2_node (text,description,user_id,type,info) "+
+                         "VALUES (?,?,?,'topic','')")
+  def makeTopic(text : String, desc : String, userid : Int) : Int = { 
+	  val id = make_topic.insert(text,desc,userid)
+      return id
+  }
   
   def getClaim(text : String,user : User) = getNode(text,"claim",user)                                                     
     

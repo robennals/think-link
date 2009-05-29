@@ -28,12 +28,20 @@ h1 {
 	font-size: 20px;
 }
 
+h1 a {
+	font-size: 20px;
+}
+
 #login h1 {
 	margin-left: 40px;
 }
 
 .content, #claim, #topic, #user, #findsnippets {
 	margin: 40px;	
+}
+
+.content .content {
+	margin: 0px;
 }
 
 #claim, #topic, #user{
@@ -93,12 +101,23 @@ h1 {
 	padding: 4px;
 }
 
-#topics h2 {
+#searchlist {
+	-moz-border-radius: 8px;
+	padding: 4px;
+	padding-bottom: 24px;
+}
+
+h2 {
 	margin-top: 0px;
 }
 
 #topics a {
 	display: block;
+	margin-bottom: 6px;
+}
+
+#topics .add {
+	margin-top: 10px;
 }
 
 #claimlist {
@@ -135,6 +154,7 @@ h1 {
 .form .hidden {
 	padding: 0px;
 	margin: 0px;
+	display: none;
 }
 
 .form label {
@@ -186,6 +206,7 @@ h1 {
 	background-color: white;
 	color: #666;
 	padding: 4px;
+	padding-bottom: 8px;
 }
 
 .claim .title {
@@ -231,10 +252,10 @@ h1 {
 	max-width: 400px;
 */
 	-moz-border-radius: 8px;
-	padding-bottom: 8px;
+	padding-bottom: 4px;
 }
 
-#supports h2, #opposed h2, #related-claims h2, #created h2, #instance h2 {
+#supports h2, #opposed h2, #related-claims h2, #created h2, #instance h2, #searchlist h2 {
 	background-color: #ECEFF5;
 	-moz-border-radius-topleft: 8px;
 	-moz-border-radius-topright: 8px;
@@ -243,7 +264,7 @@ h1 {
 	padding-bottom: 4px;
 }
 
-#supports h2, #opposed h2 {
+#supports h2, #opposed h2, #searchlist h2 {
 	background-color: transparent;
 }
 
@@ -254,6 +275,12 @@ h1 {
 #opposed {
 	background-color: #FFD3D3;
 }
+
+#searchlist {
+	background-color: #E0ECFF;
+	border: 1px solid gray;
+}
+
 
 .snippet {
 	padding: 4px;
@@ -402,8 +429,13 @@ h1 {
 }
 
 .searchcontent {
+/*
 	background-color: #C3D9FF;
+*/
+/*
 	-moz-border-radius: 8px;
+*/
+	background-color: white;
 }
 
 .searchcontent .snippet {
@@ -423,6 +455,9 @@ h1 {
 	position: absolute;
 	right: 50px;
 	top: 5px;
+	background: none;
+	padding: 0px;
+	margin: 0px;
 }
 
 .snippet .ignore {
@@ -472,8 +507,12 @@ h1 {
 	right: 5px;
 }
 
-.evidence, #claimlist, #related-claims {
+.evidence, #claimlist, #related-claims, #searchlist {
 	position: relative;
+}
+
+#searchlist h2 {
+	padding-top: 0px;
 }
 
 /*
@@ -527,12 +566,12 @@ h1 {
 	border: 1px solid gray;
 }
 
-.evidence .add {
-	margin-bottom: 0px;
-	margin-top: 10px;
-	margin-left: 4px;
-	text-align: right;
+.add {
+	display: block;
+	margin-top: 2px;
+	margin-left: 5px;
 }
+
 
 #minisearch {
 	background-color: #FFFFAA;
@@ -614,4 +653,47 @@ img {
 	overflow: auto;
 	max-height: 290px;
 	margin-bottom: 2px;
+}
+
+.connect, .disconnect {
+	display: inline;
+	padding: 4px;
+	padding-left: 6px;
+	padding-right: 6px;
+	margin-right: 6px;
+	-moz-border-radius: 4px;
+	background-color: #666666;
+	cursor: pointer;
+	color: white;
+}
+
+.connect:hover{
+	background-color: green;
+	color: white;
+}
+
+.disconnect:hover{
+	background-color: darkRed;
+}
+
+.claimlink {
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
+.beta {
+	vertical-align: top;
+}
+
+.add {
+	background-image: url(/images/add_item2.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 18px;
+	padding-bottom: 1px;
+}
+
+.manualmarked {
+	display: block;
+	padding-top: 20px;
 }

@@ -4,7 +4,7 @@ import scala.xml._
 object Render {
   import Widgets._
   
-  def claim(row : SqlRow) = 
+  def claim(row : SqlRow)(implicit c : ReqContext) = 
     <div class="claim">
       <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
       <div class="description">{row("description")}</div>
@@ -15,6 +15,16 @@ object Render {
 -->
   </div>  
 
+  def nodelink(row : SqlRow)(implicit c : ReqContext) =
+    <div class="claimlink">
+      {if(row("linkid") != null){
+    	  	<div onclick={"connect(this,"+row("id")+","+c.arg("addto")+")"} class="disconnect">Disconnect</div>
+       }else{
+    	   <div onclick={"connect(this,"+row("id")+","+c.arg("addto")+")"} class="connect">Connect</div>
+      }}
+      <a class="title" href={Urls.topic(row("id"))}>{row("text")}</a>
+    </div>
+
   def topic(row : SqlRow) =
     <div class="claim">
       <a class="title" href={Urls.topic(row("id"))}>{row("text")}</a>
@@ -23,6 +33,13 @@ object Render {
       - <span class="claimcount"><span class="count">{row("instance_count")}</span> claims in this topic</span>
     </div>
   
+  def user(row : SqlRow) =  
+    <div class="claim">
+      <a class='title' href={Urls.user(row("id"))}>{row("name")}</a>
+      <div class='instances'>marked <span class='count'>{row("snipcount")}</span> snippets
+         and created <span class='count'>{row("claimcount")}</span> claims</div>
+    </div>
+    
   def userLinkCount(row : SqlRow) = 
     <div class="linkcount">
       <a class="title" href={Urls.claim(row("id"))}>{row.str("text")}</a>
@@ -91,21 +108,43 @@ object Render {
        {if(c.user.realuser){
        <a class="add" onclick="doAdd(this)">{if(mode == "added") "added" else "add"}</a>
        <a class="ignore" onclick="doIgnore(this)">{if(mode == "ignored") "ignored" else "ignore"}</a>
-         }else{
-       <a class="mustlogin" href={Urls.login(c.getUrl)}>login to add</a>
-         }
-       }         
+        }else{
+        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
+        }
+       }
     </div>    
     }
-
+  
   def bossResults(query : String,page : Int)(implicit c : ReqContext) : NodeSeq = {
       val bossUrls = SnipSearch.searchBoss(query,page,10)      
       return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query))}</div>
   }
   
   def snipSearchResults(query : String)(implicit c : ReqContext) = 
-    Widgets.pagedList(bossResults(query,_))
-  
+    <div id="searchlist">
+    <h2>Search Results matching "{query}"</h2>
+    {Widgets.pagedList(bossResults(query,_))}
+    </div>
+
+  def markedSnippet(row : SqlRow)(implicit c : ReqContext) = 
+    <div class='bossurl'>
+      <span class='title'>{row("title")}</span>
+      <a href={row.str("url")}>{row("url")}</a>
+      <div class='snippets'>
+          <input type='hidden' class='position' value="0"/>
+         <div class={if(row("state") == "true") "snippet snippet-added" else "snippet snippet-ignored"}>
+	       <div class="text">{row("abstract")}</div>
+         {if(c.user.realuser){
+	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "added" else "add"}</a>
+	       <a class="ignore" onclick="doIgnore(this)">{if(row("state") == "false") "ignored" else "ignore"}</a>         	
+            }else{
+        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
+            }
+         }
+         </div>
+      </div>
+    </div>
+    
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>
     
@@ -122,6 +161,7 @@ object Render {
     }else{
         <a class='install' href={Urls.extension}>Install the FireFox extension</a>
     }
+  
 }      
 
 

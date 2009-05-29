@@ -77,3 +77,17 @@ function closePopupWindow(){
     ev.initEvent("thinklink-close-popup", true, false);
     document.body.dispatchEvent(evt);	
 }
+
+function connect(node,id,addto){
+	if(node.className == "connect"){
+		$.post(url_base+"connect/",{addto:addto,id:id},function(){
+			node.className = "disconnect";
+			node.textContent = "Disconnect";
+		})
+	}else{
+		$.post(url_base+"connect/",{addto:addto,id:id,disconnect:true},function(){
+			node.className = "connect";
+			node.textContent = "Connect";
+		})
+	}
+}

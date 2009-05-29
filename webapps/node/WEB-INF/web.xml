@@ -67,6 +67,11 @@
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
+	<url-pattern>/connect/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
 	<url-pattern>/mini/*</url-pattern>
 	</servlet-mapping>
 

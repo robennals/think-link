@@ -18,17 +18,13 @@ function get_api_path(){
 var global_marked = [];
 
 function mark_snippets(doc){
-	tl_log("mark snippets");
 	var targeturl = doc.location.href;
 	var apipath = get_api_path();
 	var url = apipath+"/apianon/search.json?url="+encodeURIComponent(targeturl);	
-	tl_log(url);
 	ajaxRequest(url,function(snippets){
-		tl_log("received "+snippets.length+" snippets");
 		global_marked = [];
 		for(var i = 0; i < snippets.length; i++){
 			var snip = snippets[i];
-			tl_log(snip.text);
 			var frags = snip.text.split(/[\.\n\?\!]/)
 			for(var j = 0; j < frags.length; j++){
 				if(frags[j].length > 10){
@@ -38,10 +34,11 @@ function mark_snippets(doc){
 		}
 		if(snippets.length > 0){
 			if(global_marked.length > 0){
-				showMessage("This page contains disputed claims (highlighted in pink)",doc);
+//				showMessage("This page contains disputed claims (highlighted in pink)",doc);
+				highlightMessage(global_marked,doc);
 			}else{
 				// TODO: cope better when can't find disputed claim
-				claimMessage(snippets[0].claimtext,snippets[0].claimid);
+				claimMessage(snippets[0].claimtext,snippets[0].claimid,doc);
 //				showMessage("This url was tagged with disputed claims, but we can't find them on the page anymore",doc);
 			}
 		}
@@ -91,6 +88,22 @@ function claimMessage(claimtext,id,doc){
 	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
 }
 
+function highlightMessage(marked,doc){
+	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
+	var notification =
+		notificationBox.getNotificationWithValue("thinklink-disputed");
+	var buttons = [{
+		label: "Goto First",
+		callback: function(){marked[0].scrollIntoView(true);},
+		accessKey: "G",
+		popup: null
+		}];
+	var message = "This page contains disputed claims (highlighted in pink)";
+
+	const priority = notificationBox.PRIORITY_INFO_MEDIUM;
+	notificationBox.appendNotification(message, "thinklink-disputed",
+	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);		
+}
 
 function showMessage(message,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
@@ -126,27 +139,32 @@ function unmark_snippet(node){
 
 function mark_snippet(text,claimid,claimtext,node){
 	if(node.nodeName == "#comment" || normalise(node.textContent).indexOf(text) == -1){
-		return;			
-	}else if (node.nodeName == "#text") {
-		node.parentNode.style.backgroundColor = "#FFD3D3";
-		node.parentNode.style.cursor = "pointer";
-		node.parentNode.setAttribute("title",claimtext);
-		node.parentNode.setAttribute("thinklink_claimid",claimid);				
-		node.parentNode.addEventListener("click",showClaimPopup,true);
-		//node.parentNode.addEventListener("click",function(){
-			//viewClaim(claimid);
-		//},true);
-		global_marked.push(node.parentNode);
-	}else{
+		return;					
+	}	
+	if(node.nodeName != "#text" && node.childNodes){
+		var insub = false;
 		for(var i = 0; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
-			mark_snippet(text,claimid,claimtext,child);
-		}
+			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
+				mark_snippet(text,claimid,claimtext,child);
+				return;
+			}
+		}		
 	}
+	if(node.nodeName == "#text"){
+		node = node.parentNode;
+	}
+	
+	node.style.backgroundColor = "#FFD3D3";
+	node.style.cursor = "pointer";
+	node.setAttribute("title","disputed: "+claimtext);
+	node.setAttribute("thinklink_claimid",claimid);				
+	node.addEventListener("click",showClaimPopup,true);
+	global_marked.push(node);
 }
 
 function showClaimPopup(ev){
-	var node = ev.target;
+	var node = ev.currentTarget;
 	var claimid = node.getAttribute("thinklink_claimid");
 	viewClaim(claimid);
 }
@@ -156,7 +174,6 @@ function ajaxRequest(url,callback){
 	req.open("GET",url,true);
 	req.onreadystatechange = function(){
 		if(req.readyState == 4 && req.status == 200){
-			tl_log("json = "+req.responseText);
 			callback(parseJSON(req.responseText))
 		}
 	}

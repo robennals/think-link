@@ -27,10 +27,12 @@ object Urls {
   def user(id : Any) = base + "/user/" + id
   def findsnippets(id : Any) = claim(id) + "/findsnippets"
   def findsnippets(id : Any, query : String) = claim(id) + "/findsnippets?query="+encode(query)
+  def findsnippets(id : Any, manual : Boolean) = claim(id) + "/findsnippets?fromextension=true"
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
-  def searchclaims(query : String) = "/claim/search?query="+encode(query)
+  def createTopic(query : String) = base+"/topic/new?query="+encode(query)
   def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
-  def addlinks(id : Any, typ: String) = claim(id)+"/addlinks?typ="+encode(typ)
+  def addlinks(id : Any, thistyp: String, thattyp: String) = base+"/connect"+"?addto="+id+"&thistype="+thistyp+"&thattype="+thattyp
+  val connect = base+"/connect"
 }
 
 object MiniUrls {
@@ -50,6 +52,8 @@ object PostUrls {
   val base = Urls.base
   def addClaimTopic(id : Any) = Urls.claim(id) + "/addtopic"
   def addEvidence(id : Any) = Urls.claim(id) + "/addevidence"
+  val newtopic = base + "/topic/new"
+  val newclaim = base + "/claim/new"
 }
 
 
@@ -105,6 +109,16 @@ class MainServlet extends HttpServlet {
 	      }
        }
     }),
+    UrlHandler("/connect", c => {
+      val disconnect = c.argBool("disconnect")
+      val addto = c.argInt("addto")
+      val id = c.argInt("id")
+      if(disconnect){
+        c.store.breakLink(id,addto,c.userid)
+      }else{
+        c.store.addLink(id,addto,c.userid)
+      }
+    }),
     UrlHandler("/mini/newsnippet", c => {
       var claimid = c.argInt("claimid")
       val name = c.arg("name")
@@ -132,7 +146,20 @@ class MainServlet extends HttpServlet {
       val name = c.arg("name")
       val descr = c.arg("descr")
       val claimid = c.store.makeClaim(name,descr,c.userid)
+      if(c.arg("addto") != null){
+        c.store.addLink(claimid,c.argInt("addto"),c.userid)
+      }
       c.redirect(Urls.claim(claimid))
+    }),
+    UrlHandler("/topic/new", c => {
+      val name = c.arg("name")
+      val descr = c.arg("descr")
+      val addto = c.argInt("addto")
+      val claimid = c.store.makeTopic(name,descr,c.userid)
+      if(c.arg("addto") != null){
+        c.store.addLink(claimid,c.argInt("addto"),c.userid)
+      }
+      c.redirect(Urls.topic(claimid))
     }),
     UrlHandler("/claim/(\\d*)/setsnippet", c => {
       val claimid = c.urlInt(1)
@@ -198,13 +225,27 @@ class MainServlet extends HttpServlet {
     UrlHandler("/index.html",c => {
       c.outputHtml("Welcome to Think Link",Page.home(c))
     }),
-    UrlHandler("/search",c => { 	// TODO: provide API access
-	      val title = c.arg("query")+" - Think Link Claim Search"
-	      c.outputHtml(title,Page.search(c))
-	    },c => {
-	      c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
-	    }    
+    UrlHandler("/search",c => {
+	  val title = c.arg("query")+" - Think Link Claim Search"
+	    c.outputHtml(title,Page.search(c))
+	  },c => {
+	    c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
+	  }    
     ),
+    UrlHandler("/connect",c => {
+      c.requireLogin
+      val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)
+      val title = "Connect "+c.arg("thattype")+" to "+me("text")+" - Think Link"
+      var query = c.arg("query")
+      if(query == null){
+        query = me.str("text")
+      }
+      if(c.arg("thattype") == "claim"){
+    	  c.outputHtml(title,Page.connectClaim(me,query)(c))
+       }else{
+          c.outputHtml(title,Page.connectTopic(me,query)(c))         
+       }
+    }),
     UrlHandler("/mini/claim/(\\d*)",c=>{
       val claimid = c.urlInt(1)
       val claim = c.store.getInfo(claimid,c.maybe_userid)
@@ -224,7 +265,7 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("""/claim/(\d*)/findsnippets""", c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
-      val title = claim("text") + "Find Instances with Think Link"
+      val title = claim("text") + " - Find Instances with Think Link"
       var query = c.arg("query")
       if(query == null) query = claim.str("text")
       c.outputHtml(title,Page.findsnippets(claim,query)(c))
@@ -232,6 +273,10 @@ class MainServlet extends HttpServlet {
     UrlHandler("/claim/new",c => {
       c.requireLogin
       c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
+    }),
+    UrlHandler("/topic/new",c => {
+      c.requireLogin
+      c.outputHtml("Create New Topic - Think Link",Page.newTopic(c,c.arg("query")))
     }),
     UrlHandler("""/claim/(\d*)/addevidence""",c=>{
       c.requireLogin
@@ -257,7 +302,9 @@ class MainServlet extends HttpServlet {
       c.outputHtml(title,Page.user(row)(c))
     }),   
     UrlHandler("/login",c => {
-      c.outputHtml("Login",(<div>{Page.login("Login",Urls.base)}</div>))
+      var url = c.arg("url")
+      if(url == null) url = Urls.base
+      c.outputHtml("Login",(<div>{Page.login("Login",url)}</div>))
     }),
     UrlHandler("/signup",c => {
       c.outputHtml("Sign up with Think Link",Page.signup)      

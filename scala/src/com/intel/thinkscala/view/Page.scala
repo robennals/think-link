@@ -8,7 +8,7 @@ object Page {
   import Render._
   def home(implicit c : ReqContext) =
     <div class="content">
-      <h1 class="logo">Think Link</h1>
+      <h1 class="logo">Think Link<span class='beta'>beta</span></h1>
       <div class="tagline">Are you being duped?</div>
       <div class="message">{Messages.pitch}</div>
 
@@ -23,12 +23,14 @@ object Page {
           "Hot Topics" -> (() => 
                 Widgets.pagedList(c.store.getBigTopics(_).toSeq flatMap Render.topic)),
           "Recently Marked Pages" -> (() => 
-                  Widgets.pagedList(c.store.recentMarkedPages(_).toSeq flatMap Render.markedPage))
+                Widgets.pagedList(c.store.recentMarkedPages(_).toSeq flatMap Render.markedPage)),
+          "Top Users" -> (() =>
+            	c.store.topUsers flatMap Render.user)
         )}
       </div>
   </div>
       
-  def searchResults(query : String, page : Int, c : ReqContext) : NodeSeq =
+  def searchResults(implicit query : String, page : Int, c : ReqContext) =
      c.store.searchClaims(query,page).toSeq flatMap Render.claim
    
   def search(implicit c : ReqContext) = 
@@ -42,10 +44,95 @@ object Page {
     		  <a href={Urls.createClaim(c.arg("query"))}>Create a new claim</a>
       </div>
       <div id="claimlist">
+        <h2>Claims matching "{c.arg("query")}"</h2>
         {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_).toSeq flatMap Render.claim)}
       </div>
     </div>
   
+  def connectClaim(row : SqlRow, query : String)(implicit c : ReqContext) = 
+    <div class="content">
+      {if(c.arg("thistype") == "claim"){
+    	  	<h1>Connect claims to <a href={Urls.claim(row("id"))}>{row("text")}</a></h1>
+       }else{
+    	   	<h1>Connect claims to <a href={Urls.topic(row("id"))}>{row("text")}</a></h1>         
+       }
+      }
+      <div class='message'>
+      	Use the interface below to select claims that relate to this {c.arg("thistype")}
+      </div>
+      {
+	    {Widgets.tabs(
+	      "Search Claims" -> (() => 
+	                       <form id="bigsearch" action={Urls.connect} method="GET">                 
+		        <input type='hidden' name='addto' value={c.arg("addto")}/>
+		        <input type='hidden' name='thistype' value={c.arg("thistype")}/>
+		        <input type='hidden' name='thattype' value={c.arg("thattype")}/>
+		        {   if(c.arg("query") != null){
+			          <input type="text" class="query" name="query" value={c.arg("query")}/>
+			        }else{
+		              Widgets.greyInput("query","query","Enter search keywords")
+			        }            
+		        }
+		        <input type="submit" class="submit" value="Search"/>
+		  </form>   
+
+	        <div id='claimlist'>
+
+            <h2>Claims matching "{query}"</h2>           
+             {Widgets.pagedList(c.store.searchLinked(query,"claim",row.int("id"),_).toSeq flatMap Render.nodelink)}
+	         </div>),
+	      "Recent Claims" -> (() => 
+  	        <div id='claimlist'>
+            <h2>Recent Claims</h2>
+             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"claim",c.userid,_).toSeq flatMap Render.nodelink)}
+	         </div>),
+          "Create a New Claim" -> (() =>
+             Page.newClaim(c,query)
+           ) 
+            
+	    )}
+      }
+    </div>
+
+   def connectTopic(row : SqlRow, query : String)(implicit c : ReqContext) = 
+    <div class="content">
+      {if(c.arg("thistype") == "claim"){
+    	  	<h1>Connect topics to <a href={Urls.claim(row("id"))}>{row("text")}</a></h1>
+       }else{
+    	   	<h1>Connect topics to <a href={Urls.topic(row("id"))}>{row("text")}</a></h1>         
+       }
+      }
+      {Widgets.tabs(
+	      "Search Topics" -> (() =>
+           <form id="bigsearch" action={Urls.connect} method="GET">                 
+		        <input type='hidden' name='addto' value={c.arg("addto")}/>
+		        <input type='hidden' name='thistype' value={c.arg("thistype")}/>
+		        <input type='hidden' name='thattype' value={c.arg("thattype")}/>
+		        {   if(c.arg("query") != null){
+			          <input type="text" class="query" name="query" value={c.arg("query")}/>
+			        }else{
+		              Widgets.greyInput("query","query","Enter search keywords")
+			        }            
+		        }
+		        <input type="submit" class="submit" value="Search"/>
+		  </form>   
+	        <div id='claimlist'>
+            <h2>Topics matching "{query}"</h2>
+             {Widgets.pagedList(c.store.searchLinked(query,"topic",row.int("id"),_).toSeq flatMap Render.nodelink)}
+	         </div>),
+	      "Recent Topics" -> (() => 
+  	        <div id='claimlist'>
+            <h2>Recent Topics</h2>
+             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"topic",c.userid,_).toSeq flatMap Render.nodelink)}
+             </div>),
+          "Create a New Topic" -> (() =>
+             Page.newTopic(c,query)
+           ) 
+	    )
+      }
+    </div>
+
+    
   def newClaim(c : ReqContext, query : String) =
     <div class="content">
     	<h1>Create a New Disputed Claim</h1>
@@ -53,21 +140,39 @@ object Page {
     		Once you have created a disputed claim, you can identify instances of this claim
     		on the web, and associate the claim with evidence on either side.
     	</div>
-    	<form class='form' id="newsnippet" action="new" method="POST">
+    	<form class='form' id="newsnippet" action={PostUrls.newclaim} method="POST">
           <label for="name">Claim</label>
           <input type="text" id="name" name="name" value={query}/>
+          <input type="hidden" class='hidden' name="addto" value={c.arg("addto")}/>
           <label for="descr">Optional Description</label>
           <textarea rows="5" id="descr" name="descr"></textarea>    
           <input class='submit' type="submit" value="Create New Claim"/>
         </form>
     </div>
+ 
+       
+  def newTopic(c : ReqContext, query : String) =
+    <div class="content">
+    	<h1>Create a New Topic</h1>
+    	<div class="message">This should be a topic that disputed claims might be about.
+    	</div>
+    	<form class='form' id="newsnippet" action={PostUrls.newtopic} method="POST">
+          <label for="name">Topic</label>
+          <input type="text" id="name" name="name" value={query}/>
+          <input type="hidden" class='hidden' name="addto" value={c.arg("addto")}/>
+          <label for="descr">Optional Description</label>
+          <textarea rows="5" id="descr" name="descr"></textarea>    
+          <input class='submit' type="submit" value="Create New Topic"/>
+        </form>
+    </div>
+ 
     
   def claim(row : SqlRow)(implicit c : ReqContext) =
     <div id="claim">
       <div class="topclaim">
 	      <h1>Claim: {row("text")}</h1>
 	      <span class="instances"><a href={Urls.findsnippets(row("id"))}>seen <span class="count">{row("instance_count")}</span> times on the web</a>
-	        <a href={Urls.findsnippets(row("id"))}>find more</a>
+	        - <a href={Urls.findsnippets(row("id"))}>find more</a>
 	      </span>   
       </div>
       <div class="description">{row("description")}</div>
@@ -90,13 +195,14 @@ object Page {
               <div id='related-claims'>
                 <h2>Related Claims</h2>
                 {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
-                <a class='add' href={Urls.addlinks(row.int("id"),"claim")}>add related claim</a>                  
+                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>add related claim</a>                  
               </div>)
         )}
       </div>
       <div id="topics">
         <h2>Topics</h2>
-        {c.store.linkedToNodes(row.int("id"),"about","topic",0,10) flatMap topicref}
+        {c.store.linkedTopics(row.int("id"),0) flatMap topicref}
+        <a class='add' href={Urls.addlinks(row.int("id"),"claim","topic")}>add related topic</a>                  
       </div>
     </div>
  
@@ -130,23 +236,36 @@ object Page {
       <div id="queries">
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
+        <a class="manualmarked" href={Urls.findsnippets(row("id"),true)}>marked with extension</a>
       </div>
       {simpleSearch(Urls.findsnippets(row("id")), query, "Enter a search string")}
-      {Render.snipSearchResults(query)}
+      {if(c.arg("fromextension") == null){
+    	  Render.snipSearchResults(query)
+       }else{
+    	  <div id="searchlist">
+		    <h2>Snippets marked with the Firefox extension</h2>
+            <div class='searchcontent'>
+		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_).toSeq flatMap Render.markedSnippet)}
+            </div>
+  	      </div>
+       }}
     </div>
     
-  def topic(c : ReqContext, row : SqlRow) = 
+  def topic(implicit c : ReqContext, row : SqlRow) = 
     <div id="topic">
       <h1>Topic: {row("text")}</h1>
       <div class="description">{row("description")}</div>
-      {simpleSearch(Urls.topic(row("id")), c.arg("query"), "Search within this topic")}
       <div id="claimlist">
+         <div id="related-claims">
          <h2>Claims about this topic</h2>
-         {c.store.topicClaims(row.int("id"),0) flatMap Render.claim}
+         {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
+         <a class='add' href={Urls.addlinks(row.int("id"),"topic","claim")}>add claims to this topic</a>                  
+         </div>
       </div>
 	    <div id="topics">
 	       <h2>Related Topics</h2>
 	       {c.store.linkedTopics(row.int("id"),0) flatMap topicref}
+           <a class='add' href={Urls.addlinks(row.int("id"),"topic","topic")}>add related topic</a>                  
 	    </div>
     </div>
     
