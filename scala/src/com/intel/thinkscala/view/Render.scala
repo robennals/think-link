@@ -47,13 +47,27 @@ object Render {
     </div>
   
       
-  def snippet(row : SqlRow) : NodeSeq = {
-    (<div class="snippet">
+  def evidence(row : SqlRow) : NodeSeq = {
+    (<div class="webquote">
         <span class="title">{row.getOrElse("title","")}</span>
         <div class="text">{row("text")}</div>
         <a target="_blank" class="url" href={row.str("url")}>{row("url")}</a>                                                     
+        {userref(row.int("user_id"), row.str("username"), "found by")} 
     </div>)
    }
+  
+  def userEvidence(row : SqlRow) =
+    <div class="webquote">
+        <span class="title">{row.getOrElse("title","")}</span>
+        <div class="text">{row("text")}</div>
+        <a target="_blank" class="url" href={row.str("url")}>{row("url")}</a>                                                     
+        <div class="says">{row("verb")}
+            <a class="claimlink" href={Urls.claim(row("claimid"))}>{row("claimtext")}</a>
+        </div>
+    </div>
+  
+  
+  
      
   def topbar(c : ReqContext) = 
     <div id="topbar">
@@ -69,13 +83,16 @@ object Render {
            {greyInput("query","query","Search")}
            <input class="icon" type="image" src={Images.search} alt="search"/>
         </form>         
+        <a class='bugreport' href="mailto:robert.ennals@intel.com?body=Report a bug, suggest a feature, or just tell us what you think.">Send us your feedback</a>
     </div>
     
   def userref(id : Int, name : String, message : String) =
     <span class="user">{message} <a href={Urls.user(id)}>{name}</a></span>
             
  def searchQueryList(c : ReqContext, claimid : Int) = 
-    c.store.searchQueries(claimid) flatMap (Render.searchQuery(_,claimid))
+    (c.store.searchQueries(claimid) flatMap (Render.searchQuery(_,claimid))) ++
+    (<a class="manualmarked" href={Urls.findsnippets(claimid,true)}>marked with extension</a>)
+
     
   def searchQuery(row : SqlRow, claimid : Int) : NodeSeq = 
     <div class="query">
@@ -97,19 +114,25 @@ object Render {
     </div>
     
   def bossSnip(snip : String, bu : BossUrl, position : Int, query : String)(implicit c : ReqContext) = {
-    val mode = c.store.existingSnippet(bu.url,query,snip) match {
-      case Some(row) if(row("state") == "true") => "added"
-      case Some(row) if(row("state") == "false") => "ignored"
-      case _ => "undecided"
+    val existing = c.store.existingSnippet(bu.url,query,snip)
+    val (mode,userrow) = c.store.existingSnippet(bu.url,query,snip) match {
+      case Some(row) if(row("state") == "true") => ("added",row)
+      case Some(row) if(row("state") == "false") => ("ignored",row)
+      case _ => ("undecided",null)
     }
     <div class={"snippet snippet-"+mode}>
        <input type="hidden" class="position" value={""+position}/>
        <div class="text">{snip}</div>
        {if(c.user.realuser){
-       <a class="add" onclick="doAdd(this)">{if(mode == "added") "added" else "add"}</a>
+       <a class="add" onclick="doAdd(this)">{if(mode == "added") "marked" else "mark"}</a>
        <a class="ignore" onclick="doIgnore(this)">{if(mode == "ignored") "ignored" else "ignore"}</a>
         }else{
         	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
+        }
+       }
+       {if(userrow != null){
+         userref(userrow.int("user_id"), userrow.str("username"), "by") 
+        }else{          
         }
        }
     </div>    
@@ -135,12 +158,13 @@ object Render {
          <div class={if(row("state") == "true") "snippet snippet-added" else "snippet snippet-ignored"}>
 	       <div class="text">{row("abstract")}</div>
          {if(c.user.realuser){
-	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "added" else "add"}</a>
+	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "marked" else "mark"}</a>
 	       <a class="ignore" onclick="doIgnore(this)">{if(row("state") == "false") "ignored" else "ignore"}</a>         	
             }else{
         	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
             }
          }
+         {userref(row.int("user_id"), row.str("username"), "by")} 
          </div>
       </div>
     </div>
@@ -153,6 +177,7 @@ object Render {
        <a class='title' target="_blank" href={row.str("url")}>{row("title")}</a>
        <a class='url' target="_blank" href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
        <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
+       {if(row.isDefinedAt("user_id")){userref(row.int("user_id"),row.str("username"),"marked by")} else {}}
     </div>
   
   def extension(c : ReqContext) = 
@@ -192,6 +217,9 @@ object Template {
   
   def mini(c : ReqContext, body : NodeSeq) =    
     basics("Think Link Popup Interface",(<body class='minibody'>{body}</body>))
+  
+  def nobar(c : ReqContext, body : NodeSeq) = 
+    basics("",(<body class='body'>{body}</body>))
   
   def basics(title : String, body : NodeSeq) =
     <html xmlns="http://www.w3.org/1999/xhtml">

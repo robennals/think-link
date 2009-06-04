@@ -25,7 +25,7 @@ function onInput(textbox,callback){
 
 
 function doAdd(obj){
-	$(obj).text("added")
+	$(obj).text("marked")
 	var snip = $(obj).parent();
 	snip.find(".ignore").text("ignore")
 	snip.addClass("snippet-added")
@@ -36,7 +36,7 @@ function doAdd(obj){
 function doIgnore(obj){
 	$(obj).text("ignored")
 	var snip = $(obj).parent()
-	snip.find(".add").text("add")
+	snip.find(".add").text("mark")
 	snip.addClass("snippet-ignored")
 	snip.removeClass("snippet-added")
 	setSnipStatus(snip,false)

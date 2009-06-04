@@ -182,13 +182,13 @@ object Page {
           "Opposing Evidence" -> (() => 
  	  	      <div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_).toSeq flatMap Render.snippet)}
+            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_).toSeq flatMap Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
               </div>),
           "Supporting Evidence" -> (() => 
   	  	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.snippet)}
+               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
           "Related Claims" -> (() => 
@@ -196,7 +196,18 @@ object Page {
                 <h2>Related Claims</h2>
                 {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
                 <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>add related claim</a>                  
-              </div>)
+              </div>),
+          "Marked Pages" -> (() => 
+              <div id='searchlist' style='padding-bottom: 4px'>
+                 <input type="hidden" id="data-query" value=""/>
+                 <input type="hidden" id="data-claim" value={""+row("id")}/>
+                <h2>Places this claim is made on the web</h2>
+                <div class='searchcontent'>
+                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_).toSeq flatMap Render.markedSnippet)}
+                </div>
+                <a class='add' href={Urls.findsnippets(row.int("id"))}>find snippets making this claim</a>
+              </div>
+           )
         )}
       </div>
       <div id="topics">
@@ -233,10 +244,12 @@ object Page {
       <input type="hidden" id="data-claim" value={""+row("id")}/>
       <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
       <div class="subtitle">Find snippets on the web that make this claim</div> 
+      <div class='message'>When a user with the <a href={Urls.extension}>Firefox extension</a> browses a web page 
+        with a marked snippet, they will see the snippet highlighted in red, telling them that it is disputed.</div>
+      <div class="message">To mark a snippet, either use the interface below, or <a href={HelpUrls.mark}>use the firefox extension</a></div>
       <div id="queries">
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
-        <a class="manualmarked" href={Urls.findsnippets(row("id"),true)}>marked with extension</a>
       </div>
       {simpleSearch(Urls.findsnippets(row("id")), query, "Enter a search string")}
       {if(c.arg("fromextension") == null){
@@ -277,7 +290,9 @@ object Page {
           "Claims Created" -> (() => 
             	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_).toSeq flatMap Render.claim)),
           "Pages Marked" -> (() => 
-                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_).toSeq flatMap Render.markedPage))
+                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_).toSeq flatMap Render.markedPage)),
+          "Evidence Found" -> (() =>
+            	Widgets.pagedList(c.store.evidenceForUser(row.int("id"),_).toSeq flatMap Render.userEvidence))
         )}
       </div>
 
@@ -299,7 +314,7 @@ object Page {
 	    <form class='form' id="login" action="login" method="POST">	   
             <input class='hidden' type='hidden' name='url' value={path}/>
 	        <label for="email">email</label>
-	        {Widgets.greyInput(null,"email","Enter the email address you signed up with")}
+	        <input type="text" name="email"/>
 	        <p><label for="password">password</label>
 	        	<input type="password" id="password" name="password"/></p>
 	        <input class='submit' type="submit" value="Login"/>

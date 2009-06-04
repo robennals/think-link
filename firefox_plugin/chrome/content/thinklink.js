@@ -57,12 +57,6 @@ function thinklink_getLogin(){
 	//thinklink_setCookies(encodeURIComponent(username),encodeURIComponent(password)); 
 }
 
-function autoLogin(){
-	if(content.document.location.href.substring(0,35) == "http://factextract.cs.berkeley.edu/"){
-		
-	}
-}
-
 function initCookieCatcher(){
 	var cookieCatcher = {
 		  observe: function(subject,topic,state){
@@ -80,6 +74,7 @@ function initCookieCatcher(){
 
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
+	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://localhost:8180/","extension","true");
 	initCookieCatcher();
     

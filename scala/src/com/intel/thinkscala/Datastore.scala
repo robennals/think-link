@@ -149,9 +149,10 @@ class Datastore {
   
   // === find marked stuff ===
   
-  val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext "+
-                                   "FROM v2_searchresult, v2_searchurl, v2_node "+
+  val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext, v2_user.id AS user_id, v2_user.name AS username "+
+                                   "FROM v2_searchresult, v2_searchurl, v2_node, v2_user "+
                                    "WHERE v2_searchurl.id = url_id "+
+                                   "AND v2_user.id = v2_searchresult.user_id "+
                                    "AND v2_node.id = v2_searchresult.claim_id "+
                                    "AND v2_searchresult.state = 'true' "+
                                    "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
@@ -181,7 +182,7 @@ class Datastore {
                             "WHERE v2_user.id = v2_node.user_id "+
                             "AND type=? "+
                             "ORDER BY instance_count DESC LIMIT 20 OFFSET ?") 
-  def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*10)
+  def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*20)
   def getBigTopics(page : Int) = get_frequent.queryRows("topic",page*10)
   
   val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
@@ -227,8 +228,14 @@ class Datastore {
   
   // === Follow links ===
 
-  val get_evidence = stmt("SELECT * FROM evidence WHERE claim_id=? AND verb = ? LIMIT 20 OFFSET ?")
+  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username FROM evidence, v2_user WHERE claim_id=? AND verb = ? AND v2_user.id = user_id LIMIT 20 OFFSET ?")
   def evidence(claimid : Int, verb : String, page : Int) = get_evidence.queryRows(claimid,verb,page * 20)
+  
+  val evidence_for_user = stmt("SELECT evidence.*,v2_node.id AS claimid, v2_node.text AS claimtext "+
+                                 "FROM evidence,v2_node "+
+                                 "WHERE evidence.user_id = ? AND claim_id = v2_node.id "+
+                                 "LIMIT 20 OFFSET ?")
+  def evidenceForUser(userid : Int, page : Int) = evidence_for_user.queryRows(userid,page * 20)
   
   val linked_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.src = v2_node.id "+
@@ -299,6 +306,7 @@ class Datastore {
   val nodes_by_user = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                            "WHERE v2_node.type = ? AND v2_node.user_id = ? "+
                            "AND v2_node.user_id = v2_user.id "+ 
+                           "ORDER BY instance_count DESC "+
                            "LIMIT 20 OFFSET ?")
   def nodesByUser(typ : String, userid : Int, page : Int) = nodes_by_user.queryRows(typ,userid,page*20)
   
@@ -330,6 +338,15 @@ class Datastore {
   def mkResult(searchid : Int, urlid : Int, position: Int, abstr : String, pagetext : String,claimid : Int) =
     mk_result.insert(searchid,urlid,position,abstr,new TruncString(pagetext,2048),claimid)    
   
+  val update_snip_user_true = stmt("UPDATE v2_searchresult "+
+                 "SET user_id = "+
+                    "(SELECT user_id FROM v2_searchvote WHERE result_id = v2_searchresult.id LIMIT 1) "+
+                 "WHERE id = ?")
+  val update_snip_user_false = stmt("UPDATE v2_searchresult "+
+                 "SET user_id = "+
+                    "(SELECT user_id FROM v2_searchvote WHERE result_id = v2_searchresult.id ORDER BY date DESC LIMIT 1) "+
+                 "WHERE id = ?")
+                                   
   val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
                              "VALUES (?,?,?,?)")
   val set_snip_state = stmt("UPDATE v2_searchresult SET state = ? WHERE id=?")
@@ -341,6 +358,9 @@ class Datastore {
     set_snip_state.update(""+vote,resultid)
     if(vote){
       set_user_snip_count.update(userid)
+      update_snip_user_true.update(resultid)
+    }else{
+      update_snip_user_false.update(resultid)
     }
     updateSearchCounts(claimid, searchid)
   }
@@ -371,19 +391,32 @@ class Datastore {
   def updateTopicCount(id : Int) = update_topic_count.update(id)
 
   
-  val existing_snippet = stmt("SELECT * FROM v2_searchresult,v2_searchurl,v2_snipsearch "+
+  val existing_snippet = stmt("SELECT state,user_id,v2_user.name AS username "+
+                                "FROM v2_searchresult,v2_searchurl,v2_snipsearch,v2_user "+
                                 "WHERE v2_searchurl.id = v2_searchresult.url_id "+
                                 "AND v2_snipsearch.id = v2_searchresult.search_id "+
                                 "AND v2_searchurl.url = ? "+
+                                "AND v2_user.id = v2_searchresult.user_id "+
                                 "AND v2_snipsearch.searchtext = ? "+
                                 "AND v2_searchresult.abstract = ?")
   def existingSnippet(url : String, query : String, abstr : String) = 
     existing_snippet.queryMaybe(url,query,abstr)  
   
-  val found_snippets = stmt("SELECT state,abstract,url,title FROM v2_searchresult,v2_searchurl "+
+  val found_snippets = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
+                              "FROM v2_searchresult,v2_searchurl,v2_user "+
                               "WHERE claim_id = ? AND search_id = 0 AND url_id = v2_searchurl.id "+
+                              "AND v2_user.id = v2_searchresult.user_id "+
                               "LIMIT 20 OFFSET ?")
   def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
+  
+  val all_snippets = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
+                              "FROM v2_searchresult,v2_searchurl,v2_user "+
+                              "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
+                              "AND state = 'true' "+
+                              "AND v2_user.id = v2_searchresult.user_id "+
+                              "LIMIT 20 OFFSET ?")
+  def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,page*20)
+  
   
   // === Nodes ===
   

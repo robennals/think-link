@@ -13,14 +13,14 @@ object Mini {
           "Opposing Evidence" -> (() =>
 	  	      <div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-	            {c.store.evidence(row.int("id"),"opposes",0) flatMap Render.snippet}
+	            {c.store.evidence(row.int("id"),"opposes",0) flatMap Render.evidence}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
 		      </div>
             ),
           "Supporting Evidence" -> (() =>
 	   	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-	            {c.store.evidence(row.int("id"),"supports",0) flatMap Render.snippet}
+	            {c.store.evidence(row.int("id"),"supports",0) flatMap Render.evidence}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
 		      </div>
             ))
@@ -90,7 +90,7 @@ object Mini {
           <input type='hidden' name='isdisputed' value={c.arg("isdisputed")}/>
           <input type='hidden' name='rel' value="opposes"/>
           <label for="name">Claim</label>
-          <input type="text" id="name" name="name"/>
+          <input type="text" id="name" name="name" value={c.arg("query")}/>
           <label for="descr">Optional Description</label>
           <textarea rows="5" id="descr" name="descr"></textarea>   
           <button class='submit' type='button' onclick="submitNewClaim(); return false">Create New Claim</button>

@@ -63,12 +63,16 @@ object SnipSearch {
   }
   
   def searchBoss(claim : String, page : Int, count : Int) : Seq[BossUrl] = {
-    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&start="+(page*count)+"&count="+count
-    val xmltext = download(url)
-    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
-    val doc = parser.document   
-    val results = doc \\ "result"
-    return results map absForResult
+    try{
+	    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long&start="+(page*count)+"&count="+count
+	    val xmltext = download(url)
+	    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
+	    val doc = parser.document   
+	    val results = doc \\ "result"
+	    return results map absForResult
+    }catch{
+      case _ => return List()
+    }
   }  
   
   def searchYahoo(claim : String) : Seq[SnipUrlRes] = {

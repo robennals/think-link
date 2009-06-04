@@ -8,7 +8,7 @@ import com.intel.thinkscala.view.Mini
 import scala.xml._
 
 object FixedUrls {
-  val base = "http://factextract.cs.berkeley.edu/"
+  val base = "http://thinklink.cs.berkeley.edu/"
   def confirmUser(id : Int, nonce : Int) = base + "confirm/"+nonce 
 }
 
@@ -33,6 +33,11 @@ object Urls {
   def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
   def addlinks(id : Any, thistyp: String, thattyp: String) = base+"/connect"+"?addto="+id+"&thistype="+thistyp+"&thattype="+thattyp
   val connect = base+"/connect"
+}
+
+object HelpUrls {
+  val base = "http://confront.intel-research.net/"
+  val mark = base + "Think_Link.html"
 }
 
 object MiniUrls {
@@ -146,7 +151,8 @@ class MainServlet extends HttpServlet {
       val name = c.arg("name")
       val descr = c.arg("descr")
       val claimid = c.store.makeClaim(name,descr,c.userid)
-      if(c.arg("addto") != null){
+      var foo = c.arg("addto")
+      if(c.arg("addto") != ""){
         c.store.addLink(claimid,c.argInt("addto"),c.userid)
       }
       c.redirect(Urls.claim(claimid))
@@ -169,7 +175,10 @@ class MainServlet extends HttpServlet {
       val query = normalizeString(c.arg("query"))
       val vote = c.arg("vote")
       val position = c.argInt("position")
-      val searchid = c.store.mkSearch(claimid,query)
+      var searchid = 0
+      if(query != ""){
+        searchid = c.store.mkSearch(claimid,query)
+      }
       val urlid = c.store.mkUrl(url,title)
       val resultid = c.store.mkResult(searchid,urlid,position,text,"",claimid)
       c.store.setSnipVote(claimid,resultid,searchid,c.userid,vote == "true")
@@ -247,11 +256,13 @@ class MainServlet extends HttpServlet {
        }
     }),
     UrlHandler("/mini/claim/(\\d*)",c=>{
+      c.minimode = true
       val claimid = c.urlInt(1)
       val claim = c.store.getInfo(claimid,c.maybe_userid)
  	  c.outputMiniHtml(Mini.claim(claim)(c))      
     }),
     UrlHandler("/mini/newsnippet",c=>{
+      c.minimode = true
       val text = c.arg("text")
       val url = c.arg("url")
       val title = c.arg("title")

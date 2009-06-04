@@ -243,6 +243,7 @@ h2 {
 
 .says {
 	margin-left: 10px;
+	color: #666666;
 }
 #supports, #opposed, #related-claims, #created, #instance {
 	background-color: #ECEFF5;
@@ -319,7 +320,7 @@ h2 {
 .hasextension {
 	position: absolute;
 	right: 4px;
-	top: 4px;
+	top: 3px;
 	color: white;
 }
 
@@ -464,6 +465,12 @@ h2 {
 	position: absolute;
 	right: 3px;
 	top: 5px;
+}
+
+.snippet .user {
+	position: absolute;
+	right: 3px;
+	top: 20px;
 }
 
 .snippet .mustlogin {
@@ -696,4 +703,17 @@ img {
 .manualmarked {
 	display: block;
 	padding-top: 20px;
+}
+
+.bugreport {
+	padding-left: 20px;
+}
+
+.minibody {
+	margin: 0px;
+}
+
+.webquote {
+	background-color: white;
+	padding: 4px;
 }

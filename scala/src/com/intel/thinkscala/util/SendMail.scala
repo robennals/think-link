@@ -10,7 +10,7 @@ object SendMail {
       props.put("mail.smtp.host","localhost")
 	  val session = Session.getDefaultInstance(props,null)
 	  val msg = new MimeMessage(session)
-	  msg.setFrom(new InternetAddress("thinklink@factextract.cs.berkeley.edu"))
+	  msg.setFrom(new InternetAddress("thinklink@thinklink.cs.berkeley.edu"))
 	  msg.setRecipients(Message.RecipientType.TO, to)
 	  msg.setSubject(subject)
 	  msg.setText(text)

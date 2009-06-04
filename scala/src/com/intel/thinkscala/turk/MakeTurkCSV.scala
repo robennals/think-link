@@ -6,26 +6,16 @@ import scala.collection.mutable.HashMap
 import java.io.FileWriter
 
 object MakeTurkCSV {
-  val filename = "v4_tye_first"
+  val filename = "v4_tye_third"
   
   val store = Pool.get
 
   // questions per task
   val PERTASK = 10
-
-//  val cols = List("claim") ++ ((1 to PERTASK) flatMap 
-//    (n => List("front","snip","back") map (v => v+n)))
-  
+ 
   val cols = List("claim") ++ ((1 to PERTASK) flatMap 
     (n => List("snip","url","title","searchtext") map (v => v+n)))
 
-                                    //  def splitContext(context : String, snip : String) : (String,String) = {
-//    val startpos = context indexOf snip
-//    if(startpos == -1) return ("","") 
-//    else
-//      return (context.substring(0,startpos),context.substring(startpos + snip.length))
-//  }
-//  
   def makeWorkUnits(claim : String) : ArrayBuffer[HashMap[String,String]] = {
     val turkdata = new ArrayBuffer[HashMap[String,String]]
     var thisreq = new HashMap[String,String]
@@ -41,9 +31,7 @@ object MakeTurkCSV {
         thisreq = new HashMap[String,String]
         nthitem=1
       }
-//      val (front,back) = splitContext(r.str("pagetext"),r.str("abstract"))
-//      thisreq("front"+nthitem) = front
-//      thisreq("back"+nthitem) = back
+
       thisreq("snip"+nthitem) = r.str("abstract")        
       thisreq("url"+nthitem) = r.str("url")
       thisreq("title"+nthitem) = r.str("title")

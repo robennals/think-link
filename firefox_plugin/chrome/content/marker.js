@@ -1,5 +1,5 @@
 
-var thinklink_imagebase = "http://factextract.cs.berkeley.edu:8180/thinklink/images/"
+var thinklink_imagebase = "http://thinklink.cs.berkeley.edu/thinklink/images/"
 
 function tl_log(msg){
     var consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
@@ -8,7 +8,7 @@ function tl_log(msg){
 
 function get_api_path(){
 	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-	var apipath = "http://factextract.cs.berkeley.edu:8180/thinklink";
+	var apipath = "http://thinklink.cs.berkeley.edu/thinklink";
 	if(prefs.prefHasUserValue("extensions.thinklink.api")){
 		apipath = prefs.getCharPref("extensions.thinklink.api");
 	}	
@@ -208,6 +208,29 @@ function viewClaim(id) {
 	viewFrame(apipath+"/mini/claim/"+id);
 }
 
+function dragPopup(ev,win,frame){
+	var deltaX = win.offsetLeft - ev.screenX;
+    var deltaY = win.offsetTop - ev.screenY;
+
+	var dragMove = function(ev){
+        var posx = Math.max(0,ev.screenX + deltaX);
+        var posy = Math.max(0,ev.screenY + deltaY);
+        win.style.left = posx + "px";
+        win.style.top = posy + "px";
+	}
+
+	var dragStop = function(ev){
+		content.document.removeEventListener("mousemove",dragMove,true);
+		content.document.removeEventListener("mouseup",dragStop,true);
+		frame.style.visibility = "visible";
+	}
+
+	content.document.addEventListener("mousemove",dragMove,true);
+    content.document.addEventListener("mouseup",dragStop,true);
+	
+	frame.style.visibility = "hidden";
+}
+
 function viewFrame(url) {
 	var doc = content.document;
 	var that = this;
@@ -239,6 +262,22 @@ function viewFrame(url) {
 		//tl_dragStart(ev,that.divID,"tl_point_frame");
 	//},true);
 	titleBar.className = "tl_dialog_title";
+	
+	var dragbar = doc.createElement("div");
+	win.appendChild(dragbar);
+	dragbar.style.position = "absolute";
+	dragbar.style.top = "14px";
+	dragbar.style.width = "240px";
+	dragbar.style.height = "32px";
+	dragbar.style.backgroundColor = "grey";
+	dragbar.style.color = "white";
+	dragbar.style.cursor = "move";
+	dragbar.style.zIndex = "-1";
+	dragbar.style.left = "170px";
+	dragbar.style.paddingLeft = "8px";
+	dragbar.style.paddingTop = "2px";
+	dragbar.style.MozBorderRadius = "6px";
+	dragbar.textContent = "Think Link";
 	
 	var buttonBox = doc.createElement("span");
 	buttonBox.style.position = "absolute";
@@ -272,8 +311,8 @@ function viewFrame(url) {
 	// add actual content
 	var frameholder = doc.createElement("div");
 	frameholder.style.height = "460px";
-	frameholder.style.width = "430px";
-	frameholder.style.marginTop = "26px";
+	frameholder.style.width = "424px";
+	frameholder.style.marginTop = "34px";
 
 	var pointframe = doc.createElement("iframe");
 	pointframe.src = url;
@@ -286,6 +325,11 @@ function viewFrame(url) {
 	frameholder.appendChild(pointframe);
 //	frameholder.style.width="100%";
 	win.appendChild(frameholder);
+
+	dragbar.addEventListener("mousedown",function(ev){
+		dragPopup(ev,win,pointframe);
+	},true);
+
 
 	win.style.visibility = "visible";
 	win.style.display = "block";

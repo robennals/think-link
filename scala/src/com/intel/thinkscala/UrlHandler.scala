@@ -51,6 +51,8 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
     return HashMap(maps.collect : _*)
   }
   
+  var minimode = false
+  
   def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.update(key,value))  
   
   def modifiedUrl(changes : (String,Any)*) = mkUrl("/thinklink"+path,params ++ changes)
@@ -107,7 +109,11 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   }
   
   def needLogin() {
-    outputHtml("You need to log in to do that",Page.login("You need to log in to do that",getUrl))
+    if(minimode){
+        UrlHandler.outputHtml(res,Template.nobar(this,Page.login("You need to log in to do that",getUrl)),true)
+    }else{
+    	outputHtml("You need to log in to do that",Page.login("You need to log in to do that",getUrl))
+     }
   }
   
   def redirect(url : String){
@@ -132,9 +138,19 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
         return null;
 	}
   
+  val second = 1
+  val minute = 60*second
+  val hour = 60*minute
+  val day = 24*hour
+  val week = 7*day
+  val month = 30*day
+  val year = 365*day
+  
   def setCookie(key : String, value : String, path : String){
     val c = new Cookie(key,encode(value))
-    c.setPath(path)
+    c.setPath("/")
+//    c.setPath(path)
+    c.setMaxAge(year)
     res.addCookie(c)
   }
   

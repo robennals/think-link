@@ -95,7 +95,8 @@ object GenerateTurkData {
 //    new TurkRequest("birth control is a human right")    
 //  )
 
-  val requests = SpeechTopics.requests.take(40)
+//  val requests = SpeechTopics.requests.take(40)
+  val requests = SpeechTopics.requests.drop(80).take(40)
   
   // Batch 6 - me. Politics
 //  val topics = List(
