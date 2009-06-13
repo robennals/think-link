@@ -74,12 +74,6 @@ function claimMessage(claimtext,id,doc){
 		accessKey: "I",
 		popup: null
 		}];
-	//{
-		//label: "ping",
-		//accessKey: "K",
-		//popup: "blockedPopupOptions",
-		//callback: null
-	 //}];
 	 
 	var message = "disputed claim: "+claimtext;
 
@@ -277,6 +271,11 @@ function viewFrame(url) {
 	dragbar.style.paddingLeft = "8px";
 	dragbar.style.paddingTop = "2px";
 	dragbar.style.MozBorderRadius = "6px";
+	dragbar.style.fontSize = "14px";
+	dragbar.style.fontFamily = "arial,sans-serif";
+	dragbar.style.textAlign = "left";
+	dragbar.style.fontWeight = "normal";
+	
 	dragbar.textContent = "Think Link";
 	
 	var buttonBox = doc.createElement("span");

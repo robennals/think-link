@@ -62,6 +62,7 @@ function initCookieCatcher(){
 		  observe: function(subject,topic,state){
 			  var ht = subject.QueryInterface(Components.interfaces.nsIHttpChannel);                       
 			  if((ht.name.substring(0,42) == "http://factextract.cs.berkeley.edu/apianon")
+			  || (ht.name.substring(0,40) == "http://thinklink.cs.berkeley.edu/apianon")
 			  || (ht.name.substring(0,39) == "http://localhost:8180/thinklink/apianon")){
 				 subject.setRequestHeader("Cookie","",false);
 			 }

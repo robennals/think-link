@@ -10,6 +10,7 @@ object Render {
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"created by")}
       - <a href={Urls.findsnippets(row("id"))} class="instances">seen <span class="count">{row("instance_count")}</span> times on the web</a>  
+      - <a onclick={"reportSpam(this,"+row("id")+")"}>report spam</a>       
 <!--      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
       - <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
 -->
@@ -25,6 +26,17 @@ object Render {
       <a class="title" href={Urls.topic(row("id"))}>{row("text")}</a>
     </div>
 
+  def claimlink(row : SqlRow)(implicit c : ReqContext) =
+    <div class="claimlink">
+      {if(row("linkid") != null){
+    	  	<div onclick={"connect(this,"+row("id")+","+c.arg("addto")+")"} class="disconnect">Disconnect</div>
+       }else{
+    	   <div onclick={"connect(this,"+row("id")+","+c.arg("addto")+")"} class="connect">Connect</div>
+      }}
+      <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
+    </div>
+
+      
   def topic(row : SqlRow) =
     <div class="claim">
       <a class="title" href={Urls.topic(row("id"))}>{row("text")}</a>
@@ -47,14 +59,21 @@ object Render {
     </div>
   
       
-  def evidence(row : SqlRow) : NodeSeq = {
-    (<div class="webquote">
+  def evidence(row : SqlRow)(implicit c : ReqContext) : NodeSeq = 
+    <div class="webquote">
         <span class="title">{row.getOrElse("title","")}</span>
         <div class="text">{row("text")}</div>
         <a target="_blank" class="url" href={row.str("url")}>{row("url")}</a>                                                     
         {userref(row.int("user_id"), row.str("username"), "found by")} 
-    </div>)
-   }
+        -
+        {if(row("user_id") == c.maybe_userid){
+           <a onclick={"deleteEvidence(this,"+row("id")+")"}>delete</a>           
+         }else{
+            <a onclick={"reportSpamEvidence(this,"+row("id")+")"}>report spam</a>   
+         }
+        }
+    </div>
+   
   
   def userEvidence(row : SqlRow) =
     <div class="webquote">
@@ -82,12 +101,12 @@ object Render {
 	    <form class="searchbox" action={Urls.search} method="GET">
            {greyInput("query","query","Search")}
            <input class="icon" type="image" src={Images.search} alt="search"/>
-        </form>         
+        </form>                 
         <a class='bugreport' href="mailto:robert.ennals@intel.com?body=Report a bug, suggest a feature, or just tell us what you think.">Send us your feedback</a>
     </div>
     
   def userref(id : Int, name : String, message : String) =
-    <span class="user">{message} <a href={Urls.user(id)}>{name}</a></span>
+    <span class="user">{message} <a target="_blank" href={Urls.user(id)}>{name}</a></span>
             
  def searchQueryList(c : ReqContext, claimid : Int) = 
     (c.store.searchQueries(claimid) flatMap (Render.searchQuery(_,claimid))) ++
@@ -104,18 +123,17 @@ object Render {
     </div>
 
     // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl, position : Int,query : String)(implicit c : ReqContext) = 
+  def bossUrl(bu : BossUrl, position : Int,query : String, claimid : Int)(implicit c : ReqContext) = 
     <div class="bossurl">
     <span class="title">{bu.title}</span>
     <a href={bu.url}>{bu.url}</a>
     <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu,position,query))}
+      {bu.snips flatMap (s => bossSnip(s,bu,position,query,claimid))}
     </div>
     </div>
     
-  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String)(implicit c : ReqContext) = {
-    val existing = c.store.existingSnippet(bu.url,query,snip)
-    val (mode,userrow) = c.store.existingSnippet(bu.url,query,snip) match {
+  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String, claimid : Int)(implicit c : ReqContext) = {
+    val (mode,userrow) = c.store.existingSnippet(bu.url,claimid,snip) match {
       case Some(row) if(row("state") == "true") => ("added",row)
       case Some(row) if(row("state") == "false") => ("ignored",row)
       case _ => ("undecided",null)
@@ -138,15 +156,15 @@ object Render {
     </div>    
     }
   
-  def bossResults(query : String,page : Int)(implicit c : ReqContext) : NodeSeq = {
+  def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
       val bossUrls = SnipSearch.searchBoss(query,page,10)      
-      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query))}</div>
+      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query,claimid))}</div>
   }
   
-  def snipSearchResults(query : String)(implicit c : ReqContext) = 
+  def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 
     <div id="searchlist">
     <h2>Search Results matching "{query}"</h2>
-    {Widgets.pagedList(bossResults(query,_))}
+    {Widgets.pagedList(bossResults(query,row.int("id"),_))}
     </div>
 
   def markedSnippet(row : SqlRow)(implicit c : ReqContext) = 

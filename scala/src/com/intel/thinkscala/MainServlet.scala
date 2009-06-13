@@ -59,6 +59,7 @@ object PostUrls {
   def addEvidence(id : Any) = Urls.claim(id) + "/addevidence"
   val newtopic = base + "/topic/new"
   val newclaim = base + "/claim/new"
+  def setspam(claimid : Int) = Urls.claim(claimid) + "/setspam"
 }
 
 
@@ -76,12 +77,6 @@ object TurkPostUrls {
 //  def setClaim(turkid : Int) = base 
 }
 
-
-
-object FragUrls {
-  val base = Urls.base + "/fragment/"
-  def snipsearch(id : Any) = base+"snipsearch?claim="+id
-}
 
 class MainServlet extends HttpServlet { 
   val posthandlers = List(
@@ -167,6 +162,27 @@ class MainServlet extends HttpServlet {
       }
       c.redirect(Urls.topic(claimid))
     }),
+    UrlHandler("/claim/(\\d*)/setspam", c => {
+      val claimid = c.urlInt(1)
+      c.store.setSpamClaim(claimid,c.userid)
+    }),
+    UrlHandler("/claim/(\\d*)/ignore", c => {
+      val claimid = c.urlInt(1)
+      c.store.ignoreClaim(claimid,c.userid)
+    }),
+    UrlHandler("/claim/(\\d*)/unignore", c => {
+      val claimid = c.urlInt(1)
+      c.store.unIgnoreClaim(claimid,c.userid)
+    }),
+    UrlHandler("/evidence/(\\d*)/setspam", c => {
+      val evid = c.urlInt(1)
+      c.store.setSpamEvidence(evid,c.userid)
+    }),
+    UrlHandler("/evidence/(\\d*)/delete", c => {
+      val evid = c.urlInt(1)      
+      c.store.deleteEvidence(evid,c.userid)
+    }),
+
     UrlHandler("/claim/(\\d*)/setsnippet", c => {
       val claimid = c.urlInt(1)
       val title = c.arg("title")
@@ -241,6 +257,15 @@ class MainServlet extends HttpServlet {
 	    c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
 	  }    
     ),
+    UrlHandler("/api/ignored",c => {
+     },c => {
+      if(c.user.realuser){
+    	  c.output(c.store.ignoredClaims(c.userid))
+      }else{
+          c.output(false)
+      }
+     }
+    ),
     UrlHandler("/connect",c => {
       c.requireLogin
       val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)
@@ -258,7 +283,7 @@ class MainServlet extends HttpServlet {
     UrlHandler("/mini/claim/(\\d*)",c=>{
       c.minimode = true
       val claimid = c.urlInt(1)
-      val claim = c.store.getInfo(claimid,c.maybe_userid)
+      val claim = c.store.getClaim(claimid,c.maybe_userid)
  	  c.outputMiniHtml(Mini.claim(claim)(c))      
     }),
     UrlHandler("/mini/newsnippet",c=>{
@@ -298,7 +323,7 @@ class MainServlet extends HttpServlet {
       c.outputHtml("Add Evidence",Page.addEvidence(claimid,claim.str("text"),rel,text)(c))
     }),
     UrlHandler("""/claim/(\d*)""",c => {
-      val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
+      val claim = c.store.getClaim(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + " - Think Link Claim"
       c.outputHtml(title,Page.claim(claim)(c))
     }),
@@ -332,11 +357,7 @@ class MainServlet extends HttpServlet {
       c.setCookie("email","")
       c.setCookie("password","")
       c.redirect("/thinklink/")
-    }),
-    
-    UrlHandler("/fragment/snipsearch", c => {
-      c.outputFragment(Render.snipSearchResults(c.arg("query"))(c))
-    })
+    })    
   )
  
   override def doPost(req : HttpServletRequest, res : HttpServletResponse){

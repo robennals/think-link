@@ -115,7 +115,19 @@ class Datastore {
     }
     get_info.queryOne(id)
   }
-
+    
+  val get_claim = stmt("SELECT v2_node.*, v2_user.name AS username,ignore_claim.user_id AS ignored "+
+		  				"FROM v2_node "+
+                        "LEFT JOIN ignore_claim ON claim_id = id AND ignore_claim.user_id = ? "+
+                        "LEFT JOIN v2_user ON v2_node.user_id = v2_user.id "+
+                        "WHERE v2_node.id = ?")
+  def getClaim(id : Int, userid : Int) = {
+    if(userid != 0){
+      logRecent(userid,id)
+    }
+    get_claim.queryOne(userid,id)
+  }
+  
   val top_users = stmt("SELECT * FROM v2_user WHERE id != 2 ORDER BY snipcount DESC LIMIT 10")
   def topUsers = top_users.queryRows()
   
@@ -162,7 +174,7 @@ class Datastore {
                                    "FROM v2_searchresult, v2_searchurl, v2_node "+
                                    "WHERE v2_searchurl.id = url_id "+
                                    "AND v2_node.id = v2_searchresult.claim_id "+
-                                   "AND v2_node.user_id = ? "+
+                                   "AND v2_searchresult.user_id = ? "+
                                    "AND v2_searchresult.state = 'true' "+
                                    "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
   def userMarkedPages(userid : Int, page : Int) = user_marked_pages.queryRows(userid, page * 20)
@@ -365,6 +377,24 @@ class Datastore {
     updateSearchCounts(claimid, searchid)
   }
   
+  val set_spam_claim = stmt("INSERT INTO spam_claim (node_id,user_id) VALUES (?,?)")
+  def setSpamClaim(claimid : Int, userid : Int) = set_spam_claim.update(claimid,userid)
+  
+  val ignore_claim = stmt("INSERT INTO ignore_claim (claim_id,user_id) VALUES (?,?)")
+  def ignoreClaim(claimid : Int, userid : Int) = ignore_claim.update(claimid,userid)
+
+  val ignored_claims = stmt("SELECT claim_id FROM ignore_claim WHERE user_id = ?")
+  def ignoredClaims(userid : Int) = ignored_claims.queryRows(userid).map(_("claim_id"))
+  
+  val unignore_claim = stmt("DELETE FROM ignore_claim WHERE claim_id = ? AND user_id = ?")
+  def unIgnoreClaim(claimid : Int, userid : Int) = unignore_claim.update(claimid,userid)
+  
+  val set_spam_evidence = stmt("INSERT INTO spam_evidence (evidence_id,user_id) VALUES (?,?)")
+  def setSpamEvidence(evidenceid : Int, userid : Int) = set_spam_evidence.update(evidenceid,userid)
+  
+  val delete_evidence = stmt("DELETE FROM evidence WHERE id = ? AND user_id = ?")
+  def deleteEvidence(evidenceid : Int, user_id : Int) = delete_evidence.update(evidenceid,user_id)
+  
   val update_search_counts = stmt("UPDATE v2_snipsearch SET "+
                                     "marked_yes = (SELECT COUNT(result_id) FROM v2_searchvote "+
                                         "WHERE search_id = v2_snipsearch.id AND vote=1), "+ 
@@ -392,15 +422,14 @@ class Datastore {
 
   
   val existing_snippet = stmt("SELECT state,user_id,v2_user.name AS username "+
-                                "FROM v2_searchresult,v2_searchurl,v2_snipsearch,v2_user "+
+                                "FROM v2_searchresult,v2_searchurl,v2_user "+
                                 "WHERE v2_searchurl.id = v2_searchresult.url_id "+
-                                "AND v2_snipsearch.id = v2_searchresult.search_id "+
                                 "AND v2_searchurl.url = ? "+
+                                "AND v2_searchresult.claim_id = ? "+
                                 "AND v2_user.id = v2_searchresult.user_id "+
-                                "AND v2_snipsearch.searchtext = ? "+
                                 "AND v2_searchresult.abstract = ?")
-  def existingSnippet(url : String, query : String, abstr : String) = 
-    existing_snippet.queryMaybe(url,query,abstr)  
+  def existingSnippet(url : String, claimid : Int, abstr : String) = 
+    existing_snippet.queryMaybe(url,claimid,abstr)  
   
   val found_snippets = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
                               "FROM v2_searchresult,v2_searchurl,v2_user "+
@@ -414,8 +443,8 @@ class Datastore {
                               "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
                               "AND state = 'true' "+
                               "AND v2_user.id = v2_searchresult.user_id "+
-                              "LIMIT 20 OFFSET ?")
-  def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,page*20)
+                              "LIMIT 10 OFFSET ?")
+  def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,page*10)
   
   
   // === Nodes ===

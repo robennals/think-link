@@ -8,12 +8,14 @@ object Page {
   import Render._
   def home(implicit c : ReqContext) =
     <div class="content">
+          <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
+
       <h1 class="logo">Think Link<span class='beta'>beta</span></h1>
       <div class="tagline">Are you being duped?</div>
       <div class="message">{Messages.pitch}</div>
 
       <form id="bigsearch" action="search" method="GET">        
-        {greyInput("query","query","Enter a claim you think may be disputed")}
+        {greyInput("query","query","Enter a claim found on the web that you think is disputed")}
         <input type="submit" class="submit" value="Search"/>
       </form>
       <div id="claimlist">
@@ -79,12 +81,12 @@ object Page {
 	        <div id='claimlist'>
 
             <h2>Claims matching "{query}"</h2>           
-             {Widgets.pagedList(c.store.searchLinked(query,"claim",row.int("id"),_).toSeq flatMap Render.nodelink)}
+             {Widgets.pagedList(c.store.searchLinked(query,"claim",row.int("id"),_).toSeq flatMap Render.claimlink)}
 	         </div>),
 	      "Recent Claims" -> (() => 
   	        <div id='claimlist'>
             <h2>Recent Claims</h2>
-             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"claim",c.userid,_).toSeq flatMap Render.nodelink)}
+             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"claim",c.userid,_).toSeq flatMap Render.claimlink)}
 	         </div>),
           "Create a New Claim" -> (() =>
              Page.newClaim(c,query)
@@ -165,7 +167,6 @@ object Page {
           <input class='submit' type="submit" value="Create New Topic"/>
         </form>
     </div>
- 
     
   def claim(row : SqlRow)(implicit c : ReqContext) =
     <div id="claim">
@@ -177,6 +178,9 @@ object Page {
       </div>
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"found by ")}
+      <span id="notagainmain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
+        	<label for="notagain">don't highlight this claim</label></span>
+
        <div id="claimlist">
         {Widgets.tabs(
           "Opposing Evidence" -> (() => 
@@ -251,9 +255,9 @@ object Page {
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
       </div>
-      {simpleSearch(Urls.findsnippets(row("id")), query, "Enter a search string")}
+      {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter a search string")}
       {if(c.arg("fromextension") == null){
-    	  Render.snipSearchResults(query)
+    	  Render.snipSearchResults(query,row)
        }else{
     	  <div id="searchlist">
 		    <h2>Snippets marked with the Firefox extension</h2>

@@ -78,7 +78,7 @@ object Widgets {
         }else{
         <input type="text" class="query" name="query" value={initquery}/>
         }}
-        <input type="submit" class="submit" value="Search"/>
+        <input type="submit" class="submit" value="Search The Web for this Claim"/>
 	  </form>
    </div>    
 

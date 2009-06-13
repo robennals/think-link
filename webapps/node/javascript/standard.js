@@ -91,3 +91,31 @@ function connect(node,id,addto){
 		})
 	}
 }
+
+function reportSpam(node,id){
+	$(node).parent().append($("<span>reported as spam</span>"))
+	$(node).remove()
+	$.post(url_base+"claim/"+id+"/setspam")
+}
+
+function reportSpamEvidence(node,id){
+	$(node).parent().append($("<span>reported as spam</span>"))
+	$(node).remove()
+	$.post(url_base+"evidence/"+id+"/setspam")
+}
+
+function deleteEvidence(node,id){
+	$(node).parent().append($("<span>reported as spam</span>"))
+	if(confirm("Are you sure you want to permanently delete this evidence?")){
+		$(node).parents(".webquote").remove();
+		$.post(url_base+"evidence/"+id+"/delete");
+	}
+}
+
+function notAgain(node,id){
+	if(node.checked){
+		$.post(url_base+"claim/"+id+"/ignore");
+	}else{
+		$.post(url_base+"claim/"+id+"/unignore");
+	}
+}

@@ -67,7 +67,7 @@ h1 {
 
 #findsnippets #queries {
 	position: absolute;
-	top: 65px;
+	top: 108px;
 	left: 10px;
 	background-color: white;
 	-moz-border-radius: 8px;
@@ -93,7 +93,7 @@ h1 {
 
 #topics {
 	position: absolute;
-	top: 65px;
+	top: 133px;
 	left: 10px;
 	width: 115px;
 	background-color: white;
@@ -296,12 +296,14 @@ h2 {
 .logo {
 	font-size: 40px;
 	margin-bottom: 0px;
+	margin-left: 100px;
+	margin-top: -20px;
 }
 
 .tagline {
 	font-size: 20px;
 	margin-top: -7px;
-	margin-left: 117px;
+	margin-left: 217px;
 	margin-bottom: 20px;
 }
 
@@ -334,7 +336,11 @@ h2 {
 }
 
 #snipsearch, #search {
+	width: auto;
+	padding: 8px;
+/*
 	width: 500px;
+*/
 }
 
 #bigsearch .query {
@@ -345,7 +351,7 @@ h2 {
 }
 
 #snipsearch .query, #search .query {
-	width: 426px;
+	width: 422px;
 	padding: 4px;
 }
 
@@ -368,8 +374,26 @@ h2 {
 
 #topbar {
 	width: 100%;
+	
 	background-color: #5867A2;
+/*
+	background-color: #0961a9;
+*/
 	padding: 1px;
+}
+
+#labs {
+	font-size: 16px;
+	font-weight: bold;
+	left: 75px;
+	position: absolute;
+	top: 44px;
+}
+
+#intellogo{
+	position: absolute;
+	left: 0px;
+	top: 20px;
 }
 
 #topbar a {
@@ -545,7 +569,9 @@ h2 {
 }
 
 .header {
+/*
 	padding-top: 6px;
+*/
 	padding-bottom: 6px;
 }
 
@@ -553,14 +579,17 @@ h2 {
 	margin: 4px;
 	padding: 4px;	
 	-moz-border-radius: 4px;	
+	float: left;
 }
 
 .tabs .header span, .tabs .header .active {
 	background-color: gray;
 	color: white;
+	padding: 5px;
 }
 
 .tabbody {
+	clear: both;
 	padding-top: 6px;
 }
 
@@ -716,4 +745,22 @@ img {
 .webquote {
 	background-color: white;
 	padding: 4px;
+}
+
+#searchlist h2 {
+	margin-right: 50px;
+}
+
+#notagain {
+	position: absolute;
+	top: 3px;
+	right: 50px;
+}
+
+#notagain input, #notagainmain input {
+	vertical-align: middle;
+}
+
+#notagainmain {
+	margin-left: 10px;
 }
