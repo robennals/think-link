@@ -363,7 +363,9 @@ h2 {
 
 .message {
 	max-width: 500px;
+/*
 	color: #555;
+*/
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
@@ -763,4 +765,83 @@ img {
 
 #notagainmain {
 	margin-left: 10px;
+}
+
+.votebox-norm, .votebox-up, .votebox-down {
+	position: absolute;
+	top: 3px;
+	right: -1px;
+	display: block;
+	width: 36px;
+	height: 16px;
+}
+
+.voteup, .votedown {
+	width: 16px;
+	height: 16px;
+	display: block;	
+	cursor: pointer;
+}
+
+.voteup {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+.votedown {
+	position: absolute;
+	left: 16px;
+	top: 0px;
+}
+
+.votebox-norm .voteup {
+	background-image: url(/images/vote_up_e.png);
+}
+
+.votebox-norm .voteup:hover {
+	background-image: url(/images/vote_up_on.png);
+}
+
+.votebox-norm .votedown {
+	background-image: url(/images/vote_down_e.png);
+}
+
+.votebox-norm .votedown:hover {
+	background-image: url(/images/vote_down_on.png);
+}
+
+.votebox-up .voteup {
+	background-image: url(/images/vote_up_on.png);
+	cursor: auto;
+}
+
+.votebox-up .votedown {
+	background-image: url(/images/vote_restore_down.png);
+}
+
+.votebox-up .votedown:hover {
+	background-image: url(/images/vote_restore_down_on.png);
+}
+
+.votebox-down .voteup {
+	background-image: url(/images/vote_restore_up.png);
+}
+
+.votebox-down .voteup:hover {
+	background-image: url(/images/vote_restore_up_on.png);
+}
+
+.votebox-down .votedown {
+	background-image: url(/images/vote_down_on.png);
+	cursor: auto;
+}
+
+
+.webquote .text{
+	margin-right: 36px;
+}
+
+.webquote {
+	position: relative;
 }

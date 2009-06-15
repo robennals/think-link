@@ -7,7 +7,7 @@ import com.intel.thinklink._;
 import java.net._;
 import scala.io._;
 import scala.xml.parsing._;
-import scala.xml._;
+import scala.xml.NodeSeq;
 import org.apache.commons.lang._;
 import scala.collection.Map;
 import scala.collection.mutable.ArrayBuffer

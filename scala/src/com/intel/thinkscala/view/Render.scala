@@ -58,7 +58,26 @@ object Render {
       <div class="instances">found <span class="count">{row("count")}</span> instances</div>
     </div>
   
-      
+//  def voter(vote : Boolean, typ : String, id : Int) = 
+//    if(vote == true){
+//       	<span class='votebox'><img class='voteup' src="/images/vote_up_on.png" />
+//        <img class='votedown' src="/images/vote_restore_down.png" /></span>
+//    }else if(vote == false){
+//       	<span class='votebox'><img class='voteup' src="/images/vote_up_on.png" />
+//        <img class='votedown' src="/images/vote_restore_down.png" /></span>             
+//    }else{
+//       	<span class='votebox'><img class='voteup' src="/images/vote_up_e.png" />
+//        <img class='votedown' src="/images/vote_down_e.png" /></span>
+//    }
+
+    def voter(vote : String, typ : String, id : Int) = {
+      val mode = if(vote == null) "norm" else vote
+      <div class={"votebox-"+mode}>
+        <img title="vote up" class='voteup' onclick={"voteUp(this,"+id+",'"+typ+"')"} />
+        <img title="vote down" class='votedown' onclick={"voteDown(this,"+id+",'"+typ+"')"} />        
+      </div>      
+    }
+  
   def evidence(row : SqlRow)(implicit c : ReqContext) : NodeSeq = 
     <div class="webquote">
         <span class="title">{row.getOrElse("title","")}</span>
@@ -72,6 +91,7 @@ object Render {
             <a onclick={"reportSpamEvidence(this,"+row("id")+")"}>report spam</a>   
          }
         }
+        {voter(row.str("vote"),"evidence",row.int("id"))}
     </div>
    
   
@@ -96,7 +116,7 @@ object Render {
 	         <a class="logout" href={Urls.logout}>logout</a>
 	     else
              <a class="signup" href={Urls.signup}>sign up</a>
-	         <a class="login" href={Urls.login(c.getUrl)}>login</a>           
+	         <a class="login" href={Urls.login(Urls.base)}>login</a>           
 	    }
 	    <form class="searchbox" action={Urls.search} method="GET">
            {greyInput("query","query","Search")}

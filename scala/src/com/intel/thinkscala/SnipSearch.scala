@@ -5,9 +5,10 @@ import java.io._;
 import java.net._;
 import com.intel.thinklink._;
 import com.intel.thinkscala.Util._;
-import scala.xml._;
+import scala.xml.NodeSeq;
+import scala.xml.Node;
 import scala.xml.parsing._;
-import scala.io._;
+import scala.io.Source;
 import org.apache.commons.lang._;
 import scala.concurrent.ops._;
 

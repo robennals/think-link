@@ -182,7 +182,15 @@ class MainServlet extends HttpServlet {
       val evid = c.urlInt(1)      
       c.store.deleteEvidence(evid,c.userid)
     }),
-
+    UrlHandler("/evidence/(\\d*)/voteup", c => {
+      c.store.setVote(c.userid,c.urlInt(1),"evidence","up")
+    }),
+    UrlHandler("/evidence/(\\d*)/votenorm", c => {
+      c.store.setVote(c.userid,c.urlInt(1),"evidence","norm")
+    }),
+    UrlHandler("/evidence/(\\d*)/votedown", c => {
+      c.store.setVote(c.userid,c.urlInt(1),"evidence","down")
+   }),
     UrlHandler("/claim/(\\d*)/setsnippet", c => {
       val claimid = c.urlInt(1)
       val title = c.arg("title")
@@ -350,7 +358,7 @@ class MainServlet extends HttpServlet {
       if(c.store.confirmUser(nonce)){
     	  c.outputHtml("Account Confirmed",Page.confirmed)
       }else{
-    	  c.outputHtml("Bad Confirmation",Page.badconfirm)
+    	  c.outputHtml("Already Confirmed",Page.badconfirm)
       }      
     }),
     UrlHandler("/logout",c => {

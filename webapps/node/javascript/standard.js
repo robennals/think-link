@@ -119,3 +119,27 @@ function notAgain(node,id){
 		$.post(url_base+"claim/"+id+"/unignore");
 	}
 }
+
+function voteUp(node,id,typ){
+	var box = $(node).parent();
+	var now = box.attr("class");
+	if(now == "votebox-down"){
+		box.attr("class","votebox-norm");
+		$.post(url_base+typ+"/"+id+"/votenorm");
+	}else{
+		box.attr("class","votebox-up");
+		$.post(url_base+typ+"/"+id+"/voteup");
+	}	
+}
+
+function voteDown(node,id,typ){
+	var box = $(node).parent();
+	var now = box.attr("class");
+	if(now == "votebox-up"){
+		box.attr("class","votebox-norm");
+		$.post(url_base+typ+"/"+id+"/votenorm");
+	}else{
+		box.attr("class","votebox-down");
+		$.post(url_base+typ+"/"+id+"/votedown");
+	}
+}

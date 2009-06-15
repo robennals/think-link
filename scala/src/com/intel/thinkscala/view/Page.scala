@@ -402,9 +402,9 @@ object Page {
     
   def badconfirm = 
     <div class='content'>
-       <h1>Account Confirmation Failed</h1>
+       <h1>Account already confirmed</h1>
        <div class='message'>
-          This confirmation email is either invalid or has expired.
+       	This account has already been confirmed.
        </div>
     </div>
     

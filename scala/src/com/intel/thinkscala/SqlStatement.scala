@@ -17,6 +17,7 @@ case class TruncString(val s : String, val max : Int)
 class SqlRow extends HashMap[String,Any]{
   def int(key : String) = apply(key).asInstanceOf[Int]
   def str(key : String) = apply(key).asInstanceOf[String]
+  def bool(key : String) = apply(key).asInstanceOf[Boolean]
   def jsonMap(key : String) : Map[String,String] = JSON.parseFull(str(key)) match {
     case Some(m : Map[_,_]) => m.asInstanceOf[Map[String,String]] 
     case _ => HashMap()
