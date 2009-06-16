@@ -18,6 +18,7 @@ object Urls {
   def img(name : String) = base + "/images/"+name + ".png"
   val extension = "https://addons.mozilla.org/en-US/firefox/addon/11712"
   def login(url : String) = base+"/login?url="+encode(url)
+  val login_simple = base+"/login"
   val logout = base+"/logout"
   val signup = base+"/signup"
   val search = base+"/search"
@@ -33,6 +34,7 @@ object Urls {
   def addevidence(id : Any, rel : String) = claim(id)+"/addevidence?rel="+encode(rel)
   def addlinks(id : Any, thistyp: String, thattyp: String) = base+"/connect"+"?addto="+id+"&thistype="+thistyp+"&thattype="+thattyp
   val connect = base+"/connect"
+  val emailpass = base + "/emailpass"
 }
 
 object HelpUrls {
@@ -108,6 +110,16 @@ class MainServlet extends HttpServlet {
 	        case _ => c.outputHtml("Could Not Send Mail",Page.badmail)
 	      }
        }
+    }),
+    UrlHandler("/emailpass",c => {
+      val email = c.arg("email")
+      val password = c.store.getPassword(email)
+      try{
+        SendMail.sendPassword(email,password)
+        c.outputHtml("Password Email Sent",Page.sentpassword)
+      }catch{
+        case _ => c.outputHtml("Could Not Send Mail",Page.badmail) 
+      }      
     }),
     UrlHandler("/connect", c => {
       val disconnect = c.argBool("disconnect")
@@ -238,6 +250,15 @@ class MainServlet extends HttpServlet {
   ) 
    
   val gethandlers = List(
+    UrlHandler("/apianon/search", c => {
+      c.output(c.store.urlSnippets(c.arg("url")))
+    }),
+    UrlHandler("/apianon/domaininfo", c => {
+      c.output(c.store.domainPages(Util.toUnsigned(c.argInt("domain"))))
+    }),
+    UrlHandler("/apianon/pageinfo", c => {
+      c.output(c.store.pageSnippets(Util.toUnsigned(c.argInt("domain")),Util.toUnsigned(c.argInt("page"))))
+    }),
     UrlHandler("/turk/searchboss", c=> {
     },c => {
       SnipSearch.turkSearchBoss(c.arg("query"))   
@@ -251,9 +272,6 @@ class MainServlet extends HttpServlet {
       }
     }, c => {
       c.store.turkResponse(c.urlInt(1))
-    }),
-    UrlHandler("/apianon/search", c => {
-      c.output(c.store.urlSnippets(c.arg("url")))
     }),
     UrlHandler("/index.html",c => {
       c.outputHtml("Welcome to Think Link",Page.home(c))
@@ -352,6 +370,9 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("/signup",c => {
       c.outputHtml("Sign up with Think Link",Page.signup)      
+    }),
+    UrlHandler("/emailpass",c => {
+      c.outputHtml("Retreive your password",Page.emailpass)
     }),
     UrlHandler("/confirm/(\\d*)",c => {
       val nonce = c.urlInt(1)

@@ -221,5 +221,39 @@ object Util {
     return strings
   }
 
+  val shortdom = """\w*\.(?:com|org|net)""".r;
+  val longdom = """(\w+\.\w+.\w+)[^\w\.]""".r;
+  val otherdom = """(\w+\.\w+\.)[^\w\.]""".r;
+ 
+  def domainForUrl(url : String) : String = {
+    shortdom.findFirstMatchIn(url) match {
+      case Some(m) => return m.group(0)
+      case _ => ()
+    }
+    longdom.findFirstMatchIn(url) match {
+      case Some(m) => return m.group(1)
+      case _ => ()
+    }
+    otherdom.findFirstMatchIn(url) match {
+      case Some(m) => return m.group(1)
+      case _ => ()
+    }
+    return "undefined"
+  }
+      
+  val max32 = 4294967296L
+  
+  def toUnsigned(x : Int) : Long = {
+    if(x < 0){
+      x.asInstanceOf[Long] + max32
+    }else{
+      x.asInstanceOf[Long]
+    }
+  }
+  
+  def toSigned(x : Long) : Int = 
+    if(x > max32) (x - max32).asInstanceOf[Int]
+    else x.asInstanceOf[Int]
+  
   
 }

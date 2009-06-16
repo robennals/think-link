@@ -69,6 +69,9 @@ class Datastore {
       case _ => User.nouser
     }  
   
+  val get_password = stmt("SELECT password FROM v2_user WHERE email = ? AND nonce = 0")
+  def getPassword(email : String) : String = get_password.queryOne(email).str("password")  
+  
   val create_user = stmt("INSERT INTO v2_user (email,name,password,nonce) VALUES (?,?,?,?)")
   def createUser(email : String,name : String,password : String) : (Int,Int) = {
     import java.util.Random
@@ -345,10 +348,10 @@ class Datastore {
   val mk_search = mkinsert("v2_snipsearch","claim_id","searchtext")
   def mkSearch(claimid : Int, searchtext : String) = mk_search.insert(claimid,searchtext)
   
-  val mk_url = stmt("INSERT INTO v2_searchurl (url,title,url_hash) "+
-                      "VALUES (?,?,CRC32(?)) "+
+  val mk_url = stmt("INSERT INTO v2_searchurl (url,title,url_hash,domain_hash) "+
+                      "VALUES (?,?,CRC32(?),CRC32(?)) "+
                       "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)")
-  def mkUrl(url : String, title : String) = mk_url.insert(url,title,url)                      
+  def mkUrl(url : String, title : String) = mk_url.insert(url,title,url,Util.domainForUrl(url))                      
   
 //  val find_url = stmt("SELECT * FROM v2_searchurl WHERE url_hash = ? AND url = ?")
 //  val add_url = stmt(")
@@ -391,7 +394,7 @@ class Datastore {
   def ignoreClaim(claimid : Int, userid : Int) = ignore_claim.update(claimid,userid)
 
   val ignored_claims = stmt("SELECT claim_id FROM ignore_claim WHERE user_id = ?")
-  def ignoredClaims(userid : Int) = ignored_claims.queryRows(userid).map(_("claim_id"))
+  def ignoredClaims(userid : Int) = ignored_claims.querySeq(userid)
   
   val unignore_claim = stmt("DELETE FROM ignore_claim WHERE claim_id = ? AND user_id = ?")
   def unIgnoreClaim(claimid : Int, userid : Int) = unignore_claim.update(claimid,userid)
@@ -519,7 +522,21 @@ class Datastore {
                             "AND v2_node.id = v2_searchresult.claim_id "+
                             "AND v2_searchresult.url_id = v2_searchurl.id")
   def urlSnippets(url : String) = url_snippets.queryRows(url)
-        
+  
+  val page_snippets = stmt("SELECT v2_searchresult.id, abstract AS text,v2_searchresult.claim_id AS claimid,v2_node.text AS claimtext "+
+                            "FROM v2_searchurl, v2_searchresult, v2_node "+
+                            "WHERE v2_searchurl.domain_hash = ? "+
+                            "AND v2_searchurl.url_hash = ? "+
+                            "AND v2_searchresult.state = 'true' "+
+                            "AND v2_node.id = v2_searchresult.claim_id "+
+                            "AND v2_searchresult.url_id = v2_searchurl.id")
+  def pageSnippets(domainhash : Long, pagehash : Long) = page_snippets.queryRows(domainhash,pagehash)
+  
+  
+  val domain_pages = stmt("SELECT url_hash FROM v2_searchurl WHERE domain_hash = ?")
+  def domainPages(domainhash : Long) = domain_pages.querySeq(domainhash) map (x => Util.toSigned(x.asInstanceOf[Long])) 
+  
+  
   // === Turk Claim Creation ===
 
   val set_turk_response = stmt("INSERT INTO turk_claim (hit_id,node_id,ev_id,turker_id,jsonsnips) "+
@@ -541,7 +558,21 @@ class Datastore {
 	  set_turk_result.insert(turkuser,hitid,question,vote)
   
   val get_user_stats = stmt("SELECT FROM v2_turkresult AS this, v2_turkresult AS that,")
-                            
+            
+  
+  
+  // === Batch tasks ===
+  
+  val get_all_urls = stmt("SELECT id,url FROM v2_searchurl")
+  val set_url_domain = stmt("UPDATE v2_searchurl SET domain_hash = CRC32(?) WHERE id = ?")
+  
+  def computeUrlDomainHashes = {
+    val rows = get_all_urls.queryRows()
+    rows.foreach(row => {
+      val domain = Util.domainForUrl(row.str("url"))
+      set_url_domain.update(domain,row.int("id"))
+    })
+  }
                             
 	  
 }

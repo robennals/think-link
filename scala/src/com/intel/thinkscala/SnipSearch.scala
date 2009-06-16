@@ -137,7 +137,6 @@ object SnipSearch {
   }
   
   
-  
   def findSentence(pagetext : String, fragment : String) : (Int,Int) = {   
     var start = reduceUnicode(pagetext).indexOf(reduceUnicode(fragment))
     if(start == -1){

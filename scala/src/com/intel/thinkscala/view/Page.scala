@@ -315,6 +315,10 @@ object Page {
 	    <div class='message'>
           If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
         </div>
+ 	    <div class='message'>
+          If you have lost your password then we can <a href={Urls.emailpass}>retreive your password</a>
+        </div>
+
 	    <form class='form' id="login" action="login" method="POST">	   
             <input class='hidden' type='hidden' name='url' value={path}/>
 	        <label for="email">email</label>
@@ -353,6 +357,24 @@ object Page {
     	</form>
     </div>
     
+  def emailpass = 
+    <div class='content'>
+      <h1>Retreive your password</h1>
+ 	  <div class="message">
+       Enter the email address you used to sign up and we will email you your password.
+     </div>		
+
+      <form class='form' id='emailpass' action='emailpass' method ='POST'>
+		<p>
+		  <label for="email">email</label>
+		  <input type="text" id="email" name="email"/>
+		</p>
+		<p>
+		  <input class='submit' value='Retrieve Password'/>
+		</p>
+      </form>
+    </div>    
+    
   def sentconfirm = 
     <div class='content'>
        <h1>Confirmation Email Sent</h1>
@@ -361,6 +383,14 @@ object Page {
        </div>
        <div class='message'>
        	  Please click on the link in that message to activate your account.
+       </div>
+    </div>
+
+  def sentpassword = 
+    <div class='content'>
+       <h1>Password Email Sent</h1>
+       <div class='message'>
+          We have sent an email with your Think Link password to the email address you gave.          
        </div>
     </div>
     

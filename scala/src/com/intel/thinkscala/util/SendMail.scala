@@ -33,4 +33,17 @@ object SendMail {
 	  sendMail(email,"Please confirm your Think Link account",body)
 	}
 	
+    def sendPassword(email : String,password : String){
+      var body = 
+      "Someone (hopefully you) asked to retreive you Think Link password. \n\n"+
+      "Your password is: "+password+"\n\n"+
+      "Sign into Think Link by going to the following URL:\n"+
+      Urls.login_simple+
+      "\n\n\n"
+      "Thank you for using Think Link\n"
+      
+      sendMail(email,"Your Think Link password",body)
+      
+    }
+ 
 }

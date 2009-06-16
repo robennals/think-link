@@ -37,8 +37,9 @@ object Mini {
       else
         (<div><h1>What claim is this evidence for?</h1>
         This evidence <select name="rel">
-            <option selected={if(c.arg("rel")=="opposes") "selected" else null}>opposes</option>
-            <option selected={if(c.arg("rel")=="supports") "selected" else null}>supports</option>
+            <option>choose...</option>
+            <option value="opposes" selected={if(c.arg("rel")=="opposes") "selected" else null}>opposes</option>
+            <option value="supports" selected={if(c.arg("rel")=="supports") "selected" else null}>supports</option>
        </select> the claim:</div>)     
      }  
         <input type='hidden' name='text' value={c.arg("text")}/>
@@ -80,7 +81,7 @@ object Mini {
 
 
    def claimButton(row : SqlRow)(implicit c : ReqContext) = 
-     <a class='claimbutton' title="choose this claim" onclick={"submitForm('newsnippet','claimid',"+row("id")+")"}>
+     <a class='claimbutton' title="choose this claim" onclick={"addEvidence("+row("id")+")"}>
          {row("text")}</a>
           
    def createNewClaim(implicit c : ReqContext) = 

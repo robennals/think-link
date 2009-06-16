@@ -73,6 +73,7 @@ function initCookieCatcher(){
   observerService.addObserver(cookieCatcher, "http-on-modify-request",false);
 }
 
+
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","true");
@@ -83,6 +84,7 @@ window.addEventListener("load", function(){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
 	},false);
+	
+	loadIgnored();
 },false);
-
 

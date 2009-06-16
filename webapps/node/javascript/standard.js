@@ -58,6 +58,15 @@ function setSnipStatus(snip,vote){
 	)
 }
 
+
+function addEvidence(id){
+	if(document.forms.newsnippet.rel.value == "choose..."){
+		alert("you must say whether the evidence supports or opposes the claim");
+	}else{
+		submitForm('newsnippet','claimid',id)
+	}
+}
+
 function submitForm(formid,fieldname,fieldval){
 	var form = document.forms[formid];
 	form[fieldname].value = fieldval;

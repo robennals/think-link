@@ -43,7 +43,17 @@ class SqlStatement(con : Connection, s : String){
       case None => throw new NotFound
     }
   }
-
+  
+  def querySeq(args : Any*) : Seq[Any] = {
+    setArgs(args)
+    val buf = new ArrayBuffer[Any]()
+    val res = stmt.executeQuery
+    while(res.next){
+      buf += res.getObject(1)
+    }
+    res.close
+    return buf
+  }
   
   def insert(args : Any*) : Int = {
     setArgs(args)
@@ -70,6 +80,7 @@ class SqlStatement(con : Connection, s : String){
         case TruncString(s,max) => stmt.setString(i+1,s)
         case n:Int => stmt.setInt(i+1,n)
         case b:Boolean => stmt.setBoolean(i+1,b)
+        case l:Long => stmt.setLong(i+1,l)
         case null => stmt.setString(i+1,"")
       }
     }
