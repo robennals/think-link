@@ -10,10 +10,23 @@ object Page {
     <div class="content">
           <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
 
-      <h1 class="logo">Think Link<span class='beta'>beta</span></h1>
+      <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
       <div class="tagline">Are you being duped?</div>
-      <div class="message">{Messages.pitch}</div>
 
+      <a class='videolink' href="http://confront.intel-research.net/Videos.html">Watch the Videos</a>
+  
+      <div class='boldmessage'>
+            The Dispute Finder <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox Extension</a> highlights <a href="http://confront.intel-research.net/Dispute_Finder.html">disputed claims</a> on web pages you browse
+            and shows you evidence for alternative points of view. <a href="http://confront.intel-research.net/Videos.html">Watch the Videos</a> to learn more.
+      
+      </div>
+      <div class='message'>
+          Use this web interface to tell Dispute Finder what snippets to highlight and what evidence to present for alternative viewpoints. You can create a new disputed claim, 
+       mark new instances of a claim on the web, and add evidence that supports or opposes a claim.
+      </div>
+
+      {extensionBig}
+        
       <form id="bigsearch" action="search" method="GET">        
         {greyInput("query","query","Enter a claim found on the web that you think is disputed")}
         <input type="submit" class="submit" value="Search"/>
@@ -247,15 +260,22 @@ object Page {
       <input type="hidden" id="data-query" value={query}/>
       <input type="hidden" id="data-claim" value={""+row("id")}/>
       <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
-      <div class="subtitle">Find snippets on the web that make this claim</div> 
-      <div class='message'>When a user with the <a href={Urls.extension}>Firefox extension</a> browses a web page 
-        with a marked snippet, they will see the snippet highlighted in red, telling them that it is disputed.</div>
-      <div class="message">To mark a snippet, either use the interface below, or <a href={HelpUrls.mark}>use the firefox extension</a></div>
-      <div id="queries">
+      <div class="subtitle">Find snippets on the web that make this claim</div>
+   
+	  <div class='boldmessage'>
+	  This search interface allows you to rapidly find many snippets on the 
+	  web that make a claim.
+	</div>
+	
+	<div class='message'>
+	  Enter search keywords to find snippets on the web that make the claim. 
+	  Then click "mark" on all snippets that suggest or imply that the claim is true.
+	</div>
+         <div id="queries">
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
       </div>
-      {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter a search string")}
+      {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter search keywords")}
       {if(c.arg("fromextension") == null){
     	  Render.snipSearchResults(query,row)
        }else{
@@ -310,10 +330,10 @@ object Page {
     <div class="content">
     	<h1>{title}</h1>
 		<div class="message">
-	      Enter the email address and password that you used to register with Think Link.
+	      Enter the email address and password that you used to register with Dispute Finder.
 	    </div>		
 	    <div class='message'>
-          If you don't have a Think Link account then <a href={Urls.signup}>sign up</a>
+          If you don't have a Dispute Finder account then <a href={Urls.signup}>sign up</a>
         </div>
  	    <div class='message'>
           If you have lost your password then we can <a href={Urls.emailpass}>retreive your password</a>
@@ -332,12 +352,12 @@ object Page {
     // TODO: sign up with facebook connect
   def signup = 
     <div class='content'>
-    	<h1>Sign up for a Think Link Account</h1>
-           <p>Reasons to sign up for a Think Link account:
+    	<h1>Sign up for a Dispute Finder Account</h1>
+           <p>Reasons to sign up for a Dispute Finder account:
              <ul>
-               <li>Add new claims to Think Link</li>
+               <li>Add new claims to Dispute Finder</li>
                <li>Find more snippets that make disputed claims</li>
-               <li>Tell think link what claims you don't want it to highlight again</li>
+               <li>Tell Dispute Finder what claims you don't want it to highlight again</li>
              </ul>
            </p>
     	<form class='form' id='signup' action="signup" method="POST">
@@ -390,7 +410,7 @@ object Page {
     <div class='content'>
        <h1>Password Email Sent</h1>
        <div class='message'>
-          We have sent an email with your Think Link password to the email address you gave.          
+          We have sent an email with your Dispute Finder password to the email address you gave.          
        </div>
     </div>
     

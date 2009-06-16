@@ -16,8 +16,8 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
         </em:targetApplication>
         
         <!-- Front End MetaData -->
-        <em:name>Think Link</em:name>
-        <em:description>See when information you read is disputed</em:description>
+        <em:name>Dispute Finder</em:name>
+        <em:description>The Dispute Finder Firefox Extension highlights disputed claims on web pages you browse and shows you evidence for alternative points of view</em:description>
         <em:creator>Rob Ennals and Beth Trushkowski</em:creator>
         <em:homepageURL>http://confront.intel-research.net</em:homepageURL>
         <em:iconURL>chrome://thinklink/skin/lightbulb_red.png</em:iconURL>

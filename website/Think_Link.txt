@@ -1,10 +1,22 @@
 
+Think Link was a precursor to [[Dispute Finder]]. Like [[Dispute Finder]] Think Link has a browser extension that highlights snippets that make disputed claims. 
+
+The key differences between Think Link and Dispute Finder are:
+
+* Dispute Finder uses a simpler interface which is less powerful, but more approachable
+* Dispute Finder removes much of the argumentation features in Think Link, and instead focusses on marking disputed claims
+* Think Link did not distinguish between a snippet that was "evidence" for/against a claim and a snippet that was an "instance" of that claim
+
+
+=== The Aim of Think Link ===
+
 Think Link is a tool that helps users know when information they read on the web is disputed. 
 As a user browses the web, Think Link highlights snippets of text that make claims that users have identified as contentious. If a user clicks on a highlighted snippet, Think Link displays an argument graph showing the best evidence for and against the claim the snippet is making.
 
 Users provide all of Think Link's information: they create new claims, mark new snippets, connect snippets to claims, and vote for the best evidence. 
 
 This page gives a simple overview of Think Link. To learn about Think Link in detail, look at the [[Publications]], or the [[Videos]].
+
 
 === Usage Scenarios ===
 
@@ -65,19 +77,6 @@ Think Link provides three ways for a user to associate a claim with a snippet:
 
 * Immediate: A user can select a claim for a snippet that they have just marked. When a user marks a snippet, Think Link will initially highlight it in blue to show that the snippet is not currently associated with a claim or topic and will not be shown to other users. If the user clicks on the highlighted snippet, then Think Link will bring up the same suggestion panel used in the "snippet first" method.
 
-=== Future Work: Opinions ===
-
-The information this graph could also be used to answer a number of interesting questions. For example:
-
-* What argument would I find most convincing in favor of this claim, given what I already believe?
-
-* What is the best reading list for this topic?
-
-* How do people's beliefs depend on geographic location?
-
-* Which of my beliefs is most inconsistent with my other beliefs?
-
-* Which of my friends who disagrees with me on this topic would be most persuadeable, and how shoud I persuede them?
 
 
 

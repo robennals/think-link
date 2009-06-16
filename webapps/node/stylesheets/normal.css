@@ -297,14 +297,14 @@ h2 {
 	font-size: 40px;
 	margin-bottom: 0px;
 	margin-left: 100px;
-	margin-top: -20px;
+	margin-top: -10px;
 }
 
 .tagline {
 	font-size: 20px;
 	margin-top: -7px;
 	margin-left: 217px;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 }
 
 .install {
@@ -362,12 +362,25 @@ h2 {
 }
 
 .message {
-	max-width: 500px;
+	max-width: 600px;
 /*
 	color: #555;
 */
 	margin-top: 10px;
 	margin-bottom: 10px;
+	color: #5d5d5d;
+}
+
+.boldmessage {
+	font-weight: bold;
+}
+
+.boldmessage, .message, .message a, .message p, .boldmessage a {
+	font-size: 14px;
+	font-family: Arial,Helvetica,sans-serif;
+	font-weight: bold;
+	margin-bottom: 15px;
+	max-width: 600px;
 }
 
 .message p {
@@ -395,7 +408,7 @@ h2 {
 #intellogo{
 	position: absolute;
 	left: 0px;
-	top: 20px;
+	top: 30px;
 }
 
 #topbar a {
@@ -844,4 +857,35 @@ img {
 
 .webquote {
 	position: relative;
+}
+
+.installbig {
+	padding: 10px;
+	margin: 10px;
+	font-size: 36px;
+	background-color: #5867A2;
+	-moz-border-radius: 10px;
+	color: white;
+	font-weight: bold;
+}
+
+.installdiv {
+	padding: 40px;
+}
+
+.videolink {
+	display: block;
+	/* background-color: #58A267; */
+/*
+		color: white;
+*/
+	color: black;
+	background-color: #FFFFAA;
+	position: absolute;
+	left: 518px;
+	top: 35px;
+	padding: 6px;
+	-moz-border-radius: 8px;	
+	font-weight: bold;
+	font-size: 12px;
 }

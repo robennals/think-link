@@ -24,25 +24,25 @@ object SendMail {
 	def sendSignup(email : String,name : String,id : Int,nonce : Int){
 	  var body = 
       "Hi "+name+",\n\n"+
-      "Thank you for signing up for an account with Think Link.\n"+
+      "Thank you for signing up for an account with Dispute Finder.\n"+
       "To confirm your account, please click this link:\n"+
       FixedUrls.confirmUser(id,nonce) +
       "\n\n"+
-      "Thank you for signing up with Think Link\n"
+      "Thank you for signing up with Dispute Finder\n"
      
-	  sendMail(email,"Please confirm your Think Link account",body)
+	  sendMail(email,"Please confirm your Dispute Finder account",body)
 	}
 	
     def sendPassword(email : String,password : String){
       var body = 
-      "Someone (hopefully you) asked to retreive you Think Link password. \n\n"+
+      "Someone (hopefully you) asked to retreive you Dispute Finder password. \n\n"+
       "Your password is: "+password+"\n\n"+
-      "Sign into Think Link by going to the following URL:\n"+
+      "Sign into Dispute Finder by going to the following URL:\n"+
       Urls.login_simple+
       "\n\n\n"
-      "Thank you for using Think Link\n"
+      "Thank you for using Dispute Finder\n"
       
-      sendMail(email,"Your Think Link password",body)
+      sendMail(email,"Your Dispute Finder password",body)
       
     }
  

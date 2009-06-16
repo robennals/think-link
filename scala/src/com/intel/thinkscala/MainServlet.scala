@@ -274,10 +274,10 @@ class MainServlet extends HttpServlet {
       c.store.turkResponse(c.urlInt(1))
     }),
     UrlHandler("/index.html",c => {
-      c.outputHtml("Welcome to Think Link",Page.home(c))
+      c.outputRawHtml(Template.noinstall(c,"Welcome to Dispute Finder",Page.home(c)))
     }),
     UrlHandler("/search",c => {
-	  val title = c.arg("query")+" - Think Link Claim Search"
+	  val title = c.arg("query")+" - Dispute Finder Claim Search"
 	    c.outputHtml(title,Page.search(c))
 	  },c => {
 	    c.output(c.store.searchClaims(c.arg("query"),c.argInt("page")))
@@ -295,7 +295,7 @@ class MainServlet extends HttpServlet {
     UrlHandler("/connect",c => {
       c.requireLogin
       val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)
-      val title = "Connect "+c.arg("thattype")+" to "+me("text")+" - Think Link"
+      val title = "Connect "+c.arg("thattype")+" to "+me("text")+" - Dispute Finder"
       var query = c.arg("query")
       if(query == null){
         query = me.str("text")
@@ -327,18 +327,18 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("""/claim/(\d*)/findsnippets""", c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
-      val title = claim("text") + " - Find Instances with Think Link"
+      val title = claim("text") + " - Find Instances with Dispute Finder"
       var query = c.arg("query")
       if(query == null) query = claim.str("text")
       c.outputHtml(title,Page.findsnippets(claim,query)(c))
     }),
     UrlHandler("/claim/new",c => {
       c.requireLogin
-      c.outputHtml("Create New Claim - Think Link",Page.newClaim(c,c.arg("query")))
+      c.outputHtml("Create New Claim - Dispute Finder",Page.newClaim(c,c.arg("query")))
     }),
     UrlHandler("/topic/new",c => {
       c.requireLogin
-      c.outputHtml("Create New Topic - Think Link",Page.newTopic(c,c.arg("query")))
+      c.outputHtml("Create New Topic - Dispute Finder",Page.newTopic(c,c.arg("query")))
     }),
     UrlHandler("""/claim/(\d*)/addevidence""",c=>{
       c.requireLogin
@@ -350,17 +350,17 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getClaim(c.urlInt(1),c.maybe_userid)
-      val title = claim("text") + " - Think Link Claim"
+      val title = claim("text") + " - Dispute Finder Claim"
       c.outputHtml(title,Page.claim(claim)(c))
     }),
     UrlHandler("""/topic/(\d*)""",c => {
       val row = c.store.getInfo(c.urlInt(1),c.maybe_userid)
-      val title = row("text") + " - Think Link Topic"
+      val title = row("text") + " - Dispute Finder Topic"
       c.outputHtml(title,Page.topic(c,row))
     }),
     UrlHandler("""/user/(\d*)""",c => {
       val row = c.store.getUserInfo(c.urlInt(1))
-      val title = row("name") + " - Think Link User"
+      val title = row("name") + " - Dispute Finder User"
       c.outputHtml(title,Page.user(row)(c))
     }),   
     UrlHandler("/login",c => {
@@ -369,7 +369,7 @@ class MainServlet extends HttpServlet {
       c.outputHtml("Login",(<div>{Page.login("Login",url)}</div>))
     }),
     UrlHandler("/signup",c => {
-      c.outputHtml("Sign up with Think Link",Page.signup)      
+      c.outputHtml("Sign up with Dispute Finder",Page.signup)      
     }),
     UrlHandler("/emailpass",c => {
       c.outputHtml("Retreive your password",Page.emailpass)

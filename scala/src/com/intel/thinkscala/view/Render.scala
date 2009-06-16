@@ -110,7 +110,7 @@ object Render {
      
   def topbar(c : ReqContext) = 
     <div id="topbar">
-	    <a class="home" href={Urls.home}>Think Link</a>
+	    <a class="home" href={Urls.home}>Dispute Finder</a>
 	    {if(c.user.realuser)
 	         <a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a>
 	         <a class="logout" href={Urls.logout}>logout</a>
@@ -123,6 +123,7 @@ object Render {
            <input class="icon" type="image" src={Images.search} alt="search"/>
         </form>                 
         <a class='bugreport' href="mailto:robert.ennals@intel.com?body=Report a bug, suggest a feature, or just tell us what you think.">Send us your feedback</a>
+        <a class='help' href="http://confront.intel-research.net/Dispute_Finder.html">Help</a>
     </div>
     
   def userref(id : Int, name : String, message : String) =
@@ -222,8 +223,16 @@ object Render {
     if(c.getCookie("extension") == "true"){
     	<div class='hasextension'>extension installed</div>     
     }else{
-        <a class='install' href={Urls.extension}>Install the FireFox extension</a>
+        <a class='install' href={Urls.extension}>Install the Firefox extension</a>
     }
+ 
+  def extensionBig(implicit c : ReqContext) = 
+    if(c.getCookie("extension") == "true"){
+        /* nothing */
+    }else{
+        <div class='installdiv'><a class='installbig' href={Urls.extension}>Install the Firefox extension</a></div>
+    }
+
   
 }      
 
@@ -237,14 +246,6 @@ object Images {
   val search = imagebase + "magnifier.png"
 }
 
-object Messages {
-  val pitch = <p>
-    Discover when information you read on the web is disputed.
-    Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox browser extension</a> to have Think Link
-    highlight disputed claims on pages you read.  
-    </p>
-}
-
 
 
 object Template {
@@ -253,8 +254,12 @@ object Template {
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
     basics(title,(<body class='body'>{topbar(c) ++ extension(c) ++ body}</body>))
   
+  def noinstall(c : ReqContext, title : String, body : NodeSeq) = 
+    basics(title,(<body class='body'>{topbar(c) ++ body}</body>))
+  
+  
   def mini(c : ReqContext, body : NodeSeq) =    
-    basics("Think Link Popup Interface",(<body class='minibody'>{body}</body>))
+    basics("Dispute Finder Popup Interface",(<body class='minibody'>{body}</body>))
   
   def nobar(c : ReqContext, body : NodeSeq) = 
     basics("",(<body class='body'>{body}</body>))
