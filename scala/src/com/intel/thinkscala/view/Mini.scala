@@ -5,8 +5,13 @@ object Mini {
   def claim(row : SqlRow)(implicit c : ReqContext) =
     <div class="minicontent">
       <h1>Disputed Claim:</h1>
+      {if (c.user.realuser) {
       <div id="notagain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
         	<label for="notagain">don't highlight this claim</label></div>
+      }else{
+        <a target="_blank" href={Urls.login_simple}>login to ignore this claim</a>
+      }      
+      }
       <div><a class='minititle' target="_blank" href={Urls.claim(row("id"))}>{row("text")}
       <img src={Urls.img("application_go")}/>
       </a></div>

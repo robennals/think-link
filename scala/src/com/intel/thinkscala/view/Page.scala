@@ -370,7 +370,7 @@ object Page {
 		  <input type="text" id="email" name="email"/>
 		</p>
 		<p>
-		  <input class='submit' value='Retrieve Password'/>
+		  <input class='submit' type='submit' value='Retrieve Password'/>
 		</p>
       </form>
     </div>    
