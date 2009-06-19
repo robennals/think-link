@@ -1,4 +1,10 @@
 
+=== Dispute Finder Demo Video ===
+
+This video gives an overview of Dispute Finder. 
+
+<object width="640" height="505"><param name="movie" value="http://www.youtube.com/v/VWni7seVXrY&hl=en&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/VWni7seVXrY&hl=en&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="640" height="505"></embed></object>
+
 === Think Link Demo Video ===
 
 This video gives an overview of the Think Link tool. The video shows how Think Link highlights disputed information, how a user can show Think Link new disputed information, and how users can organize information in Think Link.

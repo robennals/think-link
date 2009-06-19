@@ -77,6 +77,7 @@ function initCookieCatcher(){
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","true");
+        thinklink_setCookie("http://disputefinder.cs.berkeley.edu/","extension","true");
 	thinklink_setCookie("http://localhost:8180/","extension","true");
 	initCookieCatcher();
     

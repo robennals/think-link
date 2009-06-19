@@ -67,7 +67,7 @@ object Page {
   def connectClaim(row : SqlRow, query : String)(implicit c : ReqContext) = 
     <div class="content">
       {if(c.arg("thistype") == "claim"){
-    	  	<h1>Connect claims to <a href={Urls.claim(row("id"))}>{row("text")}</a></h1>
+    	  	<h1>Connect opposing claims to <a href={Urls.claim(row("id"))}>{row("text")}</a></h1>
        }else{
     	   	<h1>Connect claims to <a href={Urls.topic(row("id"))}>{row("text")}</a></h1>         
        }
@@ -196,24 +196,30 @@ object Page {
 
        <div id="claimlist">
         {Widgets.tabs(
-          "Opposing Evidence" -> (() => 
- 	  	      <div class='evidence' id="opposed">
+          "Opposition" -> (() => 
+              (<div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
             	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_).toSeq flatMap Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
-              </div>),
-          "Supporting Evidence" -> (() => 
+              </div>
+              <div id='opposing-claims'>
+                <h2>Opposing Claims</h2>
+                {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.miniclaim)}
+                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
+              </div>
+          )),
+          "Support" -> (() => 
   	  	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
                	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
-          "Related Claims" -> (() => 
-              <div id='related-claims'>
-                <h2>Related Claims</h2>
-                {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
-                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>add related claim</a>                  
-              </div>),
+//          "Related Claims" -> (() => 
+//              <div id='related-claims'>
+//                <h2>Related Claims</h2>
+//                {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
+//                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>add related claim</a>                  
+//              </div>),
           "Marked Pages" -> (() => 
               <div id='searchlist' style='padding-bottom: 4px'>
                  <input type="hidden" id="data-query" value=""/>
@@ -230,7 +236,7 @@ object Page {
       <div id="topics">
         <h2>Topics</h2>
         {c.store.linkedTopics(row.int("id"),0) flatMap topicref}
-        <a class='add' href={Urls.addlinks(row.int("id"),"claim","topic")}>add related topic</a>                  
+        <a class='add' href={Urls.addlinks(row.int("id"),"claim","topic")}>edit topics</a>                  
       </div>
     </div>
  

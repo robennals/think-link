@@ -1,0 +1,73 @@
+
+<a style='font-weight:bold' href="http://thinklink.cs.berkeley.edu">Use Dispute Finder Now</a>
+
+=== What is Dispute Finder ===
+
+Not all information on the web is accurate or unbiased. Often one will read information on the web without realising that there are alternative points of view.
+
+The <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Firefox Extension</a> helps you know when information you read is disputed by highlighting snippets if they make a disputed claim.
+
+
+=== Usage Scenarios ===
+
+Think Link is designed to support two primary usage scenarios: 
+
+* Activists care strongly about a particular issue and combine Think Link with a search engine to find and mark snippets that make claims that they disagree with
+
+* Sceptical Readers install Think Link as a browser extension to see when statements they read are disputed and find other sources that present alternative viewpoints.
+
+=== See disputed information highlighted ===
+
+[[image:v3_highlight_shadow.png]]
+
+If you have installed the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Firefox Extension</a>, Dispute Finder will highlight snippets that make or imply disputed claims. If you click on a highlighted snippet then Dispute Finder will show you sources that present alternative viewpoints.
+
+[[image:v3_popup.png]]
+
+Since the purpose of a highlight is to alert the user to claims that they had not realized were contentious, there is little benefit in highlighting snippets that make claims that the user already realizes are contentious. If you don't want Dispute Finder to highlight instances of this claim again, then turn on "don't highlight this claim".
+
+
+=== Mark disputed claims in bulk ===
+
+If you feel strongly that a claim made on the web is false, you can use Dispute Finder's snippet search features to quickly find and mark large numbers of snippets that make a claim.
+
+[[image:v3_factextract.png]]
+
+Enter keywords into the search box and Dispute Finder will find snippets on the web that match the keywords. You can then use the "mark" and "ignore" buttons to tell Dispute Finder which snippets should be highlighted.
+
+The search engine is implemented using <a href="http://developer.yahoo.com/search/boss/">Yahoo BOSS</a> so you can use all features found in Yahoo search. In particular, you can put a minus sign before a keyword to exclude it.
+
+In the next version of Dispute Finder we plan to improve this interface by using a machine learning algorithm that learns how to find new snippets by looking at the snippets that users mark.
+
+
+=== Mark a single disputed claim ===
+
+You can also use the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Firefox Extension</a> to directly mark a snippet on the web page you are currently looking at. To do this, select the next that should be highlighted, right click, and select "this is disputed" from the popup menu.
+
+[[image:v3_mark_menu.png]]
+
+You will then be prompted to select the claim that the snippet is making or implying. If Dispute Finder does not suggest the current claim then you can enter search keywords, look at recently browsed claims, or create a new claim.
+
+[[image:v3_mark_popup.png]]
+
+
+=== Add evidence ===
+
+If the page you are looking at contains evidence supporting or opposing a claim that you think other users would find useful then you can add it to Dispute Finder by selecting a representative quote, right clicking, and selecting "Use as evidence".
+
+Dispute Finder will then ask you to select the claim being made, and say whether it supports or opposes the claim.
+
+=== Voting for the best evidence ===
+
+Dispute Finder chooses what order to show evidence in based on user voting. Vote up evidence that you think is useful and trustworthy, and vote down evidence that is lower quality. You can also report evidence as spam.
+
+[[image:v3_vote.png]]
+
+=== Create a new Claim ===
+
+There are several ways to create a new disputed claim. The easiest way is to go to the <a href='http://thinklink.cs.berkeley.edu'>Think Link home page</a>, enter the claim into the input box, and then click "Create a new claim". Make sure you check first that the claim has not been created already by another user.
+
+[[image:v3_search_create.png]]
+ 
+
+

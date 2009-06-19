@@ -8,7 +8,7 @@ function tl_log(msg){
 
 function get_api_path(){
 	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-	var apipath = "http://thinklink.cs.berkeley.edu/thinklink";
+	var apipath = "http://disputefinder.cs.berkeley.edu/thinklink";
 	if(prefs.prefHasUserValue("extensions.thinklink.api")){
 		apipath = prefs.getCharPref("extensions.thinklink.api");
 	}	

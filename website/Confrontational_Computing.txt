@@ -3,7 +3,8 @@ Much of the information on the web consists of opinions, arguments, and beliefs.
 
 How do people use the web to help them form beliefs about the world? How do people promote their own opinions to others online? Can we build tools that make it easier for people to understand when and why other people hold opinions different to those that they read? Can we make it easier for people to assemble and promote arguments? Can we create a personalized web that understands what you know or believe already, and tailors the way information is presented accordingly?
 
-=== Think Link ===
+=== Dispute Finder ===
 
-Currently, the main result of this project is [[Think Link]], a tool that shows you when information you read is disputed, and helps your find evidence for alternative points of view.
+Currently, the main result of this project is [[Dispute Finder]], a tool that shows you when information you read is disputed, and helps your find evidence for alternative points of view.
 
+<a href="http://thinklink.cs.berkeley.edu">Use Dispute Finder Now</a>

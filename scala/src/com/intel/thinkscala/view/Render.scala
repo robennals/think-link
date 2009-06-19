@@ -16,6 +16,11 @@ object Render {
 -->
   </div>  
 
+  def miniclaim(row : SqlRow)(implicit c : ReqContext) = 
+    <div class='miniclaim'>
+      <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
+    </div>
+  
   def nodelink(row : SqlRow)(implicit c : ReqContext) =
     <div class="claimlink">
       {if(row("linkid") != null){

@@ -1,11 +1,4 @@
-Think Link is currently being tested in a closed beta. Currently only people who we have invited are able to use Think Link.
 
-If you would like to be notified when we make Think Link generally available then please enter your email address below:
+Dispute Finder has now been opened up to the public.
 
-<form action="http://mashmaker.intel-research.net/rob/thinklink/signup.php" method="post">
-<input type='text' name='email'/>
-<input type='submit' value="Add me to the Wait List"/>
-</form>
-
-
-
+<a href="http://thinklink.cs.berkeley.edu/signup">sign up for a Dispute Finder account</a>

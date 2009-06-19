@@ -209,7 +209,17 @@ h2 {
 	padding-bottom: 8px;
 }
 
-.claim .title {
+.miniclaim {
+	background-color: white;
+	color: #666;
+	padding: 4px;
+}
+
+.miniclaim .title {
+	color: black;
+}
+
+.claim .title{
 	font-size: 13px;
 	font-weight: bold;
 	color: black;
@@ -245,7 +255,7 @@ h2 {
 	margin-left: 10px;
 	color: #666666;
 }
-#supports, #opposed, #related-claims, #created, #instance {
+#supports, #opposed, #related-claims, #opposing-claims, #created, #instance {
 	background-color: #ECEFF5;
 	border: 1px solid gray;
 	margin-top: 4px;
@@ -256,7 +266,7 @@ h2 {
 	padding-bottom: 4px;
 }
 
-#supports h2, #opposed h2, #related-claims h2, #created h2, #instance h2, #searchlist h2 {
+#supports h2, #opposed h2, #related-claims h2, #opposing-claims h2, #created h2, #instance h2, #searchlist h2 {
 	background-color: #ECEFF5;
 	-moz-border-radius-topleft: 8px;
 	-moz-border-radius-topright: 8px;
@@ -553,7 +563,7 @@ h2 {
 	right: 5px;
 }
 
-.evidence, #claimlist, #related-claims, #searchlist {
+.evidence, #claimlist, #related-claims, #opposing-claims, #searchlist {
 	position: relative;
 }
 

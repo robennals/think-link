@@ -6,7 +6,7 @@ Several of these articles are also syndicated by other publications.
 
 Jake Widman - May 2nd, 2009
 
-A short article about Think Link.
+A short article about [[Think Link]].
 
 <a href="http://www.itwire.com/content/view/24779/1231/">http://www.itwire.com/content/view/24779/1231/</a>
 
@@ -14,7 +14,7 @@ A short article about Think Link.
 
 Josh Lowenson - April 30th, 2009
 
-CNet had a look at Think Link and seemed to like it.
+CNet had a look at [[Think Link]] and seemed to like it.
 
 <blockquote>
 What's really, really cool about this project is that as more people continue to use Think Link and create what Intel calls "snippets," it's building up the database of related dispute items.

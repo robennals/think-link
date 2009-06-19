@@ -19,12 +19,12 @@
 
 	<menupopup id="menu_viewPopup">
 		<menuseparator/>
-		<menuitem label="View Think Link" oncommand="window.open('http://thinklink.cs.berkeley.edu')" />
+		<menuitem label="View Think Link" oncommand="window.open('http://disputefinder.cs.berkeley.edu')" />
 	</menupopup>
 
     <menupopup id="menu_HelpPopup">
 		<menuseparator/>
-        <menuitem label="Think Link Help" oncommand="window.open('http://confront.intel-research.net')"/>
+        <menuitem label="Dispute Finder Help" oncommand="window.open('http://confront.intel-research.net')"/>
     </menupopup>
 
 
@@ -35,8 +35,8 @@
 	</popup>
 	
 	<statusbar id="status-bar">
-		<statusbarpanel id="thinklink-status" onclick="window.open('http://thinklink.cs.berkeley.edu')">
-			<image id="thinklink-statusicon" src="chrome://thinklink/skin/lightbulb_off.png" tooltiptext='click to open Think Link'/>
+		<statusbarpanel id="thinklink-status" onclick="window.open('http://disputefinder.cs.berkeley.edu')">
+			<image id="thinklink-statusicon" src="chrome://thinklink/skin/lightbulb_off.png" tooltiptext='click to open Dispute Finder'/>
 		</statusbarpanel>			
 	</statusbar>
 

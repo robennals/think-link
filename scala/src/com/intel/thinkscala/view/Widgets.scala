@@ -88,7 +88,15 @@ object Widgets {
        {if(current > 0){<a href={c.modifiedUrl("page",current-1)}>prev</a>}else{}}
        <a href={c.modifiedUrl("page",current+1)}>next</a>      
     </div>
-   
+
+  def pageSelector2(current : Int,cls: String)(implicit c : ReqContext) =
+    <div class={cls}>
+       <span>page {current+1}</span>
+       {if(current > 0){<a href={c.modifiedUrl("page2",current-1)}>prev</a>}else{}}
+       <a href={c.modifiedUrl("page2",current+1)}>next</a>      
+    </div>
+       
+       
    def pagedList(content : Int => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
      val current = c.argIntDflt("page",0)
      (<div class="pager">
@@ -97,4 +105,14 @@ object Widgets {
      	{pageSelector(c.argIntDflt("page",0),"selectorbottom")}
      </div>)
      }
+   
+   def pagedList2(content : Int => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
+     val current = c.argIntDflt("page2",0)
+     (<div class="pager">
+        {pageSelector2(c.argIntDflt("page2",0),"selectortop")}
+     	{content(current)}
+     	{pageSelector2(c.argIntDflt("page2",0),"selectorbottom")}
+     </div>)
+     }
+
 }

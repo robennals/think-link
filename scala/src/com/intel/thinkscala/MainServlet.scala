@@ -294,8 +294,11 @@ class MainServlet extends HttpServlet {
     ),
     UrlHandler("/connect",c => {
       c.requireLogin
-      val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)
-      val title = "Connect "+c.arg("thattype")+" to "+me("text")+" - Dispute Finder"
+      val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)      
+      var title = "Connect "+c.arg("thattype")+" to "+me("text")+" - Dispute Finder"
+      if(c.arg("thattype")=="claim" && c.arg("thistype") == "claim"){
+        title = "Connect opposing claims to "+me("text")+" - Dispute Finder"
+      }
       var query = c.arg("query")
       if(query == null){
         query = me.str("text")

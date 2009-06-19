@@ -1,6 +1,8 @@
 
 Think Link was a precursor to [[Dispute Finder]]. Like [[Dispute Finder]] Think Link has a browser extension that highlights snippets that make disputed claims. 
 
+=== Differences between Think Link and Dispute Finder ===
+
 The key differences between Think Link and Dispute Finder are:
 
 * Dispute Finder uses a simpler interface which is less powerful, but more approachable
