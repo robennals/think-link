@@ -41,7 +41,7 @@ function mark_snippets(doc){
 			var frags = snip.text.split(/[\.\n\?\!]/)
 			for(var j = 0; j < frags.length; j++){
 				if(frags[j].length > 10){
-					mark_snippet(normalise(frags[j]),snip.claimid,snip.claimtext,doc.body);			
+					mark_snippet(normalise(frags[j]),snip.claimid,snip.id,snip.claimtext,doc.body);			
 				}
 			}
 		}
@@ -50,7 +50,7 @@ function mark_snippets(doc){
 				highlightMessage(global_marked,doc);
 			}else{
 				// TODO: cope better when can't find disputed claim
-				claimMessage(snippets[0].claimtext,snippets[0].claimid,doc);
+				claimMessage(snippets[0].claimtext,snippets[0].claimid,snippets[0].snipid,doc);
 			}
 		}
 		doc.thinklink_marked = global_marked;
@@ -77,13 +77,13 @@ function findBrowser(doc){
 	}
 }
 
-function claimMessage(claimtext,id,doc){
+function claimMessage(claimtext,claimid,snipid,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
 	var notification =
 		notificationBox.getNotificationWithValue("thinklink-disputed");
 	var buttons = [{
 		label: "More Info",
-		callback: function(){viewClaim(id);},
+		callback: function(){viewClaim(claimid,snipid);},
 		accessKey: "I",
 		popup: null
 		}];
@@ -144,7 +144,7 @@ function unmark_snippet(node){
 	node.removeEventListener("click",showClaimPopup,true);
 }
 
-function mark_snippet(text,claimid,claimtext,node){
+function mark_snippet(text,claimid,snipid,claimtext,node){
 	if(isIgnored(claimid)) return;
 	if(node.nodeName == "#comment" || normalise(node.textContent).indexOf(text) == -1){
 		return;					
@@ -154,7 +154,7 @@ function mark_snippet(text,claimid,claimtext,node){
 		for(var i = 0; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
 			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
-				mark_snippet(text,claimid,claimtext,child);
+				mark_snippet(text,claimid,snipid,claimtext,child);
 				return;
 			}
 		}		
@@ -167,6 +167,7 @@ function mark_snippet(text,claimid,claimtext,node){
 	node.style.cursor = "pointer";
 	node.setAttribute("title","disputed: "+claimtext);
 	node.setAttribute("thinklink_claimid",claimid);				
+    node.setAttribute("thinklink_snipid",snipid);				
 	node.addEventListener("click",showClaimPopup,true);
 	global_marked.push(node);
 }
@@ -174,7 +175,8 @@ function mark_snippet(text,claimid,claimtext,node){
 function showClaimPopup(ev){
 	var node = ev.currentTarget;
 	var claimid = node.getAttribute("thinklink_claimid");
-	viewClaim(claimid);
+	var snipid = node.getAttribute("thinklink_snipid");
+	viewClaim(claimid,snipid);
 }
 
 function ajaxRequest(url,callback){
@@ -211,9 +213,9 @@ function addFader(viewframe){
 	return fader;
 }	
 
-function viewClaim(id) {
+function viewClaim(claimid,snipid) {
 	var apipath = get_api_path();
-	viewFrame(apipath+"/mini/claim/"+id);
+	viewFrame(apipath+"/mini/claim/"+claimid+"?snippet="+snipid,snipid);
 }
 
 function dragPopup(ev,win,frame){
@@ -239,7 +241,7 @@ function dragPopup(ev,win,frame){
 	frame.style.visibility = "hidden";
 }
 
-function viewFrame(url) {
+function viewFrame(url,snipid) {
 	var doc = content.document;
 	var that = this;
 	
@@ -290,23 +292,25 @@ function viewFrame(url) {
 	dragbar.style.textAlign = "left";
 	dragbar.style.fontWeight = "normal";
 	
-	dragbar.textContent = "Think Link";
+	dragbar.textContent = "Dispute Finder";
 	
 	var buttonBox = doc.createElement("span");
 	buttonBox.style.position = "absolute";
 	buttonBox.style.right = "4px";
 	titleBar.appendChild(buttonBox);
-	
-	//var ignoreButton = doc.createElement("input");
-	//ignoreButton.className = "tl_openbutton";
-	//ignoreButton.setAttribute("type","button");
-	//ignoreButton.setAttribute("value","Don't highlight again");
-	//buttonBox.appendChild(ignoreButton);
-	//ignoreButton.addEventListener("click",function(){
-		//that.hideMe();
-		//tl_doAJAX("tl_ignore","scripthack/ignoreclaim.js"+
-			//"?claim="+snippet.claimid,function(){});					
-	//},true);
+
+	//if(snipid){	
+		//var spamButton = doc.createElement("input");
+		//spamButton.className = "tl_openbutton";
+		//spamButton.setAttribute("type","button");
+		//spamButton.setAttribute("value","Report highlight as spam");
+		//spamBox.appendChild(ignoreButton);
+		//spamButton.addEventListener("click",function(){
+			//that.hideMe();
+			//tl_doAJAX("tl_ignore","scripthack/ignoreclaim.js"+
+				//"?claim="+snippet.claimid,function(){});					
+		//},true);
+	//}
 
 	var close = doc.createElement("img");
 	close.style.width = "64px";

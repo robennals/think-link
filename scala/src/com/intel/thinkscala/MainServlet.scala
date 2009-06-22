@@ -228,6 +228,10 @@ class MainServlet extends HttpServlet {
       c.store.makeEvidence(c.userid,claimid,text,url,"",rel)
 	  c.redirect(Urls.claim(claimid))      
     }),    
+    UrlHandler("/api/badsnippet", c => {
+      val snipid = c.argInt("snipid")
+      c.store.reportBadSnip(snipid,c.userid)
+    }),
     // TODO: batch process to fill in evidence URL titles
     UrlHandler("/turk/submit", c=> {
       val turkid = c.argInt("turkid")
@@ -327,6 +331,9 @@ class MainServlet extends HttpServlet {
       }
       c.userid
       c.outputMiniHtml(Mini.newsnippet(text,url,title,isdisputed,query)(c))      
+    }),
+    UrlHandler("/mini/markedbad", c => {
+      c.outputMiniHtml(Mini.markedbad);
     }),
     UrlHandler("""/claim/(\d*)/findsnippets""", c => {
       val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)

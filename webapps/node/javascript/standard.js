@@ -60,7 +60,7 @@ function setSnipStatus(snip,vote){
 
 
 function addEvidence(id){
-	if(document.forms.newsnippet.rel.value == "choose..."){
+	if(document.forms.newsnippet.rel && document.forms.newsnippet.rel.value == "choose..."){
 		alert("you must say whether the evidence supports or opposes the claim");
 	}else{
 		submitForm('newsnippet','claimid',id)
@@ -151,4 +151,10 @@ function voteDown(node,id,typ){
 		box.attr("class","votebox-down");
 		$.post(url_base+typ+"/"+id+"/votedown");
 	}
+}
+
+function unmark(snipid){
+	$.post(url_base+"api/badsnippet?snipid="+snipid,function(){
+		window.location.href = url_base+"/mini/markedbad";
+	});
 }

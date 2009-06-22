@@ -225,14 +225,14 @@ object Render {
     </div>
   
   def extension(c : ReqContext) = 
-    if(c.getCookie("extension") == "true"){
+    if(c.getCookie("extension") != ""){
     	<div class='hasextension'>extension installed</div>     
     }else{
         <a class='install' href={Urls.extension}>Install the Firefox extension</a>
     }
  
   def extensionBig(implicit c : ReqContext) = 
-    if(c.getCookie("extension") == "true"){
+    if(c.getCookie("extension") != ""){
         /* nothing */
     }else{
         <div class='installdiv'><a class='installbig' href={Urls.extension}>Install the Firefox extension</a></div>

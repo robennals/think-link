@@ -387,6 +387,12 @@ class Datastore {
     updateSearchCounts(claimid, searchid)
   }
   
+  val get_search_result = stmt("SELECT * FROM v2_searchresult WHERE id = ?")
+  def reportBadSnip(resultid : Int, userid : Int) = {
+    val row = get_search_result.queryOne(resultid)
+    setSnipVote(row.int("claim_id"),resultid,row.int("search_id"),userid,false)    
+  }
+  
   val set_spam_claim = stmt("INSERT INTO spam_claim (node_id,user_id) VALUES (?,?)")
   def setSpamClaim(claimid : Int, userid : Int) = set_spam_claim.update(claimid,userid)
   

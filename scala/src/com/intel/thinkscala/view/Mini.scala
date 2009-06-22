@@ -3,13 +3,14 @@ import com.intel.thinkscala._
 
 object Mini {
   def claim(row : SqlRow)(implicit c : ReqContext) =
-    <div class="minicontent">
+  <div><div class="minicontent">
       <h1>Disputed Claim:</h1>
+
       {if (c.user.realuser) {
       <div id="notagain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
         	<label for="notagain">don't highlight this claim</label></div>
       }else{
-        <a target="_blank" href={Urls.login_simple}>login to ignore this claim</a>
+        <a id="notagain" target="_blank" href={Urls.login_simple}>login to ignore or report spam</a>
       }      
       }
       <div><a class='minititle' target="_blank" href={Urls.claim(row("id"))}>{row("text")}
@@ -32,6 +33,17 @@ object Mini {
 		      </div>
             ))
          }
+  </div>
+  {if (c.user.realuser && c.arg("snippet") != "") {
+//	      if(c.user.userid == row.int("user_id")){
+//	        <button id="badsnippet" onclick={"unmark("+c.arg("snippet")+")"}>unmark snippet</button>
+//	      }else{
+		    <button id="badsnippet" onclick={"unmark("+c.arg("snippet")+")"}>unmark snippet - snippet does not make this claim</button>
+//	      }
+	  }else{
+	    <span class="nothing" />
+	  }      
+  }
   </div>
   
   def newsnippet(text : String, url : String, title : String, disputed : Boolean, query : String)(implicit c : ReqContext) =
@@ -117,6 +129,14 @@ object Mini {
         <a href={Urls.claim(claimid)} target="_blank">go to claim</a>
       </div>
 
+    def markedbad = 
+      <div class='minicontent'>
+        <h1>Snippet has now been unmarked</h1>
+        <p>Thank you for unmarking this snippet. We rely on users like you
+        to tell us when other users have marked snippets indirectly.</p>
+        <p>We keep statistics on whether snippets marked by a user are 
+        subsequently unmarked so that we can track down abusive users</p>
+      </div>
     
     def closewindow = 
       <script type='text/javascript'>

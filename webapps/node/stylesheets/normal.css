@@ -14,6 +14,10 @@ a:hover, a h1:hover{
 	text-decoration: underline;
 }
 
+.webquote .title {
+	font-weight: bold;
+}
+
 .body {
 	background-color: #eeeeee;
 	margin: 0px;
@@ -898,4 +902,9 @@ img {
 	-moz-border-radius: 8px;	
 	font-weight: bold;
 	font-size: 12px;
+}
+
+#badsnippet{
+	margin: 4px;
+	float: right;
 }
