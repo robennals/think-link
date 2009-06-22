@@ -2,6 +2,92 @@
 
 Several of these articles are also syndicated by other publications.
 
+=== TechNewsWorld - Iran, Technology and Truth: Do You Care If Your Information Is False? ===
+
+Rob Enderle - June 22nd, 2009
+
+Rob Enderle made Dispute Finder his project of the week.
+
+<blockquote>
+While this is one of the riskiest efforts I've ever seen any vendor undertake, (because folks view those who present alternative views as biased, and both sides may not initially be populated), it is also likely one of the most important. Dispute Finder is therefore a natural for my product of the week.
+</blockquote>
+
+<a href="http://www.technewsworld.com/story/67386.html?wlc=1245700875">http://www.technewsworld.com/story/67386.html?wlc=1245700875</a>
+
+Also on <a href="http://www.linuxinsider.com/story/67386.html?wlc=1245701688">Linux Insider</a>
+
+=== Fast Company - This Week's Top Tech News: Elimination Edition ===
+
+Chris Dannen - June 21st, 2009
+
+Chris Dannen of Fast Company highlighted Dispute Finder as one of his tech highlights of the week.
+
+<blockquote>
+Put an end to blindness, bullshit, copyright laws and Time Warner's dark hegemony? Sure: the top tech stories of the week are all about the death of things that Web nerds hate - and that includes Bing, whether you like the idyllic backgrounds or not. 
+</blockquote>
+
+<a href="http://www.fastcompany.com/blog/chris-dannen/techwatch/weeks-top-tech-news-elimination-edition">http://www.fastcompany.com/blog/chris-dannen/techwatch/weeks-top-tech-news-elimination-edition</a>
+
+=== AFP - Intel program spotlights dubious online claims ===
+
+The Agence France-Presse did a piece on Dispute Finder. 
+
+<a href="http://www.google.com/hostednews/afp/article/ALeqM5gw-8UL71v5Rv6-YmR1v8CeSaivow">http://www.google.com/hostednews/afp/article/ALeqM5gw-8UL71v5Rv6-YmR1v8CeSaivow</a>
+
+This got syndicated to several other news outlets that use AFP feeds, including: <a href="http://news.id.msn.com/sci-tech/article.aspx?cp-documentid=3393746">MSN News</a> and <a href="http://ca.news.yahoo.com/s/afp/090619/technology/us_it_internet_software">Yahoo News</a>.
+
+=== New Scientist - 'Dispute Finder' web tool gives two sides of a story ===
+
+Colin Barras - June 19th, 2009
+
+New Scientist wrote an article about Dispute Finder, after seeing it at Research @ Intel Day.
+
+<blockquote>
+Showing that there are two sides to every story has never been easier, thanks to a new web tool that highlights disputed text on a web page and offers links to other sites with a different perspective.
+</blockquote>
+
+<a href="http://www.newscientist.com/article/dn17339-dispute-finder-web-tool-gives-two-sides-of-a-story.html">http://www.newscientist.com/article/dn17339-dispute-finder-web-tool-gives-two-sides-of-a-story.html</a>
+
+
+=== EE Times - Intel Pushes 193-nm litho down to 15-nm ===
+
+This article was primarily about Intel's litho process, but in it's roundup of Intel's new technology, it included a paragraph about Confrontational Computing:
+
+<blockquote>
+Confrontational computing. Intel and the University of California at Berkeley have rolled out The Dispute Finder, a technology that highlights disputed claims on Web pages you browse and shows you evidence for alternative points of view.
+
+''Use this Web interface to tell Dispute Finder what snippets to highlight and what evidence to present for alternative viewpoints. You can create a new disputed claim, mark new instances of a claim on the Web, and add evidence that supports or opposes a claim,'' according to the site.
+</blockquote>
+
+<a href="http://www.eetimes.com/news/latest/showArticle.jhtml;jsessionid=ELVN42KR3HF1AQSNDLPSKH0CJUNN2JVN?articleID=218100243&pgno=2">http://www.eetimes.com/news/latest/showArticle.jhtml;jsessionid=ELVN42KR3HF1AQSNDLPSKH0CJUNN2JVN?articleID=218100243&pgno=2</a>
+
+=== Wall Street Journal - Sifting for News at Intel's Annual Research Day ===
+
+Don Clark - June 18th, 2009
+
+The Wall Street Journal "Digits" blog highlighted Dispute Finder in their coverage of the Research @ Intel Day.
+
+<blockquote>
+Another project from Intel's Berkeley outpost is designed to sort help Internet users spot false or biased statements in news articles or information sources. The tool, called Dispute Finder, automatically highlights a snippet of text if there is information from other authoritative sources that contradicts that part of an article.
+</blockquote>
+
+<a href="http://blogs.wsj.com/digits/2009/06/18/sifting-for-news-at-intels-annual-research-day/">http://blogs.wsj.com/digits/2009/06/18/sifting-for-news-at-intels-annual-research-day/</a>
+
+=== VentureBeat - Intel's bullshit filter exposes disputed information on the Internet ===
+
+Dean Takashi - June 19th, 2009
+
+VentureBeat liked Dispute Finder, and even took a video of it. 
+
+<blockquote>
+Intel's researchers have figured out how to expose lies on the Internet. They've launched a tool dubbed Dispute Finder that lets you see highlighted text in a news story where the information is disputed. I call it a bullshit filter.
+</blockquote>
+
+<a href="http://digital.venturebeat.com/2009/06/19/intels-most-interesting-new-research-ideas/">http://digital.venturebeat.com/2009/06/19/intels-most-interesting-new-research-ideas/</a>
+
+Also on <a href="http://www.thestandard.com/news/2009/06/19/intel-s-bullshit-filter-exposes-disputed-information-internet">The Industry Standard</a>
+
+
 === ITWire - Intel Making it easier to argue online ===
 
 Jake Widman - May 2nd, 2009
