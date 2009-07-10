@@ -155,9 +155,13 @@ function mark_snippet(text,claimid,snipid,claimtext,node){
 			var child = node.childNodes[i];
 			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
 				mark_snippet(text,claimid,snipid,claimtext,child);
-				return;
+				insub = true;
+//				return;
 			}
 		}		
+	}
+	if(insub){
+		return;
 	}
 	if(node.nodeName == "#text"){
 		node = node.parentNode;

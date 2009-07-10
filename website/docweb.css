@@ -74,7 +74,7 @@ blockquote {
 }
 
 .article_body {
-	width: 500px;
+	max-width: 500px;
 /*	border-left: thin solid #AAAAAA; */
 }
 

@@ -102,9 +102,15 @@ function connect(node,id,addto){
 }
 
 function reportSpam(node,id){
-	$(node).parent().append($("<span>reported as spam</span>"))
+	$(node).parent().append($("<span>reported as spam <a onclick='unreportSpam(this,"+id+")'>(undo)</a></span>"))
 	$(node).remove()
 	$.post(url_base+"claim/"+id+"/setspam")
+}
+
+function unreportSpam(node,id){	
+	$(node).parent().parent().append($("<a onclick='reportSpam(this,"+id+")'>report spam</a>"))
+	$(node).parent().remove()
+	$.post(url_base+"claim/"+id+"/unsetspam")
 }
 
 function reportSpamEvidence(node,id){
@@ -158,3 +164,28 @@ function unmark(snipid){
 		window.location.href = url_base+"/mini/markedbad";
 	});
 }
+
+var foo = null;
+
+function setToggle(box,vote){
+	var id = box.attr("data-id")
+	var type = box.attr("data-type")
+	var zone = box.attr("data-zone")
+	$.post(url_base+zone+"/pick/?type="+type+"&id="+id+"&vote="+vote);
+}
+
+window.onload = function(){
+	$(".yes").click(function(e){
+		var box = $(e.target).parents(".togglebox");
+		box.addClass("state-yes");
+		box.removeClass("state-no");
+		setToggle(box,"yes");
+	})
+	$(".no").click(function(e){
+		var box = $(e.target).parents(".togglebox");
+		box.addClass("state-no");
+		box.removeClass("state-yes");
+		setToggle(box,"no");
+	})
+}
+

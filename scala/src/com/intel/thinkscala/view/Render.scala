@@ -128,12 +128,15 @@ object Render {
            <input class="icon" type="image" src={Images.search} alt="search"/>
         </form>                 
         <a class='bugreport' href="mailto:robert.ennals@intel.com?body=Report a bug, suggest a feature, or just tell us what you think.">Send us your feedback</a>
+        <a class='blog' href="http://disputefinder.blogspot.com/">Blog</a>
         <a class='help' href="http://confront.intel-research.net/Dispute_Finder.html">Help</a>
     </div>
     
   def userref(id : Int, name : String, message : String) =
     <span class="user">{message} <a target="_blank" href={Urls.user(id)}>{name}</a></span>
             
+  def userref(user : User, message : String) : NodeSeq = userref(user.userid, user.name, message)  
+    
  def searchQueryList(c : ReqContext, claimid : Int) = 
     (c.store.searchQueries(claimid) flatMap (Render.searchQuery(_,claimid))) ++
     (<a class="manualmarked" href={Urls.findsnippets(claimid,true)}>marked with extension</a>)
@@ -225,14 +228,14 @@ object Render {
     </div>
   
   def extension(c : ReqContext) = 
-    if(c.getCookie("extension") != ""){
+    if(c.getCookie("extension") != null && c.getCookie("extension") != ""){
     	<div class='hasextension'>extension installed</div>     
     }else{
         <a class='install' href={Urls.extension}>Install the Firefox extension</a>
     }
  
   def extensionBig(implicit c : ReqContext) = 
-    if(c.getCookie("extension") != ""){
+    if(c.getCookie("extension") != null && c.getCookie("extension") != ""){
         /* nothing */
     }else{
         <div class='installdiv'><a class='installbig' href={Urls.extension}>Install the Firefox extension</a></div>

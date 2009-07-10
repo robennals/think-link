@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Queue
 import scala.collection.Map
+import com.intel.thinkscala.data._
 
 object Pool{
   import Util._
@@ -37,78 +38,39 @@ object Pool{
   } 
 }
 
-class User(val name : String, val userid : Int){
+class User(val name : String, val userid : Int, val isadmin : Boolean){
+  def this(name : String, userid : Int) = this(name,userid,false)
   val realuser = userid != 0
 }
 
 object User {
-  val autoimport = new User("autoimport",2)
-  val nouser = new User("no user",0)
-  val turk = new User("turk",2)
+  val autoimport = new User("autoimport",2,false)
+  val nouser = new User("no user",0,false)
+  val turk = new User("turk",2,false)
+}
+
+
+abstract class BaseData {
+  def stmt(s : String) = new SqlStatement(con,s)
+  var con = DriverManager.getConnection(
+    "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
+    "thinklink","zofleby")  
 }
 
 
 
-class Datastore {  
+
+class Datastore extends BaseData 
+	with com.intel.thinkscala.data.UserData with Conflicts
+ {  
   
   val connectdate = new Date getTime 
   
   Class.forName("com.mysql.jdbc.Driver")
-  var con = DriverManager.getConnection(
-    "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
-    "thinklink","zofleby")
-    
-  def stmt(s : String) = new SqlStatement(con,s)
+
   def mkinsert(table : String, fields : String*) = SqlStatement.mkInsert(con,table,fields)
 
-  val get_user = stmt("SELECT id,password,name FROM v2_user WHERE email = ? AND nonce = 0")
-  def getUser(email : String, password : String) : User = 
-    get_user.queryMaybe(email) match {
-      case Some(row) if row("password") == password => 
-        new User(row.str("name"),row.int("id"))
-      case _ => User.nouser
-    }  
-  
-  val get_password = stmt("SELECT password FROM v2_user WHERE email = ? AND nonce = 0")
-  def getPassword(email : String) : String = get_password.queryOne(email).str("password")  
-  
-  val create_user = stmt("INSERT INTO v2_user (email,name,password,nonce) VALUES (?,?,?,?)")
-  def createUser(email : String,name : String,password : String) : (Int,Int) = {
-    import java.util.Random
-    val nonce : Int = Math.abs(new Random nextInt)
-    val userid = create_user.insert(email,name,password,nonce)
-    return (userid,nonce)      
-  }                      
-  
-  val email_registered = stmt("SELECT id FROM v2_user WHERE email = ?")
-  def emailRegistered(email : String) = 
-	  email_registered.queryMaybe(email) match {
-	    case Some(_) => true
-	    case _ => false
-	  }
-
-  val name_registered = stmt("SELECT id FROM v2_user WHERE name = ?")
-  def nameRegistered(name : String) = 
-	  name_registered.queryMaybe(name) match {
-	    case Some(_) => true
-	    case _ => false
-	  }
-
-  
-  val check_confirm_user = stmt("SELECT * FROM v2_user WHERE nonce = ?")
-  val confirm_user = stmt("UPDATE v2_user SET nonce = 0 WHERE nonce = ?")
-  def confirmUser(nonce : Int) = {
-    check_confirm_user.queryMaybe(nonce) match {
-      case Some(_) => confirm_user.update(nonce); true
-      case _ => false                                                                                                
-    }
-  }
-                         
-  
-  val get_user_info = stmt("SELECT * FROM v2_user WHERE id = ?")
-  def getUserInfo(id : Int) = get_user_info.queryOne(id)
-  
-  val get_info = stmt("SELECT v2_node.*, v2_user.name AS username "+
+    val get_info = stmt("SELECT v2_node.*, v2_user.name AS username "+
                         "FROM v2_node,v2_user "+
                         "WHERE v2_node.id=? "+
                         "AND v2_node.user_id = v2_user.id")
@@ -117,8 +79,8 @@ class Datastore {
       logRecent(userid,id)
     }
     get_info.queryOne(id)
-  }
-    
+  }    
+  
   val get_claim = stmt("SELECT v2_node.*, v2_user.name AS username,ignore_claim.user_id AS ignored "+
 		  				"FROM v2_node "+
                         "LEFT JOIN ignore_claim ON claim_id = id AND ignore_claim.user_id = ? "+
@@ -142,6 +104,7 @@ class Datastore {
   val get_recent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
                           "WHERE v2_node.id = v2_history.node_id AND type='claim' AND v2_history.user_id = ? "+
                           "AND v2_node.user_id = v2_user.id "+
+                          "AND v2_node.hidden = false "+
   						  "ORDER BY date DESC LIMIT 20")
   def getRecentClaims(userid : Int) = get_recent.queryRows(userid)
 
@@ -157,7 +120,7 @@ class Datastore {
   					 "WHERE v2_node.type = ? "+
                      "AND v2_node.id != ? "+
                      "AND v2_history.node_id = v2_node.id "+
-                     "AND v2_history.user_id = ? "+
+                     "AND v2_history.user_id = ? "+                    		 
                      "ORDER BY date DESC "+
                      "LIMIT 20 OFFSET ?") 
   def recentLinked(linkedto : Int, typ : String, userid : Int, page : Int) = recent_linked.queryRows(linkedto,linkedto,typ,linkedto,userid,page*20)
@@ -190,12 +153,14 @@ class Datastore {
                        "WHERE v2_node.id = v2_history.node_id "+
                        "AND type = 'claim' AND opposed = true "+
                        "AND v2_user.id = v2_node.user_id "+
+                       "AND v2_node.hidden = false "+
                        "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 20")
   def getHotClaims = get_hot.queryRows()
   
   val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
                             "WHERE v2_user.id = v2_node.user_id "+
                             "AND type=? "+
+                            "AND hidden=false "+
                             "ORDER BY instance_count DESC LIMIT 20 OFFSET ?") 
   def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*20)
   def getBigTopics(page : Int) = get_frequent.queryRows("topic",page*10)
@@ -204,6 +169,7 @@ class Datastore {
                      "WHERE type = 'claim' "+                             
                      "AND v2_user.id = v2_node.user_id "+
                      "AND MATCH(text) AGAINST(?) "+
+                     "AND v2_node.hidden = false "+
                      "LIMIT 20 OFFSET ?")
   def searchClaims(query : String, offset : Int) = search_claims.queryRows(query,offset * 20)
   
@@ -212,6 +178,7 @@ class Datastore {
                              "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
   					 "WHERE v2_node.type = ? "+
                      "AND v2_node.id != ? "+
+                     "AND v2_node.hidden = false "+
   	                 "AND MATCH(text) AGAINST(?) "+
                      "LIMIT 20 OFFSET ?")    
   def searchLinked(query : String, typ : String, linkedto : Int, offset : Int) = 
@@ -221,6 +188,7 @@ class Datastore {
                      "WHERE type = 'topic' "+                             
                      "AND v2_user.id = v2_node.user_id "+
                      "AND MATCH(text) AGAINST(?) "+
+                     "AND v2_node.hidden = false "+
                      "LIMIT 20 OFFSET ?")
   def searchTopics(query : String, offset : Int) = search_topics.queryRows(query,offset * 20)
   
@@ -393,7 +361,7 @@ class Datastore {
     setSnipVote(row.int("claim_id"),resultid,row.int("search_id"),userid,false)    
   }
   
-  val set_spam_claim = stmt("INSERT INTO spam_claim (node_id,user_id) VALUES (?,?)")
+  val set_spam_claim = stmt("REPLACE INTO spam_claim (node_id,user_id) VALUES (?,?)")
   def setSpamClaim(claimid : Int, userid : Int) = set_spam_claim.update(claimid,userid)
   
   val ignore_claim = stmt("INSERT INTO ignore_claim (claim_id,user_id) VALUES (?,?)")
@@ -405,7 +373,7 @@ class Datastore {
   val unignore_claim = stmt("DELETE FROM ignore_claim WHERE claim_id = ? AND user_id = ?")
   def unIgnoreClaim(claimid : Int, userid : Int) = unignore_claim.update(claimid,userid)
   
-  val set_spam_evidence = stmt("INSERT INTO spam_evidence (evidence_id,user_id) VALUES (?,?)")
+  val set_spam_evidence = stmt("REPLACE INTO spam_evidence (evidence_id,user_id) VALUES (?,?)")
   def setSpamEvidence(evidenceid : Int, userid : Int) = set_spam_evidence.update(evidenceid,userid)
   
   val delete_evidence = stmt("DELETE FROM evidence WHERE id = ? AND user_id = ?")
@@ -462,9 +430,15 @@ class Datastore {
                               "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
                               "AND state = 'true' "+
                               "AND v2_user.id = v2_searchresult.user_id "+
-                              "LIMIT 10 OFFSET ?")
-  def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,page*10)
-  
+                              "LIMIT ? OFFSET ?")
+  def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,10,page*10)
+
+  val all_snippets_all = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
+                              "FROM v2_searchresult,v2_searchurl,v2_user "+
+                              "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
+                              "AND (state = 'true' OR state='false') "+
+                              "AND v2_user.id = v2_searchresult.user_id")
+  def allSnippets(claimid : Int) = all_snippets_all.queryRows(claimid)
   
   // === Nodes ===
   

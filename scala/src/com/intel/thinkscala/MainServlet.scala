@@ -5,6 +5,8 @@ import com.intel.thinkscala.Util._
 import com.intel.thinkscala.util._
 import com.intel.thinkscala.view._
 import com.intel.thinkscala.view.Mini
+import com.intel.thinkscala.pages._
+import com.intel.thinkscala.pages.Login
 import scala.xml._
 
 object FixedUrls {
@@ -15,6 +17,7 @@ object FixedUrls {
 object Urls {
   val base = "/thinklink"
   val home = base
+  val admin = base + "/admin"
   def img(name : String) = base + "/images/"+name + ".png"
   val extension = "https://addons.mozilla.org/en-US/firefox/addon/11712"
   def login(url : String) = base+"/login?url="+encode(url)
@@ -91,23 +94,23 @@ class MainServlet extends HttpServlet {
         c.setCookie("password",password)        
         c.redirect(c.arg("url"))			
       }else{
-        c.outputHtml("Login Failed - Please Try Again",Page.login("Login Failed",c.arg("url")))
+        c.outputHtml("Login Failed - Please Try Again",Login.login("Login Failed",c.arg("url")))
       }
     }),
     UrlHandler("/signup", c => {
       val email = c.arg("email")
       val name = c.arg("name")      
       if(c.store.emailRegistered(email)){
-        c.outputHtml("An account already exists with this email address",Page.emailregistered)
+        c.outputHtml("An account already exists with this email address",Messages.emailregistered)
       }else if(c.store.nameRegistered(name)){
-    	c.outputHtml("An account already exists with this email address",Page.nameregistered)
+    	c.outputHtml("An account already exists with this email address",Messages.nameregistered)
       }else{
           val (userid,nonce) = c.store.createUser(email,name,c.arg("password"))
 	      try{
 	    	  SendMail.sendSignup(email,name,userid,nonce)
-	    	  c.outputHtml("Confirmation Email Sent",Page.sentconfirm)
+	    	  c.outputHtml("Confirmation Email Sent",Messages.sentconfirm)
 	      }catch{
-	        case _ => c.outputHtml("Could Not Send Mail",Page.badmail)
+	        case _ => c.outputHtml("Could Not Send Mail",Messages.badmail)
 	      }
        }
     }),
@@ -116,9 +119,9 @@ class MainServlet extends HttpServlet {
       val password = c.store.getPassword(email)
       try{
         SendMail.sendPassword(email,password)
-        c.outputHtml("Password Email Sent",Page.sentpassword)
+        c.outputHtml("Password Email Sent",Messages.sentpassword)
       }catch{
-        case _ => c.outputHtml("Could Not Send Mail",Page.badmail) 
+        case _ => c.outputHtml("Could Not Send Mail",Messages.badmail) 
       }      
     }),
     UrlHandler("/connect", c => {
@@ -232,6 +235,9 @@ class MainServlet extends HttpServlet {
       val snipid = c.argInt("snipid")
       c.store.reportBadSnip(snipid,c.userid)
     }),
+    UrlHandler("/admin/pick", c => {
+      Admin.pick(c.arg("type"),c.arg("id"),c.arg("vote"))(c)
+    }),
     // TODO: batch process to fill in evidence URL titles
     UrlHandler("/turk/submit", c=> {
       val turkid = c.argInt("turkid")
@@ -342,6 +348,10 @@ class MainServlet extends HttpServlet {
       if(query == null) query = claim.str("text")
       c.outputHtml(title,Page.findsnippets(claim,query)(c))
     }),
+    UrlHandler("""/claim/(\d*)/allsnippets""", c => {
+    },c => {
+      c.output(c.store.allSnippets(c.urlInt(1)))
+    }),
     UrlHandler("/claim/new",c => {
       c.requireLogin
       c.outputHtml("Create New Claim - Dispute Finder",Page.newClaim(c,c.arg("query")))
@@ -376,21 +386,25 @@ class MainServlet extends HttpServlet {
     UrlHandler("/login",c => {
       var url = c.arg("url")
       if(url == null) url = Urls.base
-      c.outputHtml("Login",(<div>{Page.login("Login",url)}</div>))
+      c.outputHtml("Login",(<div>{Login.login("Login",url)}</div>))
     }),
     UrlHandler("/signup",c => {
-      c.outputHtml("Sign up with Dispute Finder",Page.signup)      
+      c.outputHtml("Sign up with Dispute Finder",Login.signup)      
     }),
     UrlHandler("/emailpass",c => {
-      c.outputHtml("Retreive your password",Page.emailpass)
+      c.outputHtml("Retreive your password",Login.emailpass)
     }),
     UrlHandler("/confirm/(\\d*)",c => {
       val nonce = c.urlInt(1)
       if(c.store.confirmUser(nonce)){
-    	  c.outputHtml("Account Confirmed",Page.confirmed)
+    	  c.outputHtml("Account Confirmed",Messages.confirmed)
       }else{
-    	  c.outputHtml("Already Confirmed",Page.badconfirm)
+    	  c.outputHtml("Already Confirmed",Messages.badconfirm)
       }      
+    }),
+    UrlHandler("/admin", c => {
+      c.requireAdmin
+      c.outputHtml("Admin",Admin.admin(c))
     }),
     UrlHandler("/logout",c => {
       c.setCookie("email","")

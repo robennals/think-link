@@ -22,10 +22,6 @@ a:hover, a h1:hover{
 	background-color: #eeeeee;
 	margin: 0px;
 	padding: 0px;
-/*
-	margin-left: 40px;
-	margin-right: 40px;
-*/
 }
 
 h1 {
@@ -575,22 +571,6 @@ h2 {
 	padding-top: 0px;
 }
 
-/*
-	text-align: right;
-	padding: 8px;
-	padding-top: 0px;
-	margin-top: 0px;
-*/
-}
-
-/*
-.tabs .header span {
-	border-color: #ccc;
-	border-width: 1px 1px medium;
-	border-style: solid solid none;
-	padding: 2px 6px 3px;
-}*/
-
 .tabs .header{
 	padding: 4px;
 	padding-bottom: 8px;
@@ -598,9 +578,6 @@ h2 {
 }
 
 .header {
-/*
-	padding-top: 6px;
-*/
 	padding-bottom: 6px;
 }
 
@@ -889,10 +866,6 @@ img {
 
 .videolink {
 	display: block;
-	/* background-color: #58A267; */
-/*
-		color: white;
-*/
 	color: black;
 	background-color: #FFFFAA;
 	position: absolute;
@@ -908,3 +881,45 @@ img {
 	margin: 4px;
 	float: right;
 }
+
+.conflict {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.togglebox {
+	position: relative;
+}
+
+.yesnobox {
+	padding-right: 4px;
+}
+
+.yes, .no {
+	display: inline;
+	background-color: #eeeeee;
+	color: black;
+	-moz-border-radius: 4px;
+	cursor: pointer;
+	padding: 4px 6px;
+}
+
+.yes:hover, .no:hover, .state-yes .yes, .state-no .no {
+	background-color: #666666;
+	color: white;
+}
+
+.state-no {
+	opacity: 0.3;
+}
+
+.state-yes {
+	background-color: yellow;
+}
+
+.yes {
+}
+
+.no {
+}
+

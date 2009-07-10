@@ -73,6 +73,18 @@ function initCookieCatcher(){
   observerService.addObserver(cookieCatcher, "http-on-modify-request",false);
 }
 
+// it turns out that the security model doesn't let us do this :-(
+//function allowSelect(){
+	//if(content.document.onmousedown){
+		//content.document.onmousedown = null;
+	//}
+	//if(content.document.onmouseup){
+		//content.document.onmouseup = null;
+	//}
+	//if(content.document.onselectstart){
+		//content.document.onselectstart = null;
+	//}
+//}
 
 window.addEventListener("load", function(){
 	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","0.21");
@@ -86,7 +98,7 @@ window.addEventListener("load", function(){
 		thinklink_getLogin();
 		mark_snippets(ev.target);
 	},false);
-	
+		
 	loadIgnored();
 },false);
 

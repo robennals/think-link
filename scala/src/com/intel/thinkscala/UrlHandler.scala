@@ -11,11 +11,14 @@ import scala.xml.NodeSeq;
 import com.intel.thinkscala.view.Template
 import com.intel.thinkscala.view.Page
 import scala.collection.immutable.HashMap
+import com.intel.thinkscala.pages.Messages
+import com.intel.thinkscala.pages.Login
 //import scala.collection.Map
 // import java.util.Iterator;
 
 class NotFound extends Exception
 class NoLogin extends Exception
+class NotAdmin extends Exception
 
 class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
   def hasNext = it.hasMoreElements
@@ -40,6 +43,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
   def requireLogin = userid
+  def requireAdmin = if(user.isadmin) () else throw new NotAdmin
   def maybe_userid = user.userid
   lazy val params = getParams
   lazy val format = getFormat(req)
@@ -105,14 +109,19 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
     
   def notFound() {
     res.setStatus(HttpServletResponse.SC_NOT_FOUND)    
-    outputHtml("Not found",Page.notfound)
+    outputHtml("Not found",Messages.notfound)
   }
+  
+  def notAdmin() {
+     outputHtml("Not Admin",Messages.notadmin)    
+  }
+  
   
   def needLogin() {
     if(minimode){
-        UrlHandler.outputHtml(res,Template.nobar(this,Page.login("You need to log in to do that",getUrl)),true)
+        UrlHandler.outputHtml(res,Template.nobar(this,Login.login("You need to log in to do that",getUrl)),true)
     }else{
-    	outputHtml("You need to log in to do that",Page.login("You need to log in to do that",getUrl))
+    	outputHtml("You need to log in to do that",Login.login("You need to log in to do that",getUrl))
      }
   }
   
@@ -176,6 +185,7 @@ class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext 
         }catch{
           case e : NotFound => c.notFound
           case e : NoLogin => c.needLogin 
+          case e : NotAdmin => c.notAdmin
         }
         true
       case None => false

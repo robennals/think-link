@@ -2,6 +2,47 @@
 
 Several of these articles are also syndicated by other publications.
 
+
+=== San Francisco Chronicle - Crap Detection 101 ===
+
+Howard Rheingold - June 30th, 2009
+
+The Chron looks at different ways of detecting "crap" on the web, and highlights Dispute Finder.
+
+<blockquote>
+on the cutting edge of community-based filtering tools, Intel labs' Dispute Finder Firefox Extension "highlights disputed claims on web pages you browse and shows you evidence for alternative points of view."
+</blockquote>
+
+<a href="http://www.sfgate.com/cgi-bin/blogs/rheingold/detail?entry_id=42805">http://www.sfgate.com/cgi-bin/blogs/rheingold/detail?entry_id=42805</a>
+
+
+=== San Jose Mercury - A glimpse of Intel's futuristic gadgets ===
+
+Steve Johnson - June 26th, 2009
+
+Dispute Finder is the first project that the San Jose Mercury mentions in its coverage of Research At Intel Day:
+
+<blockquote>
+Wouldn't it be useful to have a gadget that immediately warned you when the information you just saw on the Internet or heard from a buddy might be baloney?
+</blockquote>
+
+<a href="http://www.mercurynews.com/technotebook/ci_12681133?source=rss&nclick_check=1">http://www.mercurynews.com/technotebook/ci_12681133?source=rss&nclick_check=1</a>
+
+Also in <a href="http://www.star-telegram.com/business/story/1468398.html">The Fort Worth Star Telegram</a>
+
+=== The Guardian - Intel Innovation Lights up its 2009 research day ===
+
+Jack Schofield - June 24th, 2009
+
+The Guardian highlighted Confrontational Computing as one of the hits of Research @ Intel Day.
+
+<blockquote>
+The other hit was Rob Ennals from Intel Research Berkeley, with Confrontational Computing, which highlights "disputed points of view" on websites. It's based on crowdsourcing, with people voting texts up and down. It works as a Firefox browser extension, and was released last week as Dispute Finder.
+</blockquote>
+
+<a href="http://www.guardian.co.uk/technology/2009/jun/24/intel-research-day">http://www.guardian.co.uk/technology/2009/jun/24/intel-research-day</a>
+
+
 === TechNewsWorld - Iran, Technology and Truth: Do You Care If Your Information Is False? ===
 
 Rob Enderle - June 22nd, 2009

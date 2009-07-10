@@ -214,12 +214,6 @@ object Page {
                	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
-//          "Related Claims" -> (() => 
-//              <div id='related-claims'>
-//                <h2>Related Claims</h2>
-//                {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
-//                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>add related claim</a>                  
-//              </div>),
           "Marked Pages" -> (() => 
               <div id='searchlist' style='padding-bottom: 4px'>
                  <input type="hidden" id="data-query" value=""/>
@@ -332,145 +326,9 @@ object Page {
     <div class="error">
     </div>
     
-  def login(title : String, path : String) =
-    <div class="content">
-    	<h1>{title}</h1>
-		<div class="message">
-	      Enter the email address and password that you used to register with Dispute Finder.
-	    </div>		
-	    <div class='message'>
-          If you don't have a Dispute Finder account then <a href={Urls.signup}>sign up</a>
-        </div>
- 	    <div class='message'>
-          If you have lost your password then we can <a href={Urls.emailpass}>retreive your password</a>
-        </div>
-
-	    <form class='form' id="login" action="login" method="POST">	   
-            <input class='hidden' type='hidden' name='url' value={path}/>
-	        <label for="email">email</label>
-	        <input type="text" name="email"/>
-	        <p><label for="password">password</label>
-	        	<input type="password" id="password" name="password"/></p>
-	        <input class='submit' type="submit" value="Login"/>
-	    </form>
-    </div>
-    
-    // TODO: sign up with facebook connect
-  def signup = 
-    <div class='content'>
-    	<h1>Sign up for a Dispute Finder Account</h1>
-           <p>Reasons to sign up for a Dispute Finder account:
-             <ul>
-               <li>Add new claims to Dispute Finder</li>
-               <li>Find more snippets that make disputed claims</li>
-               <li>Tell Dispute Finder what claims you don't want it to highlight again</li>
-             </ul>
-           </p>
-    	<form class='form' id='signup' action="signup" method="POST">
-            <p>
-               <label for="name">name</label>
-               <input type="text" id="name" name="name"/>
-            </p>
-            <p>
-               <label for="email">email</label>
-               <input type="text" id="email" name="email"/>
-            </p>
-            <p>
-               <label for="password">password</label>
-               <input type="password" id="password" name="password"/>
-            </p>
-            <input class='submit' type="submit" value="Create Account"/>
-    	</form>
-    </div>
-    
-  def emailpass = 
-    <div class='content'>
-      <h1>Retreive your password</h1>
- 	  <div class="message">
-       Enter the email address you used to sign up and we will email you your password.
-     </div>		
-
-      <form class='form' id='emailpass' action='emailpass' method ='POST'>
-		<p>
-		  <label for="email">email</label>
-		  <input type="text" id="email" name="email"/>
-		</p>
-		<p>
-		  <input class='submit' type='submit' value='Retrieve Password'/>
-		</p>
-      </form>
-    </div>    
-    
-  def sentconfirm = 
-    <div class='content'>
-       <h1>Confirmation Email Sent</h1>
-       <div class='message'>
-          We have sent a confirmation email to the email address you gave.          
-       </div>
-       <div class='message'>
-       	  Please click on the link in that message to activate your account.
-       </div>
-    </div>
-
-  def sentpassword = 
-    <div class='content'>
-       <h1>Password Email Sent</h1>
-       <div class='message'>
-          We have sent an email with your Dispute Finder password to the email address you gave.          
-       </div>
-    </div>
-    
-  def badmail =
-    <div class='content'>
-       <h1>Bad Email Adress</h1>
-       <div class='message'>
-          We were not able to send email to the address you gave. Please go back and try again.    
-       </div>
-    </div>
-    
-  def confirmed = 
-    <div class='content'>
-       <h1>Account Confirmed</h1>
-       <div class='message'>
-         Your account has been successfully confirmed. 
-       </div>
-       <div class='message'><a href={Urls.login(Urls.base)}>login</a> with your new account.</div>
-    </div>
-    
-  // TODO: support retreiving or changing existing password
-  // OR: support facebook connect for signup
-  def emailregistered = 
-    <div class='content'>
-       <h1>An account already exists with this email address</h1>
-       <div class='message'>
-       	Someone, hopefully you, has already created an account with this email address.
-       </div>
-    </div>
-
-  def nameregistered = 
-    <div class='content'>
-       <h1>An account already exists with this user name</h1>
-       <div class='message'>
-       	Someone has already created an account with this email address. Go back and try a different user name.
-       </div>
-    </div>
 
     
-  def badconfirm = 
-    <div class='content'>
-       <h1>Account already confirmed</h1>
-       <div class='message'>
-       	This account has already been confirmed.
-       </div>
-    </div>
-    
-    
-  val notfound = 
-    <div class="content">
-      <h1>Not Found</h1>
-      <div class="message">
-      This page was not found
-      </div>
-    </div>
+
+
 }
 
