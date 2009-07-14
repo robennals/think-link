@@ -1,4 +1,7 @@
+*/mt_files
+*/.svn
 *.csv
+*.csv*
 *tmp*
 think/*
 *.kilepr
@@ -22,7 +25,8 @@ Edit.000
 store
 init.d
 *.class
-*~.manager
+*~
+.manager
 scala/.manager
 *~
 pastrevs

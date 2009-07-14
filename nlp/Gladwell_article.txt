@@ -1,0 +1,289 @@
+Priced to Sell
+Is free the future?
+by Malcolm Gladwell July 6, 2009
+
+Print E-Mail Feeds
+
+$B!H(BIn the digital realm you can try to keep Free at bay,$B!I(B Chris
+Anderson writes, $B!H(Bbut eventually the force of economic gravity will
+win.$B!I(B
+
+
+Keywords
+    $B!H(BFree: The Future of a Radical Price$B!I(B (Hyperion; $26.99);
+    Chris Anderson;
+    Google;
+    Technology;
+    YouTube;
+    Amazon;
+    Kindle
+
+At a hearing on Capitol Hill in May, James Moroney, the publisher of
+the Dallas Morning News, told Congress about negotiations he$B!G(Bd just
+had with the online retailer Amazon. The idea was to license his
+newspaper$B!G(Bs content to the Kindle, Amazon$B!G(Bs new electronic
+reader. $B!H(BThey want seventy per cent of the subscription revenue,$B!I(B 
+Moroney testified. $B!H(BI get thirty per cent, they get seventy per
+cent. On top of that, they have said we get the right to republish
+your intellectual property to any portable device.$B!I(B The idea was that
+if a Kindle subscription to the Dallas Morning News cost ten dollars a
+month, seven dollars of that belonged to Amazon, the provider of the
+gadget on which the news was read, and just three dollars belonged to
+the newspaper, the provider of an expensive and ever-changing variety
+of editorial content. The people at Amazon valued the newspaper$B!G(Bs
+contribution so little, in fact, that they felt they ought then to be
+able to license it to anyone else they wanted. Another witness at the
+hearing, Arianna Huffington, of the Huffington Post, said that she
+thought the Kindle could provide a business model to save the
+beleaguered newspaper industry. Moroney disagreed. $B!H(BI get thirty per
+cent and they get the right to license my content to any portable
+device%G—%@not just ones made by Amazon?$B!I(B He was incredulous. 
+$B!H(BThat, to me, is not a model.$B!I(B
+
+Had James Moroney read Chris Anderson$B!G(Bs new book, $B!H(BFree: The Future
+of a Radical Price$B!I(B (Hyperion; $26.99), Amazon$B!G(Bs offer might not
+have seemed quite so surprising. Anderson is the editor of Wired and
+the author of the 2006 best-seller $B!H(BThe Long Tail,$B!I(B and $B!H(BFree$B!I(B is
+essentially an extended elaboration of Stewart Brand$B!G(Bs famous
+declaration that $B!H(Binformation wants to be free.$B!I(B The digital age,
+Anderson argues, is exerting an inexorable downward pressure on the
+prices of all things $B!H(Bmade of ideas.$B!I(B Anderson does not consider
+this a passing trend. Rather, he seems to think of it as an iron law: 
+$B!H(BIn the digital realm you can try to keep Free at bay with laws and
+locks, but eventually the force of economic gravity will win.$B!I(B To
+musicians who believe that their music is being pirated, Anderson is
+blunt. They should stop complaining, and capitalize on the added
+exposure that piracy provides by making money through touring,
+merchandise sales, and $B!H(Byes, the sale of some of [their] music to
+people who still want CDs or prefer to buy their music online.$B!I(B To
+the Dallas Morning News, he would say the same thing. Newspapers need
+to accept that content is never again going to be worth what they want
+it to be worth, and reinvent their business. $B!H(BOut of the bloodbath
+will come a new role for professional journalists,$B!I(B he predicts, and
+he goes on:
+
+
+There may be more of them, not fewer, as the ability to participate in
+journalism extends beyond the credentialed halls of traditional
+media. But they may be paid far less, and for many it won$B!G(Bt be a full
+time job at all. Journalism as a profession will share the stage with
+journalism as an avocation. Meanwhile, others may use their skills to
+teach and organize amateurs to do a better job covering their own
+communities, becoming more editor/coach than writer. If so, leveraging
+the Free---paying people to get other people to write for
+non-monetary rewards---may not be the enemy of professional
+journalists. Instead, it may be their salvation.
+
+Anderson is very good at paragraphs like this---with its
+reassuring arc from $B!H(Bbloodbath$B!I(B to $B!H(Bsalvation.$B!I(B His advice is
+pithy, his tone uncompromising, and his subject matter perfectly timed
+for a moment when old-line content providers are desperate for
+answers. That said, it is not entirely clear what distinction is being
+marked between $B!H(Bpaying people to get other people to write$B!I(B and
+paying people to write. If you can afford to pay someone to get other
+people to write, why can$B!G(Bt you pay people to write? It would be nice
+to know, as well, just how a business goes about reorganizing itself
+around getting people to work for $B!H(Bnon-monetary rewards.$B!I(B Does he
+mean that the New York Times should be staffed by volunteers, like
+Meals on Wheels? Anderson$B!G(Bs reference to people who $B!H(Bprefer to buy
+their music online$B!I(B carries the faint suggestion that refraining from
+theft should be considered a mere preference. And then there is his
+insistence that the relentless downward pressure on prices represents
+an iron law of the digital economy. Why is it a law? Free is just
+another price, and prices are set by individual actors, in accordance
+with the aggregated particulars of marketplace power. $B!H(BInformation
+wants to be free,$B!I(B Anderson tells us, $B!H(Bin the same way that life
+wants to spread and water wants to run downhill.$B!I(B But information can$B!G(B
+t actually want anything, can it? Amazon wants the information in the
+Dallas paper to be free, because that way Amazon makes more money. Why
+are the self-interested motives of powerful companies being elevated
+to a philosophical principle? But we are getting ahead of ourselves.
+
+Anderson$B!G(Bs argument begins with a technological trend. The cost of
+the building blocks of all electronic activity---storage, processing,
+and bandwidth---has fallen so far that it is now approaching
+zero. In 1961, Anderson says, a single transistor was ten dollars. In
+1963, it was five dollars. By 1968, it was one dollar. Today, Intel
+will sell you two billion transistors for eleven hundred
+dollars---meaning that the cost of a single transistor is now
+about .000055 cents.
+
+Anderson$B!G(Bs second point is that when prices hit zero extraordinary
+things happen. Anderson describes an experiment conducted by the
+M.I.T. behavioral economist Dan Ariely, the author of $B!H(BPredictably
+Irrational.$B!I(B Ariely offered a group of subjects a choice between two
+kinds of chocolate---Hershey$B!G(Bs Kisses, for one cent, and Lindt
+truffles, for fifteen cents. Three-quarters of the subjects chose the
+truffles. Then he redid the experiment, reducing the price of both
+chocolates by one cent. The Kisses were now free. What happened? The
+order of preference was reversed. Sixty-nine per cent of the subjects
+chose the Kisses. The price difference between the two chocolates was
+exactly the same, but that magic word $B!H(Bfree$B!I(B has the power to create
+a consumer stampede. Amazon has had the same experience with its offer
+of free shipping for orders over twenty-five dollars. The idea is to
+induce you to buy a second book, if your first book comes in at less
+than the twenty-five-dollar threshold. And that$B!G(Bs exactly what it
+does. In France, however, the offer was mistakenly set at the
+equivalent of twenty cents---and consumers didn$B!G(Bt buy the
+second book. $B!H(BFrom the consumer$B!G(Bs perspective, there is a huge
+difference between cheap and free,$B!I(B Anderson writes. $B!H(BGive a product
+away, and it can go viral. Charge a single cent for it and you$B!G(Bre in
+an entirely different business. . . . The truth is that zero is one
+market and any other price is another.$B!I(B
+
+Since the falling costs of digital technology let you make as much
+stuff as you want, Anderson argues, and the magic of the word $B!H(Bfree$B!I(B 
+creates instant demand among consumers, then Free (Anderson honors it
+with a capital) represents an enormous business opportunity. Companies
+ought to be able to make huge amounts of money $B!H(Baround$B!I(B the thing
+being given away---as Google gives away its search and e-mail
+and makes its money on advertising.
+
+Anderson cautions that this philosophy of embracing the Free involves
+moving from a $B!H(Bscarcity$B!I(B mind-set to an $B!H(Babundance$B!I(B 
+mind-set. Giving something away means that a lot of it will be
+wasted. But because it costs almost nothing to make things, digitally,
+we can afford to be wasteful. The elaborate mechanisms we set up to
+monitor and judge the quality of content are, Anderson thinks,
+artifacts of an era of scarcity: we had to worry about how to allocate
+scarce resources like newsprint and shelf space and broadcast
+time. Not anymore. Look at YouTube, he says, the free video archive
+owned by Google. YouTube lets anyone post a video to its site free,
+and lets anyone watch a video on its site free, and it doesn$B!G(Bt have
+to pass judgment on the quality of the videos it archives. $B!H(BNobody is
+deciding whether a video is good enough to justify the scarce channel
+space it takes, because there is no scarce channel space,$B!I(B he writes,
+and goes on:
+
+
+Distribution is now close enough to free to round down. Today, it
+costs about $0.25 to stream one hour of video to one person. Next
+year, it will be $0.15. A year later it will be less than a
+dime. Which is why YouTube$B!G(Bs founders decided to give it
+away. . . . The result is both messy and runs counter to every
+instinct of a television professional, but this is what abundance both
+requires and demands.
+
+There are four strands of argument here: a technological claim
+(digital infrastructure is effectively Free), a psychological claim
+(consumers love Free), a procedural claim (Free means never having to
+make a judgment), and a commercial claim (the market created by the
+technological Free and the psychological Free can make you a lot of
+money). The only problem is that in the middle of laying out what he
+sees as the new business model of the digital age Anderson is forced
+to admit that one of his main case studies, YouTube, $B!H(Bhas so far
+failed to make any money for Google.$B!I(B
+
+Why is that? Because of the very principles of Free that Anderson so
+energetically celebrates. When you let people upload and download as
+many videos as they want, lots of them will take you up on the
+offer. That$B!G(Bs the magic of Free psychology: an estimated seventy-five
+billion videos will be served up by YouTube this year. Although the
+magic of Free technology means that the cost of serving up each video
+is $B!H(Bclose enough to free to round down,$B!I(B $B!H(Bclose enough to free$B!I(B 
+multiplied by seventy-five billion is still a very large number. A
+recent report by Credit Suisse estimates that YouTube$B!G(Bs bandwidth
+costs in 2009 will be three hundred and sixty million dollars. In the
+case of YouTube, the effects of technological Free and psychological
+Free work against each other.
+
+So how does YouTube bring in revenue? Well, it tries to sell
+advertisements alongside its videos. The problem is that the videos
+attracted by psychological Free---pirated material, cat videos,
+and other forms of user-generated content---are not the sort of
+thing that advertisers want to be associated with. In order to sell
+advertising, YouTube has had to buy the rights to professionally
+produced content, such as television shows and movies. Credit Suisse
+put the cost of those licenses in 2009 at roughly two hundred and
+sixty million dollars. For Anderson, YouTube illustrates the principle
+that Free removes the necessity of aesthetic judgment. (As he puts it,
+YouTube proves that $B!H(Bcrap is in the eye of the beholder.$B!I(B) But, in
+order to make money, YouTube has been obliged to pay for programs that
+aren$B!G(Bt crap. To recap: YouTube is a great example of Free, except
+that Free technology ends up not being Free because of the way
+consumers respond to Free, fatally compromising YouTube$B!G(Bs ability to
+make money around Free, and forcing it to retreat from the $B!H(Babundance
+thinking$B!I(B that lies at the heart of Free. Credit Suisse estimates
+that YouTube will lose close to half a billion dollars this year. If
+it were a bank, it would be eligible for TARP funds.
+
+Anderson begins the second part of his book by quoting Lewis Strauss,
+the former head of the Atomic Energy Commission, who famously
+predicted in the mid-nineteen-fifties that $B!H(Bour children will enjoy
+in their homes electrical energy too cheap to meter.$B!I(B
+
+$B!H(BWhat if Strauss had been right?$B!I(B Anderson wonders, and then
+diligently sorts through the implications: as much fresh water as you
+could want, no reliance on fossil fuels, no global warming, abundant
+agricultural production. Anderson wants to take $B!H(Btoo cheap to meter$B!I(B 
+seriously, because he believes that we are on the cusp of our own 
+$B!H(Btoo cheap to meter$B!I(B revolution with computer processing, storage,
+and bandwidth. But here is the second and broader problem with
+Anderson$B!G(Bs argument: he is asking the wrong question. It is pointless
+to wonder what would have happened if Strauss$B!G(Bs prediction had come
+true while rushing past the reasons that it could not have come true.
+
+Strauss$B!G(Bs optimism was driven by the fuel cost of nuclear
+energy---which was so low compared with its fossil-fuel
+counterparts that he considered it (to borrow Anderson$B!G(Bs phrase)
+close enough to free to round down. Generating and distributing
+electricity, however, requires a vast and expensive infrastructure of
+transmission lines and power plants---and it is this
+infrastructure that accounts for most of the cost of electricity. Fuel
+prices are only a small part of that. As Gordon Dean, Strauss$B!G(Bs
+predecessor at the A.E.C., wrote, $B!H(BEven if coal were mined and
+distributed free to electric generating plants today, the reduction in
+your monthly electricity bill would amount to but twenty per cent, so
+great is the cost of the plant itself and the distribution system.$B!I(B
+
+This is the kind of error that technological utopians make. They
+assume that their particular scientific revolution will wipe away all
+traces of its predecessors---that if you change the fuel you
+change the whole system. Strauss went on to forecast $B!H(Ban age of
+peace,$B!I(B jumping from atoms to human hearts. $B!H(BAs the world of chips
+and glass fibers and wireless waves goes, so goes the rest of the
+world,$B!I(B Kevin Kelly, another Wired visionary, proclaimed at the start
+of his 1998 digital manifesto, $B!H(BNew Rules for the New Economy,$B!I(B 
+offering up the same non sequitur. And now comes Anderson. $B!H(BThe more
+products are made of ideas, rather than stuff, the faster they can get
+cheap,$B!I(B he writes, and we know what$B!G(Bs coming next: $B!H(BHowever, this
+is not limited to digital products.$B!I(B Just look at the pharmaceutical
+industry, he says. Genetic engineering means that drug development is
+poised to follow the same learning curve of the digital world, to 
+$B!H(Baccelerate in performance while it drops in price.$B!I(B
+
+But, like Strauss, he$B!G(Bs forgotten about the plants and the power
+lines. The expensive part of making drugs has never been what happens
+in the laboratory. It$B!G(Bs what happens after the laboratory, like the
+clinical testing, which can take years and cost hundreds of millions
+of dollars. In the pharmaceutical world, what$B!G(Bs more, companies have
+chosen to use the potential of new technology to do something very
+different from their counterparts in Silicon Valley. They$B!G(Bve been
+trying to find a way to serve smaller and smaller markets---to
+create medicines tailored to very specific subpopulations and strains
+of diseases---and smaller markets often mean higher prices. The
+biotechnology company Genzyme spent five hundred million dollars
+developing the drug Myozyme, which is intended for a condition, Pompe
+disease, that afflicts fewer than ten thousand people worldwide. That$B!G(B
+s the quintessential modern drug: a high-tech, targeted remedy that
+took a very long and costly path to market. Myozyme is priced at three
+hundred thousand dollars a year. Genzyme isn$B!G(Bt a mining company: its
+real assets are intellectual property---information, not
+stuff. But, in this case, information does not want to be free. It
+wants to be really, really expensive.
+
+And there$B!G(Bs plenty of other information out there that has chosen to
+run in the opposite direction from Free. The Times gives away its
+content on its Web site. But the Wall Street Journal has found that
+more than a million subscribers are quite happy to pay for the
+privilege of reading online. Broadcast television---the original
+practitioner of Free---is struggling. But premium cable, with
+its stiff monthly charges for specialty content, is doing just
+fine. Apple may soon make more money selling iPhone downloads (ideas)
+than it does from the iPhone itself (stuff). The company could one day
+give away the iPhone to boost downloads; it could give away the
+downloads to boost iPhone sales; or it could continue to do what it
+does now, and charge for both. Who knows? The only iron law here is
+the one too obvious to write a book about, which is that the digital
+age has so transformed the ways in which things are made and sold that
+there are no iron laws.
