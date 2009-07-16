@@ -313,6 +313,8 @@ object Page {
         {Widgets.tabs(
           "Claims Created" -> (() => 
             	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_), Render.claim)),
+          "Claims Deleted" -> (() => 
+                Widgets.pagedList(c.store.nodesUserDeleted("claim",row.int("id"),_), Render.claim)),
           "Pages Marked" -> (() => 
                 Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.markedPage)),
           "Evidence Found" -> (() =>

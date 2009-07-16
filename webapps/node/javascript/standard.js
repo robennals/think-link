@@ -74,6 +74,10 @@ function submitForm(formid,fieldname,fieldval){
 }
 
 function submitNewClaim(){
+	if(document.forms.newsnippet.rel && document.forms.newsnippet.rel.value == "choose..."){
+		alert("you must say whether the evidence supports or opposes the claim");
+		return;
+	}
 	var claimform = document.forms.newclaimform;
 	var snipform = document.forms.newsnippet;
 	snipform.name.value = claimform.name.value;

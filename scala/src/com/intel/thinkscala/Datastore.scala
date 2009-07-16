@@ -51,25 +51,25 @@ object User {
 
 
 abstract class BaseData {
-  def stmt(s : String) = new SqlStatement(con,s)
-  var con = DriverManager.getConnection(
-    "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
-    "thinklink","zofleby")  
+	def stmt(s : String) = new SqlStatement(con,s)
+	implicit val con = DriverManager.getConnection(
+	    "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
+	    "thinklink","zofleby")  
+    
+	val connectdate = new Date getTime 
+	
+	Class.forName("com.mysql.jdbc.Driver")
+	
+	def mkinsert(table : String, fields : String*) = SqlStatement.mkInsert(con,table,fields)
+	
+    val log_recent = stmt("REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)")
+	def logRecent(userid : Int, nodeid : Int) = log_recent.update(userid,nodeid)
 }
 
 
-
-
 class Datastore extends BaseData 
-	with com.intel.thinkscala.data.UserData with Conflicts with data.UrlCache
+	with com.intel.thinkscala.data.UserData with Conflicts with data.UrlCache with data.Nodes with data.Evidence
  {  
-  
-  val connectdate = new Date getTime 
-  
-  Class.forName("com.mysql.jdbc.Driver")
-
-  def mkinsert(table : String, fields : String*) = SqlStatement.mkInsert(con,table,fields)
-
     val get_info = stmt("SELECT v2_node.*, v2_user.name AS username "+
                         "FROM v2_node,v2_user "+
                         "WHERE v2_node.id=? "+
@@ -81,50 +81,10 @@ class Datastore extends BaseData
     get_info.queryOne(id)
   }    
   
-  val get_claim = stmt("SELECT v2_node.*, v2_user.name AS username,ignore_claim.user_id AS ignored "+
-		  				"FROM v2_node "+
-                        "LEFT JOIN ignore_claim ON claim_id = id AND ignore_claim.user_id = ? "+
-                        "LEFT JOIN v2_user ON v2_node.user_id = v2_user.id "+
-                        "WHERE v2_node.id = ?")
-  def getClaim(id : Int, userid : Int) = {
-    if(userid != 0){
-      logRecent(userid,id)
-    }
-    get_claim.queryOne(userid,id)
-  }
   
   val top_users = stmt("SELECT * FROM v2_user WHERE id != 2 ORDER BY snipcount DESC LIMIT 10")
   def topUsers = top_users.queryRows()
-  
-  // == recent stuff ==
     
-  val log_recent = stmt("REPLACE DELAYED INTO v2_history (user_id,node_id,date) VALUES (?,?,CURRENT_TIMESTAMP)")
-  def logRecent(userid : Int, nodeid : Int) = log_recent.update(userid,nodeid)
- 
-  val get_recent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
-                          "WHERE v2_node.id = v2_history.node_id AND type='claim' AND v2_history.user_id = ? "+
-                          "AND v2_node.user_id = v2_user.id "+
-                          "AND v2_node.hidden = false "+
-  						  "ORDER BY date DESC LIMIT 20")
-  def getRecentClaims(userid : Int) = get_recent.queryRows(userid)
-
-  val get_recent_topics = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
-                          "WHERE v2_node.id = v2_history.node_id AND type='topic' AND v2_history.user_id = ? "+
-                          "AND v2_node.user_id = v2_user.id "+
-  						  "ORDER BY date DESC LIMIT 20")
-  def getRecentTopics(userid : Int) = get_recent_topics.queryRows(userid)
-  
-  val recent_linked = stmt("SELECT v2_node.id, v2_node.text, v2_link.id AS linkid "+
-                     "FROM v2_history, v2_node LEFT JOIN v2_link ON "+
-                             "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
-  					 "WHERE v2_node.type = ? "+
-                     "AND v2_node.id != ? "+
-                     "AND v2_history.node_id = v2_node.id "+
-                     "AND v2_history.user_id = ? "+                    		 
-                     "ORDER BY date DESC "+
-                     "LIMIT 20 OFFSET ?") 
-  def recentLinked(linkedto : Int, typ : String, userid : Int, page : Int) = recent_linked.queryRows(linkedto,linkedto,typ,linkedto,userid,page*20)
-  
   // === find marked stuff ===
   
   val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext, v2_user.id AS user_id, v2_user.name AS username "+
@@ -146,52 +106,6 @@ class Datastore extends BaseData
   def userMarkedPages(userid : Int, page : Int) : Seq[SqlRow] = user_marked_pages.queryRows(userid, page * 20)
 
   
-  // === find claims ===
-  
-  // HOT: currently just the most recently accessed stuff
-  val get_hot = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
-                       "WHERE v2_node.id = v2_history.node_id "+
-                       "AND type = 'claim' AND opposed = true "+
-                       "AND v2_user.id = v2_node.user_id "+
-                       "AND v2_node.hidden = false "+
-                       "GROUP BY v2_node.id ORDER BY v2_history.date DESC LIMIT 20")
-  def getHotClaims = get_hot.queryRows()
-  
-  val get_frequent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
-                            "WHERE v2_user.id = v2_node.user_id "+
-                            "AND type=? "+
-                            "AND hidden=false "+
-                            "ORDER BY instance_count DESC LIMIT 20 OFFSET ?") 
-  def getFrequentClaims(page : Int) = get_frequent.queryRows("claim",page*20)
-  def getBigTopics(page : Int) = get_frequent.queryRows("topic",page*10)
-  
-  val search_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
-                     "WHERE type = 'claim' "+                             
-                     "AND v2_user.id = v2_node.user_id "+
-                     "AND MATCH(text) AGAINST(?) "+
-                     "AND v2_node.hidden = false "+
-                     "LIMIT 20 OFFSET ?")
-  def searchClaims(query : String, offset : Int) = search_claims.queryRows(query,offset * 20)
-  
-  val search_linked = stmt("SELECT v2_node.id, v2_node.text, v2_link.id AS linkid "+
-                     "FROM v2_node LEFT JOIN v2_link ON "+
-                             "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
-  					 "WHERE v2_node.type = ? "+
-                     "AND v2_node.id != ? "+
-                     "AND v2_node.hidden = false "+
-  	                 "AND MATCH(text) AGAINST(?) "+
-                     "LIMIT 20 OFFSET ?")    
-  def searchLinked(query : String, typ : String, linkedto : Int, offset : Int) = 
-	  	search_linked.queryRows(linkedto,linkedto,typ,linkedto,query,offset*20)
-  
-  val search_topics = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
-                     "WHERE type = 'topic' "+                             
-                     "AND v2_user.id = v2_node.user_id "+
-                     "AND MATCH(text) AGAINST(?) "+
-                     "AND v2_node.hidden = false "+
-                     "LIMIT 20 OFFSET ?")
-  def searchTopics(query : String, offset : Int) = search_topics.queryRows(query,offset * 20)
-  
   // === add and break links ==
   
   val add_link = stmt("INSERT INTO v2_link (src,dst,type,user_id) VALUES (?,?,'relates to',?)")
@@ -208,25 +122,8 @@ class Datastore extends BaseData
   }
   
                                                                                                                          
-  
   // === Follow links ===
 
-  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username,vote.vote "+                            
-		  "FROM evidence "+
-          "LEFT JOIN v2_user ON v2_user.id = user_id "+
-          "LEFT JOIN vote ON object_id = evidence.id AND type = 'evidence' "+
-          "WHERE claim_id=? AND verb = ? "+ 
-          "LIMIT 20 OFFSET ?")
-//  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username,vote.vote "+
-//                            "FROM evidence, v2_user WHERE claim_id=? AND verb = ? AND v2_user.id = user_id LIMIT 20 OFFSET ?")
-  def evidence(claimid : Int, verb : String, page : Int) = get_evidence.queryRows(claimid,verb,page * 20)
-  
-  val evidence_for_user = stmt("SELECT evidence.*,v2_node.id AS claimid, v2_node.text AS claimtext "+
-                                 "FROM evidence,v2_node "+
-                                 "WHERE evidence.user_id = ? AND claim_id = v2_node.id "+
-                                 "LIMIT 20 OFFSET ?")
-  def evidenceForUser(userid : Int, page : Int) = evidence_for_user.queryRows(userid,page * 20)
-  
   val linked_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.src = v2_node.id "+
                             "AND v2_node.type = ? "+
@@ -238,16 +135,7 @@ class Datastore extends BaseData
   def linkedNodes(typ : String, rel : String, target : Int, offset : Int, limit : Int) = 
     linked_nodes.queryRows(typ,rel,target,limit,offset)
 
-  val topic_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
-                            "WHERE v2_link.src = v2_node.id "+
-                            "AND v2_node.type = 'claim' "+
-                            "AND v2_link.type = 'about' "+
-                            "AND v2_link.dst = ? "+
-                            "AND v2_node.user_id = v2_user.id "+
-                            "ORDER BY instance_count DESC "+
-                            "LIMIT 20 OFFSET ?")
-  def topicClaims(topicid : Int, offset : Int) = topic_claims.queryRows(topicid,offset)                            
-  
+
   val linkedto_nodes = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
                             "WHERE v2_link.dst = v2_node.id "+
                             "AND v2_node.type = ? "+
@@ -293,13 +181,6 @@ class Datastore extends BaseData
   					"LIMIT 20 OFFSET ?")
   def linkedClaims(claim : Int, page : Int) = linked_claims.queryRows(claim,claim,page*20)
     
-  val nodes_by_user = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user "+
-                           "WHERE v2_node.type = ? AND v2_node.user_id = ? "+
-                           "AND v2_node.user_id = v2_user.id "+ 
-                           "ORDER BY instance_count DESC "+
-                           "LIMIT 20 OFFSET ?")
-  def nodesByUser(typ : String, userid : Int, page : Int) : Seq[SqlRow] = nodes_by_user.queryRows(typ,userid,page*20)
-  
   val user_link_count = stmt("SELECT v2_node.*,COUNT(v2_link.src) AS count FROM v2_node,v2_link "+
                                "WHERE v2_link.dst = v2_node.id "+
                                "AND v2_link.user_id = ? "+
@@ -361,23 +242,6 @@ class Datastore extends BaseData
     setSnipVote(row.int("claim_id"),resultid,row.int("search_id"),userid,false)    
   }
   
-  val set_spam_claim = stmt("REPLACE INTO spam_claim (node_id,user_id) VALUES (?,?)")
-  def setSpamClaim(claimid : Int, userid : Int) = set_spam_claim.update(claimid,userid)
-  
-  val ignore_claim = stmt("INSERT INTO ignore_claim (claim_id,user_id) VALUES (?,?)")
-  def ignoreClaim(claimid : Int, userid : Int) = ignore_claim.update(claimid,userid)
-
-  val ignored_claims = stmt("SELECT claim_id FROM ignore_claim WHERE user_id = ?")
-  def ignoredClaims(userid : Int) = ignored_claims.querySeq(userid)
-  
-  val unignore_claim = stmt("DELETE FROM ignore_claim WHERE claim_id = ? AND user_id = ?")
-  def unIgnoreClaim(claimid : Int, userid : Int) = unignore_claim.update(claimid,userid)
-  
-  val set_spam_evidence = stmt("REPLACE INTO spam_evidence (evidence_id,user_id) VALUES (?,?)")
-  def setSpamEvidence(evidenceid : Int, userid : Int) = set_spam_evidence.update(evidenceid,userid)
-  
-  val delete_evidence = stmt("DELETE FROM evidence WHERE id = ? AND user_id = ?")
-  def deleteEvidence(evidenceid : Int, user_id : Int) = delete_evidence.update(evidenceid,user_id)
   
   val set_vote = stmt("REPLACE INTO vote (user_id,object_id,type,vote) VALUES (?,?,?,?)")
   def setVote(user_id : Int, object_id : Int, typ : String, vote : String) = set_vote.update(user_id,object_id,typ,vote)

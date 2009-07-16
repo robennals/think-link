@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer;
 import scala.collection.mutable.HashMap;
 import scala.collection.Map;
 import scala.util.parsing.json.JSON;
+import org.apache.commons.lang.StringEscapeUtils.escapeSql;
 
 case class TruncString(val s : String, val max : Int)
 
@@ -22,6 +23,61 @@ class SqlRow extends HashMap[String,Any]{
     case Some(m : Map[_,_]) => m.asInstanceOf[Map[String,String]] 
     case _ => HashMap()
   } 
+}
+
+object SqlQuery{
+	def select(row : String, from : String) = new SqlSelect(List(row),List(from),List(),List(),None,None)
+	def select(table : String) : SqlSelect = select(table+".*",table)	
+}
+
+class SqlSelect(val cols : List[String], val from : List[String], 
+				val joins : List[String], val wheres : List[String], val orderby : Option[String],val limit : Option[String]){
+	
+	def join(col : String, joinbit : String, arg : Any) = 
+		new SqlSelect(col :: cols, from, fillArg(joinbit,arg) :: joins, wheres, orderby, limit)
+	def join(col : String, joinbit : String) = 
+		new SqlSelect(col :: cols, from, joinbit :: joins, wheres, orderby, limit)
+	
+	def where(wherebit : String, arg : Any) = 
+		new SqlSelect(cols,from,joins,fillArg(wherebit,arg) :: wheres, orderby, limit)
+	def where(wherebit : String) = 
+		new SqlSelect(cols,from,joins,wherebit :: wheres, orderby, limit)
+	
+	def toSql = "SELECT "+cols.mkString(",")+
+				" FROM "+from.mkString(",")+
+				strList(joins," LEFT JOIN "," LEFT JOIN ")+
+				strList(wheres," WHERE "," AND ") + 				
+				maybeStr(orderby) + maybeStr(limit)				
+
+	def orderby(row : String) = new SqlSelect(cols,from,joins,wheres,Some(" ORDER BY "+row+ " "),limit)				
+	def orderdesc(row : String) = new SqlSelect(cols,from,joins,wheres,Some(" ORDER BY "+row+ " DESC "),limit)
+    def paged(page : Int) = new SqlSelect(cols,from,joins,wheres,orderby,Some(" LIMIT 20 OFFSET "+page*20))				
+    def rows(implicit con : Connection) = new SqlStatement(con,toSql).queryRows()				
+    def one(implicit con : Connection) = new SqlStatement(con,toSql).queryOne()
+    
+    private def maybeStr(ostr : Option[String]) = ostr match {
+		case Some(x) => x
+		case None => ""
+	}
+	
+	private def strList(l : Seq[String], prefix : String, sep : String) = 
+		if(l.length == 0) "" else prefix + l.mkString(sep) 
+	
+	def fillArg(str : String, arg : Any) : String = {
+	    val argstr = argAsStr(arg)
+	    return str.replace("?",argstr)
+	}
+	
+	private def argAsStr(arg : Any) : String = arg match {
+		case x : String if x.length > 510 => esc (x.substring(0,510))
+		case x : String => esc(x)
+		case TruncString(s,max) if s.length > max => esc(s.substring(0,max))
+		case TruncString(s,max) => esc(s)
+		case null => "\"\""
+		case x => x.toString
+	}	
+	
+	def esc(s : String) = "'" + escapeSql(s) + "'" 
 }
 
 class SqlStatement(con : Connection, s : String){

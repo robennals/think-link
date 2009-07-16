@@ -40,6 +40,6 @@ object UrlCache {
     writeFile(filename,content)
     }finally{
     }
-    pending.removeKey(url)    
+    pending.remove(url)    
   }    
 }

@@ -29,7 +29,7 @@ object CheckTurkData {
     })
     
     val users = new ArrayBuffer[User]()
-    userResults.keys foreach (userid => {
+    userResults.keysIterator foreach (userid => {
       val total = userResults(userid).length * 10
       var agree = 0
       var disagree = 0
