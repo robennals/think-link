@@ -12,15 +12,21 @@ trait Conflicts extends BaseData {
            "LIMIT 20 OFFSET ?")
   def spamClaims(page : Int) = spam_claims.queryRows(page*20)
   
-  val set_spam = stmt("UPDATE v2_node SET hidden=? WHERE id=?")
+  val set_hidden = stmt("UPDATE v2_node SET hidden=? WHERE id=?")
   val set_spam_done = stmt("UPDATE spam_claim SET state = ? WHERE node_id = ?")
   def yesSpam(nodeid : Int){
-	  set_spam.update(true,nodeid)
+	  set_hidden.update(true,nodeid)
       set_spam_done.update("yes",nodeid)
     }
   def noSpam(nodeid : Int){
-	  set_spam.update(false,nodeid)
+	  set_hidden.update(false,nodeid)
 	  set_spam_done.update("no",nodeid)
    }
+  def setHidden(nodeid : Int){
+      set_hidden.update(true,nodeid)
+  }
+  def setNotHidden(nodeid : Int){
+      set_hidden.update(false,nodeid)
+  }
   
 }

@@ -9,7 +9,7 @@ object Admin {
   val conflicthandlers = List(SpamHandler)
 
   def mkTab(handler : ConflictHandler)(implicit c : ReqContext) =
-    () => Widgets.pagedList(handler.conflicts(_) flatMap renderConflict)
+    () => Widgets.pagedList(handler.conflicts(_), renderConflict)
   
   def renderConflict(conflict : Conflict) = 
     <div class={"conflict togglebox state-"+conflict.state} data-zone="admin" data-id={conflict.id} data-type={conflict.handler.name}>
@@ -69,7 +69,7 @@ object SpamHandler extends ConflictHandler {
   val name = "spam"
   def mkConflict(row : SqlRow) = 
     new SpamConflict(row.int("id"),row.str("text"),row.str("state"),new User(row.str("thatname"),row.int("thatid")), new User(row.str("thisname"),row.int("thisid")))
-  def conflicts(page : Int)(implicit c : ReqContext) = 
+  def conflicts(page : Int)(implicit c : ReqContext) : Seq[Conflict] = 
     c.store.spamClaims(page) map mkConflict
   override def accept(id : String)(implicit c : ReqContext) = c.store.yesSpam(id.toInt) 
   override def reject(id : String)(implicit c : ReqContext) = c.store.noSpam(id.toInt) 

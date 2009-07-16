@@ -52,12 +52,12 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   def getParams : Map[String,String] = {
     val keys : Iterator[String] = new Enum(req.getParameterNames.asInstanceOf[java.util.Enumeration[String]])
     val maps : Iterator[(String,String)] = keys map (key => (key,req.getParameterValues(key)(0)))
-    return HashMap(maps.collect : _*)
+    return HashMap(maps.toSequence : _*)
   }
   
   var minimode = false
   
-  def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.update(key,value))  
+  def modifiedUrl(key : String, value : Any) = mkUrl("/thinklink"+path,params.updated(key,value))  
   
   def modifiedUrl(changes : (String,Any)*) = mkUrl("/thinklink"+path,params ++ changes)
   

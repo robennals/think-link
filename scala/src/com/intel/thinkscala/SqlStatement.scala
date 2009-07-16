@@ -29,7 +29,7 @@ class SqlStatement(con : Connection, s : String){
   
   def queryRows(args : Any*) : Seq[SqlRow] = {
     setArgs(args)
-    readResults(stmt.executeQuery()).toSeq
+    readResults(stmt.executeQuery()).toSequence
   }
   
   def queryMaybe(args : Any*) : Option[SqlRow] = {

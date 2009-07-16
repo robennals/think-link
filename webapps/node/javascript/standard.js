@@ -113,6 +113,12 @@ function unreportSpam(node,id){
 	$.post(url_base+"claim/"+id+"/unsetspam")
 }
 
+function deleteClaim(node,id){  // can only be used by creator or admin
+	$(node).parent().remove();
+	$.post(url_base+"claim/"+id+"/delete")
+	alert("This claim has been deleted.\nTo undelete it, go to the list of deleted claims in your profile"); 
+}
+
 function reportSpamEvidence(node,id){
 	$(node).parent().append($("<span>reported as spam</span>"))
 	$(node).remove()

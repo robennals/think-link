@@ -10,10 +10,10 @@ object Widgets {
     <a class={"action-"+action} href={"/thinklink/api/action?id="+row("id")}>{name}</a>
 
   
-  def tabs(options : (String,() => NodeSeq)*)(implicit c : ReqContext) : NodeSeq = {
+  def tabs(options : (String,() => Seq[Node])*)(implicit c : ReqContext) : NodeSeq = {
     var selected = c.arg("tab")
     if(selected == null){
-    	selected = options.first._1
+    	selected = options.head._1
     }
     return {
 		<div class="tabs">
@@ -36,7 +36,7 @@ object Widgets {
   def ajaxTabs(options : (String,NodeSeq)*) = 
      <div class="tabs">
         <div class="header">                
-            {options.first match {
+            {options.head match {
 		      case (name,_) => <span>{name}</span>
             }}
             {options.drop(1) flatMap {
@@ -104,7 +104,18 @@ object Widgets {
      	{content(current)}
      	{pageSelector(c.argIntDflt("page",0),"selectorbottom")}
      </div>)
-     }
+   }
+   
+   def pagedList[A](itemfun : Int => Seq[A], renderer : A => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
+     val current = c.argIntDflt("page",0)
+     val items = itemfun(current)
+     val nodes = items flatMap renderer
+     (<div class="pager">
+     	{pageSelector(c.argIntDflt("page",0),"selectortop")}
+     	{nodes}
+     	{pageSelector(c.argIntDflt("page",0),"selectorbottom")}
+     </div>)
+   }
    
    def pagedList2(content : Int => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
      val current = c.argIntDflt("page2",0)
@@ -113,6 +124,19 @@ object Widgets {
      	{content(current)}
      	{pageSelector2(c.argIntDflt("page2",0),"selectorbottom")}
      </div>)
-     }
+   }
+   
+   def pagedList2[A](itemfun : Int => Seq[A], renderer : A => NodeSeq)(implicit c : ReqContext) : NodeSeq = {
+     val current = c.argIntDflt("page2",0)
+     val items = itemfun(current)
+     val nodes = items flatMap renderer
+     (<div class="pager">
+     	{pageSelector(c.argIntDflt("page2",0),"selectortop")}
+     	{nodes}
+     	{pageSelector(c.argIntDflt("page2",0),"selectorbottom")}
+     </div>)
+   }
 
+
+   
 }

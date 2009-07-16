@@ -3,6 +3,7 @@ import java.util.regex._;
 import javax.servlet.http._;
 import java.io._;
 import java.net._;
+import java.net.URL;
 import com.intel.thinklink._;
 import com.intel.thinkscala.Util._;
 import scala.xml.NodeSeq;
@@ -78,7 +79,7 @@ object SnipSearch {
   
   def searchYahoo(claim : String) : Seq[SnipUrlRes] = {
     val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
-    val parser = ConstructingParser.fromSource(Source fromURL url,false)
+    val parser = ConstructingParser.fromSource(Source fromURL (new URL(url)),false)
     val doc = parser.document   
     val results = doc \\ "result"
     val futures = results map (x => future(snipForResult(x)))

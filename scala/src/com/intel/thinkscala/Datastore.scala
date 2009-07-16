@@ -61,7 +61,7 @@ abstract class BaseData {
 
 
 class Datastore extends BaseData 
-	with com.intel.thinkscala.data.UserData with Conflicts
+	with com.intel.thinkscala.data.UserData with Conflicts with data.UrlCache
  {  
   
   val connectdate = new Date getTime 
@@ -143,7 +143,7 @@ class Datastore extends BaseData
                                    "AND v2_searchresult.user_id = ? "+
                                    "AND v2_searchresult.state = 'true' "+
                                    "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
-  def userMarkedPages(userid : Int, page : Int) = user_marked_pages.queryRows(userid, page * 20)
+  def userMarkedPages(userid : Int, page : Int) : Seq[SqlRow] = user_marked_pages.queryRows(userid, page * 20)
 
   
   // === find claims ===
@@ -298,7 +298,7 @@ class Datastore extends BaseData
                            "AND v2_node.user_id = v2_user.id "+ 
                            "ORDER BY instance_count DESC "+
                            "LIMIT 20 OFFSET ?")
-  def nodesByUser(typ : String, userid : Int, page : Int) = nodes_by_user.queryRows(typ,userid,page*20)
+  def nodesByUser(typ : String, userid : Int, page : Int) : Seq[SqlRow] = nodes_by_user.queryRows(typ,userid,page*20)
   
   val user_link_count = stmt("SELECT v2_node.*,COUNT(v2_link.src) AS count FROM v2_node,v2_link "+
                                "WHERE v2_link.dst = v2_node.id "+

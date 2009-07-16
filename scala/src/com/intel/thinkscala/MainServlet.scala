@@ -181,6 +181,13 @@ class MainServlet extends HttpServlet {
       val claimid = c.urlInt(1)
       c.store.setSpamClaim(claimid,c.userid)
     }),
+    UrlHandler("/claim/(\\d*)/delete", c => {
+      val claimid = c.urlInt(1)
+	  val claim = c.store.getClaim(claimid, c.userid)
+	  if(c.user.isadmin || c.user.userid == claim("userid")){
+		  c.store.setHidden(claimid)
+	  } 
+    }),
     UrlHandler("/claim/(\\d*)/ignore", c => {
       val claimid = c.urlInt(1)
       c.store.ignoreClaim(claimid,c.userid)

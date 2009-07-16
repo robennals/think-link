@@ -10,7 +10,13 @@ object Render {
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"created by")}
       - <a href={Urls.findsnippets(row("id"))} class="instances">seen <span class="count">{row("instance_count")}</span> times on the web</a>  
-      - <a onclick={"reportSpam(this,"+row("id")+")"}>report spam</a>       
+      - 
+      {if(c.user.userid == row.int("user_id")){
+           <a onclick={"deleteClaim(this,"+row("id")+")"}>delete</a> 
+      	}else{
+           <a onclick={"reportSpam(this,"+row("id")+")"}>report spam</a>
+        }
+      }
 <!--      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
       - <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
 -->

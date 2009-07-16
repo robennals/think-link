@@ -34,19 +34,19 @@ object Page {
       <div id="claimlist">
         {Widgets.tabs(
           "Hot Claims" -> (() => 
-            	Widgets.pagedList(c.store.getFrequentClaims(_).toSeq flatMap Render.claim)),
+            	Widgets.pagedList(c.store.getFrequentClaims(_), Render.claim)),
           "Hot Topics" -> (() => 
-                Widgets.pagedList(c.store.getBigTopics(_).toSeq flatMap Render.topic)),
+                Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
           "Recently Marked Pages" -> (() => 
-                Widgets.pagedList(c.store.recentMarkedPages(_).toSeq flatMap Render.markedPage)),
+                Widgets.pagedList(c.store.recentMarkedPages(_), Render.markedPage)),
           "Top Users" -> (() =>
-            	c.store.topUsers flatMap Render.user)
+            	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
         )}
       </div>
   </div>
       
   def searchResults(implicit query : String, page : Int, c : ReqContext) =
-     c.store.searchClaims(query,page).toSeq flatMap Render.claim
+     c.store.searchClaims(query,page).toSequence flatMap Render.claim
    
   def search(implicit c : ReqContext) = 
     <div class="content">
@@ -60,7 +60,7 @@ object Page {
       </div>
       <div id="claimlist">
         <h2>Claims matching "{c.arg("query")}"</h2>
-        {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_).toSeq flatMap Render.claim)}
+        {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_), Render.claim)}
       </div>
     </div>
   
@@ -94,12 +94,12 @@ object Page {
 	        <div id='claimlist'>
 
             <h2>Claims matching "{query}"</h2>           
-             {Widgets.pagedList(c.store.searchLinked(query,"claim",row.int("id"),_).toSeq flatMap Render.claimlink)}
+             {Widgets.pagedList(c.store.searchLinked(query,"claim",row.int("id"),_), Render.claimlink)}
 	         </div>),
 	      "Recent Claims" -> (() => 
   	        <div id='claimlist'>
             <h2>Recent Claims</h2>
-             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"claim",c.userid,_).toSeq flatMap Render.claimlink)}
+             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"claim",c.userid,_), Render.claimlink)}
 	         </div>),
           "Create a New Claim" -> (() =>
              Page.newClaim(c,query)
@@ -133,12 +133,12 @@ object Page {
 		  </form>   
 	        <div id='claimlist'>
             <h2>Topics matching "{query}"</h2>
-             {Widgets.pagedList(c.store.searchLinked(query,"topic",row.int("id"),_).toSeq flatMap Render.nodelink)}
+             {Widgets.pagedList(c.store.searchLinked(query,"topic",row.int("id"),_), Render.nodelink)}
 	         </div>),
 	      "Recent Topics" -> (() => 
   	        <div id='claimlist'>
             <h2>Recent Topics</h2>
-             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"topic",c.userid,_).toSeq flatMap Render.nodelink)}
+             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"topic",c.userid,_), Render.nodelink)}
              </div>),
           "Create a New Topic" -> (() =>
              Page.newTopic(c,query)
@@ -199,19 +199,19 @@ object Page {
           "Opposition" -> (() => 
               (<div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_).toSeq flatMap Render.evidence)}
+            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
               </div>
               <div id='opposing-claims'>
                 <h2>Opposing Claims</h2>
-                {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.miniclaim)}
+                {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
                 <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
               </div>
           )),
           "Support" -> (() => 
   	  	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_).toSeq flatMap Render.evidence)}
+               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
           "Marked Pages" -> (() => 
@@ -220,7 +220,7 @@ object Page {
                  <input type="hidden" id="data-claim" value={""+row("id")}/>
                 <h2>Places this claim is made on the web</h2>
                 <div class='searchcontent'>
-                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_).toSeq flatMap Render.markedSnippet)}
+                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_), Render.markedSnippet)}
                 </div>
                 <a class='add' href={Urls.findsnippets(row.int("id"))}>find snippets making this claim</a>
               </div>
@@ -282,7 +282,7 @@ object Page {
     	  <div id="searchlist">
 		    <h2>Snippets marked with the Firefox extension</h2>
             <div class='searchcontent'>
-		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_).toSeq flatMap Render.markedSnippet)}
+		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.markedSnippet)}
             </div>
   	      </div>
        }}
@@ -295,7 +295,7 @@ object Page {
       <div id="claimlist">
          <div id="related-claims">
          <h2>Claims about this topic</h2>
-         {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_).toSeq flatMap Render.claim)}
+         {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_), Render.claim)}
          <a class='add' href={Urls.addlinks(row.int("id"),"topic","claim")}>add claims to this topic</a>                  
          </div>
       </div>
@@ -312,11 +312,11 @@ object Page {
      <div id="claimlist">
         {Widgets.tabs(
           "Claims Created" -> (() => 
-            	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_).toSeq flatMap Render.claim)),
+            	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_), Render.claim)),
           "Pages Marked" -> (() => 
-                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_).toSeq flatMap Render.markedPage)),
+                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.markedPage)),
           "Evidence Found" -> (() =>
-            	Widgets.pagedList(c.store.evidenceForUser(row.int("id"),_).toSeq flatMap Render.userEvidence))
+            	Widgets.pagedList(c.store.evidenceForUser(row.int("id"),_), Render.userEvidence))
         )}
       </div>
 

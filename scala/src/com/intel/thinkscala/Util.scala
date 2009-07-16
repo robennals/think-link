@@ -23,6 +23,11 @@ object Util {
  def mkUrl(path : String, args : Map[String,Any]) = 
     path + (args map {case (key,value) => key + "=" + encode(com.intel.thinklink.Util.toUTF8(value.toString))}).mkString("?","&","")  
 
+ def writeFile(filename : String, content : String) = {
+   val writer = new FileWriter(filename)
+   writer.write(content)
+   writer.close()
+ }
  
  def readToString(reader : BufferedReader) : String = {
    val buf = new StringBuffer("");
@@ -43,8 +48,10 @@ object Util {
    return str;
  }	
  
+ def readFile(filename : String) : String = readToString(new BufferedReader(new FileReader(filename)))
+ 
  def getXML(url : String){
-   val parser = ConstructingParser.fromSource(Source.fromURL(url),false);
+   val parser = ConstructingParser.fromSource(Source.fromURL(new URL(url)),false);
    return parser.document();
  }
 
@@ -152,7 +159,7 @@ object Util {
   
    
   def parseCsvRows(filename : String) : ArrayBuffer[ArrayBuffer[String]] = {
-    val source = Source.fromFile(filename)
+    val source = Source.fromFile(new java.io.File(filename))
     val lines = new ArrayBuffer[ArrayBuffer[String]]   
     var inquote = false
     var curline = new ArrayBuffer[String]
@@ -189,7 +196,7 @@ object Util {
   }
   
   def parseCsvFile2(filename : String) : ArrayBuffer[Map[String,String]] = {
-    val source = Source.fromFile(filename)
+    val source = Source.fromFile(new java.io.File(filename))
     val lines = source.getLines
     val header = Util.parseCsvLine(lines.next)
     val result = new ArrayBuffer[Map[String,String]]()
