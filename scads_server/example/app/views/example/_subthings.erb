@@ -1,5 +1,0 @@
-<ul>
-	<% @thing.sub_things.each do |st| %>
-	<li><%= st[:name] %> <%= link_to_remote 'remove', :update => 'subthings', :url => {:action => 'remove_subthing', :subthing_id => st, :thing_id => @thing}%></li>
-	<% end %>
-</ul>
