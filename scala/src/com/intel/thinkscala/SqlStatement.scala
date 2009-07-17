@@ -13,6 +13,8 @@ import scala.collection.Map;
 import scala.util.parsing.json.JSON;
 import org.apache.commons.lang.StringEscapeUtils.escapeSql;
 
+class BadSql(val sql : String, val message : String) extends Exception(sql + " - " + message)
+
 case class TruncString(val s : String, val max : Int)
 
 class SqlRow extends HashMap[String,Any]{
@@ -33,26 +35,38 @@ object SqlQuery{
 class SqlSelect(val cols : List[String], val from : List[String], 
 				val joins : List[String], val wheres : List[String], val orderby : Option[String],val limit : Option[String]){
 	
-	def join(col : String, joinbit : String, arg : Any) = 
-		new SqlSelect(col :: cols, from, fillArg(joinbit,arg) :: joins, wheres, orderby, limit)
-	def join(col : String, joinbit : String) = 
-		new SqlSelect(col :: cols, from, joinbit :: joins, wheres, orderby, limit)
+	def leftjoin(col : String, joinbit : String, arg : Any) = 
+		new SqlSelect(col :: cols, from, " LEFT JOIN "+fillArg(joinbit,arg) :: joins, wheres, orderby, limit)
+	def leftjoin(col : String, joinbit : String) = 
+		new SqlSelect(col :: cols, from, " LEFT JOIN "+joinbit :: joins, wheres, orderby, limit)
+	def innerjoin(col : String, joinbit : String, arg : Any) = 
+		new SqlSelect(col :: cols, from, " INNER JOIN "+fillArg(joinbit,arg) :: joins, wheres, orderby, limit)
+	def innerjoin(col : String, joinbit : String) = 
+		new SqlSelect(col :: cols, from, " INNER JOIN "+joinbit :: joins, wheres, orderby, limit)
+
 	
 	def where(wherebit : String, arg : Any) = 
 		new SqlSelect(cols,from,joins,fillArg(wherebit,arg) :: wheres, orderby, limit)
 	def where(wherebit : String) = 
 		new SqlSelect(cols,from,joins,wherebit :: wheres, orderby, limit)
 	
-	def toSql = "SELECT "+cols.mkString(",")+
-				" FROM "+from.mkString(",")+
-				strList(joins," LEFT JOIN "," LEFT JOIN ")+
+	def toSql = "SELECT "+cols.reverse.mkString(",")+
+				" FROM "+from.reverse.mkString(",")+
+				joins.reverse.mkString(" ")+
 				strList(wheres," WHERE "," AND ") + 				
 				maybeStr(orderby) + maybeStr(limit)				
 
 	def orderby(row : String) = new SqlSelect(cols,from,joins,wheres,Some(" ORDER BY "+row+ " "),limit)				
 	def orderdesc(row : String) = new SqlSelect(cols,from,joins,wheres,Some(" ORDER BY "+row+ " DESC "),limit)
     def paged(page : Int) = new SqlSelect(cols,from,joins,wheres,orderby,Some(" LIMIT 20 OFFSET "+page*20))				
-    def rows(implicit con : Connection) = new SqlStatement(con,toSql).queryRows()				
+    def rows(implicit con : Connection) = {
+		val sql = toSql
+		try{
+			new SqlStatement(con,sql).queryRows()
+		}catch{
+			case e : Exception => throw new BadSql(sql,e.getMessage)
+		}
+	}
     def one(implicit con : Connection) = new SqlStatement(con,toSql).queryOne()
     
     private def maybeStr(ostr : Option[String]) = ostr match {

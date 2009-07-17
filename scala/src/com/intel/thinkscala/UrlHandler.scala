@@ -221,9 +221,11 @@ object UrlHandler{
     try{
        innerRunHandler(store,handlers,req,res);
     } catch {
-      case e : Exception => 
+      case e : Exception =>         
         e.printStackTrace() 
         val w = res.getWriter
+        w.println("message: "+e.getMessage())
+        w.println("cause: "+e.getCause())
         e.printStackTrace(w)
         w.close
     }

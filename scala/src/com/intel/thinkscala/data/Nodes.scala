@@ -4,15 +4,9 @@ import com.intel.thinkscala.SqlQuery._
 
 trait Nodes extends BaseData {
 	  // === find claims ===
-	  
-	
-//	 def getNodes(typ : String, topic : Option[Int], search : Option[String], user : Option[Int]) = {
-//		 val basic = "SELECT v2_node.*, v2_user.name AS username, v2_user.id AS userid FROM v2_node, "
-//		 
-//	 }	
 		
 	val v2_node = select("v2_node")
-	val nodes =	v2_node join ("v2_user.name AS username","v2_user ON v2_node.user_id = v2_user.id")
+	val nodes =	v2_node leftjoin ("v2_user.name AS username","v2_user ON v2_node.user_id = v2_user.id")
 	def typnodes(typ : String, page : Int) = nodes where ("v2_node.type = ?",typ) where ("hidden = false") paged (page)
 	def usernodes(typ : String, userid : Int, page : Int) = typnodes(typ,page) where ("user_id = ?",userid)
 	def claims(page : Int) = typnodes("claim",page) 
@@ -22,7 +16,7 @@ trait Nodes extends BaseData {
 		if(userid != 0){
 			logRecent(userid,id)
 		}
-		nodes join ("ignore_claim.user_id AS ignored","ignore_claim ON claim_id = v2_node.id AND ignore_claim.user_id = ?",userid) where ("v2_node.id = ?",id) one
+		nodes leftjoin ("ignore_claim.user_id AS ignored","ignore_claim ON claim_id = v2_node.id AND ignore_claim.user_id = ?",userid) where ("v2_node.id = ?",id) one
 	}
 	
 	  def nodesByUser(typ : String, userid : Int, page : Int) =
@@ -38,34 +32,25 @@ trait Nodes extends BaseData {
 	  def searchClaims(query : String, page : Int) = claims(page) where ("MATCH(text) AGAINST(?)",query) rows
 	  
 	  def searchLinked(query : String, typ : String, linkedto : Int, page : Int) = 
-		  typnodes(typ,page) where ("v2_node.id != ?",linkedto) where ("MATCH(text) AGAINST(?)",query) join ("v2_link.id AS linkid",
+		  typnodes(typ,page) where ("v2_node.id != ?",linkedto) where ("MATCH(text) AGAINST(?)",query) leftjoin ("v2_link.id AS linkid",
 				  "v2_link ON ((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id))",linkedto) rows
 	  	  
 	  def searchTopics(query : String, page : Int) = topics(page) where ("MATCH(text) AGAINST(?)")
-		
-	  val get_recent = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
-              "WHERE v2_node.id = v2_history.node_id AND type='claim' AND v2_history.user_id = ? "+
-              "AND v2_node.user_id = v2_user.id "+
-              "AND v2_node.hidden = false "+
-				  "ORDER BY date DESC LIMIT 20")
-	def getRecentClaims(userid : Int) = get_recent.queryRows(userid)
 	  
-	val get_recent_topics = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_history,v2_user "+
-	              "WHERE v2_node.id = v2_history.node_id AND type='topic' AND v2_history.user_id = ? "+
-	              "AND v2_node.user_id = v2_user.id "+
-					  "ORDER BY date DESC LIMIT 20")
-	def getRecentTopics(userid : Int) = get_recent_topics.queryRows(userid)
-	
-	val recent_linked = stmt("SELECT v2_node.id, v2_node.text, v2_link.id AS linkid "+
-	         "FROM v2_history, v2_node LEFT JOIN v2_link ON "+
-	                 "((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id)) "+
-				 "WHERE v2_node.type = ? "+
-	         "AND v2_node.id != ? "+
-	         "AND v2_history.node_id = v2_node.id "+
-	         "AND v2_history.user_id = ? "+                    		 
-	         "ORDER BY date DESC "+
-	         "LIMIT 20 OFFSET ?") 
-	def recentLinked(linkedto : Int, typ : String, userid : Int, page : Int) = recent_linked.queryRows(linkedto,linkedto,typ,linkedto,userid,page*20)
+	  def getRecentNodes(userid : Int, typ : String) = 
+		  	typnodes(typ,0) innerjoin ("v2_history.date AS hdate","v2_history ON v2_history.node_id = v2_node.id AND v2_history.user_id = ?",userid) orderdesc ("date") rows
+
+	  def getRecentClaims(userid : Int) = getRecentNodes(userid, "claim")
+	  def getRecentTopics(userid : Int) = getRecentNodes(userid, "topic")
+		  		  		
+	def recentLinked(linkedto : Int, typ : String, userid : Int, page : Int) = 
+		select("v2_history.date","v2_history").leftjoin("v2_node.*","v2_node ON v2_node.id = v2_history.node_id")
+			.leftjoin ("v2_link.id AS linkid","v2_link ON ((src = ? AND dst = v2_node.id) OR (dst = ? AND src = v2_node.id))",linkedto)
+			.orderdesc("v2_history.date")
+			.where("v2_node.type = ?",typ)
+			.where("v2_history.user_id = ?",userid)
+			.paged(page)
+			.rows
 	
     val topic_claims = stmt("SELECT v2_node.*,v2_user.name AS username FROM v2_node,v2_user,v2_link "+
               "WHERE v2_link.src = v2_node.id "+
