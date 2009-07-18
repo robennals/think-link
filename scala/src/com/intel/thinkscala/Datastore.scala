@@ -68,7 +68,8 @@ abstract class BaseData {
 
 
 class Datastore extends BaseData 
-	with com.intel.thinkscala.data.UserData with Conflicts with data.UrlCache with data.Nodes with data.Evidence
+	with com.intel.thinkscala.data.UserData with Conflicts with data.UrlCache with data.Nodes 
+	with data.Evidence with data.Snippets
  {  
     val get_info = stmt("SELECT v2_node.*, v2_user.name AS username "+
                         "FROM v2_node,v2_user "+

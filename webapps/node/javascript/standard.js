@@ -118,9 +118,11 @@ function unreportSpam(node,id){
 }
 
 function deleteClaim(node,id){  // can only be used by creator or admin
-	$(node).parent().remove();
-	$.post(url_base+"claim/"+id+"/delete")
-	alert("This claim has been deleted.\nTo undelete it, go to the list of deleted claims in your profile"); 
+	if(confirm("Are you sure you want to delete this claim? This action cannot be undone.")){
+		$(node).parent().remove();
+		$.post(url_base+"claim/"+id+"/delete")
+	}
+	//alert("This claim has been deleted.\nTo undelete it, go to the list of deleted claims in your profile"); 
 }
 
 function reportSpamEvidence(node,id){
