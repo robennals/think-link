@@ -1,6 +1,7 @@
 package com.intel.thinkscala.view
 import scala.xml._
 import com.intel.thinkscala.learn.Learner
+import scala.collection.mutable.ArrayBuffer
 
 object Render {
   import Widgets._
@@ -159,38 +160,67 @@ object Render {
     </div>
 
     // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl, position : Int,query : String, claimid : Int,classifier : Learner)(implicit c : ReqContext) = 
+  def bossUrl(bu : BossUrl, searchid : Int, position : Int,query : String, claimid : Int,classifier : Learner)(implicit c : ReqContext) = {
+	val urlid = c.store.mkUrl(bu.url,bu.title)
     <div class="bossurl">
     <span class="title">{bu.title}</span>
-    <a href={bu.url}>{bu.url}</a>
+    <a class='url' href={bu.url}>{bu.url}</a>
     <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu,position,query,claimid,classifier))}
+      {bu.snips flatMap (s => bossSnip(s,bu,searchid,urlid,position,query,claimid,classifier))}
     </div>
     </div>
+  }
+   
+  def splitSentences(text : String) : ArrayBuffer[String] = {
+    val outarr = new ArrayBuffer[String]
+	var outstr = new StringBuffer
+	text foreach {c =>
+	    outstr append c
+		if(c == '.' || c == '!' || c == '?' || c == '\n'){
+			outarr += outstr.toString
+			outstr = new StringBuffer
+		}
+	}
+    outarr
+  }
     
-  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
-    val (mode,userrow) = c.store.existingSnippet(bu.url,claimid,snip) match {
-      case Some(row) if(row("state") == "true") => ("added",row)
-      case Some(row) if(row("state") == "false") => ("ignored",row)
-      case _ => ("undecided",null)
+  def selectableSentences(text : String, picktext : String) = {
+	val sentences = splitSentences(text)
+//    val sentences = text.split("[\\.\\,\\!\\?]")
+    sentences.map {x => 
+    	<span class='clicksentence' style={if(x == picktext) "background-color: yellow" else ""}>{x}</span>
     }
-    <div class={"snippet snippet-"+mode}>
+  }
+    
+  def bossSnip(snip : String, bu : BossUrl, searchid : Int, urlid : Int, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
+    val roboscore = (classifier.classify(snip) * 100).toInt 
+    val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
+    val row = c.store.getSnippet(resultid)
+    val mode = row("state") match {
+    	case "true" => "yes"
+    	case "false" => "no"
+    	case _ => "undecided"
+    }
+    <div class={"snippet togglebox state-"+mode}>
+    	<div class="boxcontent snippettext"><div class="text">{selectableSentences(snip,row.str("picktext"))}</div></div>
        <input type="hidden" class="position" value={""+position}/>
-       <div class="text">{snip}</div>
+       <input type="hidden" class="resultid" value={""+row("id")}/>
        {if(c.user.realuser){
-       <a class="add" onclick="doAdd(this)">{if(mode == "added") "marked" else "mark"}</a>
-       <a class="ignore" onclick="doIgnore(this)">{if(mode == "ignored") "ignored" else "ignore"}</a>
+       <div class="yesnobox">
+       <a class="yes" onclick="doAdd(this)">yes</a>
+       <a class="no" onclick="doIgnore(this)">no</a>
+       </div>
         }else{
         	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
         }
        }
-       {if(userrow != null){
-         userref(userrow.int("user_id"), userrow.str("username"), "by") 
+       {if(row != null){
+         userref(row.int("user_id"), row.str("username"), "by") 
         }else{          
         }
-       }
-       <div class='robotscore'>
-       {(classifier.classify(snip) * 100).toInt+"%"}
+       }       
+       <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
+       {roboscore+"%"}
        </div>
     </div>    
     }
@@ -198,7 +228,8 @@ object Render {
   def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
       val bossUrls = SnipSearch.searchBoss(query,page,10)   
       val classifier = Learner.getClassifier(c.store,claimid,query)
-      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query,claimid,classifier))}</div>
+      val searchid = c.store.mkSearch(claimid,query)
+      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>
   }
   
   def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 

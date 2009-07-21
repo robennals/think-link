@@ -25,18 +25,18 @@ function onInput(textbox,callback){
 
 
 function doAdd(obj){
-	$(obj).text("marked")
+	//$(obj).text("marked")
 	var snip = $(obj).parent();
-	snip.find(".ignore").text("ignore")
+	//snip.find(".ignore").text("ignore")
 	snip.addClass("snippet-added")
 	snip.removeClass("snippet-ignored")
 	setSnipStatus(snip,true)
 }
 
 function doIgnore(obj){
-	$(obj).text("ignored")
+	//$(obj).text("ignored")
 	var snip = $(obj).parent()
-	snip.find(".add").text("mark")
+	//snip.find(".add").text("mark")
 	snip.addClass("snippet-ignored")
 	snip.removeClass("snippet-added")
 	setSnipStatus(snip,false)
@@ -198,6 +198,17 @@ window.onload = function(){
 		box.addClass("state-no");
 		box.removeClass("state-yes");
 		setToggle(box,"no");
+	})
+	$(".clicksentence").click(function(e){
+		var target = $(e.target);
+		var box = target.parents(".snippettext");
+		var snippet = target.parents(".snippet");
+		var snipid = snippet.find(".resultid").val();
+		snippet.addClass("state-yes");
+		snippet.removeClass("state-no");
+		box.find(".clicksentence").css("background-color","");
+		target.css("background-color","yellow");
+		$.post(url_base+"snippet/"+snipid+"/sethighlight",{highlight:target.text()});
 	})
 }
 

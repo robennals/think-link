@@ -131,7 +131,7 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	// P(makes-claim * has-features) / P(has-features)
 	// P(makes-claim) * P(has-features | makes-claim) / P(has-features)
 	// propyes * pfeaturesyes / pfeatures
-	def classify4(text : String) : Double = {
+	def classify(text : String) : Double = {
 		val features = getFeatures(text.split("\\s"))
 		val pclaim = countyes/(countyes + countno)
 		var cfeatures = 0
@@ -184,7 +184,7 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	}
 	
 	// total hack
-	def classify(text : String) : Double = {
+	def classify4(text : String) : Double = {
 		val features = getFeatures(text.split("\\s"))
 		val totalcount = countyes + countno		
 		var pfeaturesno = 1.0 : Double

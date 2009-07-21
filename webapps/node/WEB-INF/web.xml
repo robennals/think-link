@@ -113,6 +113,11 @@
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>
+	<url-pattern>/snippet/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
 	<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 

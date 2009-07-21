@@ -219,14 +219,14 @@ class Datastore extends BaseData
                     "(SELECT user_id FROM v2_searchvote WHERE result_id = v2_searchresult.id ORDER BY date DESC LIMIT 1) "+
                  "WHERE id = ?")
                                    
-  val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, search_id, user_id, vote) "+
-                             "VALUES (?,?,?,?)")
+  val set_snip_vote = stmt("REPLACE INTO v2_searchvote (result_id, user_id, vote) "+
+                             "VALUES (?,?,?)")
   val set_snip_state = stmt("UPDATE v2_searchresult SET state = ? WHERE id=?")
   val set_user_snip_count = stmt("UPDATE v2_user SET snipcount = "+
                                    "(SELECT COUNT(result_id) FROM v2_searchvote WHERE vote=true AND user_id = v2_user.id) "+
   									"WHERE id = ?")
-  def setSnipVote(claimid : Int, resultid : Int, searchid : Int, userid : Int, vote : Boolean) = {
-    set_snip_vote.update(resultid,searchid,userid,vote)
+  def setSnipVote(resultid : Int, userid : Int, vote : Boolean) = {
+    set_snip_vote.update(resultid,userid,vote)
     set_snip_state.update(""+vote,resultid)
     if(vote){
       set_user_snip_count.update(userid)
@@ -234,13 +234,12 @@ class Datastore extends BaseData
     }else{
       update_snip_user_false.update(resultid)
     }
-    updateSearchCounts(claimid, searchid)
   }
   
   val get_search_result = stmt("SELECT * FROM v2_searchresult WHERE id = ?")
   def reportBadSnip(resultid : Int, userid : Int) = {
     val row = get_search_result.queryOne(resultid)
-    setSnipVote(row.int("claim_id"),resultid,row.int("search_id"),userid,false)    
+    setSnipVote(resultid,userid,false)    
   }
   
   
@@ -272,17 +271,21 @@ class Datastore extends BaseData
                                 		   "WHERE type='topic' AND id = ?")
   def updateTopicCount(id : Int) = update_topic_count.update(id)
 
-  
-  val existing_snippet = stmt("SELECT state,user_id,v2_user.name AS username "+
-                                "FROM v2_searchresult,v2_searchurl,v2_user "+
-                                "WHERE v2_searchurl.id = v2_searchresult.url_id "+
-                                "AND v2_searchurl.url = ? "+
-                                "AND v2_searchresult.claim_id = ? "+
-                                "AND v2_user.id = v2_searchresult.user_id "+
-                                "AND v2_searchresult.abstract = ?")
-  def existingSnippet(url : String, claimid : Int, abstr : String) = 
-    existing_snippet.queryMaybe(url,claimid,abstr)  
-  
+//  val get_snippet = stmt("SELECT state,user_id,v2_user.name AS username "+
+//                                "FROM v2_searchresult,v2_searchurl,v2_user "+
+//                                "WHERE v2_searchurl.id = v2_searchresult.url_id "+
+//                                "AND v2_searchurl.url = ? "+
+//                                "AND v2_searchresult.claim_id = ? "+
+//                                "AND v2_user.id = v2_searchresult.user_id "+
+//                                "AND v2_searchresult.abstract = ?")
+//                              
+//  def getSnippet(url : String, claimid : Int, abstr : String) = 
+//    existing_snippet.queryMaybe(url,claimid,abstr) match {
+//    	case Some(row) => Some(row)
+//    	case None => 
+//    }
+//  
+    
   val found_snippets = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
                               "FROM v2_searchresult,v2_searchurl,v2_user "+
                               "WHERE claim_id = ? AND search_id = 0 AND url_id = v2_searchurl.id "+

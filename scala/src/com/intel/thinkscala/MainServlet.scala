@@ -150,7 +150,7 @@ class MainServlet extends HttpServlet {
 	  if(disputed){
 	  	val urlid = c.store.mkUrl(url,title)
 	  	val resultid = c.store.mkResult(0,urlid,0,text,"",claimid)
-	  	c.store.setSnipVote(claimid,resultid,0,c.userid,true)
+	  	c.store.setSnipVote(resultid,c.userid,true)
         c.outputMiniHtml(Mini.marked(claimid))
 	  }else{
 	    c.store.makeEvidence(c.userid,claimid,text,url,title,rel)
@@ -176,6 +176,11 @@ class MainServlet extends HttpServlet {
         c.store.addLink(claimid,c.argInt("addto"),c.userid)
       }
       c.redirect(Urls.topic(claimid))
+    }),
+    UrlHandler("/snippet/(\\d*)/sethighlight", c => {
+    	val resultid = c.urlInt(1)
+    	c.store.setSnipHighlight(resultid,c.arg("highlight"))
+    	c.store.setSnipVote(resultid,c.userid,true)
     }),
     UrlHandler("/claim/(\\d*)/setspam", c => {
       val claimid = c.urlInt(1)
@@ -227,7 +232,9 @@ class MainServlet extends HttpServlet {
       }
       val urlid = c.store.mkUrl(url,title)
       val resultid = c.store.mkResult(searchid,urlid,position,text,"",claimid)
-      c.store.setSnipVote(claimid,resultid,searchid,c.userid,vote == "true")
+      c.store.setSnipVote(resultid,c.userid,vote == "true")
+      c.store.updateSearchCounts(claimid, searchid)
+
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     }),
     UrlHandler("/claim/(\\d*)/addevidence", c => {
@@ -258,7 +265,7 @@ class MainServlet extends HttpServlet {
     	  val searchid = c.store.mkSearch(claimid,c.arg("query-"+i))
     	  val urlid = c.store.mkUrl(c.arg("url-"+i),c.arg("title-"+i))
     	  val resultid = c.store.mkResult(searchid,urlid,c.argInt("position-"+i),c.arg("text-"+i),"",claimid)
-    	  c.store.setSnipVote(claimid,resultid,searchid,User.turk.userid,true)
+    	  c.store.setSnipVote(resultid,User.turk.userid,true)
     	  i+=1
       }
 

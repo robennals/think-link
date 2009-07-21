@@ -51,7 +51,7 @@ h1 a {
 
 #findsnippets {
 	margin-left: 240px;
-	max-width: 450px;
+	max-width: 550px;
 }
 
 h1 {
@@ -488,8 +488,25 @@ h2 {
 	background-color: white;
 }
 
+/*
 .searchcontent .snippet {
 	background-color: #E0ECFF;
+}
+*/
+
+.bossurl .title {
+	margin-left: 100px;
+}
+
+.bossurl .url {
+	margin-left: 100px;
+}
+
+.snippettext {
+	overflow-y: scroll;
+	border: 1px solid black;
+	width: 375px;
+	height: 80px;
 }
 
 .snippet {
@@ -497,8 +514,26 @@ h2 {
 	margin-top: 4px;
 }
 
+.clicksentence{
+	cursor: pointer;
+}
+.clicksentence:hover {
+	background-color: lightgrey;
+}
+
 .snippet .text {
-	width: 300px;
+	width: 350px;
+	padding: 4px;
+}
+
+.snippet .boxcontent {
+	margin-left: 70px;
+}
+
+.snippet .yesnobox {
+	position: absolute;
+	top: 10px;
+	left: 4px;
 }
 
 .snippet .add {
@@ -528,16 +563,39 @@ h2 {
 	top: 5px;
 }
 
+.roboscore-yes, .roboscore-no, .roboscore-maybe {
+	position: absolute;
+	top: 30px;
+}
+
+.roboscore-yes {
+	left: 4px;
+}
+.roboscore-no {
+	left: 40px;
+}
+.roboscore-maybe {
+	left: 25px;
+}
+
 .searchcontent .snippet-added {
+/*
 	opacity: 0.5;
+*/
+/*
 	background-color: #FFD3D3;
+*/
 /*
 	background-color: #E0FFEC;
 */
 }
 .searchcontent .snippet-ignored {
+/*
 	opacity: 0.5;
+*/
+/*
 	background-color: #CCCCCC;	
+*/
 
 /*
 	background-color: #E0FFEC;
@@ -909,13 +967,19 @@ img {
 	color: white;
 }
 
-.state-no {
+.state-no .boxcontent {
 	opacity: 0.3;
 }
 
-.state-yes {
+/*
+.state-yes .boxcontent {
 	background-color: yellow;
 }
+
+.state-yes .boxcontent:hover{
+	background-color: 
+}
+*/
 
 .yes {
 }

@@ -53,7 +53,7 @@ object StoreTurkResults {
 	    val searchid = store.mkSearch(claimid,query)
 	    val urlid = store.mkUrl(url,title)
 	    val resultid = store.mkResult(searchid,urlid,-1,snip,"",claimid)
-	    store.setSnipVote(claimid,resultid,searchid,User.turk.userid,vote == "yes")
+	    store.setSnipVote(resultid,User.turk.userid,vote == "yes")
       }
       prevrow = row
     })    
