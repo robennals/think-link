@@ -91,13 +91,14 @@ class PrefixTree extends HashMap[String,WordInfo] {
 	
 }
 
-class SimpleLearner  {
-	val tree = new PrefixTree
+class SimpleLearner(val maxlength : Int) extends Learner {
+	var tree = null : PrefixTree
 	var probyes = 0.0
 	var countyes = 0 : Double
 	var countno = 0 : Double
 	
-	def train(yes : Seq[String], no : Seq[String], maxlength : Int){
+	def train(yes : Seq[String], no : Seq[String]){
+		tree = new PrefixTree
 		val yeswords = yes map (_.split("\\s"))
 		val nowords = no map (_.split("\\s"))
 		countyes = yes.length
@@ -122,25 +123,83 @@ class SimpleLearner  {
 	
 	var yes = null : Seq[String]
 	var no = null : Seq[String]
-	
-	def trainForClaim(store : Datastore,claimid : Int, maxlength : Int){
-		yes = store.snippetText(claimid,"true").map(_.str("abstract"))
-        no = store.snippetText(claimid,"false").map(_.str("abstract"))        
-		train(yes,no,maxlength)
-	}
-	
-	// Want P(makes-claim | has-features)
+		
+	// P(A|B) = P(B|A)*P(A)/P(B)  - bayes theorem
+	// P(claim | features) = P(features | claim)*P(claim)/P(features)
+	                    
+    // Want P(makes-claim | has-features)
 	// P(makes-claim * has-features) / P(has-features)
 	// P(makes-claim) * P(has-features | makes-claim) / P(has-features)
 	// propyes * pfeaturesyes / pfeatures
+	def classify4(text : String) : Double = {
+		val features = getFeatures(text.split("\\s"))
+		val pclaim = countyes/(countyes + countno)
+		var cfeatures = 0
+		var cfeaturesclaim = 0
+		features foreach {info =>
+			cfeatures += info.yescount + info.nocount
+			cfeaturesclaim += info.yescount
+		}
+		if(features.isEmpty){
+			return pclaim			
+		}else{
+			return (cfeaturesclaim+0.0)/cfeatures
+		}
+	}
+	def classify2(text : String) : Double = {
+		val features = getFeatures(text.split("\\s"))
+		val pclaim = countyes/(countyes + countno)
+		var pfeatures = 1.0 : Double
+		var pfeaturesclaim = 1.0 : Double
+		features foreach {info =>
+			pfeaturesclaim *= (info.yescount + 1) / (countyes + 1)
+		    pfeatures *= (info.yescount+info.nocount+1) / (countno+countyes+1)
+		}
+		if(features.isEmpty){
+			return pclaim
+		}else{
+			pclaim * pfeaturesclaim / pfeatures
+		}
+	}
+	def classify3(text : String) : Double = {
+		val features = getFeatures(text.split("\\s"))
+		val totalcount = countyes + countno
+		val pyes = countyes/totalcount
+		val pno = 1-pyes
+		var pfeatures = 1.0 : Double
+		var pfeaturesyes = 1.0 : Double
+		features foreach {info =>
+		    if(info.yescount == 0){
+		    	pfeaturesyes *= (1/totalcount)
+		    }else{
+		    	pfeaturesyes *= info.yescount / countyes
+		    }
+		    pfeatures *= (info.yescount + info.nocount) / totalcount 
+		}
+		if(features.isEmpty){
+			return pyes
+		}else{
+			pyes * pfeaturesyes / pfeatures
+		}
+	}
+	
+	// total hack
 	def classify(text : String) : Double = {
 		val features = getFeatures(text.split("\\s"))
-		val pmakesclaim = countyes/(countyes + countno)
+		val totalcount = countyes + countno		
 		var pfeaturesno = 1.0 : Double
 		var pfeaturesyes = 1.0 : Double
 		features foreach {info =>
-			pfeaturesyes *= (info.yescount + 1) / countyes
-		    pfeaturesno *= (info.nocount+1) / countno
+			if(info.yescount == 0){
+				pfeaturesyes *= (1/totalcount)
+			}else{
+				pfeaturesyes *= info.yescount / countyes
+			}
+			if(info.nocount == 0){
+				pfeaturesno *= (1/totalcount)
+			}else{
+				pfeaturesno *= info.nocount / countno
+			}
 		}
 		if(features.isEmpty){
 			return countyes / (countyes + countno)
@@ -148,6 +207,21 @@ class SimpleLearner  {
 			pfeaturesyes / (pfeaturesyes + pfeaturesno)
 		}
 	}
+			
+			
+			
+//		var pfeaturesno = 1.0 : Double
+//		var pfeaturesyes = 1.0 : Double
+//		features foreach {info =>
+//			pfeaturesyes *= (info.yescount + 1) / countyes
+//		    pfeaturesno *= (info.nocount+1) / countno
+//		}
+//		if(features.isEmpty){
+//			return countyes / (countyes + countno)
+//		}else{
+//			pfeaturesyes / (pfeaturesyes + pfeaturesno)
+//		}
+//	}
 	
 	def testClassify(data : Seq[String], classifier : String => Double) = {
 		var included = 0;

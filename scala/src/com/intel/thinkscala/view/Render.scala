@@ -1,5 +1,6 @@
 package com.intel.thinkscala.view
 import scala.xml._
+import com.intel.thinkscala.learn.Learner
 
 object Render {
   import Widgets._
@@ -152,22 +153,22 @@ object Render {
     <div class="query">
     <a href={Urls.findsnippets(claimid,row.str("searchtext"))}>{row("searchtext")}</a>
     <div class="score">
-    <span class="yes">{row("marked_yes")} marked</span>
-    <span class="no">{row("marked_no")} ignored</span>
+    <span class="markedyes">{row("marked_yes")} marked</span>
+    <span class="markedno">{row("marked_no")} ignored</span>
     </div>
     </div>
 
     // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl, position : Int,query : String, claimid : Int)(implicit c : ReqContext) = 
+  def bossUrl(bu : BossUrl, position : Int,query : String, claimid : Int,classifier : Learner)(implicit c : ReqContext) = 
     <div class="bossurl">
     <span class="title">{bu.title}</span>
     <a href={bu.url}>{bu.url}</a>
     <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu,position,query,claimid))}
+      {bu.snips flatMap (s => bossSnip(s,bu,position,query,claimid,classifier))}
     </div>
     </div>
     
-  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String, claimid : Int)(implicit c : ReqContext) = {
+  def bossSnip(snip : String, bu : BossUrl, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
     val (mode,userrow) = c.store.existingSnippet(bu.url,claimid,snip) match {
       case Some(row) if(row("state") == "true") => ("added",row)
       case Some(row) if(row("state") == "false") => ("ignored",row)
@@ -188,12 +189,16 @@ object Render {
         }else{          
         }
        }
+       <div class='robotscore'>
+       {(classifier.classify(snip) * 100).toInt+"%"}
+       </div>
     </div>    
     }
   
   def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
-      val bossUrls = SnipSearch.searchBoss(query,page,10)      
-      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query,claimid))}</div>
+      val bossUrls = SnipSearch.searchBoss(query,page,10)   
+      val classifier = Learner.getClassifier(c.store,claimid,query)
+      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,_,query,claimid,classifier))}</div>
   }
   
   def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 

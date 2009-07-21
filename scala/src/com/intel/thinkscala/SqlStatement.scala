@@ -67,7 +67,12 @@ class SqlSelect(val cols : List[String], val from : List[String],
 			case e : Exception => throw new BadSql(sql,e.getMessage)
 		}
 	}
-    def one(implicit con : Connection) = new SqlStatement(con,toSql).queryOne()
+    def one(implicit con : Connection) = new SqlStatement(con,toSql).queryOne()    
+    def maybe(implicit con : Connection) = new SqlStatement(con,toSql).queryMaybe()
+    def maybeInt(col : String)(implicit con : Connection) : Option[Int] = maybe match {
+		case Some(row) => Some(row.int(col))
+		case None => None
+	}
     
     private def maybeStr(ostr : Option[String]) = ostr match {
 		case Some(x) => x

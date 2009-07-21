@@ -248,10 +248,10 @@ class Datastore extends BaseData
   def setVote(user_id : Int, object_id : Int, typ : String, vote : String) = set_vote.update(user_id,object_id,typ,vote)
   
   val update_search_counts = stmt("UPDATE v2_snipsearch SET "+
-                                    "marked_yes = (SELECT COUNT(result_id) FROM v2_searchvote "+
-                                        "WHERE search_id = v2_snipsearch.id AND vote=1), "+ 
-                                    "marked_no = (SELECT COUNT(result_id) FROM v2_searchvote "+
-                                        "WHERE search_id = v2_snipsearch.id AND vote=0) " +
+                                    "marked_yes = (SELECT COUNT(id) FROM v2_searchresult "+
+                                        "WHERE search_id = v2_snipsearch.id AND state='true'), "+ 
+                                    "marked_no = (SELECT COUNT(id) FROM v2_searchresult "+
+                                        "WHERE search_id = v2_snipsearch.id AND state='false') " +
                                     "WHERE v2_snipsearch.id = ?")
   val update_instance_count = stmt("UPDATE v2_node SET instance_count = "+
                                      "(SELECT COUNT(*) FROM v2_searchresult WHERE claim_id = v2_node.id AND state = 'true') "+
