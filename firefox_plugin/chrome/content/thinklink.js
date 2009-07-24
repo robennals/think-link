@@ -29,6 +29,14 @@ function thinklink_msg(msg){
 
 function thinklink_new_snippet(isdisputed){
 	var text = content.document.getSelection();
+	if(!text){
+		alert("You might first select some text that makes the disputed claim");
+		return;
+	}
+	if(content.document.location.href.indexOf("disputefinder") != -1){
+		alert("This feature should be applied to external web sites, not to the dispute finder site");
+		return;
+	}
 	var apipath = get_api_path();
 	viewFrame(apipath+"/mini/newsnippet?text="+encodeURIComponent(text)+
 		"&url="+encodeURIComponent(content.document.location.href)+

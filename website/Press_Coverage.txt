@@ -3,6 +3,20 @@
 Several of these articles are also syndicated by other publications.
 
 
+=== Sacramento Bee - Intel Project seeks to mark disputed web information ===
+
+Nicholas Diakopoulos - July 18th, 2009
+
+The Sacramento Bee had an article on Dispute Finder.
+
+<blockquote>
+Now imagine if, while you surfed the Web, you had a thousand little Conrad Jungs in your computer, whispering, "Hey, watch out, that might not be true." That's what Dispute Finder promises.
+</blockquote>
+
+<a href='http://www.sacbee.com/tech/story/2035868.html'>http://www.sacbee.com/tech/story/2035868.html</a>
+
+
+
 === San Francisco Chronicle - Crap Detection 101 ===
 
 Howard Rheingold - June 30th, 2009

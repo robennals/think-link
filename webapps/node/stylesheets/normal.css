@@ -566,16 +566,21 @@ h2 {
 .roboscore-yes, .roboscore-no, .roboscore-maybe {
 	position: absolute;
 	top: 30px;
+	background-image: url(/images/robot.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 16px;
+	
 }
 
 .roboscore-yes {
-	left: 4px;
+	left: -10px;
 }
 .roboscore-no {
-	left: 40px;
+	left: 24px;
 }
 .roboscore-maybe {
-	left: 25px;
+	left: 10px;
 }
 
 .searchcontent .snippet-added {

@@ -29,10 +29,10 @@ function filter_snippets(snippets){
 }
 
 function mark_snippets(doc){
+	thinklink_msg("mark snippets : "+doc.location.href);
 	var targeturl = doc.location.href;
 	var apipath = get_api_path();
 	var url = apipath+"/apianon/search.json?url="+encodeURIComponent(targeturl);	
-//	ajaxRequest(url,function(snippets){
     snippetsForUrl(targeturl,function(snippets){
 		snippets = filter_snippets(snippets);
 		global_marked = [];
@@ -41,16 +41,19 @@ function mark_snippets(doc){
 			var frags = snip.text.split(/[\.\n\?\!]/)
 			for(var j = 0; j < frags.length; j++){
 				if(frags[j].length > 10){
-					mark_snippet(normalise(frags[j]),snip.claimid,snip.id,snip.claimtext,doc.body);			
+					mark_snippet(frags[j],normalise(frags[j]),snip.claimid,snip.id,snip.claimtext,doc.body);			
 				}
 			}
 		}
 		if(snippets.length > 0){
 			if(global_marked.length > 0){
+//				thinklink_msg("highlight : "+doc.location.href);
 				highlightMessage(global_marked,doc);
 			}else{
-				// TODO: cope better when can't find disputed claim
-				claimMessage(snippets[0].claimtext,snippets[0].claimid,snippets[0].snipid,doc);
+				//// TODO: cope better when can't find disputed claim
+				// UPDATE: do nothing, as this can be annoying and we can't unmark
+				thinklink_msg("claimMessage : "+doc.location.href+" - "+snippets[0].text);				
+				//claimMessage(snippets[0].claimtext,snippets[0].claimid,snippets[0].snipid,doc);
 			}
 		}
 		doc.thinklink_marked = global_marked;
@@ -59,6 +62,8 @@ function mark_snippets(doc){
 
 function update_highlights(){
 	var marked = content.document.thinklink_marked;
+	content.document.disputefinder_done = true;
+
 	if(marked){
 		for(var i = 0; i < marked.length; i++){
 			unmark_snippet(marked[i]);
@@ -142,19 +147,24 @@ function unmark_snippet(node){
 	node.style.cursor = "";
 	node.setAttribute("title","");
 	node.removeEventListener("click",showClaimPopup,true);
+	if(node.className == "disputefinder_highlight"){
+		node.className = "";
+	}
 }
 
-function mark_snippet(text,claimid,snipid,claimtext,node){
+function mark_snippet(realtext,text,claimid,snipid,claimtext,node){
 	if(isIgnored(claimid)) return;
-	if(node.nodeName == "#comment" || normalise(node.textContent).indexOf(text) == -1){
+	var nodetext = node.textContent;
+	if(node.nodeName == "#comment" || normalise(nodetext).indexOf(text) == -1){
 		return;					
 	}	
+	if(node.tagName == "SPAN" && node.getAttribute("class") == "disputefinder_highlight") return;
 	if(node.nodeName != "#text" && node.childNodes){
 		var insub = false;
 		for(var i = 0; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
 			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
-				mark_snippet(text,claimid,snipid,claimtext,child);
+				mark_snippet(realtext,text,claimid,snipid,claimtext,child);
 				insub = true;
 //				return;
 			}
@@ -164,9 +174,30 @@ function mark_snippet(text,claimid,snipid,claimtext,node){
 		return;
 	}
 	if(node.nodeName == "#text"){
-		node = node.parentNode;
+		var splitted = splitText(nodetext,text);
+//		var start = nodetext.indexOf(realtext);
+	//	if(start != -1 && node.tagName != "PRE"){   // only works if match exactly
+		if(splitted != false && node.tagName != "PRE"){
+			var pre = splitted.pre;
+			var post = splitted.post;
+		
+			//var pre = nodetext.substring(0,start)
+			//var post = nodetext.substring(start+realtext.length)
+			var span = content.document.createElement("span");
+			// span.appendChild(content.document.createTextNode(realtext));
+			span.appendChild(content.document.createTextNode(splitted.snip));
+			span.setAttribute("class","disputefinder_highlight");
+			node.parentNode.insertBefore(content.document.createTextNode(pre),node);
+			node.parentNode.insertBefore(span,node);
+			node.parentNode.insertBefore(content.document.createTextNode(post),node);
+			node.parentNode.removeChild(node);
+//			return;
+			node = span;
+		}else{
+			node = node.parentNode;
+		}
 	}
-	
+
 	node.style.backgroundColor = "#FFD3D3";
 	node.style.cursor = "pointer";
 	node.setAttribute("title","disputed: "+claimtext);
@@ -174,6 +205,37 @@ function mark_snippet(text,claimid,snipid,claimtext,node){
     node.setAttribute("thinklink_snipid",snipid);				
 	node.addEventListener("click",showClaimPopup,true);
 	global_marked.push(node);
+}
+
+/* find where the snippet starts and ends in the nodetext */
+function splitText(nodetext,sniptext){
+	var start = nodetext.indexOf(sniptext);
+	if(start != -1){
+		return {pre: nodetext.substring(0,start), post: nodetext.substring(start+sniptext.length), snip:sniptext}		
+	}
+	
+	var nodetext_n = normalise(nodetext)
+	var sniptext_n = normalise(sniptext)
+	
+	var ni = 0;	
+	for(var nni = 0; nni < nodetext_n.length; nni++){
+		while(nodetext_n[nni] != nodetext[ni]) ni++;
+		
+		var pad = 0;
+		for(var sni = 0; sni < sniptext_n.length; sni++){
+			while(nodetext_n[nni+sni] != nodetext[ni+sni+pad]) pad++;
+			if(sniptext_n[sni] != nodetext_n[nni+sni]) break;
+			if(sni == sniptext_n.length - 1){
+				return {
+					pre: nodetext.substring(0,ni),
+					post: nodetext.substring(ni+sni+pad+1),
+					snip: nodetext.substring(ni,sni+ni+pad+1),
+					sni: sni
+				}
+			}	
+		}
+	}
+	return false;
 }
 
 function showClaimPopup(ev){
@@ -485,7 +547,11 @@ function snippetsForUrl(url,callback){
 			snippetsForUrl(url,callback);
 		})
 	}else if(cache[domaincrc] && cache[domaincrc][urlcrc]){
-		callback(cache[domaincrc][urlcrc]);
+		try{
+			callback(cache[domaincrc][urlcrc]);
+		}catch(e){
+			thinklink_error("exception in marker",e.message);
+		}
 	}else{
 		callback([]);
 	}	
