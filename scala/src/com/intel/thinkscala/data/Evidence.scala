@@ -4,12 +4,14 @@ trait Evidence extends BaseData {
 	  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username,vote.vote "+                            
 			  "FROM evidence "+
 	          "LEFT JOIN v2_user ON v2_user.id = user_id "+
-	          "LEFT JOIN vote ON object_id = evidence.id AND type = 'evidence' "+
+	          "LEFT JOIN vote ON object_id = evidence.id AND type = 'evidence' AND vote.user_id = ? "+
 	          "WHERE claim_id=? AND verb = ? "+ 
-	          "LIMIT 20 OFFSET ?")
+	          "LIMIT ? OFFSET ?")
 	//  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username,vote.vote "+
 //	                            "FROM evidence, v2_user WHERE claim_id=? AND verb = ? AND v2_user.id = user_id LIMIT 20 OFFSET ?")
-	  def evidence(claimid : Int, verb : String, page : Int) = get_evidence.queryRows(claimid,verb,page * 20)
+	  def evidence(claimid : Int, verb : String, userid : Int, page : Int) = get_evidence.queryRows(userid,claimid,verb,20,page * 20)
+	  def evidence_one(claimid : Int, verb : String, userid : Int) = get_evidence.queryRows(userid,claimid,verb,1,0)
+
 	  
 	  val evidence_for_user = stmt("SELECT evidence.*,v2_node.id AS claimid, v2_node.text AS claimtext "+
 	                                 "FROM evidence,v2_node "+

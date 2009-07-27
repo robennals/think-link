@@ -21,14 +21,14 @@ object Mini {
           "Opposing Evidence" -> (() =>
 	  	      <div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-	            {c.store.evidence(row.int("id"),"opposes",0) flatMap Render.evidence}
+	            {c.store.evidence_one(row.int("id"),"opposes",c.user.userid) flatMap Render.evidence}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
 		      </div>
             ),
           "Supporting Evidence" -> (() =>
 	   	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-	            {c.store.evidence(row.int("id"),"supports",0) flatMap Render.evidence}
+	            {c.store.evidence_one(row.int("id"),"supports",c.user.userid) flatMap Render.evidence}
 	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
 		      </div>
             ))

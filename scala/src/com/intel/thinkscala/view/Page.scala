@@ -199,7 +199,7 @@ object Page {
           "Opposition" -> (() => 
               (<div class='evidence' id="opposed">
 		        <h2>Opposing Evidence</h2>
-            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",_), Render.evidence)}
+            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",c.user.userid,_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
               </div>
               <div id='opposing-claims'>
@@ -211,7 +211,7 @@ object Page {
           "Support" -> (() => 
   	  	      <div class='evidence' id="supports">
 		        <h2>Supporting Evidence</h2>
-               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",_), Render.evidence)}
+               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",c.user.userid,_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
           "Marked Pages" -> (() => 
