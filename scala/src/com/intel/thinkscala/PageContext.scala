@@ -16,23 +16,33 @@ object PageContext {
 		  case Some(row : SqlRow) => Some(row.str("text"))
 		  case None if pending.isDefinedAt(url) => None   // already fetching this one
 		  case None => {
-			  pending(url) = future(startFetchingUrl(url,resultid,abstr, store)); None
+			  pending(url) = future(fetchUrl(url,resultid,abstr)); None
 		  }
 	  }
   }
 	
   val pending = new HashMap[String,Any]  // currently loading
-      
-  def startFetchingUrl(url : String, resultid : Int, abstr : String, store : Datastore){
-    val id = store.addUrlFile(url)   
+
+  def backgroundFetchSnippet(row : SqlRow){
+	  val url = row.str("url")
+	  if(!pending.isDefinedAt(url)){
+		  pending(url) = future(fetchUrl(url,row.int("id"),row.str("abstract")))
+	  }
+  }
+                            
+  def fetchUrl(url : String, resultid : Int, abstr : String){
+    var store : Datastore = null
     try{
-	    val fullpage = SnipSearch.htmlToString(download(url))	    
+	    val fullpage = SnipSearch.htmlToString(download(url))	   
+	    store = Pool.get
 	    SnipSearch.findSnipContext(fullpage,abstr,2000) match {
 	    	case Some(text) => store.setPageText(resultid,text)
 	    	case None => store.setPageText(resultid,"")
 	    }
     }finally{
+    	// TODO: set pagetext to NULL to avoid repeated fetches
         pending.remove(url)    
+        Pool.release(store)
     }
-  }    
+  }
 }

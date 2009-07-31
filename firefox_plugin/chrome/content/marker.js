@@ -152,8 +152,33 @@ function unmark_snippet(node){
 	}
 }
 
-function mark_snippet(realtext,text,claimid,snipid,claimtext,node){
+function joinNormStrings(arr){
+	var buf = ""
+	for(var i = 0; i < arr.length; i++){
+		buf+=arr[i]+" ";
+	}
+	return buf;
+}
+
+function divideSnip(parent,realtext){
+	var words = realtext.split(/\s+/)
+	for(var i = 1; i < words.length; i++){
+		var first = joinNormStrings(words.slice(0,words.length - i))
+		var second = joinNormStrings(words.slice(words.length - i,words.length))
+		var foundfirst = false
+		for(var j = 0; j < parent.childNodes.length; j++){
+			var child = parent.childNodes[j];
+			if(child.tagName != "SCRIPT" && child.textContent && normalise(child.textContent).indexOf(normalise(first)) != -1){
+				return {first: first, second: second, node: child, index: j}
+			}
+		}		
+	}
+	return null;
+}
+
+function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 	if(isIgnored(claimid)) return;
+	if(!childoff) childoff = 0
 	var nodetext = node.textContent;
 	if(node.nodeName == "#comment" || normalise(nodetext).indexOf(text) == -1){
 		return;					
@@ -161,14 +186,21 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node){
 	if(node.tagName == "SPAN" && node.getAttribute("class") == "disputefinder_highlight") return;
 	if(node.nodeName != "#text" && node.childNodes){
 		var insub = false;
-		for(var i = 0; i < node.childNodes.length; i++){
+		for(var i = childoff; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
 			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
 				mark_snippet(realtext,text,claimid,snipid,claimtext,child);
 				insub = true;
-//				return;
 			}
 		}		
+		if(!insub && node.nodeName != "#text"){
+			var divided = divideSnip(node,realtext)			
+			if(divided){
+				mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
+				mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
+			}
+			return;
+		}
 	}
 	if(insub){
 		return;

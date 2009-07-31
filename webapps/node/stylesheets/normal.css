@@ -992,3 +992,13 @@ img {
 .no {
 }
 
+.more {
+	margin-left: 10px;
+	margin-right: 10px;
+	color: gray;
+	cursor: pointer;
+}
+
+.more:hover {
+	color: black;
+}

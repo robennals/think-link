@@ -12,6 +12,7 @@ import scala.collection.mutable.HashMap;
 import scala.collection.Map;
 import scala.util.parsing.json.JSON;
 import org.apache.commons.lang.StringEscapeUtils.escapeSql;
+import util.Timer.time
 
 class BadSql(val sql : String, val message : String) extends Exception(sql + " - " + message)
 
@@ -104,12 +105,12 @@ class SqlStatement(con : Connection, s : String){
   
   def queryRows(args : Any*) : Seq[SqlRow] = {
     setArgs(args)
-    readResults(stmt.executeQuery()).toSequence
+    time("SQL",readResults(stmt.executeQuery()).toSequence)
   }
   
   def queryMaybe(args : Any*) : Option[SqlRow] = {
     setArgs(args)
-    readOneResult(stmt.executeQuery);
+    time("SQL",readOneResult(stmt.executeQuery));
   }
 
   def queryOne(args : Any*) : SqlRow = {

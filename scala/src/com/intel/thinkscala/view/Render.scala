@@ -2,6 +2,7 @@ package com.intel.thinkscala.view
 import scala.xml._
 import com.intel.thinkscala.learn.Learner
 import scala.collection.mutable.ArrayBuffer
+import util.Timer.time
 
 object Render {
   import Widgets._
@@ -176,11 +177,14 @@ object Render {
 	var outstr = new StringBuffer
 	text foreach {c =>
 	    outstr append c
-		if(c == '.' || c == '!' || c == '?' || c == '\n'){
+		if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == '"' || c == ';'){
 			outarr += outstr.toString
 			outstr = new StringBuffer
 		}
 	}
+    if(outstr.length > 0){
+    	outarr += outstr.toString
+    }
     outarr
   }
     
@@ -191,8 +195,55 @@ object Render {
     	<span class='clicksentence' style={if(x == picktext) "background-color: yellow" else ""}>{x}</span>
     }
   }
-    
-  def bossSnip(snip : String, bu : BossUrl, searchid : Int, urlid : Int, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
+
+  def snipVoteMode(state : String) = state match {
+	  case "true" => "yes"
+	  case "false" => "no"
+	  case _ => "undecided"
+  }
+  
+  def snippet(row: SqlRow, classifier: Learner)(implicit c : ReqContext) = {
+    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
+    val mode = snipVoteMode(row.str("state"))
+    if(row("pagetext") == null){
+    	PageContext.backgroundFetchSnippet(row)
+    }
+    <div class={"snippet togglebox state-"+mode}>
+	<div class="boxcontent snippettext">
+		<div class="text">
+		    <span class="more">...load more...</span>
+			{selectableSentences(row.str("abstract"),row.str("picktext"))}
+			<span class="more">...load more...</span>
+		</div></div>
+		<div class='pagetext'>{row("pagetext")}</div>
+	   <input type="hidden" class="resultid" value={""+row("id")}/>
+	   {if(c.user.realuser){
+		   <div class="yesnobox">
+		   <a class="yes" onclick="doAdd(this)">yes</a>
+		   <a class="no" onclick="doIgnore(this)">no</a>
+		   </div>
+	    }else{
+	    	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
+	    }
+	   }
+	   {if(row != null){
+	     userref(row.int("user_id"), row.str("username"), "by") 
+	    }else{          
+	    }
+	   }       
+	   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
+	   {roboscore+"%"}
+	   </div>
+	</div>     
+  }
+  
+  def bossSnip(snip: String, bu : BossUrl, searchid : Int, urlid : Int, position: Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
+    val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
+    val row = c.store.getSnippet(resultid)
+    snippet(row,classifier)
+  }
+  
+  def bossSnip2(snip : String, bu : BossUrl, searchid : Int, urlid : Int, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
     val roboscore = (classifier.classify(snip) * 100).toInt 
     val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
     val row = c.store.getSnippet(resultid)
@@ -226,8 +277,8 @@ object Render {
     }
   
   def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
-      val bossUrls = SnipSearch.searchBoss(query,page,10)   
-      val classifier = Learner.getClassifier(c.store,claimid,query)
+      val bossUrls = time("Yahoo BOSS",SnipSearch.searchBoss(query,page,10))   
+      val classifier = time("train classifier",Learner.getClassifier(c.store,claimid,query))
       val searchid = c.store.mkSearch(claimid,query)
       return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>
   }

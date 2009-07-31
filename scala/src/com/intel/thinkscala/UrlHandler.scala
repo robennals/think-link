@@ -178,7 +178,7 @@ class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext 
         val c = new ReqContext(store,m,req,res,path)
         try{
           if(c.ishtml || datafunc == null){
-        	  func(c)
+        	  util.Timer.time("URL Request",func(c))
           }else if(datafunc != null){
         	  c.output(datafunc(c))
           }

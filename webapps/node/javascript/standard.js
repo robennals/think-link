@@ -42,16 +42,12 @@ function doIgnore(obj){
 	setSnipStatus(snip,false)
 }
 
-function setSnipStatus(snip,vote){
-	var query = $("#data-query").val();
-	var claim = $("#data-claim").val();
-	var text = snip.find(".text").text();
-	var bossurl = snip.parents(".bossurl");
-	var url = bossurl.find("a").attr("href");
-	var title = bossurl.find(".title").text();
-	var position = bossurl.find(".position").val();
-	$.post(url_base+"claim/"+claim+"/setsnippet",
-		{query: query, text: text, url: url,title: title, vote: vote, position: position}, 
+function setSnipStatus(button,vote){
+	var snippet = button.parents(".snippet")
+	var resultid = snippet.find(".resultid").val();
+	var claim = $("#data-claim").val();	
+
+	$.post(url_base+"snippet/"+resultid+"/setvote", {claim: claim}, 
 		function(querieshtml){
 			$("#queries").html(querieshtml);
 		}
@@ -183,7 +179,9 @@ function setToggle(box,vote){
 	var id = box.attr("data-id")
 	var type = box.attr("data-type")
 	var zone = box.attr("data-zone")
-	$.post(url_base+zone+"/pick/?type="+type+"&id="+id+"&vote="+vote);
+	if(type != null){
+		$.post(url_base+zone+"/pick/?type="+type+"&id="+id+"&vote="+vote);
+	}
 }
 
 window.onload = function(){

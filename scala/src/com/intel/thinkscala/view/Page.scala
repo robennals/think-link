@@ -1,7 +1,7 @@
 package com.intel.thinkscala.view
 import com.intel.thinkscala.Util._
 import scala.xml._
-
+import util.Timer.time
 
 object Page {
   import Widgets._
@@ -277,7 +277,7 @@ object Page {
       </div>
       {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter search keywords")}
       {if(c.arg("fromextension") == null){
-    	  Render.snipSearchResults(query,row)
+    	  time("snipSearchResults",Render.snipSearchResults(query,row))
        }else{
     	  <div id="searchlist">
 		    <h2>Snippets marked with the Firefox extension</h2>

@@ -8,6 +8,7 @@ import com.intel.thinkscala.view.Mini
 import com.intel.thinkscala.pages._
 import com.intel.thinkscala.pages.Login
 import scala.xml._
+import util.Timer.time
 
 object FixedUrls {
   val base = "http://thinklink.cs.berkeley.edu/"
@@ -181,6 +182,14 @@ class MainServlet extends HttpServlet {
     	val resultid = c.urlInt(1)
     	c.store.setSnipHighlight(resultid,c.arg("highlight"))
     	c.store.setSnipVote(resultid,c.userid,true)
+    }),
+    UrlHandler("/snippet/(\\d*)/setvote", c => {
+    	val resultid = c.urlInt(1)
+    	val claimid = c.argInt("claim")
+    	c.store.setSnipVote(resultid,c.userid,c.arg("vote") == "true")
+    	if(claimid != 0){
+    		c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
+    	}
     }),
     UrlHandler("/claim/(\\d*)/setspam", c => {
       val claimid = c.urlInt(1)
@@ -360,7 +369,7 @@ class MainServlet extends HttpServlet {
       val title = claim("text") + " - Find Instances with Dispute Finder"
       var query = c.arg("query")
       if(query == null) query = claim.str("text")
-      c.outputHtml(title,Page.findsnippets(claim,query)(c))
+      c.outputHtml(title,time("findsnippets",Page.findsnippets(claim,query)(c)))
     }),
     UrlHandler("""/claim/(\d*)/allsnippets""", c => {
     },c => {
@@ -415,6 +424,10 @@ class MainServlet extends HttpServlet {
       }else{
     	  c.outputHtml("Already Confirmed",Messages.badconfirm)
       }      
+    }),
+    UrlHandler("/admin/time", c => {
+      c.requireAdmin
+      c.outputHtml("Admin Timers",Admin.timers(c))
     }),
     UrlHandler("/admin", c => {
       c.requireAdmin

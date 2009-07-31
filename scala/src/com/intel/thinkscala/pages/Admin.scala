@@ -33,7 +33,17 @@ object Admin {
 		  }
 	  })
   }
-    
+
+  def timers(implicit c : ReqContext) = 
+	<div class='content'>
+       Performance timers
+       {
+    	   util.Timer.counters.map {entry => 
+    	   	  <div class='counter'>{entry._1} -> {entry._2}</div>
+    	   }
+       }
+    </div>
+  
   def admin(implicit c : ReqContext) = 
     <div class='content'>
             Conflicts that need to be resolved:
