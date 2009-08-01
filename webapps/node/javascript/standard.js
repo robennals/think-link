@@ -184,6 +184,14 @@ function setToggle(box,vote){
 	}
 }
 
+function getUserId(){
+	return $("#user-id").val();
+}
+
+function loggedIn(){
+	return getUserId() != 0;
+}
+
 window.onload = function(){
 	$(".yes").click(function(e){
 		var box = $(e.target).parents(".togglebox");
@@ -198,6 +206,10 @@ window.onload = function(){
 		setToggle(box,"no");
 	})
 	$(".clicksentence").click(function(e){
+		if(!loggedIn()){
+			alert("You need to be logged in to mark a snippet");
+			return;
+		}
 		var target = $(e.target);
 		var box = target.parents(".snippettext");
 		var snippet = target.parents(".snippet");

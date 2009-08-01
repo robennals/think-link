@@ -151,6 +151,7 @@ class MainServlet extends HttpServlet {
 	  if(disputed){
 	  	val urlid = c.store.mkUrl(url,title)
 	  	val resultid = c.store.mkResult(0,urlid,0,text,"",claimid)
+    	c.store.setSnipHighlight(resultid,text)
 	  	c.store.setSnipVote(resultid,c.userid,true)
         c.outputMiniHtml(Mini.marked(claimid))
 	  }else{
@@ -180,6 +181,7 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("/snippet/(\\d*)/sethighlight", c => {
     	val resultid = c.urlInt(1)
+    	c.requireLogin
     	c.store.setSnipHighlight(resultid,c.arg("highlight"))
     	c.store.setSnipVote(resultid,c.userid,true)
     }),

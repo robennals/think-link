@@ -38,7 +38,7 @@ object Page {
           "Hot Topics" -> (() => 
                 Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
           "Recently Marked Pages" -> (() => 
-                Widgets.pagedList(c.store.recentMarkedPages(_), Render.markedPage)),
+                Widgets.pagedList(c.store.recentMarkedPages(_), Render.urlSnippet)),
           "Top Users" -> (() =>
             	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
         )}
@@ -60,7 +60,9 @@ object Page {
       </div>
       <div id="claimlist">
         <h2>Claims matching "{c.arg("query")}"</h2>
+        <div class='tabbody'>
         {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_), Render.claim)}
+        </div>
       </div>
     </div>
   
@@ -119,7 +121,7 @@ object Page {
       }
       {Widgets.tabs(
 	      "Search Topics" -> (() =>
-           <form id="bigsearch" action={Urls.connect} method="GET">                 
+           <div><form id="bigsearch" action={Urls.connect} method="GET">                 
 		        <input type='hidden' name='addto' value={c.arg("addto")}/>
 		        <input type='hidden' name='thistype' value={c.arg("thistype")}/>
 		        <input type='hidden' name='thattype' value={c.arg("thattype")}/>
@@ -131,15 +133,12 @@ object Page {
 		        }
 		        <input type="submit" class="submit" value="Search"/>
 		  </form>   
-	        <div id='claimlist'>
-            <h2>Topics matching "{query}"</h2>
              {Widgets.pagedList(c.store.searchLinked(query,"topic",row.int("id"),_), Render.nodelink)}
-	         </div>),
+             </div>
+	      ),
 	      "Recent Topics" -> (() => 
-  	        <div id='claimlist'>
-            <h2>Recent Topics</h2>
-             {Widgets.pagedList(c.store.recentLinked(row.int("id"),"topic",c.userid,_), Render.nodelink)}
-             </div>),
+  	         {Widgets.pagedList(c.store.recentLinked(row.int("id"),"topic",c.userid,_), Render.nodelink)}
+          ),
           "Create a New Topic" -> (() =>
              Page.newTopic(c,query)
            ) 
@@ -196,31 +195,29 @@ object Page {
 
        <div id="claimlist">
         {Widgets.tabs(
-          "Opposition" -> (() => 
-              (<div class='evidence' id="opposed">
-		        <h2>Opposing Evidence</h2>
+          "Opposing Evidence" -> (() => 
+              <div>
             	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",c.user.userid,_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
               </div>
-              <div id='opposing-claims'>
-                <h2>Opposing Claims</h2>
-                {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
-                <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
-              </div>
-          )),
-          "Support" -> (() => 
+          ),
+          "Supporting Evidence" -> (() => 
   	  	      <div class='evidence' id="supports">
-		        <h2>Supporting Evidence</h2>
                	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",c.user.userid,_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
               </div>),
+          "Alternative Claims" -> (() =>
+	          <div>
+	          {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
+	          <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
+ 	        </div>
+          ),
           "Marked Pages" -> (() => 
-              <div id='searchlist' style='padding-bottom: 4px'>
+              <div>
                  <input type="hidden" id="data-query" value=""/>
                  <input type="hidden" id="data-claim" value={""+row("id")}/>
-                <h2>Places this claim is made on the web</h2>
                 <div class='searchcontent'>
-                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_), Render.markedSnippet)}
+                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_), Render.urlSnippet)}
                 </div>
                 <a class='add' href={Urls.findsnippets(row.int("id"))}>find snippets making this claim</a>
               </div>
@@ -275,14 +272,13 @@ object Page {
         <h2>Previous Search Queries</h2>
         {searchQueryList(c,row.int("id"))}
       </div>
-      {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter search keywords")}
-      {if(c.arg("fromextension") == null){
+      {if(c.arg("fromextension") == null){         
     	  time("snipSearchResults",Render.snipSearchResults(query,row))
        }else{
     	  <div id="searchlist">
 		    <h2>Snippets marked with the Firefox extension</h2>
             <div class='searchcontent'>
-		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.markedSnippet)}
+		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.urlSnippet)}
             </div>
   	      </div>
        }}
@@ -293,8 +289,8 @@ object Page {
       <h1>Topic: {row("text")}</h1>
       <div class="description">{row("description")}</div>
       <div id="claimlist">
-         <div id="related-claims">
          <h2>Claims about this topic</h2>
+         <div class='tabbody'>
          {Widgets.pagedList(c.store.linkedClaims(row.int("id"),_), Render.claim)}
          <a class='add' href={Urls.addlinks(row.int("id"),"topic","claim")}>add claims to this topic</a>                  
          </div>
@@ -309,17 +305,14 @@ object Page {
   def user(row : SqlRow)(implicit c : ReqContext) = 
     <div id="user">
       <h1>User: {row("name")}</h1>
-     <div id="claimlist">
         {Widgets.tabs(
           "Claims Created" -> (() => 
             	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_), Render.claim)),
           "Pages Marked" -> (() => 
-                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.markedPage)),
+                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.urlSnippet)),
           "Evidence Found" -> (() =>
             	Widgets.pagedList(c.store.evidenceForUser(row.int("id"),_), Render.userEvidence))
         )}
-      </div>
-
     </div>
 
   def error(e : Exception) = 

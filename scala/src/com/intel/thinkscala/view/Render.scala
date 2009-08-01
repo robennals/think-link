@@ -175,12 +175,14 @@ object Render {
   def splitSentences(text : String) : ArrayBuffer[String] = {
     val outarr = new ArrayBuffer[String]
 	var outstr = new StringBuffer
+	var prevspace = false
 	text foreach {c =>
 	    outstr append c
-		if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == '"' || c == ';'){
+		if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == ';' || (prevspace && c == '-') ){
 			outarr += outstr.toString
 			outstr = new StringBuffer
 		}
+	    prevspace = c == ' '
 	}
     if(outstr.length > 0){
     	outarr += outstr.toString
@@ -203,19 +205,15 @@ object Render {
   }
   
   def snippet(row: SqlRow, classifier: Learner)(implicit c : ReqContext) = {
-    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
     val mode = snipVoteMode(row.str("state"))
-    if(row("pagetext") == null){
-    	PageContext.backgroundFetchSnippet(row)
-    }
+//    if(row("pagetext") == null){
+//    	PageContext.backgroundFetchSnippet(row)
+//    }
     <div class={"snippet togglebox state-"+mode}>
 	<div class="boxcontent snippettext">
 		<div class="text">
-		    <span class="more">...load more...</span>
 			{selectableSentences(row.str("abstract"),row.str("picktext"))}
-			<span class="more">...load more...</span>
 		</div></div>
-		<div class='pagetext'>{row("pagetext")}</div>
 	   <input type="hidden" class="resultid" value={""+row("id")}/>
 	   {if(c.user.realuser){
 		   <div class="yesnobox">
@@ -226,16 +224,28 @@ object Render {
 	    	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
 	    }
 	   }
-	   {if(row != null){
+	   {if(row("username") != null){
 	     userref(row.int("user_id"), row.str("username"), "by") 
 	    }else{          
 	    }
 	   }       
-	   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
-	   {roboscore+"%"}
-	   </div>
+	   {if(classifier != null){
+		    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
+		   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
+		   {roboscore+"%"}
+		   </div>
+	   }}
 	</div>     
   }
+    
+  def snippet(row : SqlRow)(implicit c : ReqContext) : NodeSeq = snippet(row,null)
+  
+  def urlSnippet(row : SqlRow)(implicit c : ReqContext) = 
+	  <div class='bossurl'>
+  		<span class="title">{row("title")}</span>
+  		<a class='url' href={row.str("url")}>{row("url")}</a>
+  		<div class='snippets'>{snippet(row)}</div>
+      </div>
   
   def bossSnip(snip: String, bu : BossUrl, searchid : Int, urlid : Int, position: Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
     val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
@@ -243,82 +253,55 @@ object Render {
     snippet(row,classifier)
   }
   
-  def bossSnip2(snip : String, bu : BossUrl, searchid : Int, urlid : Int, position : Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
-    val roboscore = (classifier.classify(snip) * 100).toInt 
-    val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
-    val row = c.store.getSnippet(resultid)
-    val mode = row("state") match {
-    	case "true" => "yes"
-    	case "false" => "no"
-    	case _ => "undecided"
-    }
-    <div class={"snippet togglebox state-"+mode}>
-    	<div class="boxcontent snippettext"><div class="text">{selectableSentences(snip,row.str("picktext"))}</div></div>
-       <input type="hidden" class="position" value={""+position}/>
-       <input type="hidden" class="resultid" value={""+row("id")}/>
-       {if(c.user.realuser){
-       <div class="yesnobox">
-       <a class="yes" onclick="doAdd(this)">yes</a>
-       <a class="no" onclick="doIgnore(this)">no</a>
-       </div>
-        }else{
-        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
-        }
-       }
-       {if(row != null){
-         userref(row.int("user_id"), row.str("username"), "by") 
-        }else{          
-        }
-       }       
-       <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
-       {roboscore+"%"}
-       </div>
-    </div>    
-    }
-  
   def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
       val bossUrls = time("Yahoo BOSS",SnipSearch.searchBoss(query,page,10))   
       val classifier = time("train classifier",Learner.getClassifier(c.store,claimid,query))
+      // val classifier = null
       val searchid = c.store.mkSearch(claimid,query)
       return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>
   }
   
   def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 
-    <div id="searchlist">
-    <h2>Search Results matching "{query}"</h2>
+    <div id="claimlist">
+    {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter web search keywords")}
+    <div class='tabbody'>
+    {if(query != null){
+    	<h3>Web snippets matching "{query}"</h3>
+    }else{}}
     {Widgets.pagedList(bossResults(query,row.int("id"),_))}
     </div>
-
-  def markedSnippet(row : SqlRow)(implicit c : ReqContext) = 
-    <div class='bossurl'>
-      <span class='title'>{row("title")}</span>
-      <a href={row.str("url")}>{row("url")}</a>
-      <div class='snippets'>
-          <input type='hidden' class='position' value="0"/>
-         <div class={if(row("state") == "true") "snippet snippet-added" else "snippet snippet-ignored"}>
-	       <div class="text">{row("abstract")}</div>
-         {if(c.user.realuser){
-	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "marked" else "mark"}</a>
-	       <a class="ignore" onclick="doIgnore(this)">{if(row("state") == "false") "ignored" else "ignore"}</a>         	
-            }else{
-        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
-            }
-         }
-         {userref(row.int("user_id"), row.str("username"), "by")} 
-         </div>
-      </div>
     </div>
+
+//  def markedSnippet(row : SqlRow)(implicit c : ReqContext) = 
+//    <div class='bossurl'>
+//      <span class='title'>{row("title")}</span>
+//      <a href={row.str("url")}>{row("url")}</a>
+//      <div class='snippets'>
+//          <input type='hidden' class='position' value="0"/>
+//         <div class={if(row("state") == "true") "snippet snippet-added" else "snippet snippet-ignored"}>
+//	       <div class="text">{row("abstract")}</div>
+//         {if(c.user.realuser){
+//	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "marked" else "mark"}</a>
+//	       <a class="ignore" onclick="doIgnore(this)">{if(row("state") == "false") "ignored" else "ignore"}</a>         	
+//            }else{
+//        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
+//            }
+//         }
+//         {userref(row.int("user_id"), row.str("username"), "by")} 
+//         </div>
+//      </div>
+//    </div>
     
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>
     
-  def markedPage(row : SqlRow) = 
-    <div class='claim'>
-       <a class='title' target="_blank" href={row.str("url")}>{row("title")}</a>
-       <a class='url' target="_blank" href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
-       <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
-       {if(row.isDefinedAt("user_id")){userref(row.int("user_id"),row.str("username"),"marked by")} else {}}
-    </div>
+//  def markedPage(row : SqlRow) = 
+//    <div class='claim'>
+//       <a class='title' target="_blank" href={row.str("url")}>{row("title")}</a>
+//       <a class='url' target="_blank" href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
+//       <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
+//       {if(row.isDefinedAt("user_id")){userref(row.int("user_id"),row.str("username"),"marked by")} else {}}
+//    </div>
   
   def extension(c : ReqContext) = 
     if(c.getCookie("extension") != null && c.getCookie("extension") != ""){
@@ -353,19 +336,19 @@ object Template {
   import Render._
   
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(title,(<body class='body'>{topbar(c) ++ extension(c) ++ body}</body>))
+    basics(c,title,topbar(c) ++ extension(c) ++ body,"body")
   
   def noinstall(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(title,(<body class='body'>{topbar(c) ++ body}</body>))
+    basics(c,title,topbar(c) ++ body,"body")
   
   
   def mini(c : ReqContext, body : NodeSeq) =    
-    basics("Dispute Finder Popup Interface",(<body class='minibody'>{body}</body>))
+    basics(c,"Dispute Finder Popup Interface",body,"minibody")
   
   def nobar(c : ReqContext, body : NodeSeq) = 
-    basics("",(<body class='body'>{body}</body>))
+    basics(c,"",body,"body")
   
-  def basics(title : String, body : NodeSeq) =
+  def basics(c : ReqContext, title : String, body : NodeSeq, bodyclass : String) =
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -376,6 +359,9 @@ object Template {
       <script src="/thinklink/javascript/jquery-1.2.3.js" type="text/javascript"/>
       <script src="/thinklink/javascript/standard.js" type="text/javascript"/>
     </head>
+    <body class={bodyclass}>
+      <input type='hidden' id='user-id' value={""+c.user.userid}/>
       {body}
+    </body>
     </html>  
 }

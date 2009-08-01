@@ -124,7 +124,9 @@ h2 {
 	background-color: white;
 	max-width: 600px;
 	-moz-border-radius: 10px;
+/*
 	padding: 8px;
+*/
 	margin-top: 10px;
 }
 
@@ -255,13 +257,11 @@ h2 {
 	margin-left: 10px;
 	color: #666666;
 }
+/*
 #supports, #opposed, #related-claims, #opposing-claims, #created, #instance {
 	background-color: #ECEFF5;
 	border: 1px solid gray;
 	margin-top: 4px;
-/*
-	max-width: 400px;
-*/
 	-moz-border-radius: 8px;
 	padding-bottom: 4px;
 }
@@ -286,6 +286,7 @@ h2 {
 #opposed {
 	background-color: #FFD3D3;
 }
+*/
 
 #searchlist {
 	background-color: #E0ECFF;
@@ -338,7 +339,7 @@ h2 {
 
 #bigsearch, #snipsearch, #search {
 	background-color: #FFFFAA;
-	width: 600px;
+	width: 530px;
 	padding: 10px;
 	-moz-border-radius: 10px;
 	margin-bottom: 15px;
@@ -354,7 +355,7 @@ h2 {
 }
 
 #bigsearch .query {
-	width: 520px;
+	width: 450px;
 	padding: 4px;
 	font-size: 15px;
 	font-weight: bold;
@@ -372,7 +373,7 @@ h2 {
 }
 
 .message {
-	max-width: 600px;
+	max-width: 500px;
 /*
 	color: #555;
 */
@@ -390,7 +391,7 @@ h2 {
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight: bold;
 	margin-bottom: 15px;
-	max-width: 600px;
+	max-width: 500px;
 }
 
 .message p {
@@ -468,10 +469,12 @@ h2 {
 
 .bossurl {
 	padding: 4px;
+	overflow: hidden;
 }
 
 .bossurl .title {
 	font-weight: bold;
+	white-space: nowrap;
 }
 
 .bossurl .snippets {
@@ -494,19 +497,25 @@ h2 {
 }
 */
 
+
+#claimlist {
+	width: 550px;
+}
+
 .bossurl .title {
 	margin-left: 100px;
 }
 
 .bossurl .url {
 	margin-left: 100px;
+	white-space: nowrap;
 }
 
 .snippettext {
 	overflow-y: scroll;
 	border: 1px solid black;
 	width: 375px;
-	height: 80px;
+	height: 60px;
 }
 
 .snippet {
@@ -552,15 +561,15 @@ h2 {
 }
 
 .snippet .user {
-	position: absolute;
-	right: 3px;
-	top: 20px;
+	display: block;
+	margin-left: 100px;
+	margin-top: 4px;
 }
 
 .snippet .mustlogin {
 	position: absolute;
-	right: 3px;
-	top: 5px;
+	left: 0px;
+	top: 10px;
 }
 
 .roboscore-yes, .roboscore-no, .roboscore-maybe {
@@ -622,8 +631,8 @@ h2 {
 
 .selectorbottom {
 	position: absolute;
-	bottom: 4px;
-	right: 5px;
+	bottom: 5px;
+	right: 4px;
 }
 
 .evidence, #claimlist, #related-claims, #opposing-claims, #searchlist {
@@ -1001,4 +1010,91 @@ img {
 
 .more:hover {
 	color: black;
+}
+
+.body, .minicontent {
+	background: #F5F5FF;
+}
+
+.tabs .header, #claimlist h2, .headersearch {
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	background: #DFDFDF none repeat scroll 0 0;
+	display: block;
+	height: 30px;
+	margin: 0px;
+	padding: 5px;
+}
+
+#claimlist h2 {
+	padding-top: 10px;
+	height: 20px;
+}
+
+.tabbody {
+	position: relative;
+	padding-top: 0px;
+	border-color: #DFDFDF;
+	border-style: none solid solid;
+	border-width: 0 2px 10px;
+	-moz-border-radius-bottomleft: 10px;
+	-moz-border-radius-bottomright: 10px;
+	-webkit-border-radius-bottomleft: 10px;
+	-webkit-border-radius-bottomright: 10px;
+	padding: 10px;
+	background-color: white;
+}
+
+.tabs .header span {
+	-moz-border-radius-bottomleft:10px;
+	-moz-border-radius-bottomright:10px;
+	-moz-border-radius-topleft:10px;
+	-moz-border-radius-topright:10px;
+	background:#AFAFAF none repeat scroll 0 0;
+	border:1px inset #FFFFFF;
+	color:#FFFFFF;
+}
+
+.tabs .header a {
+	background:#DFDFDF none repeat scroll 0 0;
+	border:1px solid #DFDFDF;
+	color:#666666;
+	display:block;
+	margin:5px;
+	outline-color:-moz-use-text-color;
+	outline-style:none;
+	outline-width:0;
+	padding:1px 5px;
+	text-decoration:none;
+	margin-top: 8px;
+}
+
+
+#topics, #findsnippets #queries {
+	background-color: #DFDFDF;
+}
+
+#opposing-claims h2 {
+	margin-top: 30px;
+}
+
+.pager {
+	padding-top: 10px;
+}
+
+.headersearch .query {
+	float: left;
+	width: 450px;
+	padding: 4px;
+}
+
+.headersearch .submit {
+	float: left;
+	padding: 4px;
+}
+
+h3 {
+	margin-top: 0px;
 }

@@ -72,13 +72,13 @@ object Widgets {
    
   def simpleSearch(url : String, initquery : String, emptytext : String) =
     <div>
-	  <form id="search" method="GET" action={url}>     
+	  <form class='headersearch' method="GET" action={url}>     
         {if(initquery == null){
           greyInput("query","query",emptytext)
         }else{
         <input type="text" class="query" name="query" value={initquery}/>
         }}
-        <input type="submit" class="submit" value="Search The Web for this Claim"/>
+        <input type="submit" class="submit" value="Search"/>
 	  </form>
    </div>    
 
