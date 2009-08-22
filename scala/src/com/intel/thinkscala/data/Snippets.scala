@@ -1,4 +1,6 @@
 package com.intel.thinkscala.data
+import com.intel.thinkscala._
+
 
 import com.intel.thinkscala.SqlQuery._
 
@@ -13,9 +15,13 @@ trait Snippets extends BaseData {
     	  .leftjoin("v2_user.name AS username","v2_user ON v2_user.id = v2_searchresult.user_id")
     	  .leftjoin("v2_searchurl.title AS title, v2_searchurl.url AS url","v2_searchurl ON v2_searchurl.id = v2_searchresult.url_id")
 
+    def claimsnippets = snippets.leftjoin("v2_node.text AS claimtext","v2_node ON v2_node.id = v2_searchresult.claim_id")    	  
+    	  
   	  // TODO: bring back pagetext
     def getSnippet(resultid : Int) =
-    	snippets where ("v2_searchresult.id = ?",resultid) one
+    	snippets 
+    	.leftjoin("pagetext.text AS articlebody","pagetext ON pagetext.url_id = v2_searchresult.url_id")
+    	.where ("v2_searchresult.id = ?",resultid) one
 
     def allSnippets(claimid : Int, page : Int) =
     	snippets where ("v2_searchresult.claim_id = ?",claimid) where ("state = true") paged page rows
@@ -24,10 +30,10 @@ trait Snippets extends BaseData {
     	snippets where ("v2_searchresult.claim_id = ?",claimid) rows
 
     def userMarkedPages(userid : Int, page : Int) = 
-    	snippets where ("state = true AND user_id = ?",userid) orderby "searchdate DESC" paged page rows
+    	claimsnippets where ("state = true AND v2_searchresult.user_id = ?",userid) orderby "searchdate DESC" paged page rows
 
     def recentMarkedPages(page : Int) =
-    	snippets orderby ("searchdate DESC") where ("state = true") paged page rows
+    	claimsnippets orderby("searchdate DESC") where ("state = true") paged page rows
     	
 //	def getSnippet(resultid : Int) = 
 //		  select("v2_searchresult").where("v2_searchresult.id = ?",resultid)
@@ -46,39 +52,5 @@ trait Snippets extends BaseData {
                                 "LIMIT 20 OFFSET ?")
     def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
 
-    
-    
-//    val all_snippets = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
-//                                "FROM v2_searchresult,v2_searchurl,v2_user "+
-//                                "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
-//                                "AND state = 'true' "+
-//                                "AND v2_user.id = v2_searchresult.user_id "+
-//                                "LIMIT ? OFFSET ?")
-//    def allSnippets(claimid : Int, page : Int) = all_snippets.queryRows(claimid,10,page*10)
-//
-//    val all_snippets_all = stmt("SELECT state,abstract,url,title,user_id,v2_user.name AS username "+
-//                                "FROM v2_searchresult,v2_searchurl,v2_user "+
-//                                "WHERE claim_id = ? AND url_id = v2_searchurl.id "+
-//                                "AND (state = 'true' OR state='false') "+
-//                                "AND v2_user.id = v2_searchresult.user_id")
-//    def allSnippets(claimid : Int) = all_snippets_all.queryRows(claimid)
 
-//    val recent_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext, v2_user.id AS user_id, v2_user.name AS username "+
-//            "FROM v2_searchresult, v2_searchurl, v2_node, v2_user "+
-//            "WHERE v2_searchurl.id = url_id "+
-//            "AND v2_user.id = v2_searchresult.user_id "+
-//            "AND v2_node.id = v2_searchresult.claim_id "+
-//            "AND v2_searchresult.state = 'true' "+
-//            "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
-//	def recentMarkedPages(page : Int) = recent_marked_pages.queryRows(page * 20)
-	
-//	val user_marked_pages = stmt("SELECT v2_node.id AS claimid, url, title, v2_node.text AS claimtext "+
-//	            "FROM v2_searchresult, v2_searchurl, v2_node "+
-//	            "WHERE v2_searchurl.id = url_id "+
-//	            "AND v2_node.id = v2_searchresult.claim_id "+
-//	            "AND v2_searchresult.user_id = ? "+
-//	            "AND v2_searchresult.state = 'true' "+
-//	            "ORDER BY searchdate DESC LIMIT 20 OFFSET ?")
-//	def userMarkedPages(userid : Int, page : Int) : Seq[SqlRow] = user_marked_pages.queryRows(userid, page * 20)
-//    
  }

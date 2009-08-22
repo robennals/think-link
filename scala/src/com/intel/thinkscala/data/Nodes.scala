@@ -1,4 +1,6 @@
 package com.intel.thinkscala.data
+import com.intel.thinkscala._
+
 
 import com.intel.thinkscala.SqlQuery._
 

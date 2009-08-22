@@ -1,4 +1,6 @@
 package com.intel.thinkscala.pages
+import com.intel.thinkscala._
+
 
 object Login {
   def login(title : String, path : String) =

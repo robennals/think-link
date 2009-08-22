@@ -2,7 +2,8 @@ package com.intel.thinkscala.view
 import scala.xml._
 import com.intel.thinkscala.learn.Learner
 import scala.collection.mutable.ArrayBuffer
-import util.Timer.time
+import com.intel.thinkscala.util.Timer.time
+import com.intel.thinkscala._
 
 object Render {
   import Widgets._
@@ -20,9 +21,6 @@ object Render {
            <a onclick={"reportSpam(this,"+row("id")+")"}>report spam</a>
         }
       }
-<!--      <span class="agree"><span class="count">{row("agree_count")}</span> agree</span>
-      - <span class="disagree"><span class="count">{row("disagree_count")}</span> disagree</span>    
--->
   </div>  
 
   def miniclaim(row : SqlRow)(implicit c : ReqContext) = 
@@ -71,20 +69,8 @@ object Render {
       <a class="title" href={Urls.claim(row("id"))}>{row.str("text")}</a>
       <div class="instances">found <span class="count">{row("count")}</span> instances</div>
     </div>
-  
-//  def voter(vote : Boolean, typ : String, id : Int) = 
-//    if(vote == true){
-//       	<span class='votebox'><img class='voteup' src="/images/vote_up_on.png" />
-//        <img class='votedown' src="/images/vote_restore_down.png" /></span>
-//    }else if(vote == false){
-//       	<span class='votebox'><img class='voteup' src="/images/vote_up_on.png" />
-//        <img class='votedown' src="/images/vote_restore_down.png" /></span>             
-//    }else{
-//       	<span class='votebox'><img class='voteup' src="/images/vote_up_e.png" />
-//        <img class='votedown' src="/images/vote_down_e.png" /></span>
-//    }
-
-    def voter(vote : String, typ : String, id : Int) = {
+    
+  def voter(vote : String, typ : String, id : Int) = {
       val mode = if(vote == null) "norm" else vote
       <div class={"votebox-"+mode}>
         <img title="vote up" class='voteup' onclick={"voteUp(this,"+id+",'"+typ+"')"} />
@@ -118,9 +104,6 @@ object Render {
             <a class="claimlink" href={Urls.claim(row("claimid"))}>{row("claimtext")}</a>
         </div>
     </div>
-  
-  
-  
      
   def topbar(c : ReqContext) = 
     <div id="topbar">
@@ -159,150 +142,10 @@ object Render {
     <span class="markedno">{row("marked_no")} ignored</span>
     </div>
     </div>
-
-    // TODO: these should all be stored in the database before being shown
-  def bossUrl(bu : BossUrl, searchid : Int, position : Int,query : String, claimid : Int,classifier : Learner)(implicit c : ReqContext) = {
-	val urlid = c.store.mkUrl(bu.url,bu.title)
-    <div class="bossurl">
-    <span class="title">{bu.title}</span>
-    <a class='url' href={bu.url}>{bu.url}</a>
-    <div class="snippets">
-      {bu.snips flatMap (s => bossSnip(s,bu,searchid,urlid,position,query,claimid,classifier))}
-    </div>
-    </div>
-  }
-   
-  def splitSentences(text : String) : ArrayBuffer[String] = {
-    val outarr = new ArrayBuffer[String]
-	var outstr = new StringBuffer
-	var prevspace = false
-	text foreach {c =>
-	    outstr append c
-		if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == ';' || (prevspace && c == '-') ){
-			outarr += outstr.toString
-			outstr = new StringBuffer
-		}
-	    prevspace = c == ' '
-	}
-    if(outstr.length > 0){
-    	outarr += outstr.toString
-    }
-    outarr
-  }
-    
-  def selectableSentences(text : String, picktext : String) = {
-	val sentences = splitSentences(text)
-//    val sentences = text.split("[\\.\\,\\!\\?]")
-    sentences.map {x => 
-    	<span class='clicksentence' style={if(x == picktext) "background-color: yellow" else ""}>{x}</span>
-    }
-  }
-
-  def snipVoteMode(state : String) = state match {
-	  case "true" => "yes"
-	  case "false" => "no"
-	  case _ => "undecided"
-  }
-  
-  def snippet(row: SqlRow, classifier: Learner)(implicit c : ReqContext) = {
-    val mode = snipVoteMode(row.str("state"))
-//    if(row("pagetext") == null){
-//    	PageContext.backgroundFetchSnippet(row)
-//    }
-    <div class={"snippet togglebox state-"+mode}>
-	<div class="boxcontent snippettext">
-		<div class="text">
-			{selectableSentences(row.str("abstract"),row.str("picktext"))}
-		</div></div>
-	   <input type="hidden" class="resultid" value={""+row("id")}/>
-	   {if(c.user.realuser){
-		   <div class="yesnobox">
-		   <a class="yes" onclick="doAdd(this)">yes</a>
-		   <a class="no" onclick="doIgnore(this)">no</a>
-		   </div>
-	    }else{
-	    	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
-	    }
-	   }
-	   {if(row("username") != null){
-	     userref(row.int("user_id"), row.str("username"), "by") 
-	    }else{          
-	    }
-	   }       
-	   {if(classifier != null){
-		    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
-		   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
-		   {roboscore+"%"}
-		   </div>
-	   }}
-	</div>     
-  }
-    
-  def snippet(row : SqlRow)(implicit c : ReqContext) : NodeSeq = snippet(row,null)
-  
-  def urlSnippet(row : SqlRow)(implicit c : ReqContext) = 
-	  <div class='bossurl'>
-  		<span class="title">{row("title")}</span>
-  		<a class='url' href={row.str("url")}>{row("url")}</a>
-  		<div class='snippets'>{snippet(row)}</div>
-      </div>
-  
-  def bossSnip(snip: String, bu : BossUrl, searchid : Int, urlid : Int, position: Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
-    val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
-    val row = c.store.getSnippet(resultid)
-    snippet(row,classifier)
-  }
-  
-  def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
-      val bossUrls = time("Yahoo BOSS",SnipSearch.searchBoss(query,page,10))   
-      val classifier = time("train classifier",Learner.getClassifier(c.store,claimid,query))
-      // val classifier = null
-      val searchid = c.store.mkSearch(claimid,query)
-      return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>
-  }
-  
-  def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 
-    <div id="claimlist">
-    {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter web search keywords")}
-    <div class='tabbody'>
-    {if(query != null){
-    	<h3>Web snippets matching "{query}"</h3>
-    }else{}}
-    {Widgets.pagedList(bossResults(query,row.int("id"),_))}
-    </div>
-    </div>
-
-//  def markedSnippet(row : SqlRow)(implicit c : ReqContext) = 
-//    <div class='bossurl'>
-//      <span class='title'>{row("title")}</span>
-//      <a href={row.str("url")}>{row("url")}</a>
-//      <div class='snippets'>
-//          <input type='hidden' class='position' value="0"/>
-//         <div class={if(row("state") == "true") "snippet snippet-added" else "snippet snippet-ignored"}>
-//	       <div class="text">{row("abstract")}</div>
-//         {if(c.user.realuser){
-//	       <a class="add" onclick="doAdd(this)">{if(row("state") == "true") "marked" else "mark"}</a>
-//	       <a class="ignore" onclick="doIgnore(this)">{if(row("state") == "false") "ignored" else "ignore"}</a>         	
-//            }else{
-//        	<a class="mustlogin" href={Urls.login(c.getUrl)}>login to edit</a>
-//            }
-//         }
-//         {userref(row.int("user_id"), row.str("username"), "by")} 
-//         </div>
-//      </div>
-//    </div>
     
   def topicref(row : SqlRow) = 
     <a href={Urls.topic(row.int("id"))}>{row("text")}</a>
-    
-//  def markedPage(row : SqlRow) = 
-//    <div class='claim'>
-//       <a class='title' target="_blank" href={row.str("url")}>{row("title")}</a>
-//       <a class='url' target="_blank" href={row.str("url")}>{Util.trimString(row.str("url"),80)}</a>
-//       <div class='says'>says that <a class='claimlink' href={Urls.claim(row("claimid"))}>{row("claimtext")}</a></div>
-//       {if(row.isDefinedAt("user_id")){userref(row.int("user_id"),row.str("username"),"marked by")} else {}}
-//    </div>
-  
+      
   def extension(c : ReqContext) = 
     if(c.getCookie("extension") != null && c.getCookie("extension") != ""){
     	<div class='hasextension'>extension installed</div>     
@@ -317,10 +160,135 @@ object Render {
         <div class='installdiv'><a class='installbig' href={Urls.extension}>Install the Firefox extension</a></div>
     }
 
+  def snippet(row: SqlRow, classifier: Learner)(implicit c : ReqContext) = {
+    val mode = snipVoteMode(row.str("state"))
+    val pagetext = row.str("articlebody")
+    if(pagetext == null || pagetext == ""){
+    	PageContext.backgroundFetchSnippet(row)
+    }
+    val thetext = if(pagetext == null || pagetext == "") row.str("abstract") else pagetext
+    <div class={"snippet togglebox state-"+mode}>
+	<div class="boxcontent snippettext">
+		<div class="text">
+			{selectableSentences(thetext,row.str("picktext"))}
+		</div></div>
+	   <input type="hidden" class="resultid" value={""+row("id")}/>
+	     <div class="yesnobox">
+		   <a class="yes" onclick="doAdd(this)">mark</a>
+		   <a class="no" onclick="doIgnore(this)">ignore</a>
+		   </div>
+	   {if(row("username") != null && mode == "yes"){
+	     userref(row.int("user_id"), row.str("username"), "marked by") 
+	   }else if(row("username") != null && mode == "no"){
+		 userref(row.int("user_id"), row.str("username"), "ignored by") 		      
+	    }else{          
+	    }
+	   }       
+	   {if(classifier != null){
+		    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
+		   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
+		   {roboscore+"%"}
+		   </div>
+	   }}
+	</div>     
+  }
+	    
+  
+	def snippet(row : SqlRow)(implicit c : ReqContext) : NodeSeq = snippet(row,null)
+	
+	def urlSnippet(row : SqlRow)(implicit c : ReqContext) = 
+		  <div class='bossurl'>
+			<span class="title">{row("title")}</span>
+			<a class='url' href={row.str("url")}>{row("url")}</a>
+			<div class='snippets'>{snippet(row)}</div>
+	    </div>
+	    
+	def claimSnippet(row : SqlRow)(implicit c : ReqContext) = 
+			<div class='bossurl'>
+				<a class="title" href={row.str("url")}>{row("title")}</a>
+				<div class="snipclaimlink">claims that <a class='link' href={Urls.claim(row.int("claim_id"))}>{row("claimtext")}</a></div>
+				<div class='snippets'>{snippet(row)}</div>
+			</div>
+		  
+	
+	def bossSnip(snip: String, bu : BossUrl, searchid : Int, urlid : Int, position: Int, query : String, claimid : Int, classifier: Learner)(implicit c : ReqContext) = {
+	  val resultid = c.store.mkResult(searchid,urlid,position,snip,"",claimid)
+	  val row = c.store.getSnippet(resultid)
+	  snippet(row,classifier)
+	}
+
+	def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
+	    val bossUrls = time("Yahoo BOSS",SnipSearch.searchBoss(query,page,10))   
+	    val classifier = time("train classifier",Learner.getClassifier(c.store,claimid,query))
+	    val searchid = c.store.mkSearch(claimid,query)
+	    return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>
+	}
+
+	def snipSearchResults(query : String, row : SqlRow)(implicit c : ReqContext) = 
+	  <div id="claimlist">
+	  {simpleSearch(Urls.findsnippets(row("id")), c.arg("query"), "Enter web search keywords")}
+	  <div class='tabbody'>
+	  {if(query != null){
+	  	<h3>Web snippets matching "{query}"</h3>
+	  }else{}}
+	  {Widgets.pagedList(bossResults(query,row.int("id"),_))}
+	  </div>
+	  </div>
+ 
+    def splitSentences(text : String) : ArrayBuffer[String] = {
+	    val outarr = new ArrayBuffer[String]
+		var outstr = new StringBuffer
+		var prevspace = false
+		val ctext = text.replaceAll("\n+","\n")
+		ctext foreach {c =>
+		    outstr append c
+			if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == ';' || (prevspace && c == '-') ){
+				outarr += outstr.toString
+				outstr = new StringBuffer
+			}
+		    if(c == '\n'){
+		    	outarr += "\n\n"
+		    }
+		    prevspace = c == ' '
+		}
+	    if(outstr.length > 0){
+	    	outarr += outstr.toString
+	    }
+	    outarr
+	  }
+
+    
+    def spanForSentence(x : String,picktext : String) = 
+    	if(x == "\n\n"){
+    		<br/>
+    	}else{
+	   		<span class='clicksentence' style={if(x == picktext) "background-color: yellow" else ""}>{x}</span>    		
+    	}
+    
+	def selectableSentences(text : String, picktext : String) = {
+		val sentences : ArrayBuffer[String] = splitSentences(text)
+	    sentences.map(x => spanForSentence(x,picktext))
+    }
+	
+	def snipVoteMode(state : String) = state match {
+		  case "true" => "yes"
+		  case "false" => "no"
+		  case _ => "undecided"
+	  }
+
+	//// TODO: these should all be stored in the database before being shown
+	def bossUrl(bu : BossUrl, searchid : Int, position : Int,query : String, claimid : Int,classifier : Learner)(implicit c : ReqContext) = {
+		val urlid = c.store.mkUrl(bu.url,bu.title)
+		<div class="bossurl">
+		<span class="title">{bu.title}</span>
+		<a class='url' href={bu.url}>{bu.url}</a>
+		<div class="snippets">
+		  {bu.snips flatMap (s => bossSnip(s,bu,searchid,urlid,position,query,claimid,classifier))}
+		</div>
+		</div>
+	}
   
 }      
-
-
 
 
 

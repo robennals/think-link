@@ -11,32 +11,32 @@ function ungrey(obj){
 function onInput(textbox,callback){
 	textbox.keyup(function(ev){
 		var text = textbox.val();
-		//if(ev.which == 32){
-			//callback(text);
-		//}else{
 			setTimeout(function(){
 				if(text == textbox.val()){
 					callback(text);
 				}
 			},200);
-		//}
 	});
 }
 
 
 function doAdd(obj){
-	//$(obj).text("marked")
+	if(!loggedIn()){
+		alert("You need to be logged in to mark a snippet");
+		return;
+	}
 	var snip = $(obj).parent();
-	//snip.find(".ignore").text("ignore")
 	snip.addClass("snippet-added")
 	snip.removeClass("snippet-ignored")
 	setSnipStatus(snip,true)
 }
 
 function doIgnore(obj){
-	//$(obj).text("ignored")
+	if(!loggedIn()){
+		alert("You need to be logged in to mark a snippet");
+		return;
+	}
 	var snip = $(obj).parent()
-	//snip.find(".add").text("mark")
 	snip.addClass("snippet-ignored")
 	snip.removeClass("snippet-added")
 	setSnipStatus(snip,false)

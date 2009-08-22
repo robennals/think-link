@@ -3,6 +3,8 @@ import java.io._
 import java.net._
 import javax.mail._
 import javax.mail.internet._
+import com.intel.thinkscala._
+
 
 object SendMail {
 	def sendMail(to : String, subject : String, text : String){

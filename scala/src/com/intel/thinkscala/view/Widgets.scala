@@ -1,6 +1,9 @@
 package com.intel.thinkscala.view
+import com.intel.thinkscala._
+
 import scala.xml._
 import scala.collection.mutable.HashMap
+import com.intel.thinkscala.ReqContext
 
 object Widgets {
   def greyInput(cls : String, id : String, previewtext : String) = 

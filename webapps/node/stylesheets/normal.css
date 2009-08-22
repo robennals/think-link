@@ -470,6 +470,8 @@ h2 {
 .bossurl {
 	padding: 4px;
 	overflow: hidden;
+	padding-top: 10px;
+	border-top: 2px solid #DFDFDF;
 }
 
 .bossurl .title {
@@ -478,7 +480,9 @@ h2 {
 }
 
 .bossurl .snippets {
+/*
 	margin-left: 20px;
+*/
 }
 
 .searchcontent {
@@ -497,17 +501,21 @@ h2 {
 }
 */
 
+.text br {
+	margin-bottom: 10px;
+}
 
 #claimlist {
 	width: 550px;
 }
 
 .bossurl .title {
-	margin-left: 100px;
+	margin-left: 104px;
+	white-space: nowrap;
 }
 
 .bossurl .url {
-	margin-left: 100px;
+	margin-left: 104px;
 	white-space: nowrap;
 }
 
@@ -515,7 +523,7 @@ h2 {
 	overflow-y: scroll;
 	border: 1px solid black;
 	width: 375px;
-	height: 60px;
+	height: 100px;
 }
 
 .snippet {
@@ -536,7 +544,7 @@ h2 {
 }
 
 .snippet .boxcontent {
-	margin-left: 70px;
+	margin-left: 100px;
 }
 
 .snippet .yesnobox {
@@ -583,13 +591,13 @@ h2 {
 }
 
 .roboscore-yes {
-	left: -10px;
+	left: 2px;
 }
 .roboscore-no {
-	left: 24px;
+	left: 50px;
 }
 .roboscore-maybe {
-	left: 10px;
+	left: 22px;
 }
 
 .searchcontent .snippet-added {
@@ -635,7 +643,7 @@ h2 {
 	right: 4px;
 }
 
-.evidence, #claimlist, #related-claims, #opposing-claims, #searchlist {
+#claimlist, #related-claims, #opposing-claims, #searchlist {
 	position: relative;
 }
 
@@ -845,8 +853,8 @@ img {
 
 .votebox-norm, .votebox-up, .votebox-down {
 	position: absolute;
-	top: 3px;
-	right: -1px;
+	top: 4px;
+	right: 0px;
 	display: block;
 	width: 36px;
 	height: 16px;
@@ -1048,10 +1056,8 @@ img {
 }
 
 .tabs .header span {
-	-moz-border-radius-bottomleft:10px;
-	-moz-border-radius-bottomright:10px;
-	-moz-border-radius-topleft:10px;
-	-moz-border-radius-topright:10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 	background:#AFAFAF none repeat scroll 0 0;
 	border:1px inset #FFFFFF;
 	color:#FFFFFF;
@@ -1062,13 +1068,25 @@ img {
 	border:1px solid #DFDFDF;
 	color:#666666;
 	display:block;
+/*
 	margin:5px;
+*/
 	outline-color:-moz-use-text-color;
 	outline-style:none;
 	outline-width:0;
-	padding:1px 5px;
+	padding:5px;
 	text-decoration:none;
+/*
 	margin-top: 8px;
+*/
+}
+
+.tabs .header a:hover {
+	border: 1px solid #D1D1D1;
+	background: #D1D1D1;
+	color: black;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 }
 
 
@@ -1097,4 +1115,28 @@ img {
 
 h3 {
 	margin-top: 0px;
+}
+
+.snipclaimtitle {
+	margin-left: 20px;
+	display: block;
+	font-weight: bold;
+}
+
+.snipclaimlink {
+	margin-left: 104px;
+}
+
+#opposed .webquote {
+	background-color: #FFDFDF;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	padding: 7px;
+}
+
+#supports .webquote {
+	background-color: #DFFFDF;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	padding: 7px;
 }

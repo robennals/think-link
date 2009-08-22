@@ -1,4 +1,6 @@
 package com.intel.thinkscala.turk
+import com.intel.thinkscala._
+
 import scala.io.Source
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap

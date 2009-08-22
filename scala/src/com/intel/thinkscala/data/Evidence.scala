@@ -1,4 +1,6 @@
 package com.intel.thinkscala.data
+import com.intel.thinkscala._
+
 
 trait Evidence extends BaseData {
 	  val get_evidence = stmt("SELECT evidence.*,v2_user.name AS username,vote.vote "+                            

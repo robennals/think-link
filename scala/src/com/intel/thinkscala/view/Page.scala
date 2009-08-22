@@ -1,5 +1,6 @@
 package com.intel.thinkscala.view
 import com.intel.thinkscala.Util._
+import com.intel.thinkscala._
 import scala.xml._
 import util.Timer.time
 
@@ -11,7 +12,7 @@ object Page {
           <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
 
       <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
-      <div class="tagline">Are you being duped?</div>
+      <div class="tagline">Reveal the other side of the story</div>
 
       <a class='videolink' href="http://confront.intel-research.net/Videos.html">Watch the Videos</a>
   
@@ -38,7 +39,7 @@ object Page {
           "Hot Topics" -> (() => 
                 Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
           "Recently Marked Pages" -> (() => 
-                Widgets.pagedList(c.store.recentMarkedPages(_), Render.urlSnippet)),
+                Widgets.pagedList(c.store.recentMarkedPages(_), Render.claimSnippet)),
           "Top Users" -> (() =>
             	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
         )}
@@ -196,7 +197,7 @@ object Page {
        <div id="claimlist">
         {Widgets.tabs(
           "Opposing Evidence" -> (() => 
-              <div>
+              <div class='evidence' id="opposed">
             	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",c.user.userid,_), Render.evidence)}
                 <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
               </div>

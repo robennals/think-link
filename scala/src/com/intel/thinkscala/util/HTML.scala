@@ -1,6 +1,7 @@
 package com.intel.thinkscala.util
 import scala.collection.mutable.ArrayBuffer
 import org.apache.commons.lang.StringEscapeUtils._;
+import com.intel.thinkscala._
 import Util.download
 
 class Node
@@ -27,7 +28,10 @@ object HTML {
 			c match {
 				case '<' => {
 					if(!intag){
-						nodes += new Text(unescapeHtml(str.substring(startpos,pos).replaceAll("\\s+"," ")))
+						val text = unescapeHtml(str.substring(startpos,pos).replaceAll("\\s+"," "))
+						if(text != " " && text != ""){
+							nodes += new Text(text)
+						}
 					}
 					nodes += new Tag(tagName(str,pos+1).toLowerCase)
 					intag = true;
@@ -46,7 +50,7 @@ object HTML {
 	def bodyForUrl(url : String) : String = getBody(parse(download(url)))
 	
 	def isArticleStart(lastlink : Boolean, len : Int) =
-		(!lastlink && len > 100) || (len > 200)
+		(!lastlink && len > 70) || (len > 200)
 	
 	def getBody(nodes : ArrayBuffer[Node]) : String = {
 		var started = false
@@ -73,8 +77,45 @@ object HTML {
 		buf.toString
 	}
 	
+	def getBody2(nodes : ArrayBuffer[Node]) : String = {
+		var started = false
+		var body = false
+		val buf = new StringBuffer
+		var lastlink = false
+		
+		var trialfirst : String = null
+		
+		nodes.foreach {node => node match {
+			case Tag("body") => body = true
+			case Tag("a") => lastlink = true
+			case Text(text) if(body) => {
+				if(isArticleStart(lastlink,text.length)){
+					if(trialfirst != null){
+						buf.append(trialfirst)
+						started = true							
+					}else{
+						trialfirst = text
+					}
+				}else{
+					trialfirst = null
+				}
+				if(started){
+					buf.append(text)
+				}
+				lastlink = false
+			}
+			case Tag(tag) if(tagIsNewLine(tag)) => {
+				buf.append("\n")
+				lastlink = false
+			}
+			case _ => lastlink = false
+		}}
+		buf.toString.replaceAll("\n+","\n")
+	}
+		
 	def tagIsNewline(tagname : String) = tagname match {
 		case "p" => true
+		case "br" => true
 		case "h1" => true
 		case "h2" => true
 		case "h3" => true

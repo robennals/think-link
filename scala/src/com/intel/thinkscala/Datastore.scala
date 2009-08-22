@@ -217,6 +217,8 @@ class Datastore extends BaseData
     }else{
       update_snip_user_false.update(resultid)
     }
+    val row = getSnippet(resultid)
+    updateInstanceCount(row.int("claim_id"))
   }
   
   val get_search_result = stmt("SELECT * FROM v2_searchresult WHERE id = ?")
@@ -245,6 +247,7 @@ class Datastore extends BaseData
     update_search_counts.update(searchid)
     update_instance_count.update(claimid)    
   }
+  def updateInstanceCount(claimid : Int) = update_instance_count.update(claimid)
   
   
   // TODO: this is a hack

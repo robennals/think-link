@@ -3,6 +3,38 @@
 Several of these articles are also syndicated by other publications.
 
 
+=== The Canadian Press - New tool flags disputed claims on web, but observers say its an uphill battle ===
+
+James Keller - August 19th, 2009
+
+The Canadian Press wrote a syndicated article that talks about Dispute Finder. 
+A quote:
+
+<blockquote>
+Developers of new web browsing software that flags questionable claims or outright lies on the web hope it will become a valuable tool to deal with the misinformation that litters the Internet.
+
+But observers say Dispute Finder, an experimental browser extension developed by Intel, and the many websites that already aim to debunk online rumours and falsehoods face an enormous task. It isn't as easy as simply telling someone they're wrong
+</blockquote>
+
+As they point out, one of the biggest challenges with Dispute Finder is persuading people to take seriously opinions that come from a different side. Our long-term plan for addressing this problem is to present peolpe with evidence from sources that they already trust and pitch an opinion using arguments compatible their own view of the world. Even taking that into account, we realise that once someone has formed an opinion it is hard to make them change, and realistically our best hope is probably to draw attention to issues where someone has not yet formed a strong opinion.
+
+Amongst other places, this article is syndicated is the following places.
+
+* <a href="http://www.winnipegfreepress.com/life/sci_tech/New-tool-flags-disputed-claims-on-web_-but-observers-say-it_s-an-uphill-battle-53732162.html">The Winnipeg Free Press</a>
+* <a href="http://www.calgarysun.com/life/gadgets/2009/08/19/10518626.html">The Calgary Sun</a>
+* <a href="http://technology.canoe.ca/2009/08/19/10521036-cp.html">Canoe Technology</a>
+* <a href="http://www.ngnews.ca/index.cfm?pid=575">New Glasgow News</a>
+
+
+
+=== NPR 'On the Media' - Looking for a Fight ===
+
+Interview with Bob Garfield - July 31st, 2009
+
+Rob was interviewed on NPR's "On the Media" radio show about the media. The audio, and a full transcript of the show is available online:
+
+<a href="http://www.onthemedia.org/transcripts/2009/07/31/02">http://www.onthemedia.org/transcripts/2009/07/31/02</a>
+
 === Sacramento Bee - Intel Project seeks to mark disputed web information ===
 
 Nicholas Diakopoulos - July 18th, 2009

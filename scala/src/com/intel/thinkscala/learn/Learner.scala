@@ -1,4 +1,6 @@
 package com.intel.thinkscala.learn
+import com.intel.thinkscala._
+
 
 class Entry (val url : String, val title : String, val highlight : String, val context : String)
 

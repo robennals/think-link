@@ -187,9 +187,9 @@ class MainServlet extends HttpServlet {
     }),
     UrlHandler("/snippet/(\\d*)/setvote", c => {
     	val resultid = c.urlInt(1)
-    	val claimid = c.argInt("claim")
     	c.store.setSnipVote(resultid,c.userid,c.arg("vote") == "true")
-    	if(claimid != 0){
+    	if(c.arg("claim") != null && c.arg("claim") != "undefined"){
+        	val claimid = c.argInt("claim")
     		c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     	}
     }),

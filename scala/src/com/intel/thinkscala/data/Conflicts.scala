@@ -1,4 +1,6 @@
 package com.intel.thinkscala.data
+import com.intel.thinkscala._
+
 
 trait Conflicts extends BaseData {
 

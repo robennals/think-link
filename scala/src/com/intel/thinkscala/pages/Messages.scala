@@ -1,4 +1,5 @@
 package com.intel.thinkscala.pages
+import com.intel.thinkscala._
 
 object Messages {
   def sentconfirm = 

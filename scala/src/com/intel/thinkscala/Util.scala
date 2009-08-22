@@ -194,23 +194,7 @@ object Util {
     }
     return result
   }
-  
-  def parseCsvFile2(filename : String) : ArrayBuffer[Map[String,String]] = {
-    val source = Source.fromFile(new java.io.File(filename))
-    val lines = source.getLines
-    val header = Util.parseCsvLine(lines.next)
-    val result = new ArrayBuffer[Map[String,String]]()
-    lines.foreach(line => {
-      val item = new HashMap[String,String]()
-      val row = parseCsvLine(line)
-      for(i <- 0 until row.length){
-        item(header(i)) = row(i)
-      }                
-      item +: result
-    })
-    return result
-  }
-  
+    
  def parseCsvLine(line : String) : Seq[String] = {
 	var strings = new ArrayBuffer[String]()
 	var lastpos = 0
