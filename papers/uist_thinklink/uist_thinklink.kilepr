@@ -2,7 +2,7 @@
 img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
-kileversion=2.0
+kileversion=2.1
 lastDocument=thinklink.tex
 masterDocument=
 name=uist_thinklink
@@ -17,11 +17,11 @@ QuickBuild=
 
 [item:thinklink.tex]
 archive=true
-column=375
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=490
-open=true
+line=22
+open=false
 order=0
 
 [item:uist_thinklink.kilepr]

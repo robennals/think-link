@@ -7,17 +7,22 @@ class Entry (val url : String, val title : String, val highlight : String, val c
 abstract class Learner {
 	def train(yes : Seq[String], no : Seq[String])
 	def classify(context : String) : Double
+	def classifyBool(context : String) : Boolean
 	                                                        
     def trainForSearch(store : Datastore,searchid : Int){
 		val yes = store.snippetText(searchid,"true").map(_.str("abstract"))
         val no = store.snippetText(searchid,"false").map(_.str("abstract"))        
 		train(yes,no)
 	}
+	
+	def dumpStatus : Unit
 }
 
 object EmptyClassifier extends Learner {
 	def train(yes : Seq[String], no : Seq[String]) = {}
 	def classify(context : String) = 0.5
+	def classifyBool(context : String) = false
+	def dumpStatus = {}
 }
 
 object Learner{

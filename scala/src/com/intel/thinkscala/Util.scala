@@ -12,6 +12,7 @@ import org.apache.commons.lang._;
 import scala.collection.Map;
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import com.intel.thinkscala.util.MiniJSON
 
 object Util {
   
@@ -125,7 +126,6 @@ object Util {
  
  def printJSON(obj : Any) : String = {
    obj match{
-     case s : String => "\""+StringEscapeUtils.escapeJavaScript(s)+"\""
      case m : Map[_,_] => 
        (m.keySet.map (k => "\""+k+"\" : " + printJSON(m(k)))).mkString("{",",","}") 
      case l : Iterable[_] => (l map printJSON).mkString("[",",","]")
@@ -133,7 +133,9 @@ object Util {
      case Some(s) => printJSON(s)
      case None => "null"
      case null => "null"
-     case o => o.toString
+     case x : Int => x.toString
+     case x : Double => x.toString
+     case o => "\""+MiniJSON.quote(o.toString)+"\""
    }
   }
 
@@ -149,7 +151,7 @@ object Util {
      case o => o.toString
     }
   }
-  
+ 
   def printCSV(l : Iterable[Map[String,String]], keys : Iterable[String]) : String = 
     keys.mkString(",") + "\n" + 
     l.map(m => keys.map(k => StringEscapeUtils.escapeCsv(m(k))).mkString(",")).mkString("\n")

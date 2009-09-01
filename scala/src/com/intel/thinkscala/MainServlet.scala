@@ -397,11 +397,15 @@ class MainServlet extends HttpServlet {
       val claim = c.store.getClaim(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + " - Dispute Finder Claim"
       c.outputHtml(title,Page.claim(claim)(c))
+    },c => {
+      c.output(c.store.getClaim(c.urlInt(1),c.maybe_userid))
     }),
     UrlHandler("""/topic/(\d*)""",c => {
       val row = c.store.getInfo(c.urlInt(1),c.maybe_userid)
       val title = row("text") + " - Dispute Finder Topic"
-      c.outputHtml(title,Page.topic(c,row))
+      c.outputHtml(title,Page.topic(c,row)) 
+    },c => {
+      c.output(c.store.getInfo(c.urlInt(1),c.maybe_userid))
     }),
     UrlHandler("""/user/(\d*)""",c => {
       val row = c.store.getUserInfo(c.urlInt(1))

@@ -18,11 +18,16 @@ trait Snippets extends BaseData {
     def claimsnippets = snippets.leftjoin("v2_node.text AS claimtext","v2_node ON v2_node.id = v2_searchresult.claim_id")    	  
     	  
   	  // TODO: bring back pagetext
+//    def getSnippet(resultid : Int) =
+//    	snippets 
+//    	.leftjoin("pagetext.text AS articlebody","pagetext ON pagetext.url_id = v2_searchresult.url_id")
+//    	.where ("v2_searchresult.id = ?",resultid) one
+
     def getSnippet(resultid : Int) =
     	snippets 
-    	.leftjoin("pagetext.text AS articlebody","pagetext ON pagetext.url_id = v2_searchresult.url_id")
     	.where ("v2_searchresult.id = ?",resultid) one
 
+    
     def allSnippets(claimid : Int, page : Int) =
     	snippets where ("v2_searchresult.claim_id = ?",claimid) where ("state = true") paged page rows
     	

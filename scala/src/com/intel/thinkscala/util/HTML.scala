@@ -104,7 +104,7 @@ object HTML {
 				}
 				lastlink = false
 			}
-			case Tag(tag) if(tagIsNewLine(tag)) => {
+			case Tag(tag) if(tagIsNewline(tag)) => {
 				buf.append("\n")
 				lastlink = false
 			}

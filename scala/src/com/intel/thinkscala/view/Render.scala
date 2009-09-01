@@ -160,12 +160,14 @@ object Render {
         <div class='installdiv'><a class='installbig' href={Urls.extension}>Install the Firefox extension</a></div>
     }
 
+  // TODO: bring back pagetext
   def snippet(row: SqlRow, classifier: Learner)(implicit c : ReqContext) = {
     val mode = snipVoteMode(row.str("state"))
-    val pagetext = row.str("articlebody")
-    if(pagetext == null || pagetext == ""){
-    	PageContext.backgroundFetchSnippet(row)
-    }
+//    val pagetext = row.str("articlebody")
+//    if(pagetext == null || pagetext == ""){
+//    	PageContext.backgroundFetchSnippet(row)
+//    }
+    val pagetext = null
     val thetext = if(pagetext == null || pagetext == "") row.str("abstract") else pagetext
     <div class={"snippet togglebox state-"+mode}>
 	<div class="boxcontent snippettext">
@@ -185,10 +187,11 @@ object Render {
 	    }
 	   }       
 	   {if(classifier != null){
-		    val roboscore = (classifier.classify(row.str("abstract")) * 100).toInt
-		   <div class={if(roboscore > 60) "roboscore-yes" else if(roboscore < 40) "roboscore-no" else "roboscore-maybe"}>
-		   {roboscore+"%"}
-		   </div>
+		   if(classifier.classifyBool(row.str("abstract"))){
+			   <div class='roboscore-yes'>yes</div>
+		   }else{
+			   <div class='roboscore-no'>no</div>
+		   }
 	   }}
 	</div>     
   }
@@ -218,7 +221,7 @@ object Render {
 	}
 
 	def bossResults(query : String,claimid : Int, page : Int)(implicit c : ReqContext) : NodeSeq = {
-	    val bossUrls = time("Yahoo BOSS",SnipSearch.searchBoss(query,page,10))   
+	    val bossUrls = time("Yahoo BOSS ",SnipSearch.searchBoss(query,page,10))   
 	    val classifier = time("train classifier",Learner.getClassifier(c.store,claimid,query))
 	    val searchid = c.store.mkSearch(claimid,query)
 	    return <div class='searchcontent'>{Util.flatMapWithIndex(bossUrls,Render.bossUrl(_ : BossUrl,searchid,_,query,claimid,classifier))}</div>

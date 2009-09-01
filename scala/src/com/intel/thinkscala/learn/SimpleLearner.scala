@@ -2,27 +2,56 @@ package com.intel.thinkscala.learn
 import scala.collection.mutable.HashMap
 import com.intel.thinkscala.Datastore
 
-class WordInfo {
+class WordInfo(val parent : PrefixTree, val tailword : String) {
 	var yescount = 0
 	var nocount = 0
 	var nextlevel = null : PrefixTree
 	// P(x | y) = P(x and y)/P(x)
-	override def toString = yescount + "/" + nocount + " - " + importance
+	override def toString = matchString + " : " + yescount + "/" + nocount + " - " + importance
 	def importance = Math.max(yescount / (yescount+nocount+1.0),nocount / (yescount+nocount+1.0)) 
+
+	// P(features | yes) - if class is yes, how likely this would be present
+	def score(totalyes : Double, totalno : Double) = {
+		val lfeatures = Math.log(yescount + nocount) - Math.log(totalno + totalyes)
+		val k = (totalyes + totalno)/(0.0 + yescount + nocount) 
+		(1.0+yescount)/(k + totalyes)
+	}
+
+	def scoreYes(totalyes : Double, totalno : Double) = {
+		val lfeatures = Math.log(yescount + nocount) - Math.log(totalno + totalyes)
+		val k = (totalyes + totalno)/(0.0 + yescount + nocount) 
+		(1.0+yescount)/(k + totalyes)
+	}
+
+	def scoreNo(totalyes : Double, totalno : Double) = {
+		val lfeatures = Math.log(yescount + nocount) - Math.log(totalno + totalyes)
+		val k = (totalyes + totalno)/(0.0 + yescount + nocount) 
+		(1.0+nocount)/(k + totalno)
+	}
+	
+	def matchString = {
+		var str = ""
+		var wi = this
+		while(wi != null){
+			str = wi.tailword + " " + str
+			wi = wi.parent.parent
+		}
+		str
+	}
 }
 
-class PrefixTree extends HashMap[String,WordInfo] {
+class PrefixTree(val parent : WordInfo) extends HashMap[String,WordInfo] {
 	def hello = 3
 	
 	def addString(s : Seq[String], length : Int, action : WordInfo => Unit, good : WordInfo => Boolean){
 		if(s.isEmpty || length == 0) return;
-		val wordinfo = getOrElseUpdate(s.head,new WordInfo)
+		val wordinfo = getOrElseUpdate(s.head,new WordInfo(this,s.head))
 		if(length == 1){
 			action(wordinfo)
 		}
 		if(length > 1 && good(wordinfo)){
 			if(wordinfo.nextlevel == null){
-				wordinfo.nextlevel = new PrefixTree
+				wordinfo.nextlevel = new PrefixTree(wordinfo)
 			}
 			wordinfo.nextlevel.addString(s.tail, length - 1, action, good)
 		}
@@ -74,8 +103,7 @@ class PrefixTree extends HashMap[String,WordInfo] {
 	def dumpBest = {
 		val flat = sortForBest(flatten(List())) take 100
 		flat foreach {x => 
-			val info = x._2
-			println(x._1.reverse.mkString(" ") + " " + info)
+			println(x._2)
 		}
 	}
 		
@@ -97,8 +125,10 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	var countyes = 0 : Double
 	var countno = 0 : Double
 	
+	def dumpStatus = tree.dumpBest
+	
 	def train(yes : Seq[String], no : Seq[String]){
-		tree = new PrefixTree
+		tree = new PrefixTree(null)
 		val yeswords = yes map (_.split("\\s"))
 		val nowords = no map (_.split("\\s"))
 		countyes = yes.length
@@ -146,82 +176,86 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 			return (cfeaturesclaim+0.0)/cfeatures
 		}
 	}
-	def classify2(text : String) : Double = {
+	// Using count of features 
+	// P(makes-claim | has-features) = P(makes-claim) * P(has-features | makes-claim) / P(has-features)
+	// can ignore P(has-features) as same for makes and doesn't make
+	// so compare P(makes-claim) * PROD_i[p(feature_i | makes-claim)) 
+	// vs P(not-claim) * PROD_i[p(feature_i | not-claim)]
+		// log both sides
+	// P(makes-claim) * PROD_i[p(feature_i | makes-claim)]
+	//   = log(P(makes-claim)) + SUM_i[log(p(feature_i | makes-claim))]
+	
+	// how many total features match claims? 
+	// P(feature_i | makes-claim) = count_ic + 1 / 
+	
+	// confidence figures? that matters is the difference between the two?
+	// do we want to unlog and get back to percentage?
+	
+	def classifyLog2(text : String) : Double = {
 		val features = getFeatures(text.split("\\s"))
-		val pclaim = countyes/(countyes + countno)
-		var pfeatures = 1.0 : Double
-		var pfeaturesclaim = 1.0 : Double
-		features foreach {info =>
-			pfeaturesclaim *= (info.yescount + 1) / (countyes + 1)
-		    pfeatures *= (info.yescount+info.nocount+1) / (countno+countyes+1)
+		val pyes = countyes/(countyes + countno)
+		var lfeatures = 0.0 : Double
+		var lfeaturesclaim = 0.0 : Double
+		features foreach {info => 
+			if(info.yescount != 0){
+				lfeaturesclaim += Math.log(info.yescount) - Math.log(countyes)
+			}else{
+				lfeaturesclaim += Math.log(1) - Math.log(countno + countyes)
+			}
+			lfeatures += Math.log(info.yescount + info.nocount) - Math.log(countno + countyes)
 		}
-		if(features.isEmpty){
-			return pclaim
-		}else{
-			pclaim * pfeaturesclaim / pfeatures
-		}
-	}
-	def classify3(text : String) : Double = {
-		val features = getFeatures(text.split("\\s"))
-		val totalcount = countyes + countno
-		val pyes = countyes/totalcount
-		val pno = 1-pyes
-		var pfeatures = 1.0 : Double
-		var pfeaturesyes = 1.0 : Double
-		features foreach {info =>
-		    if(info.yescount == 0){
-		    	pfeaturesyes *= (1/totalcount)
-		    }else{
-		    	pfeaturesyes *= info.yescount / countyes
-		    }
-		    pfeatures *= (info.yescount + info.nocount) / totalcount 
-		}
-		if(features.isEmpty){
-			return pyes
-		}else{
-			pyes * pfeaturesyes / pfeatures
-		}
+		return Math.exp(Math.log(pyes) + lfeaturesclaim - lfeatures)
 	}
 	
-	// total hack
-	def classify4(text : String) : Double = {
-		val features = getFeatures(text.split("\\s"))
-		val totalcount = countyes + countno		
-		var pfeaturesno = 1.0 : Double
-		var pfeaturesyes = 1.0 : Double
-		features foreach {info =>
-			if(info.yescount == 0){
-				pfeaturesyes *= (1/totalcount)
-			}else{
-				pfeaturesyes *= info.yescount / countyes
-			}
-			if(info.nocount == 0){
-				pfeaturesno *= (1/totalcount)
-			}else{
-				pfeaturesno *= info.nocount / countno
-			}
+	def textFeatures(text : String) = getFeatures(text.split("\\s"))
+	
+	def bestFeatures(text : String) = 
+		textFeatures(text).sort((x,y) => x.score(countyes,countno) > y.score(countyes,countno)) 
+	
+	// P(makes-claim | features) = P(claim) * P(features | claim)/P(has-features)
+    // = P(claim) * PROD_i[P(feature_i | claim)/p(feature_i)]
+    // = P(claim) * exp(log(PROD_i[P(feature_i | claim)/p(feature_i)])
+	// = P(claim) * exp(SUM[log(....)]))
+	def classifyLog(text : String) : Double = {
+		val features = textFeatures(text)
+		val pclaim = countyes/(countyes + countno)
+		var logsum = 0.0 
+		var lfeaturesclaim = 0.0
+		var lfeatures = 0.0
+		features foreach {info => 
+			lfeaturesclaim += Math.log(info.score(countyes,countno))
+			lfeatures += Math.log(info.yescount + info.nocount) - Math.log(countno + countyes)
 		}
-		if(features.isEmpty){
-			return countyes / (countyes + countno)
-		}else{
-			pfeaturesyes / (pfeaturesyes + pfeaturesno)
-		}
+		return Math.exp(Math.log(pclaim) + lfeaturesclaim - lfeatures)
 	}
-			
-			
-			
-//		var pfeaturesno = 1.0 : Double
-//		var pfeaturesyes = 1.0 : Double
-//		features foreach {info =>
-//			pfeaturesyes *= (info.yescount + 1) / countyes
-//		    pfeaturesno *= (info.nocount+1) / countno
-//		}
-//		if(features.isEmpty){
-//			return countyes / (countyes + countno)
-//		}else{
-//			pfeaturesyes / (pfeaturesyes + pfeaturesno)
-//		}
-//	}
+
+	def logYes(text : String) : Double = {
+		val features = textFeatures(text)
+		var logsum = 0.0
+		var lfeatures = 0.0
+		val pyes = countyes/(countyes + countno)
+		features foreach {info =>
+			logsum += Math.log(info.scoreYes(countyes,countno)) 
+			lfeatures += Math.log(info.yescount + info.nocount) - Math.log(countno + countyes)
+		}
+		Math.log(pyes) + logsum - lfeatures
+	}
+
+	def logNo(text : String) : Double = {
+		val features = textFeatures(text)
+		var logsum = 0.0
+		var lfeatures = 0.0
+		val pno = countno/(countyes + countno)
+		features foreach {info =>
+			logsum += Math.log(info.scoreNo(countyes,countno)) 
+			lfeatures += Math.log(info.yescount + info.nocount) - Math.log(countno + countyes)
+		}
+		Math.log(pno) + logsum - lfeatures
+	}
+	
+	def logDiff(text : String) : Double = logYes(text) - logNo(text)
+	
+	def classifyBool(text : String) = logYes(text) > logNo(text)
 	
 	def testClassify(data : Seq[String], classifier : String => Double) = {
 		var included = 0;
