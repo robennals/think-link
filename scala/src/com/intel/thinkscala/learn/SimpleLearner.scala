@@ -255,6 +255,12 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	
 	def logDiff(text : String) : Double = logYes(text) - logNo(text)
 	
+	def bestSentence(xs : Seq[String]) : String = {
+		val scored = xs.toList map {x => (logDiff(x),x)}
+		val sorted = scored sort {(x,y) => x._1 > y._1}
+		sorted.head._2
+	}
+	
 	def classifyBool(text : String) = logYes(text) > logNo(text)
 	
 	def testClassify(data : Seq[String], classifier : String => Double) = {

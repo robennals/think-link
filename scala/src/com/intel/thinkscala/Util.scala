@@ -135,7 +135,7 @@ object Util {
      case null => "null"
      case x : Int => x.toString
      case x : Double => x.toString
-     case o => "\""+MiniJSON.quote(o.toString)+"\""
+     case o => MiniJSON.quote(o.toString)
    }
   }
 

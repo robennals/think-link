@@ -8,7 +8,9 @@ abstract class Learner {
 	def train(yes : Seq[String], no : Seq[String])
 	def classify(context : String) : Double
 	def classifyBool(context : String) : Boolean
-	                                                        
+	 
+	def bestSentence(sentences : Seq[String]) : String
+	
     def trainForSearch(store : Datastore,searchid : Int){
 		val yes = store.snippetText(searchid,"true").map(_.str("abstract"))
         val no = store.snippetText(searchid,"false").map(_.str("abstract"))        
@@ -23,6 +25,7 @@ object EmptyClassifier extends Learner {
 	def classify(context : String) = 0.5
 	def classifyBool(context : String) = false
 	def dumpStatus = {}
+	def bestSentence(xs : Seq[String]) = xs.head
 }
 
 object Learner{

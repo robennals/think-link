@@ -167,12 +167,20 @@ object Render {
 //    if(pagetext == null || pagetext == ""){
 //    	PageContext.backgroundFetchSnippet(row)
 //    }
+    var picktext = row.str("picktext")
+    var robotyes = false
+    if(classifier != null){
+    	robotyes = classifier.classifyBool(row.str("abstract"))
+	    if(robotyes && (picktext == null || picktext == "" || picktext == "''")){
+	    	picktext = classifier.bestSentence(splitSentences(row.str("abstract")));
+	    }
+    }
     val pagetext = null
     val thetext = if(pagetext == null || pagetext == "") row.str("abstract") else pagetext
     <div class={"snippet togglebox state-"+mode}>
 	<div class="boxcontent snippettext">
 		<div class="text">
-			{selectableSentences(thetext,row.str("picktext"))}
+			{selectableSentences(thetext,picktext)}
 		</div></div>
 	   <input type="hidden" class="resultid" value={""+row("id")}/>
 	     <div class="yesnobox">
@@ -187,7 +195,7 @@ object Render {
 	    }
 	   }       
 	   {if(classifier != null){
-		   if(classifier.classifyBool(row.str("abstract"))){
+		   if(robotyes){
 			   <div class='roboscore-yes'>yes</div>
 		   }else{
 			   <div class='roboscore-no'>no</div>
