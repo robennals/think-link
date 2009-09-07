@@ -56,6 +56,28 @@ object Util {
    return parser.document();
  }
 
+ def splitSentences(text : String) : ArrayBuffer[String] = {
+		    val outarr = new ArrayBuffer[String]
+			var outstr = new StringBuffer
+			var prevspace = false
+			val ctext = text.replaceAll("\n+","\n")
+			ctext foreach {c =>
+			    outstr append c
+				if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == ';' || (prevspace && c == '-') ){
+					outarr += outstr.toString
+					outstr = new StringBuffer
+				}
+			    if(c == '\n'){
+			    	outarr += "\n\n"
+			    }
+			    prevspace = c == ' '
+			}
+		    if(outstr.length > 0){
+		    	outarr += outstr.toString
+		    }
+		    outarr
+		  }
+ 
  def reduceUnicode(str_in : String) = {
    var str = str_in
    str = str.replace('\u2010','-');

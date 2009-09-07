@@ -4,6 +4,7 @@ import com.intel.thinkscala.learn.Learner
 import scala.collection.mutable.ArrayBuffer
 import com.intel.thinkscala.util.Timer.time
 import com.intel.thinkscala._
+import com.intel.thinkscala.Util._
 
 object Render {
   import Widgets._
@@ -245,30 +246,7 @@ object Render {
 	  {Widgets.pagedList(bossResults(query,row.int("id"),_))}
 	  </div>
 	  </div>
- 
-    def splitSentences(text : String) : ArrayBuffer[String] = {
-	    val outarr = new ArrayBuffer[String]
-		var outstr = new StringBuffer
-		var prevspace = false
-		val ctext = text.replaceAll("\n+","\n")
-		ctext foreach {c =>
-		    outstr append c
-			if(c == '.' || c == '!' || c == '?' || c == '\n' || c == ':' || c == ';' || (prevspace && c == '-') ){
-				outarr += outstr.toString
-				outstr = new StringBuffer
-			}
-		    if(c == '\n'){
-		    	outarr += "\n\n"
-		    }
-		    prevspace = c == ' '
-		}
-	    if(outstr.length > 0){
-	    	outarr += outstr.toString
-	    }
-	    outarr
-	  }
-
-    
+     
     def spanForSentence(x : String,picktext : String) = 
     	if(x == "\n\n"){
     		<br/>
