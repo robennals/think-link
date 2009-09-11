@@ -69,7 +69,6 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
         };
         reqUrl
     }
-
   
   def output(obj : Any) {
     res.setContentType("text/html; charset=UTF-8") // TODO: set this correctly

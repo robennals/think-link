@@ -1,0 +1,23 @@
+<div class="box docbox">
+<h1>Highlighted Claims</h1>
+
+<div class='docbody'>
+
+Once you have installed the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">
+Firefox Extension</a>, Dispute Finder will examine the pages you browse,
+looking for sentences that imply <a href="claims.html">claims that other users have said are disputed</a>.
+
+<p>If Dispute Finder finds a sentence that makes a disputed claim, it will highlight it on 
+the page to let you know that there are other points of view that you might want to 
+investigate.
+<img src="../images/highlight_snippet2.png"/>
+</p>
+
+<p>If a sentence is highlighted, it does not mean that the claim it is making is wrong. Dispute
+Finder makes no attempt to determine if a claim is <em>true</em>, only if it is <em>disputed</em>. 
+You should not interpret the number of sentences that are highlighted no a page as an indication of 
+the accuracy of an article.
+</p>
+
+</div>
+</div>

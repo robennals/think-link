@@ -9,7 +9,7 @@ object Page {
   import Render._
   def home(implicit c : ReqContext) =
     <div class="content">
-          <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
+      <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
 
       <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
       <div class="tagline">Reveal the other side of the story</div>

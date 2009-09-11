@@ -85,7 +85,16 @@ object TurkPostUrls {
 
 
 class MainServlet extends HttpServlet { 
-  val posthandlers = List(
+//  def readResource(res : String) : String = 
+//	  readToString(getServletContext().getResourceAsStream(res))
+
+	def readResource(res : String) : String = {
+		val filename = getServletContext().getRealPath(res)
+		readFileToString(new File(filename))
+	}
+	
+	
+  val posthandlers = List(		  
     UrlHandler("/login",c => {
       val email = c.arg("email")
       val password = c.arg("password")
@@ -362,6 +371,9 @@ class MainServlet extends HttpServlet {
       }
       c.userid
       c.outputMiniHtml(Mini.newsnippet(text,url,title,isdisputed,query)(c))      
+    }),
+    UrlHandler("/docs/(\\w*)", c => {
+      c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml")))
     }),
     UrlHandler("/mini/markedbad", c => {
       c.outputMiniHtml(Mini.markedbad);

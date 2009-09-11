@@ -41,6 +41,10 @@ object Util {
    return buf.toString;   
  }
  
+// def readToString(in : InputStream) : String = readToString(new BufferedReader(new InputStreamReader(in)))
+ 
+ def readFileToString(in : java.io.File) : String = readToString(new BufferedReader(new FileReader(in)))
+ 
  def download(url : String) : String = {
    val connection = new URL(url).openConnection();
    val reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

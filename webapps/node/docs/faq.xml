@@ -1,0 +1,120 @@
+<div class="box docbox">
+<h1>Frequently Asked Questions</h1>
+
+<div class="docbody">
+
+This is a partial list of questions that are often asked about Dispute Finder. 
+Please <a href="mailto:robert.ennals@intel.com">email Rob Ennals</a> if 
+you have a question that isn't answered here.
+
+<ul>
+<li><a href="#disputed">Isn't everything disputed?</a></li>
+<li><a href="#lobby">Won't lobbyists use this to attack their opponents?</a></li>
+<li><a href="#oneview">Are you trying to impose one view of the world?</a></li>
+<li><a href="#mobrule">Is this mob rule?</a></li>
+<li><a href="#wrong">If something is highlighted, does that mean it is wrong?</a></li>
+<li><a href="#opensource">Is Dispute Finder open source?</a></li>
+</ul>
+
+
+<h3 id="disputed">Isn't Everything Disputed?</h3>
+
+<p>Yes. To some extent, everything is disputed. Our aim is not to tell you 
+about <em>everything</em> that is disputed by <em>anybody</em>. Our aim
+is to let you know when you read something that disagrees with an opinion
+expressed by a source that <em>you</em> would take seriously.</p>
+
+<p>If a random blogger disagrees with what you are reading, then that
+probably isn't very interesting, but if a newspaper you trust disagrees
+then you might want to know. Similarly, you might want to know if an article
+your best friend agreed with disagrees with what you are reading.</p>
+
+<p>This is why we have the vote up/vote down buttons on each of the 
+argument sources that we show you for a claim. If you like a source then vote
+it up. If you don't like it then vote it down.</p>
+
+<p>Right now, this technology doesn't function all that well, but we are working
+hard to make it awesome.</p>
+
+<h3 id="lobby">Won't lobbyists just mark their opponents sites?</h3>
+
+<p>They probably will, and provided that they only mark things that actually are
+disputed and provide good evidence in favor of their points of view, then this
+is probably a good thing.</p>
+
+<p>Remember that just because something is disputed doesn't mean
+it is wrong. If you think that something someone has marked is correct then
+you can help support your point of view by making sure that Dispute Finder
+has good arguments in favor of your side of the story.
+</p>
+
+<p>While it is true that the side with more resources may be able to spend
+more time making sure their opponents claims are marked as disputed, training
+Dispute Finder to mark disputed claims doesn't take that much effort, so we 
+think the scales are more fairly balanced then they are in most media.</p>
+
+<p>If someone is abusing Dispute Finder by marking something as making
+a claim that it isn't actually making then you can report their marking
+as incorrect. If someone does this repeatedly then we can revoke their account
+and reverse all their making.</p>
+
+<h3 id="oneview">Are you trying to impose one view of the world</h3>
+
+<p>Absolutely not. We are trying to do exactly the opposite.</p>
+
+<p>When we mark something is disputed, it does <strong>not</strong> mean
+that it is wrong. It just means that their are sources that you might
+take seriously that argue for other points of view. It is likely that there
+will also be sources that argue in favor of the claim, and we will show you
+those as well.</p>
+
+<p>The key aim of Dispute Finder is to encourage you to be aware of the 
+diverse range of opinions that are out there. We want to encourage doubt
+and skepticism. We hate the idea of everyone believing the same thing even
+more than you do :-)</p>
+
+<h3>Is this mob rule?</h3>
+
+<p>Not really. Dispute Finder has no idea of <em>truth</em> and does
+provide you with any metrics about how <em>true</em> a claim may on may not be. 
+For example we do not take vote counts, or try to rate the reliability
+of sources.</p>
+
+<p>Our aim is to resist the mob rule that already exists by exposing you
+to a diverse range of opinions that you might find interesting.</p>
+
+<h3 id="wrong">If something is highlighted, does that mean it is wrong?</h3>
+
+<p>No. It doesn't. If something is highlighted, it simply means it is disputed. 
+Something is considered to be disputed if there is a source that we believe
+you would find credible that supports a different point of view. Many disputed
+claims are probably correct, and if one side of an argument is disputed then it is
+likely that the other side is disputed to.</p>
+
+<h3 id="opensource">Is Dispute Finder open source?</h3>
+
+<p>Yes. The full <a href="http://wiki.github.com/robennals/think-link">source code</a> for Dispute Finder is available under 
+an Apache License.</p>
+
+<h3>Who made this?</h3>
+
+<p>The following people have contributed to the development of Dispute Finder:</p>
+
+<p>People at Intel Research</p>
+<ul><li> <a href="http://berkeley.intel-research.net/rennals/">Rob Ennals</a> - Project lead</li>
+<li> <a href="http://web.media.mit.edu/~tad/">Tad Hirsch</a> </li>
+<li> Tye Rattenbury</li>
+<li> <a href="http://www.agosta.org/">John Mark Agosta</a> </li>
+</ul> 
+People at UC Berkeley
+<ul>
+<li> <a href="http://www.cs.berkeley.edu/~trush/">Beth Trushkowsky</a> - 2008 Summer Intern on Think Link</li>
+<li> <a href="http://www.eecs.berkeley.edu/~willettw/selectpage.html">Wes Willet</a> </li>
+<li> Nick Kong</li>
+<li> Nick Lanham</li>
+<li> Christine Robson</li>
+<li> Jesse Trutna</li>
+</ul> 
+
+</div>
+</div>

@@ -1,6 +1,9 @@
 
 * {
 	font-family: arial,sans-serif;
+}
+
+body {
 	font-size: 12px;
 }
 
@@ -805,6 +808,7 @@ img {
 
 .beta {
 	vertical-align: top;
+	font-size: 14px;
 }
 
 .add {
