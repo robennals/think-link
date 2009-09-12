@@ -1,8 +1,40 @@
 <div class="box docbox">
-<h2>Arguments for Other Points of View</h2>
+<h1>Arguments</h2>
 <div class='docbody'>
 
-Hello
+Dispute Finder considers a claim to be disputed if a trustworthy source argues
+for an alternative point of view.
+
+<h3>Viewing Arguments</h3>
+
+<p>
+If you click on a <a href="highlight.html">highlighted claim</a> on a web page
+then Dispute Finder will display a popup dialog showing arguments for alternative
+points of view that you might find convincing.</p>
+	    <img src="../images/evidence_popup.png"/>
+
+<p>
+Of course, different people will disagree on which arguments are trustworthy or
+convincing. When Dispute Finder shows you an argument, you can vote it up or 
+down to let Dispute Finder know whether you think the argument is interesting.
+</p>
+
+<p>At present, Dispute Finder largely ignores these votes, but a future version
+of Dispute Finder will use these votes to predict which arguments it should show
+you in the future, and which claims have evidence that is most likely to convince you
+they are disputed.</p>
+
+<h3>Adding Arguments</h3>
+
+All arguments are contributed by Dispute Finder users. If you have read an article
+online that makes a good argument for or against a disputed claim then you can
+add it to Dispute Finder.
+
+<p>To add an argument to Dispute Finder, browse to the web page that contains the 
+argument, select a representative paragraph of text to use as an excerpt, right click,
+and select <q>Use as evidence</q> from the popup menu</p>
+<img src="../images/mark_evidence.png"/>
+
 
 </div>
 </div>

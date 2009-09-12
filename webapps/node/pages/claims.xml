@@ -1,0 +1,41 @@
+<div class="box yellowbox mainbox">
+<div class='boxbody'>
+
+<h1 class='hidden'>Disputed Claims</h1>
+
+<form id="mainsearch" method="get" action="/thinklink/search">
+<span class='prompt'>I dispute the claim that...</span>
+<input type="text" name="query" class='search tempinput' value="- enter a claim that you think is disputed - "/>
+<input class='submit' type="submit" value="Search"/>
+</form>
+
+<div class='claimsummary'>
+	
+	Tell Dispute Finder about a claim on the web that you believe 
+	is disputed.
+	
+	<p>
+	To avoid creating duplicates, first search our database to check 
+	it isn't already there.
+	</p>
+		
+	<p>Try to use a minimal expression of the claim. For example:</p>
+	
+	<ul>
+		<li>I dispute the claim that <q>global warming is a hoax</q></li>
+		<li>I dispute the claim that <q>gun control would reduce crime</q></li>
+		<li>I dispute the claim that <q>eskimos have many words for snow</q></li>
+		<li>I dispute the claim that <q>margarine is healthier than butter</q></li>
+		<li>I dispute the claim that <q>the world is running out of oil</q></li>
+	</ul>	
+	
+	<p>Just because a claim is disputed does not mean that it is wrong. 
+	It just means that there are other points of view that people might want to know about.</p>
+
+	<p>Dispute Finder relies on users like you to tell it claims that are made on the web that they
+	think are disputed.</p>
+
+</div>
+
+</div>
+</div>

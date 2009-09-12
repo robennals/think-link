@@ -3,6 +3,7 @@ import scala.io.Source
 import java.io.File
 import scala.xml.parsing._
 import scala.xml._
+import com.intel.thinkscala._
 
 object Docs {
 	def head(title : String) = 
@@ -23,21 +24,13 @@ object Docs {
 		    <ul>
 		    <li><a href="../frontpage.html">About Dispute Finder</a></li>
 		    <li><a href="faq.html">FAQ</a></li>
-		    </ul>		
-		    <h3>Skeptical Readers</h3>
-		    <ul>
-		    	<li><a href="highlight.html">Highlighted Claims</a></li>
-		    	<li><a href="arguments.html">Arguments</a></li>
-		    </ul>
-		    <h3>Activists</h3>
-		    <ul>
-		    	<li><a href="claims.html">Add Disputed Claims</a></li>
-		    	<li><a href="addrarg.html">Add Arguments</a></li>
-		    	<li><a href="train.html">Train Dispute Finder</a></li>
+		    <li><a href="highlight.html">Highlighted Claims</a></li>
+		    <li><a href="arguments.html">Arguments</a></li>
+		    <li><a href="training.html">Training</a></li>
 		    </ul>
 	    </div>
 
-    val nav = 
+    def nav(c : ReqContext) = 
     	<div>
     	<div id="intellogo">
 			<img src="/images/intel_black_transparent_100w.png"/>
@@ -48,21 +41,34 @@ object Docs {
 		
 		<div id="nav">
 			<ul>
-				<li><a href="/thinklink/frontpage.html">About</a></li>
-			    <li><a href="faq.html">FAQ</a></li>
-				<li><a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Extension</a></li>
-				<li>Claims</li>
+				<li><a href="/thinklink/">About</a></li>
+				<li><a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install</a></li>
+			    <li><a href="/thinklink/docs/faq.html">FAQ</a></li>
+				<li><a href="/thinklink/pages/claims.html">Claims</a></li>
 				<li>Pages</li>
-				<li>Me</li>
+			    {if(c.user.realuser)
+			         <li><a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a></li>
+			         <li><a class="logout" href={Urls.logout}>logout</a></li>
+			     else
+		             <li><a class="signup" href={Urls.signup}>sign up</a></li>
+			         <li><a class="login" href={Urls.login(Urls.base)}>login</a></li>           
+			    }
 				<li>Feedback</li>
 			</ul>
 		</div>
 		</div>
 		
 		
-	def docPage(xmlstr : String) : NodeSeq = {
+	def docPage(xmlstr : String, c : ReqContext) : NodeSeq = {
 		val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 		val title : String = (xml \\ "h1").text
-		return <html>{head(title)}<body class='body'>{nav ++ docnav ++ xml}</body></html>
+		return <html>{head(title)}<body class='body'>{nav(c) ++ docnav ++ xml}</body></html>
 	}
+	
+	def page(xmlstr : String, c : ReqContext) : NodeSeq = {
+			val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
+			val title : String = (xml \\ "h1").text
+			return <html>{head(title)}<body class='body'>{nav(c) ++ xml}</body></html>
+	}
+
 }

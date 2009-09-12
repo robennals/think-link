@@ -14,6 +14,8 @@ you have a question that isn't answered here.
 <li><a href="#mobrule">Is this mob rule?</a></li>
 <li><a href="#wrong">If something is highlighted, does that mean it is wrong?</a></li>
 <li><a href="#opensource">Is Dispute Finder open source?</a></li>
+<li><a href="#api">Do you have an API?</a></li>
+<li><a href="#who">Who created Dispute Finder?</a></li>
 </ul>
 
 
@@ -96,7 +98,12 @@ likely that the other side is disputed to.</p>
 <p>Yes. The full <a href="http://wiki.github.com/robennals/think-link">source code</a> for Dispute Finder is available under 
 an Apache License.</p>
 
-<h3>Who made this?</h3>
+<h3 id="api">Do you have an API?</h3>
+
+<p>We are working on one. Please <a href="mailto:robert.ennals@intel.com">contact us</a> 
+if you are interested in using our data or otherwise interfacing with Dispute Finder.</p>
+
+<h3 id="who">Who made this?</h3>
 
 <p>The following people have contributed to the development of Dispute Finder:</p>
 

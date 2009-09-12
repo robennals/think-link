@@ -1,3 +1,11 @@
+* {
+	font-family: arial,sans-serif;
+}
+
+body {
+	font-size: 12px;
+}
+
 
 #frontlogo {
 	font-size: 40px;
@@ -28,7 +36,7 @@
 .box img {
 	align: right;
 	margin-left: 30px;
-	width: 270px;
+	max-width: 270px;
 }
 
 .box h2, .box h1 {
@@ -48,7 +56,7 @@
 .frontlist {
 	float: left;
 	width: 350px;
-	min-height: 750px;
+	min-height: 620px;
 	margin-left: 20px;
 	margin-bottom: 20px;
 }
@@ -82,6 +90,20 @@
 	clear: both;
 	margin: 20px;
 	margin-top: 20px;
+}
+
+#stats {
+	width: 180px;	
+	position: absolute;
+	left: 650px;
+	padding: 10px;
+	font-size: 14px;
+}
+
+#stats .instances {
+	display: block;
+	font-size: 14px;
+	margin-top: 4px;
 }
 
 #nav {
@@ -140,4 +162,114 @@
 #docnav .toplink {
 	margin-left: 10px;
 	margin-bottom: 10px;
+}
+
+#mainsearch {
+	padding: 6px;
+	background-color: #FFFFAA;
+}
+
+.yellowbox {
+	border-color: #FFFFAA;
+}
+
+.mainbox {
+	margin-left: 20px;
+	position: absolute;
+}
+
+.search {
+	font-size: 16px;
+	padding: 4px;
+	width: 450px;	
+}
+
+.prompt {
+	font-weight: bold;
+	font-size: 14px;
+	display: block;
+}
+
+.submit {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 4px;
+}
+
+.tempinput {
+	color: gray;
+}
+
+.claimsummary {
+	padding: 20px;
+	font-size: 15px;
+}
+
+.claimsummary q {
+	font-weight: bold;
+}
+
+.claimresults .title {
+	font-size: 15px;
+	color: #105CB6;
+}
+
+.claimresults {
+	padding: 10px;
+	font-size: 13px;
+}
+
+#newthing {
+	margin-left: 120px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.hidden {
+	display: none;
+}
+
+.topbutton {
+	font-size: 20px;
+	padding: 5px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #5867A2;
+	color: white;
+	font-weight: bold;
+}
+
+.button-install {
+	margin-left: 43px;
+}
+
+.button-addclaim {
+	margin-left: 120px;
+}
+
+#topbuttonbox {
+	padding-top: 10px;
+	margin: 20px;
+}
+
+.thingbox h1{
+	margin-bottom: 0px;
+}
+
+.thingbox .tabs .header {
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	background-color: #F6F6F6;
+}
+
+.thingbox .tabs .header a {
+	background-color: #F6F6F6;
+	border-color: #F6F6F6;
+}
+
+.thingbox .tabs .tabbody {
+	border: none;
+	
 }

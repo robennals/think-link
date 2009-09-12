@@ -193,6 +193,11 @@ function loggedIn(){
 }
 
 window.onload = function(){
+	$(".tempinput").focus(function(e){
+		var input = e.target;
+		$(input).removeClass("tempinput");
+		input.value = "";		
+	})
 	$(".yes").click(function(e){
 		var box = $(e.target).parents(".togglebox");
 		box.addClass("state-yes");

@@ -5,7 +5,7 @@
 
 Once you have installed the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">
 Firefox Extension</a>, Dispute Finder will examine the pages you browse,
-looking for sentences that imply <a href="claims.html">claims that other users have said are disputed</a>.
+looking for sentences that imply <a href="../pages/claims.html">claims that other users have said are disputed</a>.
 
 <p>If Dispute Finder finds a sentence that makes a disputed claim, it will highlight it on 
 the page to let you know that there are other points of view that you might want to 

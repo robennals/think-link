@@ -318,7 +318,7 @@ class MainServlet extends HttpServlet {
       c.store.turkResponse(c.urlInt(1))
     }),
     UrlHandler("/index.html",c => {
-      c.outputRawHtml(Template.noinstall(c,"Welcome to Dispute Finder",Page.home(c)))
+      c.outputRawHtml(Docs.page(readResource("pages/frontpage.xml"),c))
     }),
     UrlHandler("/search",c => {
 	  val title = c.arg("query")+" - Dispute Finder Claim Search"
@@ -373,7 +373,10 @@ class MainServlet extends HttpServlet {
       c.outputMiniHtml(Mini.newsnippet(text,url,title,isdisputed,query)(c))      
     }),
     UrlHandler("/docs/(\\w*)", c => {
-      c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml")))
+      c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml"),c))
+    }),
+    UrlHandler("/pages/(\\w*)", c => {
+        c.outputRawHtml(Docs.page(readResource("pages/"+c.urlArg(1)+".xml"),c))
     }),
     UrlHandler("/mini/markedbad", c => {
       c.outputMiniHtml(Mini.markedbad);

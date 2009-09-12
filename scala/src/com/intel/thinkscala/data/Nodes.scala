@@ -22,7 +22,7 @@ trait Nodes extends BaseData {
 	}
 	
 	  def nodesByUser(typ : String, userid : Int, page : Int) =
-		  typnodes(typ,page) where ("user_id = ?",userid) orderby ("instance_count") rows
+		  typnodes(typ,page) where ("user_id = ?",userid) orderby ("v2_node.id DESC") rows
 	
 	  def nodesUserDeleted(typ : String, userid : Int, page : Int) =
 		  nodes where ("hidden = true") where ("type = ?",typ) where ("user_id = ?",userid) rows

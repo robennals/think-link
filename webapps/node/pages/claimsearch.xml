@@ -1,0 +1,181 @@
+<div class="box yellowbox mainbox">
+<div class='boxbody'>
+
+<form id="mainsearch" method="get" action="claimsearch">
+<span class='prompt'>I dispute the claim that...</span>
+<input type="text" class='search' value="global warming is a hoax"/>
+<input class='submit' type="submit" value="Search"/>
+</form>
+
+<form id="newthing">
+Don't see your claim? &#8212; <input type='submit' class='submit' value="Create a New Claim"/>
+</form>
+
+<div class='claimresults'>
+   	<div class="claim">
+      <a href="fakeclaim.html" class="title">Global warming is a hoax</a>
+      <div class="description"> </div>
+      <span class="user">created by <a href="/thinklink/user/8" target="_blank">Tye Rattenbury</a></span>
+      - <a href="/thinklink/claim/6486/findsnippets" class="instances">seen <span class="count">108</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,6486)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6149" class="title">Only hippies believe in global warming</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6149/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6149)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5973" class="title">Global warming is a problem</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/2" target="_blank">mechanical turk</a></span>
+      - <a href="/thinklink/claim/5973/findsnippets" class="instances">seen <span class="count">1</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,5973)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5947" class="title">Global warming does not exist</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/29" target="_blank">Natalie </a></span>
+      - <a href="/thinklink/claim/5947/findsnippets" class="instances">seen <span class="count">68</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,5947)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6342" class="title">Global warming is irreversible</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/29" target="_blank">Natalie </a></span>
+      - <a href="/thinklink/claim/6342/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,6342)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6148" class="title">Global warming has natural causes</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6148/findsnippets" class="instances">seen <span class="count">2</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6148)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6101" class="title">Global warming has had natural causes in the past</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6101/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6101)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6150" class="title">Most scientists believe global warming exists</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6150/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6150)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5981" class="title">Mars is experiencing global warming</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/2" target="_blank">mechanical turk</a></span>
+      - <a href="/thinklink/claim/5981/findsnippets" class="instances">seen <span class="count">15</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,5981)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6177" class="title">carbon dioxide does not cause global warming</a>
+      <div class="description">The increased level of carbon dioxide in the atmosphere is not the primary reason for global warming on earth - if indeed global warming is taking place.</div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6177/findsnippets" class="instances">seen <span class="count">14</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6177)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5992" class="title">Carbon dioxide causes global warming</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/5992/findsnippets" class="instances">seen <span class="count">23</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,5992)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5991" class="title">Global warming is man made</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/5991/findsnippets" class="instances">seen <span class="count">4</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,5991)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6100" class="title">Global Warming is increasing the spread of Malaria</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6100/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6100)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6001" class="title">Supporters of global warming are trying to silence skeptics</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6001/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6001)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5989" class="title">Global warming is also taking place on other planets</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/5989/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,5989)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5986" class="title">There is a scientific consensus that global warming would be harmful</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/5986/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,5986)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6555" class="title">Man-made global warming does not exist</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/93" target="_blank">Finster</a></span>
+      - <a href="/thinklink/claim/6555/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,6555)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5895" class="title">Global warming is increasing the number of hurricanes</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/2" target="_blank">mechanical turk</a></span>
+      - <a href="/thinklink/claim/5895/findsnippets" class="instances">seen <span class="count">8</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,5895)">report spam</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/6003" class="title">The science supporting global warming is flawed</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/1" target="_blank">Rob Ennals</a></span>
+      - <a href="/thinklink/claim/6003/findsnippets" class="instances">seen <span class="count">0</span> times on the web</a>  
+      - 
+      <a onclick="deleteClaim(this,6003)">delete</a>
+
+  </div><div class="claim">
+      <a href="/thinklink/claim/5972" class="title">There is a scientific consensus that global warming is man made</a>
+      <div class="description"></div>
+      <span class="user">created by <a href="/thinklink/user/2" target="_blank">mechanical turk</a></span>
+      - <a href="/thinklink/claim/5972/findsnippets" class="instances">seen <span class="count">1</span> times on the web</a>  
+      - 
+      <a onclick="reportSpam(this,5972)">report spam</a>
+
+  </div>
+
+
+</div>
+
+</div>
+</div>

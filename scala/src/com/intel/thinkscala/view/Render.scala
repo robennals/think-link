@@ -5,6 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import com.intel.thinkscala.util.Timer.time
 import com.intel.thinkscala._
 import com.intel.thinkscala.Util._
+import com.intel.thinkscala.pages.Docs
 
 object Render {
   import Widgets._
@@ -293,10 +294,10 @@ object Template {
   import Render._
   
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(c,title,topbar(c) ++ extension(c) ++ body,"body")
+    basics(c,title,Docs.nav(c) ++ body,"body")
   
   def noinstall(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(c,title,topbar(c) ++ body,"body")
+    basics(c,title,Docs.nav(c) ++ body,"body")
   
   
   def mini(c : ReqContext, body : NodeSeq) =    
@@ -307,15 +308,7 @@ object Template {
   
   def basics(c : ReqContext, title : String, body : NodeSeq, bodyclass : String) =
     <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta http-equiv="Content-Language" content="en-us" />
-      <title>{title}</title>
-      <link rel="icon" type="image/png" href="/thinklink/images/lightbulb_red.png" />
-      <link rel="stylesheet" href="/thinklink/stylesheets/normal.css" media="screen"/>
-      <script src="/thinklink/javascript/jquery-1.2.3.js" type="text/javascript"/>
-      <script src="/thinklink/javascript/standard.js" type="text/javascript"/>
-    </head>
+    {Docs.head(title)}
     <body class={bodyclass}>
       <input type='hidden' id='user-id' value={""+c.user.userid}/>
       {body}

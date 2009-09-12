@@ -1,0 +1,47 @@
+<div>
+	<div class='message'>
+	</div>
+
+	<div class="box mainbox thingbox">
+	<h1>Claim: Global warming is a hoax</h1>
+
+	<div class="tabs">
+		  <div class="header">
+		    <span>Opposing Arguments</span>
+			<a href="/thinklink/claim/5947?page=0&amp;tab=Supporting+Evidence">Supporting Arguments</a>
+			<a href="/thinklink/claim/5947?page=0&amp;tab=Marked+Pages">Find on the Web</a>
+		  </div>
+		  <div class="tabbody">
+		    <div id="opposed" class="evidence">
+            	<div class="pager">
+     	<div class="selectortop">
+       <span>page 1</span>
+       
+       <a href="/thinklink/claim/5947?page=1&amp;tab=Opposing+Evidence">next</a>      
+    </div>
+     	<div class="webquote">
+        <span class="title"/>
+        <div class="text">The eight warmest years on record (since 1850) have all occurred since 1998, with the warmest year being 2005. Most of the warming in recent decades is very likely the result of human activities. Other aspects of the climate are also changing such as rainfall patterns, snow and ice cover, and sea level.</div>
+        <a target="_blank" class="url" href="http://www.epa.gov/climatechange/basicinfo.html">http://www.epa.gov/climatechange/basicinfo.html</a>                                                     
+        <span class="user">found by <a target="_blank" href="/thinklink/user/1">robzilla</a></span> 
+        -
+        <a onclick="deleteEvidence(this,2411)">delete</a>
+        <div class="votebox-down">
+        <img onclick="voteUp(this,2411,'evidence')" class="voteup" title="vote up"/>
+        <img onclick="voteDown(this,2411,'evidence')" class="votedown" title="vote down"/>        
+      </div>
+    </div>
+     	<div class="selectorbottom">
+       <span>page 1</span>
+       
+       <a href="/thinklink/claim/5947?page=1&amp;tab=Opposing+Evidence">next</a>      
+    </div>
+     </div>
+                <a class="add" href="/thinklink/claim/5947/addevidence?rel=opposes">add opposing evidence</a>
+              </div>
+		  </div>
+		</div>
+	</div>
+	
+</div>
+

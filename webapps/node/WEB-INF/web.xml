@@ -125,6 +125,12 @@
 	<servlet-name>main</servlet-name>
 	<url-pattern>/docs/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+	<servlet-name>main</servlet-name>
+	<url-pattern>/pages/*</url-pattern>
+	</servlet-mapping>
+
 
 	<servlet-mapping>
 	<servlet-name>main</servlet-name>

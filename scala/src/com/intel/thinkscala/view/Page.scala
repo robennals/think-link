@@ -50,20 +50,23 @@ object Page {
      c.store.searchClaims(query,page).toSequence flatMap Render.claim
    
   def search(implicit c : ReqContext) = 
-    <div class="content">
-      <h1>Search Results</h1>
-      <form id="bigsearch" action="search" method="GET">        
-        <input type="text" class="query" name="query" value={c.arg("query")}/>
-        <input type="submit" class="submit" value="Search"/>
+    <div class="box yellowbox mainbox">
+	  <div class='boxbody'>
+	
+	  <form id="mainsearch" method="get" action="search">
+		  <span class='prompt'>I dispute the claim that...</span>
+		  <input name="query" type="text" class='search' value={c.arg("query")}/>
+		  <input class='submit' type="submit" value="Search"/>
 	  </form>
-      <div id="newclaim">Don't see your claim? - 
-    		  <a href={Urls.createClaim(c.arg("query"))}>Create a new claim</a>
+	
+	  <form id="newthing" method="GET" action={Urls.createClaim(c.arg("query"))}>
+	  <input type="hidden" name="query" value={c.arg("query")}/>
+	  Don't see your claim? &#8212; <input type='submit' class='submit' value="Create a New Claim"/>
+	  </form>
+	  
+     <div class="claimresults">
+        {c.store.searchClaims(c.arg("query"),0) flatMap Render.claim}
       </div>
-      <div id="claimlist">
-        <h2>Claims matching "{c.arg("query")}"</h2>
-        <div class='tabbody'>
-        {Widgets.pagedList(c.store.searchClaims(c.arg("query"),_), Render.claim)}
-        </div>
       </div>
     </div>
   
@@ -182,38 +185,35 @@ object Page {
     </div>
     
   def claim(row : SqlRow)(implicit c : ReqContext) =
-    <div id="claim">
-      <div class="topclaim">
-	      <h1>Claim: {row("text")}</h1>
-	      <span class="instances"><a href={Urls.findsnippets(row("id"))}>seen <span class="count">{row("instance_count")}</span> times on the web</a>
-	        - <a href={Urls.findsnippets(row("id"))}>find more</a>
-	      </span>   
-      </div>
-      <div class="description">{row("description")}</div>
-      {userref(row.int("user_id"),row.str("username"),"found by ")}
+    <div>
       <span id="notagainmain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
         	<label for="notagain">don't highlight this claim</label></span>
-
-       <div id="claimlist">
+       <div class="box mainbox thingbox">
+        <h1>Claim: {row("text")}</h1>  
         {Widgets.tabs(
-          "Opposing Evidence" -> (() => 
+          "Opposing Articles" -> (() => 
+          	  <div>Articles on the web that argue against the claim being true.
+          	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
               <div class='evidence' id="opposed">
-            	{Widgets.pagedList(c.store.evidence(row.int("id"),"opposes",c.user.userid,_), Render.evidence)}
-                <a class='add' href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
+            	{c.store.evidence(row.int("id"),"opposes",c.user.userid,0) flatMap Render.evidence}
+                <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add opposing articles</a>
               </div>
           ),
-          "Supporting Evidence" -> (() => 
+          "Supporting Articles" -> (() => 
+          <div>Articles on the web that argue in favor of the claim being true.
+      	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
+
   	  	      <div class='evidence' id="supports">
-               	{Widgets.pagedList(c.store.evidence(row.int("id"),"supports",c.user.userid,_), Render.evidence)}
-                <a class='add' href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
+               	{c.store.evidence(row.int("id"),"supports",c.user.userid,0) flatMap Render.evidence}
+                <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add supporting articles</a>
               </div>),
-          "Alternative Claims" -> (() =>
-	          <div>
-	          {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
-	          <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
- 	        </div>
-          ),
-          "Marked Pages" -> (() => 
+//          "Alternative Claims" -> (() =>
+//	          <div>
+//	          {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
+//	          <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
+// 	        </div>
+//          ),
+          "Find on the Web" -> (() => 
               <div>
                  <input type="hidden" id="data-query" value=""/>
                  <input type="hidden" id="data-claim" value={""+row("id")}/>
@@ -225,10 +225,10 @@ object Page {
            )
         )}
       </div>
-      <div id="topics">
-        <h2>Topics</h2>
-        {c.store.linkedTopics(row.int("id"),0) flatMap topicref}
-        <a class='add' href={Urls.addlinks(row.int("id"),"claim","topic")}>edit topics</a>                  
+      <div id="stats" class="box">
+        {userref(row.int("user_id"),row.str("username"),"created by ")}
+        <span class="instances"><a href={Urls.findsnippets(row("id"))}>seen <span class="count">{row("instance_count")}</span> times on the web</a>
+	    </span>         
       </div>
     </div>
  
