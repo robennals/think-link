@@ -2,6 +2,7 @@ package com.intel.thinkscala
 
 import java.util.regex._;
 import javax.servlet.http._;
+import javax.servlet.ServletContext;
 import java.io._;
 import scala.util.matching._;
 import scala.util.matching.Regex._;
@@ -25,7 +26,7 @@ class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
   def next = it.nextElement
 }  
 
-class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse, path : String){
+class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse, path : String, servletcontext : ServletContext){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
   def urlArg(i : Int) = m.group(i)
   def argInt(name : String) = 
@@ -37,6 +38,10 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
       java.lang.Boolean.parseBoolean(req.getParameter(name))
      }else false
 
+  def readResource(res : String) : String = {
+	val filename = servletcontext.getRealPath(res)
+	readFileToString(new File(filename))
+  }
   
   def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
   def arg(name : String) = com.intel.thinklink.Util.toUTF8(req.getParameter(name))
@@ -118,9 +123,9 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   
   def needLogin() {
     if(minimode){
-        UrlHandler.outputHtml(res,Template.nobar(this,Login.login("You need to log in to do that",getUrl)),true)
+        UrlHandler.outputHtml(res,Template.nobar(this,Login.login("You need to log in to do that",getUrl)(this)),true)
     }else{
-    	outputHtml("You need to log in to do that",Login.login("You need to log in to do that",getUrl))
+    	outputHtml("You need to log in to do that",Login.login("You need to log in to do that",getUrl)(this))
      }
   }
   
@@ -171,10 +176,10 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
 
 class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any){
   val r = pat.r
-  def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse) : Boolean = {
+  def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse, ctx : ServletContext) : Boolean = {
     r.findFirstMatchIn(path) match {
       case Some(m) => 
-        val c = new ReqContext(store,m,req,res,path)
+        val c = new ReqContext(store,m,req,res,path,ctx)
         try{
           if(c.ishtml || datafunc == null){
         	  util.Timer.time("URL Request",func(c))
@@ -198,7 +203,8 @@ object UrlHandler{
   def apply(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any) = new UrlHandler(pat,func,datafunc)
   
   def innerRunHandler(store: Datastore, handlers : List[UrlHandler],
-                     req : HttpServletRequest, res : HttpServletResponse){
+                     req : HttpServletRequest, res : HttpServletResponse,
+                     ctx : ServletContext){
     req.setCharacterEncoding("UTF-8")
 	var path = req.getServletPath
 	val pathinfo = req.getPathInfo
@@ -206,19 +212,20 @@ object UrlHandler{
 		path+=pathinfo
 	}
     handlers.foreach(h => {      
-     if(h.tryForUrl(store,path,req,res)){       
+     if(h.tryForUrl(store,path,req,res,ctx)){       
        return;
      }     
     })
-    val c = new ReqContext(store,null,req,res,path);
+    val c = new ReqContext(store,null,req,res,path,ctx);
     c.notFound
   }  
   
   def runMatchingHandler(handlers : List[UrlHandler],
-                         req : HttpServletRequest, res : HttpServletResponse){
+                         req : HttpServletRequest, res : HttpServletResponse,
+                         ctx : ServletContext){
     val store = Pool.get
     try{
-       innerRunHandler(store,handlers,req,res);
+       innerRunHandler(store,handlers,req,res,ctx);
     } catch {
       case e : Exception =>         
         e.printStackTrace() 

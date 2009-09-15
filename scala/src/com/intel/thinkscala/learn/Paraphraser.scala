@@ -16,13 +16,15 @@ object Paraphraser {
 
 	def searchBoss(text : String, page : Int) : NodeSeq = {
 	    val url = bossSvr + "/"+encode(text)+"?appid="+bossKey+"&format=xml&abstract=long&start="+(page*50)+"&count=50"
-	    val xmltext = download(url)
+	    val xmltext = download(url).replaceAll("\\]\\]+>","]]>")
 	    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
 	    parser.document \\ "result"
 	}
 	
 	def searchBigBoss(text : String) : NodeSeq = 
-		searchBoss(text,0) ++ searchBoss(text,1) ++ searchBoss(text,2) ++ searchBoss(text,3) ++ searchBoss(text,4) ++ searchBoss(text,5) ++ searchBoss(text,6) ++ searchBoss(text,7)
+		searchBoss(text,0) ++ searchBoss(text,1) ++ searchBoss(text,2) ++ searchBoss(text,3)
+
+//		searchBoss(text,0) ++ searchBoss(text,1) ++ searchBoss(text,2) ++ searchBoss(text,3) ++ searchBoss(text,4) ++ searchBoss(text,5) ++ searchBoss(text,6) ++ searchBoss(text,7)
 
 			
 	def getSentences(xml : NodeSeq) : Seq[String] = {

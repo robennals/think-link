@@ -308,7 +308,7 @@ object Template {
   
   def basics(c : ReqContext, title : String, body : NodeSeq, bodyclass : String) =
     <html xmlns="http://www.w3.org/1999/xhtml">
-    {Docs.head(title)}
+    {Docs.head(title)(c)}
     <body class={bodyclass}>
       <input type='hidden' id='user-id' value={""+c.user.userid}/>
       {body}

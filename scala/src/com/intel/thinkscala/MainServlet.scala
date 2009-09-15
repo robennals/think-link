@@ -104,7 +104,7 @@ class MainServlet extends HttpServlet {
         c.setCookie("password",password)        
         c.redirect(c.arg("url"))			
       }else{
-        c.outputHtml("Login Failed - Please Try Again",Login.login("Login Failed",c.arg("url")))
+        c.outputHtml("Login Failed - Please Try Again",Login.login("Login Failed",c.arg("url"))(c))
       }
     }),
     UrlHandler("/signup", c => {
@@ -430,10 +430,10 @@ class MainServlet extends HttpServlet {
     UrlHandler("/login",c => {
       var url = c.arg("url")
       if(url == null) url = Urls.base
-      c.outputHtml("Login",(<div>{Login.login("Login",url)}</div>))
+      c.outputHtml("Login",(<div>{Login.login("Login",url)(c)}</div>))
     }),
     UrlHandler("/signup",c => {
-      c.outputHtml("Sign up with Dispute Finder",Login.signup)      
+      c.outputHtml("Sign up with Dispute Finder",Login.signup(c))      
     }),
     UrlHandler("/emailpass",c => {
       c.outputHtml("Retreive your password",Login.emailpass)
@@ -462,11 +462,11 @@ class MainServlet extends HttpServlet {
   )
  
   override def doPost(req : HttpServletRequest, res : HttpServletResponse){
-    UrlHandler.runMatchingHandler(posthandlers,req,res)
+    UrlHandler.runMatchingHandler(posthandlers,req,res,getServletContext())
   }
   
   override def doGet(req : HttpServletRequest, res : HttpServletResponse){
-    UrlHandler.runMatchingHandler(gethandlers,req,res)
+    UrlHandler.runMatchingHandler(gethandlers,req,res,getServletContext())
   }
 }
 

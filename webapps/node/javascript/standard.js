@@ -198,6 +198,11 @@ window.onload = function(){
 		$(input).removeClass("tempinput");
 		input.value = "";		
 	})
+	$(".showlink").click(function(e){
+		var lnk = $(e.target);
+		lnk.parents(".showcontext").find(".showhide").toggle();
+		lnk.text(lnk.text().replace("show","XXX").replace("hide","show").replace("XXX","hide"));
+	})
 	$(".yes").click(function(e){
 		var box = $(e.target).parents(".togglebox");
 		box.addClass("state-yes");

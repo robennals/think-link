@@ -28,17 +28,16 @@
 						<q class='title'>Global Warming is a scam</q>
 						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a></span>
 					</div>
-					<div class='paraphrase'>
+					<div class='paraphrase showcontext'>
 						<q class='title'>Global Warming does not exist</q>
-						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a></span>
-						<div class='subphrases'>
+						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a> 							
+						- <a class='showlink'><span>hide</span> 4 derived phrases</a></span>
+						<div class='subphrases showhide'>
 							<h4>derived phrases</h4>
-							<div class='subphrase togglebox'>
-								<div class='yesnobox'><a class='yes'>on</a><a class='no'>off</a></div>
+							<div class='subphrase'>
 							<q>global warming, as we think we know it, does not exist</q>
 							</div>
-							<div class='subphrase togglebox'>
-								<div class='yesnobox'><a class='yes'>on</a><a class='no'>off</a></div>		
+							<div class='subphrase'>
 							<q>global warming really does not exist</q>
 							</div>
 						</div>

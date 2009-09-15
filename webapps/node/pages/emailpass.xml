@@ -1,0 +1,16 @@
+<div class='content'>
+  <h1>Retreive your password</h1>
+  <div class="message">
+   Enter the email address you used to sign up and we will email you your password.
+ </div>		
+
+  <form class='form' id='emailpass' action='emailpass' method ='POST'>
+	<p>
+	  <label for="email">email</label>
+	  <input type="text" id="email" name="email"/>
+	</p>
+	<p>
+	  <input class='submit' type='submit' value='Retrieve Password'/>
+	</p>
+  </form>
+</div>   

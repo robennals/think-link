@@ -1,0 +1,10 @@
+<div class='box' id="docnav">
+    <h3>Overview</h3>
+    <ul>
+    <li><a href="../frontpage.html">About Dispute Finder</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="highlight.html">Highlighted Claims</a></li>
+    <li><a href="arguments.html">Arguments</a></li>
+    <li><a href="training.html">Training</a></li>
+    </ul>
+</div>

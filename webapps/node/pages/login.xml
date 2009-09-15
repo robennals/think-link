@@ -1,0 +1,21 @@
+<div class="content">
+	<h1><xt:bind name="title"/></h1>
+	<div class="message">
+	  Enter the email address and password that you used to register with Dispute Finder.
+	</div>		
+	<div class='message'>
+	  If you don't have a Dispute Finder account then <a href="/thinklink/signup">sign up</a>
+	</div>
+	<div class='message'>
+	  If you have lost your password then we can <a href="/thinklink/emailpass">retreive your password</a>
+	</div>
+
+	<form class='form' id="login" action="login" method="POST">	   
+		<xt:bind name="hiddenpath"/>
+		<label for="email">email</label>
+		<input type="text" name="email"/>
+		<p><label for="password">password</label>
+			<input type="password" id="password" name="password"/></p>
+		<input class='submit' type="submit" value="Login"/>
+	</form>
+</div>

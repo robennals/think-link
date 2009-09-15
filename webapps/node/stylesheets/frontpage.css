@@ -184,6 +184,12 @@ body {
 	width: 450px;	
 }
 
+.newphrase {
+	font-size: 16px;
+	padding: 4px;
+	width: 400px;
+}
+
 .prompt {
 	font-weight: bold;
 	font-size: 14px;
@@ -273,3 +279,45 @@ body {
 	border: none;
 	
 }
+
+.desc {
+	margin-bottom: 15px;
+}
+
+.subphrases {
+	margin-left: 20px;
+}
+
+.subphrases h4{
+	margin: 0px;
+}
+
+.paraphrases h3{
+	margin-top: 20px;
+}
+
+.paraphrase {
+	margin: 10px;
+}
+
+.paraphrase .title {
+	font-size: 15px;
+}
+
+.paraphrases q {
+}
+
+.subphrase .yes, .subphrase .no {
+	padding: 0px 6px;
+}
+
+.subphrase {
+	margin-bottom: 4px;
+	margin-left: 20px;
+}
+
+.paraphrase .details {
+	display: block;
+	margin-left: 20px;
+}
+

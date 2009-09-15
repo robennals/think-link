@@ -979,14 +979,16 @@ img {
 }
 
 .yesnobox {
-	padding-right: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border: 1px solid grey;
+	display: inline;
 }
 
 .yes, .no {
 	display: inline;
 	background-color: #eeeeee;
 	color: black;
-	-moz-border-radius: 4px;
 	cursor: pointer;
 	padding: 4px 6px;
 }
@@ -995,6 +997,12 @@ img {
 	background-color: #666666;
 	color: white;
 }
+
+.state-yes .no, .state-no .yes {
+	background-color: transparent;
+	color: black;
+}
+
 
 .state-no .boxcontent {
 	opacity: 0.3;

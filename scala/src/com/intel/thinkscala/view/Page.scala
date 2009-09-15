@@ -192,7 +192,7 @@ object Page {
         <h1>Claim: {row("text")}</h1>  
         {Widgets.tabs(
           "Opposing Articles" -> (() => 
-          	  <div>Articles on the web that argue against the claim being true.
+          	  <div>These are articles on the web that argue against the claim.
           	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
               <div class='evidence' id="opposed">
             	{c.store.evidence(row.int("id"),"opposes",c.user.userid,0) flatMap Render.evidence}
@@ -200,7 +200,7 @@ object Page {
               </div>
           ),
           "Supporting Articles" -> (() => 
-          <div>Articles on the web that argue in favor of the claim being true.
+          <div>There are articles on the web that argue in favor of the claim.
       	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
 
   	  	      <div class='evidence' id="supports">

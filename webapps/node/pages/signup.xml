@@ -1,0 +1,26 @@
+<div class='content'>
+	<h1>Sign up for a Dispute Finder Account</h1>
+	   <p>Reasons to sign up for a Dispute Finder account:
+		 <ul>
+		   <li>Add new claims to Dispute Finder</li>
+		   <li>Find more snippets that make disputed claims</li>
+		   <li>Tell Dispute Finder what claims you don't want it to highlight again</li>
+		 </ul>
+	   </p>
+	<form class='form' id='signup' action="signup" method="POST">
+		<p>
+		   <label for="name">name</label>
+		   <input type="text" id="name" name="name"/>
+		</p>
+		<p>
+		   <label for="email">email</label>
+		   <input type="text" id="email" name="email"/>
+		</p>
+		<p>
+		   <label for="password">password</label>
+		   <input type="password" id="password" name="password"/>
+		</p>
+		<input class='submit' type="submit" value="Create Account"/>
+	</form>
+</div>
+    

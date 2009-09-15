@@ -4,31 +4,13 @@ import java.io.File
 import scala.xml.parsing._
 import scala.xml._
 import com.intel.thinkscala._
+import scala.collection.mutable.HashMap
 
 object Docs {
-	def head(title : String) = 
-		<head>
-			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
-			<meta http-equiv="Content-Language" content="en-us"></meta>
-			<title>{title}</title>
-			<link href="/thinklink/images/lightbulb_red.png" type="image/png" rel="icon"></link>
-			<link href="/thinklink/stylesheets/normal.css" rel="stylesheet" media="screen"></link>
-			<link href="/thinklink/stylesheets/frontpage.css" rel="stylesheet" media="screen"></link>
-			<script type="text/javascript" src="/thinklink/javascript/jquery-1.2.3.js"></script>
-			<script type="text/javascript" src="/thinklink/javascript/standard.js"></script>
-		</head>
-	
-    val docnav = 	
-    	<div class='box' id="docnav">
-		    <h3>Overview</h3>
-		    <ul>
-		    <li><a href="../frontpage.html">About Dispute Finder</a></li>
-		    <li><a href="faq.html">FAQ</a></li>
-		    <li><a href="highlight.html">Highlighted Claims</a></li>
-		    <li><a href="arguments.html">Arguments</a></li>
-		    <li><a href="training.html">Training</a></li>
-		    </ul>
-	    </div>
+	def head(title : String)(implicit c : ReqContext) = 
+		bind(loadFrag("head"),"xt","title" -> Text(title)) 
+
+	def docnav(implicit c : ReqContext) = loadPage("fragments/docnav.xml") 
 
     def nav(c : ReqContext) = 
     	<div>
@@ -58,17 +40,42 @@ object Docs {
 		</div>
 		</div>
 		
+	def loadPage(respath : String)(implicit c : ReqContext) : Node = 
+		ConstructingParser.fromSource(Source.fromString(c.readResource(respath)),false).document.docElem
+	
+	def loadFrag(res : String)(implicit c : ReqContext) : Node = loadPage("fragments/"+res+".xml")
+
+	def bindPage(res : String, margs : (String,Node)*)(implicit c : ReqContext) =
+		bind(loadPage("pages/"+res+".xml"),"xt",margs : _*)
 		
+	def page(res : String)(implicit c : ReqContext) = loadPage("pages/"+res+".xml")
+	
 	def docPage(xmlstr : String, c : ReqContext) : NodeSeq = {
 		val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 		val title : String = (xml \\ "h1").text
-		return <html>{head(title)}<body class='body'>{nav(c) ++ docnav ++ xml}</body></html>
+		return <html>{head(title)(c)}<body class='body'>{nav(c) ++ docnav(c) ++ xml}</body></html>
 	}
 	
 	def page(xmlstr : String, c : ReqContext) : NodeSeq = {
 			val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 			val title : String = (xml \\ "h1").text
-			return <html>{head(title)}<body class='body'>{nav(c) ++ xml}</body></html>
+			return <html>{head(title)(c)}<body class='body'>{nav(c) ++ xml}</body></html>
 	}
-
+	
+	def bind(xml : Node, pre : String, margs : (String,Node)*) : Node = {
+		val m = HashMap(margs : _*)
+		processXml(xml,pre,n => 
+		n match {
+			case Elem(_,"bind",attr,scp,ns @ _*) => m(attr("name").text)
+			case _ => n
+		})
+	}
+	
+	def processXml(xml : Node, pre : String, f : Elem => Node) : Node = xml match {
+		case Elem(prefix,label,attr,scp,ns @ _*) if prefix == pre => f(xml.asInstanceOf[Elem])
+		case Elem(prefix,label,attr,scp,ns @ _*) => 
+			Elem(prefix,label,attr,scp,ns.map(processXml(_,pre,f)) : _*)
+		case _ => xml
+	}
+	
 }

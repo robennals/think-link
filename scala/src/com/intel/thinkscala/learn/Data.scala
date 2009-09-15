@@ -41,5 +41,7 @@ object Data {
 			"which", "while", "whither", "who", "whoever", "whole", "whom", "whose", 
 			"why", "will", "with", "within", "without", "would", "yet", "you", "your", 
 			"yours", "yourself", "yourselves", "the");
+
+	val negwords = List("not");
 	
 }
