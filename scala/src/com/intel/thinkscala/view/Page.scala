@@ -1,6 +1,8 @@
 package com.intel.thinkscala.view
 import com.intel.thinkscala.Util._
 import com.intel.thinkscala._
+import com.intel.thinkscala.pages.Docs
+import scala.collection.mutable.HashMap
 import scala.xml._
 import util.Timer.time
 
@@ -200,30 +202,26 @@ object Page {
               </div>
           ),
           "Supporting Articles" -> (() => 
-          <div>There are articles on the web that argue in favor of the claim.
+          <div>These are articles on the web that argue in favor of the claim.
       	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
 
   	  	      <div class='evidence' id="supports">
                	{c.store.evidence(row.int("id"),"supports",c.user.userid,0) flatMap Render.evidence}
                 <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add supporting articles</a>
               </div>),
-//          "Alternative Claims" -> (() =>
-//	          <div>
-//	          {Widgets.pagedList2(c.store.linkedClaims(row.int("id"),_), Render.miniclaim)}
-//	          <a class='add' href={Urls.addlinks(row.int("id"),"claim","claim")}>edit opposing claims</a>                  
-// 	        </div>
-//          ),
-          "Find on the Web" -> (() => 
-              <div>
-                 <input type="hidden" id="data-query" value=""/>
-                 <input type="hidden" id="data-claim" value={""+row("id")}/>
-                <div class='searchcontent'>
-                	{Widgets.pagedList(c.store.allSnippets(row.int("id"),_), Render.urlSnippet)}
-                </div>
-                <a class='add' href={Urls.findsnippets(row.int("id"))}>find snippets making this claim</a>
-              </div>
+         "Marked Phrases" -> (() => Docs.applyXml("fragments","paraphrases",
+        		   HashMap[String,Any]("claimtext" -> "Hello", 
+        				   "paraphrases" -> List(
+        						   HashMap("subphrases" -> List(
+        								   		HashMap("text" -> "global warming really does not exist")
+        								   ),
+        		        				   "text" -> "Global warming is a hoax",
+        		        				   "count" -> 32,
+        		        				   "user" -> <a>rob</a>)
+        		        			)
+        		    )))
            )
-        )}
+        }
       </div>
       <div id="stats" class="box">
         {userref(row.int("user_id"),row.str("username"),"created by ")}
@@ -231,7 +229,7 @@ object Page {
 	    </span>         
       </div>
     </div>
- 
+     
   def addEvidence(claimid : Int, claimtxt : String, rel : String, text : String)(implicit c : ReqContext) =    
     <div class='content'>
         <a href={Urls.claim(claimid)}><h1>{claimtxt}</h1></a>

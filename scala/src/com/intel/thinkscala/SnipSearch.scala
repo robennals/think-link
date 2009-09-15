@@ -34,15 +34,6 @@ class BossUrl(val url : String, val title : String, val snips : Array[String]) e
 class TurkBoss(val url : String, val title : String, val abstr : String) extends HasData{
   def data = Map("url" -> url, "title" -> title, "abstr" -> abstr)
 }
-
-
-//class SnipSearch extends HttpServlet {
-//  override def doGet(req : HttpServletRequest, res : HttpServletResponse) {
-//    val claim = req getParameter "claimstr"
-//    val snips = SnipSearch.searchYahoo(claim)
-//    httpOutput(req,res,snips)
-//  }
-//}    
  
 object SnipSearch {
   val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
@@ -76,49 +67,14 @@ object SnipSearch {
       case _ => return List()
     }
   }  
-  
-//  def searchYahoo(claim : String) : Seq[SnipUrlRes] = {
-//    val url = bossSvr + "/"+encode(claim)+"?appid="+bossKey+"&format=xml&abstract=long"
-//    val parser = ConstructingParser.fromSource(Source fromURL (new URL(url)),false)
-//    val doc = parser.document   
-//    val results = doc \\ "result"
-//    val futures = results map (x => future(snipForResult(x)))
-//    val snips = futures.map(f => f())
-//    // DEBUG
-////    val snips = results map snipForResult                                                          
-//    return snips;   
-//  }
-//  
+ 
   def absForResult(result : Node) : BossUrl = {
     var fragments = ((result \ "abstract").text).split("""<b>\.\.\.</b>""").map(cleanString).filter(s => s.length > 10)    
     val url = (result \ "url").text
     val title = cleanString((result \ "title").text)
     return new BossUrl(url,title,fragments)
   }
-// 
-//  def snipForResult(result : Node) : SnipUrlRes = {
-//    var fragments = ((result \ "abstract").text).split("""<b>\.\.\.</b>""").map(cleanString).filter(s => s.length > 10)    
-//    val url = (result \ "url").text
-//    log("fetching: "+url)
-//    val title = cleanString((result \ "title").text)
-//    try{
-//	    val pagetext = htmlToString(download(url))
-//	    var expanded = fragments.map(frag => findSnipContext(pagetext,trimEnds(frag),200))
-//	    new SnipUrlRes(expanded,url,title,null)
-//    }catch{
-//      case e : FileNotFoundException => {
-//        log("URL failed: "+e.getMessage);
-//        new SnipUrlRes(e,url)
-//      }
-//      case e : Exception => {
-//        e.printStackTrace(); 
-//        new SnipUrlRes(e,url)
-//       }
-//    }
-//  }
 
-//  val context_length = 200
-  
   def findSnipContext(pagetext : String, fragment : String, context_length : Int) : Option[String] = {
     import java.lang.Math._;
     findSentence(pagetext,fragment) match {

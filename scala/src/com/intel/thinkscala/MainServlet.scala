@@ -436,7 +436,7 @@ class MainServlet extends HttpServlet {
       c.outputHtml("Sign up with Dispute Finder",Login.signup(c))      
     }),
     UrlHandler("/emailpass",c => {
-      c.outputHtml("Retreive your password",Login.emailpass)
+      c.outputHtml("Retreive your password",Login.emailpass(c))
     }),
     UrlHandler("/confirm/(\\d*)",c => {
       val nonce = c.urlInt(1)

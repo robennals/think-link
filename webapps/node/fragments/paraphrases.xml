@@ -1,0 +1,27 @@
+<div>
+	<div class='desc'>
+		These are phrases that have approximately the same meaning as the claim.
+		Dispute Finder highlights these phrases when it sees them on web pages, to let 
+		users know that they relate to a disputed claim.
+	</div>
+	<div class='paraphrases'>
+		<span class='prompt'>
+		<q><xt:bind name="claimtext">Global warming is a hoax</xt:bind></q> can also be reworded as...</span>
+		<input type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -"/>
+		<input type="submit" class='submit' value="Add Paraphrase"/>
+		
+		<h3>Current Paraphrases</h3>
+		
+		<xt:foreach name="paraphrases" as="para" class="paraphrase showcontext">
+			<q class='title'><para:bind name="text">Global Warming does not exist</para:bind></q>
+			<span class='details'>created by <para:bind name="user" linkname="userlink" class='user'>rob</para:link> - <a>report abuse</a> 							
+			- <a class='showlink'><span>hide</span> <para:bind name="count"/> derived phrases</a></span>
+			<div class='subphrases showhide'>
+				<h4>derived phrases</h4>
+				<para:foreach name="subphrases" as="sub" class='subphrase'>
+				<q><sub:bind name="text">global warming, as we think we know it, does not exist</sub:bind></q>
+				</para:foreach>
+			</div>
+		</xt:foreach>
+	</div>
+</div>

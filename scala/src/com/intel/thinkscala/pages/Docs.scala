@@ -5,6 +5,7 @@ import scala.xml.parsing._
 import scala.xml._
 import com.intel.thinkscala._
 import scala.collection.mutable.HashMap
+import scala.collection.Map
 
 object Docs {
 	def head(title : String)(implicit c : ReqContext) = 
@@ -41,7 +42,7 @@ object Docs {
 		</div>
 		
 	def loadPage(respath : String)(implicit c : ReqContext) : Node = 
-		ConstructingParser.fromSource(Source.fromString(c.readResource(respath)),false).document.docElem
+		ConstructingParser.fromSource(Source.fromString(c.readResource(respath)),true).document.docElem
 	
 	def loadFrag(res : String)(implicit c : ReqContext) : Node = loadPage("fragments/"+res+".xml")
 
@@ -61,12 +62,34 @@ object Docs {
 			val title : String = (xml \\ "h1").text
 			return <html>{head(title)(c)}<body class='body'>{nav(c) ++ xml}</body></html>
 	}
-	
+		
 	def bind(xml : Node, pre : String, margs : (String,Node)*) : Node = {
 		val m = HashMap(margs : _*)
 		processXml(xml,pre,n => 
 		n match {
 			case Elem(_,"bind",attr,scp,ns @ _*) => m(attr("name").text)
+			case _ => n
+		})
+	}
+	
+	def applyXml(zone : String, res : String, m : Map[String,Any])(implicit c : ReqContext) : Node = 
+			applyToData(loadPage(zone+"/"+res+".xml"),"xt",m)
+	
+	def applyToData(xml : Node, pre : String, m : Map[String,Any]) : Node = {
+		processXml(xml,pre,n => n match {
+			case Elem(_,"bind",attr,scp,ns @ _*) => m(attr("name").text) match {
+				case n : Node => n
+				case null => <div class='null'/>
+				case s => Text(s.toString)
+			}
+			case Elem(_,"foreach",attr,scp,ns @ _*) => m(attr("name").text) match {
+				case l : Iterable[Map[String,_]] => {
+					val body = ns.map(applyToData(_,pre,m))
+					val cls = attr("class").text
+					val as = attr("as").text
+					<div>{l.flatMap(applyToData(<div class={cls}>{body}</div>,as,_))}</div>
+				}
+			}
 			case _ => n
 		})
 	}
