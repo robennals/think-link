@@ -1,0 +1,110 @@
+<div>
+	<div class='message'>
+	</div>
+
+	<div class="box mainbox thingbox">
+		<h1>Claim: Global warming is a hoax</h1>
+
+		<div class="tabs">
+			  <div class="header">
+				<a>Opposing Arguments</a>
+				<a href="/thinklink/claim/5947?page=0&amp;tab=Supporting+Evidence">Supporting Arguments</a>
+				<span>Marked Phrases</span>
+			  </div>
+			  <div class="tabbody">
+			  	<div class='desc'>
+					These are phrases that have approximately the same meaning as the claim.
+					Dispute Finder highlights these phrases when it sees them on web pages, to let 
+					users know that they relate to a disputed claim.
+				</div>
+				<div class='paraphrases'>
+					<span class='prompt'>
+					<q>Global warming is a hoax</q> can also be reworded as...</span>
+					<form>
+					<input type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -"/>
+					<input type="submit" class='submit' value="Add Paraphrase"/>
+					</form>
+					
+					<div class="popupborder">
+					<div class="parapopup">
+						<h4>Which derived phrases should we highlight?</h3>
+						<div class='desc'>
+						We found these other phrases on the web that seem similar. Please select any of these phrases that you would like us to also highlight:
+						</div>
+						
+						<div class='subphrases'>
+							<div class='subphrase togglephrase'>
+							Global warming hoax
+							</div>
+							<div class='subphrase togglephrase'>
+							Global warming is a big fat hoax
+							</div>
+							<div class='subphrase togglephrase'>
+							Global warming is a politically motivated hoax
+							</div>
+							<div class='subphrase togglephrase'>
+							Global warming is not a hoax
+							</div>					
+						</div>	
+						<button class='submit' style='margin-left:60px; margin-top: 10px'>Add Paraphrase and Derived Paraphrases</button>
+					</div>
+					</div>
+					
+					
+					<h3>Current Paraphrases</h3>
+					<div class='paraphrase'>
+						<q class='title'>Global Warming is a scam</q>
+						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a></span>
+					</div>
+					<div class='paraphrase showcontext'>
+						<q class='title'>Global Warming does not exist</q>
+						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a> 							
+						- <a class='showlink'><span>hide</span> 4 derived phrases</a></span>
+						<div class='subphrases showhide'>
+							<h4>derived phrases</h4>
+							<div class='subphrase'>
+							<q>global warming, as we think we know it, does not exist</q>
+							</div>
+							<div class='subphrase'>
+							<q>global warming really does not exist</q>
+							</div>
+						</div>
+					</div>
+
+					<div class='paraphrase'>
+						<q class='title'>Global Warming is a hoax</q>
+						<span class='details'>created by <a class='user'>rob</a> - <a>report abuse</a></span>
+						<div class='subphrases'>
+							<h4>derived phrases</h4>
+							<div class='subphrase togglebox'>
+								<div class='yesnobox'><a class='yes'>on</a><a class='no'>off</a></div>
+								global warming hoax
+							</div>
+							<div class='subphrase'>
+								<div class='yesnobox'><a class='yes'>on</a><a class='no'>off</a></div>
+ 								global warming is a big fat hoax
+							</div>
+						</div>
+					</div>
+					<div class='paraphrase'>
+						<q class='title'>Global Warming is a made up crisis</q>
+						<div class='subphrases'>
+							<h4>derived phrases</h4>
+							<div class='subphrase'>
+							global warming is not a crisis
+							</div>
+							<div class='subphrase'>
+							global warming is a manufactured crisis
+							</div>
+						</div>
+
+					</div>
+					<div class='paraphrase'>
+						<span class='title'>Global Warming does not exist</span>
+					</div>
+
+				</div>
+			  </div>
+		</div>
+	</div>
+</div>

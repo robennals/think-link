@@ -76,7 +76,7 @@ class PrefixTree(val parent : WordInfo) extends HashMap[String,WordInfo] {
 	}
 	
 	def filterTree(cond : WordInfo => Boolean){
-		keys foreach {key => 
+		keysIterator foreach {key => 
 			val obj = apply(key)
 			if(cond(obj)){
 				removeEntry(key)
@@ -87,7 +87,7 @@ class PrefixTree(val parent : WordInfo) extends HashMap[String,WordInfo] {
 	}
 	
 	def flatten(prefix : List[String]) : List[(List[String],WordInfo)] = {
-		keys.toList flatMap {key => 
+		keysIterator.toList flatMap {key => 
 		 	val info = apply(key)
 		 	if(info.nextlevel != null){
 		 		(key :: prefix,info) :: info.nextlevel.flatten(key :: prefix) 
@@ -98,7 +98,7 @@ class PrefixTree(val parent : WordInfo) extends HashMap[String,WordInfo] {
 	}
 
 	def sortForBest(matchers : List[(List[String],WordInfo)]) = 
-		matchers.sort((a,b) => a._2.importance > b._2.importance)
+		matchers.sortWith((a,b) => a._2.importance > b._2.importance)
 	
 	def dumpBest = {
 		val flat = sortForBest(flatten(List())) take 100
@@ -108,7 +108,7 @@ class PrefixTree(val parent : WordInfo) extends HashMap[String,WordInfo] {
 	}
 		
 	def dumpContent(indent : String) : Unit = {
-		keys foreach {key => 
+		keysIterator foreach {key => 
 			val info = apply(key)
 			println(indent + key + " " + info.yescount + "/" + info.nocount + " - " + info.importance)
 			if(info.nextlevel != null){
@@ -210,7 +210,7 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	def textFeatures(text : String) = getFeatures(text.split("\\s"))
 	
 	def bestFeatures(text : String) = 
-		textFeatures(text).sort((x,y) => x.score(countyes,countno) > y.score(countyes,countno)) 
+		textFeatures(text).sortWith((x,y) => x.score(countyes,countno) > y.score(countyes,countno)) 
 	
 	// P(makes-claim | features) = P(claim) * P(features | claim)/P(has-features)
     // = P(claim) * PROD_i[P(feature_i | claim)/p(feature_i)]
@@ -257,7 +257,7 @@ class SimpleLearner(val maxlength : Int) extends Learner {
 	
 	def bestSentence(xs : Seq[String]) : String = {
 		val scored = xs.toList map {x => (logDiff(x),x)}
-		val sorted = scored sort {(x,y) => x._1 > y._1}
+		val sorted = scored sortWith {(x,y) => x._1 > y._1}
 		sorted.head._2
 	}
 	

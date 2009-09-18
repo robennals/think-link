@@ -3,6 +3,7 @@ import com.intel.thinkscala.Util._
 import com.intel.thinkscala._
 import com.intel.thinkscala.pages.Docs
 import scala.collection.mutable.HashMap
+import com.intel.thinkscala.data.Snippets
 import scala.xml._
 import util.Timer.time
 
@@ -63,10 +64,11 @@ object Page {
 	
 	  <form id="newthing" method="GET" action={Urls.createClaim(c.arg("query"))}>
 	  <input type="hidden" name="query" value={c.arg("query")}/>
-	  Don't see your claim? &#8212; <input type='submit' class='submit' value="Create a New Claim"/>
+	  <span class='reuse'>Re-use a claim we already know</span> &#8212; or &#8212; <input type='submit' class='submit' value="Create a New Claim"/>
 	  </form>
-	  
+  
      <div class="claimresults">
+        <h2>Claims already in our database</h2>
         {c.store.searchClaims(c.arg("query"),0) flatMap Render.claim}
       </div>
       </div>
@@ -194,34 +196,30 @@ object Page {
         <h1>Claim: {row("text")}</h1>  
         {Widgets.tabs(
           "Opposing Articles" -> (() => 
-          	  <div>These are articles on the web that argue against the claim.
-          	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
+          	  <div class='desc'><a href="/thinklink/docs/arguments.html">Articles found by users</a> that oppose the claim that <q>{row("text")}</q></div>
               <div class='evidence' id="opposed">
             	{c.store.evidence(row.int("id"),"opposes",c.user.userid,0) flatMap Render.evidence}
                 <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add opposing articles</a>
               </div>
           ),
-          "Supporting Articles" -> (() => 
-          <div>These are articles on the web that argue in favor of the claim.
-      	  Vote for the articles you like to help us recommend claims and articles for you in the future.</div>
+          "Supporting Articles" -> (() =>
+      	  <div class='desc'><a href="/thinklink/docs/arguments.html">Articles found by users</a> that support the claim that <q>{row("text")}</q></div>
 
   	  	      <div class='evidence' id="supports">
                	{c.store.evidence(row.int("id"),"supports",c.user.userid,0) flatMap Render.evidence}
                 <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add supporting articles</a>
               </div>),
-         "Marked Phrases" -> (() => Docs.applyXml("fragments","paraphrases",
-        		   HashMap[String,Any]("claimtext" -> "Hello", 
-        				   "paraphrases" -> List(
-        						   HashMap("subphrases" -> List(
-        								   		HashMap("text" -> "global warming really does not exist")
-        								   ),
-        		        				   "text" -> "Global warming is a hoax",
-        		        				   "count" -> 32,
-        		        				   "user" -> <a>rob</a>)
-        		        			)
-        		    )))
-           )
-        }
+         "Highlight on the Web" -> {() =>
+         		val paras = c.store.paraphrases(row.int("id"))
+         		row("paraphrases") = paras
+         		row("idnode") = Docs.mkvar("claimid",row.int("id") + "")
+         		paras foreach {para =>
+         			para("user") = <a class='user' href={Urls.user(para("user_id"))}>{para("username")}</a>
+         			para("subphrases") = c.store.subphrases(para.int("id"))
+         		}
+         		Docs.applyXml("fragments","paraphrases",row)       		 
+         }
+        )}
       </div>
       <div id="stats" class="box">
         {userref(row.int("user_id"),row.str("username"),"created by ")}

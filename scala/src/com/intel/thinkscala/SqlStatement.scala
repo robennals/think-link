@@ -1,6 +1,5 @@
 package com.intel.thinkscala
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +12,7 @@ import scala.collection.Map;
 import scala.util.parsing.json.JSON;
 import org.apache.commons.lang.StringEscapeUtils.escapeSql;
 import util.Timer.time
+
 
 class BadSql(val sql : String, val message : String) extends Exception(sql + " - " + message)
 

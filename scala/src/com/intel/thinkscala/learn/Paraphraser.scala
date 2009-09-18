@@ -39,12 +39,12 @@ object Paraphraser {
 		words foreach (set += _)
 		set		                      
 	}
-		
-	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
-		val words = textWords(sentence)
-		val goodwords = words filter (phraseset contains _) 
-		goodwords.length		
-	}
+//		
+//	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
+//		val words = textWords(sentence)
+//		val goodwords = words filter (phraseset contains _) 
+//		goodwords.length		
+//	}
 	
 	def trimSentence(sentence : String, phraseset : HashSet[String]) : String = {
 		val words = textWords(sentence)
@@ -63,6 +63,15 @@ object Paraphraser {
 		set toList
 	}
 	
+	def hasAll(sentence : String, phraseset : HashSet[String]) : Boolean = {
+		phraseset foreach {word =>
+			if(!sentence.contains(word)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	var scores : HashMap[String,Int] = null
 	var counts : HashMap[String,Int] = null
 	         
@@ -74,18 +83,20 @@ object Paraphraser {
 		val bossxml = searchBigBoss(phrase)
 		val phraseset = wordSet(textWords(phrase) filter (s => !Data.stopwords.contains(s)))
 		var sentences = getSentences(bossxml) filter (s => !s.contains(phrase))
+		if(!phrase.contains("not")){
+			sentences = sentences filter (s => ! s.contains("not"))
+		}
 		sentences = sentences map (s => trimSentence(s,phraseset))
-		scores = new HashMap[String,Int]()
+		sentences = sentences filter (s => hasAll(s,phraseset))
 		counts = new HashMap[String,Int]()
 		sentences foreach {sentence => 
 			if(counts contains sentence){
 				counts(sentence) += 1
 			}else{
 				counts(sentence) = 1
-				scores(sentence) = sentenceScore(sentence,phraseset)
 			}		
 		}
-		def weight(s : String) = scores(s) * scores(s) * counts(s) 
-		makeUnique(sentences.toList) sort {(x,y) => weight(x) > weight(y)}
+//		def weight(s : String) = scores(s) * scores(s) * counts(s) 
+		makeUnique(sentences.toList) sort {(x,y) => counts(x) > counts(y)}
 	}
 }

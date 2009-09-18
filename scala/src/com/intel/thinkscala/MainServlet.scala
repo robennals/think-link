@@ -7,6 +7,8 @@ import com.intel.thinkscala.view._
 import com.intel.thinkscala.view.Mini
 import com.intel.thinkscala.pages._
 import com.intel.thinkscala.pages.Login
+import com.intel.thinkscala.learn.Paraphraser
+import scala.collection.mutable.HashMap
 import scala.xml._
 import util.Timer.time
 
@@ -213,6 +215,13 @@ class MainServlet extends HttpServlet {
 		  c.store.setHidden(claimid)
 	  } 
     }),
+    UrlHandler("/claim/(\\d*)/addphrase", c => {
+      val claimid = c.urlInt(1)
+      val phrase = c.arg("phrase")
+      val subparas = c.argArray("phrase")
+      val subpick = c.argArray("picked")
+      c.store.addphrases(claimid, phrase, subparas, subpick, c.userid) 			
+    }),
     UrlHandler("/claim/(\\d*)/ignore", c => {
       val claimid = c.urlInt(1)
       c.store.ignoreClaim(claimid,c.userid)
@@ -336,6 +345,12 @@ class MainServlet extends HttpServlet {
       }
      }
     ),
+    UrlHandler("/api/derivedparas",c2 => {
+    	implicit val c = c2 
+    	val paras = Paraphraser.paraphrases(c.arg("text"),"")
+    	val data = paras map (para => HashMap("text" -> para))
+    	c.outputRawHtml(Docs.applyXml("fragments","derivedparas",HashMap("derivedparas" -> data)))
+    }),
     UrlHandler("/connect",c => {
       c.requireLogin
       val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)      

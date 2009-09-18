@@ -294,11 +294,20 @@ object Template {
   import Render._
   
   def normal(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(c,title,Docs.nav(c) ++ body,"body")
-  
-  def noinstall(c : ReqContext, title : String, body : NodeSeq) = 
-    basics(c,title,Docs.nav(c) ++ body,"body")
-  
+	  basics(c,title,Docs.nav(c) ++ body,"body")
+
+//  {
+//	 var user_signup : Node = null
+//	 var login_logout : Node = null
+//	 if(c.user.realuser){
+//	      user_signup = <li><a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a></li>
+//	      login_logout = <li><a class="logout" href={Urls.logout}>logout</a></li>
+//	 }else{
+//	      user_signup = <li><a class="signup" href={Urls.signup}>sign up</a></li>
+//	      login_logout = <li><a class="login" href={Urls.login(Urls.base)}>login</a></li>           
+//	 }
+//     Docs.bindFrag("template","title" -> Text(title), "content" -> <div>{body}</div>, "user_signup" -> user_signup, "login_logout" -> login_logout)(c)
+//  }	  
   
   def mini(c : ReqContext, body : NodeSeq) =    
     basics(c,"Dispute Finder Popup Interface",body,"minibody")
@@ -312,6 +321,20 @@ object Template {
     <body class={bodyclass}>
       <input type='hidden' id='user-id' value={""+c.user.userid}/>
       {body}
+      <script type="text/javascript">
+        <xml:unparsed>
+	  	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	  	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	  	</xml:unparsed>
+	  </script>
+	  <script type="text/javascript">
+	  	<xml:unparsed>
+	  	try {
+	  	var pageTracker = _gat._getTracker("UA-10712508-1");
+	  	pageTracker._trackPageview();
+	  	} catch(err) {}
+	  	</xml:unparsed>
+	  </script>
     </body>
     </html>  
 }

@@ -38,7 +38,7 @@ trait Snippets extends BaseData {
     	claimsnippets where ("state = true AND v2_searchresult.user_id = ?",userid) orderby "searchdate DESC" paged page rows
 
     def recentMarkedPages(page : Int) =
-    	claimsnippets orderby("searchdate DESC") where ("state = true") paged page rows
+    	claimsnippets orderby("searchdate DESC") where ("state = true") paged page rows 
     	
 //	def getSnippet(resultid : Int) = 
 //		  select("v2_searchresult").where("v2_searchresult.id = ?",resultid)
@@ -57,5 +57,20 @@ trait Snippets extends BaseData {
                                 "LIMIT 20 OFFSET ?")
     def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
 
+    def paraphrases(claimid : Int) = select("paraphrase").where("claim_id = ? AND derivedfrom = 0 AND enabled = 1",claimid)
+    	.leftjoin("v2_user.name AS username","v2_user ON v2_user.id = paraphrase.user_id") rows
+    
+    def subphrases(phraseid : Int) = select("paraphrase").where("derivedfrom = ? AND enabled = 1",phraseid) rows
 
+    val addphrase = stmt("INSERT INTO paraphrase (claim_id,user_id,text,count,derivedfrom,enabled) VALUES(?,?,?,?,?,?)")
+    def addphrases(claimid : Int, phrase : String, subphrases : Seq[String], picked : Seq[String],userid : Int){
+		var count = 0
+		picked foreach {x => 
+			if(x == "true") count += 1
+		}
+		var paraid = addphrase.insert(claimid,userid,phrase,count,0,true)
+		for(i <- 0 until subphrases.length){
+			addphrase.update(claimid,userid,subphrases(i),0,paraid,picked(i) == "true")
+		}	
+	}
  }

@@ -12,6 +12,7 @@ import scala.xml.NodeSeq;
 import com.intel.thinkscala.view.Template
 import com.intel.thinkscala.view.Page
 import scala.collection.immutable.HashMap
+import scala.collection.mutable.ArrayBuffer
 import com.intel.thinkscala.pages.Messages
 import com.intel.thinkscala.pages.Login
 //import scala.collection.Map
@@ -33,6 +34,15 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
     if(req.getParameter(name) != null){
       Integer.parseInt(req.getParameter(name))
      }else 0
+  def argArray(name : String) : Seq[String] = {
+    var i = 0;
+    val arr = new ArrayBuffer[String]
+    while(req.getParameter(name+"-"+i) != null){
+    	arr += req.getParameter(name+"-"+i)
+    	i+= 1
+    }
+    return arr
+  }
   def argBool(name : String) : Boolean = 
     if(req.getParameter(name) != null){
       java.lang.Boolean.parseBoolean(req.getParameter(name))
@@ -174,7 +184,7 @@ class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res
   } 
 }
 
-class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any){
+class UrlHandler(pat : String, func : ReqContext => Unit, datafunc : ReqContext => Any){
   val r = pat.r
   def tryForUrl(store : Datastore, path : String,req : HttpServletRequest, res : HttpServletResponse, ctx : ServletContext) : Boolean = {
     r.findFirstMatchIn(path) match {
@@ -199,8 +209,8 @@ class UrlHandler(pat : String, func : ReqContext => unit, datafunc : ReqContext 
 }
 
 object UrlHandler{
-  def apply(pat : String, func : ReqContext => unit) = new UrlHandler(pat,func,null)
-  def apply(pat : String, func : ReqContext => unit, datafunc : ReqContext => Any) = new UrlHandler(pat,func,datafunc)
+  def apply(pat : String, func : ReqContext => Unit) = new UrlHandler(pat,func,null)
+  def apply(pat : String, func : ReqContext => Unit, datafunc : ReqContext => Any) = new UrlHandler(pat,func,datafunc)
   
   def innerRunHandler(store: Datastore, handlers : List[UrlHandler],
                      req : HttpServletRequest, res : HttpServletResponse,

@@ -8,11 +8,15 @@ import scala.collection.mutable.HashMap
 import scala.collection.Map
 
 object Docs {
+    def mkvar(varname : String, varval : String) = <input class='hidden' type='hidden' id={varname} name={varname} value={varval}/>
+	
 	def head(title : String)(implicit c : ReqContext) = 
 		bind(loadFrag("head"),"xt","title" -> Text(title)) 
 
+	def analytics(implicit c : ReqContext) = loadPage("fragments/analytics.xml")	
+		
 	def docnav(implicit c : ReqContext) = loadPage("fragments/docnav.xml") 
-
+	
     def nav(c : ReqContext) = 
     	<div>
     	<div id="intellogo">
@@ -43,12 +47,15 @@ object Docs {
 		
 	def loadPage(respath : String)(implicit c : ReqContext) : Node = 
 		ConstructingParser.fromSource(Source.fromString(c.readResource(respath)),true).document.docElem
-	
+		
 	def loadFrag(res : String)(implicit c : ReqContext) : Node = loadPage("fragments/"+res+".xml")
 
 	def bindPage(res : String, margs : (String,Node)*)(implicit c : ReqContext) =
 		bind(loadPage("pages/"+res+".xml"),"xt",margs : _*)
-		
+
+	def bindFrag(res : String, margs : (String,Node)*)(implicit c : ReqContext) =
+		bind(loadPage("fragments/"+res+".xml"),"xt",margs : _*)
+				
 	def page(res : String)(implicit c : ReqContext) = loadPage("pages/"+res+".xml")
 	
 	def docPage(xmlstr : String, c : ReqContext) : NodeSeq = {
@@ -75,7 +82,7 @@ object Docs {
 	def applyXml(zone : String, res : String, m : Map[String,Any])(implicit c : ReqContext) : Node = 
 			applyToData(loadPage(zone+"/"+res+".xml"),"xt",m)
 	
-	def applyToData(xml : Node, pre : String, m : Map[String,Any]) : Node = {
+	def applyToData(xml : Node, pre : String, m : Map[String,Any])(implicit c : ReqContext) : Node = {
 		processXml(xml,pre,n => n match {
 			case Elem(_,"bind",attr,scp,ns @ _*) => m(attr("name").text) match {
 				case n : Node => n
@@ -89,6 +96,11 @@ object Docs {
 					val as = attr("as").text
 					<div>{l.flatMap(applyToData(<div class={cls}>{body}</div>,as,_))}</div>
 				}
+			}
+			case Elem(_,objname,attr,scp,ns @ _*) => {
+				val cls = Class.forName("com.intel.thinkscala.render."+objname)
+				val method = cls.getMethod("render",classOf[ReqContext],classOf[Map[String,Any]],classOf[Elem],classOf[MetaData])
+				method.invoke(c,m,n,attr).asInstanceOf[Node]
 			}
 			case _ => n
 		})

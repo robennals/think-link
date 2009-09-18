@@ -1,0 +1,22 @@
+<div class="box yellowbox mainbox">
+<div class='boxbody'>
+
+	<h1 class='hidden'>Disputed Claims</h1>
+
+	<form id="mainsearch" method="get" action="/thinklink/search">
+		<span class='prompt'>I dispute the claim that...</span>
+		<input type="text" name="query" class='search tempinput' value="- enter a claim that you think is disputed - "/>
+		<input class='submit' type="submit" value="Search"/>
+	</form>
+
+	<form id="newthing" method="GET" action={Urls.createClaim(c.arg("query"))}>
+		<input type="hidden" name="query" value={c.arg("query")}/>
+		Don't see your claim? &#8212; <input type='submit' class='submit' value="Create a New Claim"/>
+	</form>
+
+	<div class='claimresults'>
+	</div>
+
+
+</div>
+</div>

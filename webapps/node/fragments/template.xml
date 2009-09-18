@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+	<meta http-equiv="Content-Language" content="en-us"></meta>
+	<title><xt:bind name="title"/></title>
+	<link href="/thinklink/images/lightbulb_red.png" type="image/png" rel="icon"></link>
+	<link href="/thinklink/stylesheets/normal.css" rel="stylesheet" media="screen"></link>
+	<link href="/thinklink/stylesheets/frontpage.css" rel="stylesheet" media="screen"></link>
+	<script type="text/javascript" src="/thinklink/javascript/jquery-1.2.3.js"></script>
+	<script type="text/javascript" src="/thinklink/javascript/standard.js"></script>
+</head>
+<body class='body'>
+   	<div>
+    	<div id="intellogo">
+			<img src="/images/intel_black_transparent_100w.png"/>
+			<div id="labs">Labs</div>
+		</div>
+		<h1 id="frontlogo">Dispute Finder<span class="beta">beta</span></h1>
+		<div class="tagline">Reveal the other side of the story</div>
+		
+		<div id="nav">
+			<ul>
+				<li><a href="/thinklink/">About</a></li>
+				<li><a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install</a></li>
+			    <li><a href="/thinklink/docs/faq.html">FAQ</a></li>
+				<li><a href="/thinklink/pages/claims.html">Claims</a></li>
+				<li>Pages</li>
+				<li><xt:head name="user_signup"/></li>
+				<li><xt:head name="login_logout"/></li>
+				<li>Feedback</li>
+			</ul>
+		</div>
+	</div>
+
+	<xt:bind name="content"/>
+  
+	<script type="text/javascript">
+	<![CDATA[
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	]]>
+	</script>
+	<script type="text/javascript">
+	<![CDATA[
+		try {
+		var pageTracker = _gat._getTracker("UA-10712508-1");
+		pageTracker._trackPageview();
+		} catch(err) {}
+	]]>
+	</script>
+</body>
+</html>

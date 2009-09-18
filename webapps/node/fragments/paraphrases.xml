@@ -1,22 +1,24 @@
 <div>
 	<div class='desc'>
-		These are phrases that have approximately the same meaning as the claim.
-		Dispute Finder highlights these phrases when it sees them on web pages, to let 
-		users know that they relate to a disputed claim.
+		User-provided <a href="/thinklink/docs/training.html">paraphrases</a> that the 
+		<a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Extension</a>
+		will <a href="/thinklink/docs/highlight.html">highlight</a> on web pages
 	</div>
 	<div class='paraphrases'>
-		<span class='prompt'>
-		<q><xt:bind name="claimtext">Global warming is a hoax</xt:bind></q> can also be reworded as...</span>
-		<input type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -"/>
-		<input type="submit" class='submit' value="Add Paraphrase"/>
+		<div id="mainsearch" class="box yellowbox">
+			<span class='prompt'><q><xt:bind name="text">Global warming is a hoax</xt:bind></q> can also be reworded as...</span>
+			<xt:bind name="idnode"/>
+			<input id="phrase" type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -"/>
+			<input id="addparabutton" type="submit" class='submit' value="Add Paraphrase" onclick="popupDerivedParas()"/>
+		</div>
 		
-		<h3>Current Paraphrases</h3>
+		<h3>Paraphrases already added by users</h3>
 		
 		<xt:foreach name="paraphrases" as="para" class="paraphrase showcontext">
 			<q class='title'><para:bind name="text">Global Warming does not exist</para:bind></q>
-			<span class='details'>created by <para:bind name="user" linkname="userlink" class='user'>rob</para:link> - <a>report abuse</a> 							
-			- <a class='showlink'><span>hide</span> <para:bind name="count"/> derived phrases</a></span>
-			<div class='subphrases showhide'>
+			<span class='details'>created by <para:bind name="user" class='user'>rob</para:bind> - <a>report abuse</a> 							
+			- <a class='showlink'><span>show</span> <para:bind name="count"/> derived phrases</a></span>
+			<div class='subphrases showhide' style="display:none">
 				<h4>derived phrases</h4>
 				<para:foreach name="subphrases" as="sub" class='subphrase'>
 				<q><sub:bind name="text">global warming, as we think we know it, does not exist</sub:bind></q>
