@@ -3,6 +3,20 @@
 Several of these articles are also syndicated by other publications.
 
 
+=== The Toronto Star - At last, a shovel for all that BS ===
+
+Ben Rayner - September 5th, 2009
+
+The Toronto Star were particularly interested in the TV and audio work we 
+plan to do in the future. However Clay Shirky was skeptical.
+
+<blockquote>
+Bill O'Reilly and Rush Limbaugh beware: There will soon be a bull detector for our TVs. In time there could even be one for your pocket
+</blockquote>
+
+<a href="http://www.thestar.com/news/insight/article/690676">http://www.thestar.com/news/insight/article/690676</a>
+
+
 === The Canadian Press - New tool flags disputed claims on web, but observers say its an uphill battle ===
 
 James Keller - August 19th, 2009

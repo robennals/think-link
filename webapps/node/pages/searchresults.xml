@@ -15,6 +15,14 @@
 	</form>
 
 	<div class='claimresults'>
+		<div class="claim">
+			<a class="title" href="/thinklink/claim/6251">Global warming is a hoax</a>
+			<div class="description"/>
+			<span class="user">created by <a target="_blank" href="/thinklink/user/2">autoimport</a></span>
+			- <a class="instances" href="/thinklink/claim/6251/findsnippets">seen <span class="count">89</span> times on the web</a>  
+			- 
+			<a onclick="reportSpam(this,6251)">report spam</a>
+		</div>
 	</div>
 
 

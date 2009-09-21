@@ -36,4 +36,5 @@ backup-db
 backup_database.sh
 Secret.scala
 */docweb/*
+\.*
 

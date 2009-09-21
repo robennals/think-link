@@ -40,11 +40,11 @@ object Paraphraser {
 		set		                      
 	}
 //		
-//	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
-//		val words = textWords(sentence)
-//		val goodwords = words filter (phraseset contains _) 
-//		goodwords.length		
-//	}
+	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
+		val words = textWords(sentence)
+		val goodwords = words filter (phraseset contains _) 
+		goodwords.length		
+	}
 	
 	def trimSentence(sentence : String, phraseset : HashSet[String]) : String = {
 		val words = textWords(sentence)
@@ -87,16 +87,21 @@ object Paraphraser {
 			sentences = sentences filter (s => ! s.contains("not"))
 		}
 		sentences = sentences map (s => trimSentence(s,phraseset))
-		sentences = sentences filter (s => hasAll(s,phraseset))
+//		sentences = sentences filter (s => hasAll(s,phraseset))
 		counts = new HashMap[String,Int]()
+		scores = new HashMap[String,Int]()
 		sentences foreach {sentence => 
 			if(counts contains sentence){
 				counts(sentence) += 1
 			}else{
 				counts(sentence) = 1
+				scores(sentence) = sentenceScore(sentence,phraseset)
 			}		
 		}
 //		def weight(s : String) = scores(s) * scores(s) * counts(s) 
-		makeUnique(sentences.toList) sort {(x,y) => counts(x) > counts(y)}
+		makeUnique(sentences.toList) sort {(x,y) => 
+			if(scores(x) > scores(y)) true
+			else counts(x) > counts(y)
+		}
 	}
 }

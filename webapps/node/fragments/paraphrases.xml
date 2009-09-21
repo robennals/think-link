@@ -1,14 +1,14 @@
 <div>
 	<div class='desc'>
 		User-provided <a href="/thinklink/docs/training.html">paraphrases</a> that the 
-		<a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Extension</a>
+		<a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Web Browser Extension</a>
 		will <a href="/thinklink/docs/highlight.html">highlight</a> on web pages
 	</div>
 	<div class='paraphrases'>
 		<div id="mainsearch" class="box yellowbox">
 			<span class='prompt'><q><xt:bind name="text">Global warming is a hoax</xt:bind></q> can also be reworded as...</span>
 			<xt:bind name="idnode"/>
-			<input id="phrase" type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -"/>
+			<input id="phrase" type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -" onkeypress="paraKey(event)"/>
 			<input id="addparabutton" type="submit" class='submit' value="Add Paraphrase" onclick="popupDerivedParas()"/>
 		</div>
 		

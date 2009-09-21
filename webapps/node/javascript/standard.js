@@ -184,7 +184,14 @@ function setToggle(box,vote){
 	}
 }
 
-function popupDerivedParas(node){
+function paraKey(ev){
+	if(!ev) var ev = window.event;
+	if(ev.keyCode == 13){
+		popupDerivedParas();
+	}
+}
+
+function popupDerivedParas(){
 	var claimid = $("#claimid").val();
 	if($("#phrase").hasClass("tempinput")){
 		alert("You must enter a paraphrase first");
@@ -221,6 +228,12 @@ function submitDerivedParas(){
 	$.post("/thinklink/claim/"+claimid+"/addphrase",args,function(result){		
 		window.location.reload();
 	});
+}
+
+function cancelDerivedParas(){
+	$("#addparabutton").attr("disabled",false);
+	$("#phrase").attr("disabled",false);
+	$("#parapopup").remove();
 }
 
 function getUserId(){
