@@ -7,10 +7,17 @@ function listToHash(list){
 	return hsh;
 }
 
+var global_wordcombos = {};
 
 function find_phrases(doc){
 	thinklink_msg("find phrases : "+doc.location.href);
 
+	var url = doc.location.href;
+	if(url.indexOf("cs.berkeley.edu") != -1 || url.indexOf("localhost") != -1){
+		clearCache(); // they may be aware of very recent data
+		return;
+	}
+	
 	var words = doc.body.textContent.toLowerCase().split(/[^\w]+/);
 	thinklink_msg("got words");
 	
@@ -24,8 +31,10 @@ function find_phrases(doc){
 		return;
 	}
 
-	searchWords(doc,words,globals.hotwords,0);
+	global_wordcombos = {};
+	searchWords(doc,words,globals.hotwords,0);	
 }
+
 
 function searchWords(doc,words,hotwords,start){
 	var apipath = get_api_path();
@@ -53,19 +62,30 @@ function searchWords(doc,words,hotwords,start){
 					})
 					return;
 				}else{
-					var claims = secondwords[words[j]];
-					for(var k = 0; k < claims.length; k++){
-						markClaimPhrases(doc,claims[k]);
-					}
+					global_wordcombos[words[i]+"-"+words[j]] = secondwords[words[j]]
+					//var claims = secondwords[words[j]];
+					//for(var k = 0; k < claims.length; k++){
+						//global_claimphrases
+////						markClaimPhrases(doc,claims[k]);
+					//}
 				}
 			}
 		}
 	}
+	
+	// only want to check for any given phrase on the page once
+	for(var combo in global_wordcombos){
+		var claims = global_wordcombos[combo];
+		for(var k = 0; k < claims.length; k++){
+			markClaimPhrases(doc,claims[k]);
+		}
+	}		
 }
 
 function markClaimPhrases(doc,claim){
 	var normtext = doc.body.textContent.toLowerCase().replace(/[^\w]+/g," ");
 	var phrases = claim.phrases;
+	global_marked = [];
 	for(var i = 0; i < phrases.length; i++){
 		var normphrase = phrases[i].toLowerCase().replace(/[^\w]+/g," ");
 		if(normtext.indexOf(normphrase) != -1){
@@ -75,5 +95,9 @@ function markClaimPhrases(doc,claim){
 	var normphrase = claim.text.toLowerCase().replace(/[^\w]+/g," ");
 	if(normtext.indexOf(normphrase) != -1){
 		mark_snippet(claim.text,normalise(claim.text),claim.claim_id,claim.id,claim.claimtext,doc.body);			
+	}
+	
+	if(global_marked.length > 0){
+		claimMessageMove(global_marked,claim.claimtext,claim.claim_id,claim.id,doc);
 	}
 }

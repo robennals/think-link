@@ -87,7 +87,7 @@ object Mini {
               Widgets.greyInput("query","query","Enter search keywords")
 	        }            
         }
-        <input type="submit" class="submit" value="Search"/>
+        <input type="submit" value="Search"/>
 	  </form>   
       <div id="claimlist">
       	{c.store.searchClaims(query,0) flatMap claimButton}    

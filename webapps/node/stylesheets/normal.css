@@ -508,9 +508,11 @@ h2 {
 	margin-bottom: 10px;
 }
 
+/*
 #claimlist {
 	width: 550px;
 }
+*/
 
 .bossurl .title {
 	margin-left: 104px;
@@ -737,7 +739,7 @@ h2 {
 
 .miniform input, .miniform label, .miniform textarea{
 	display: block;
-	width: 380px;
+	width: 360px;
 }
 
 .miniform label {

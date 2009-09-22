@@ -101,6 +101,30 @@ function claimMessage(claimtext,claimid,snipid,doc){
 	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
 }
 
+function claimMessageMove(marked,claimtext,claimid,snipid,doc){
+	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
+	var notification =
+		notificationBox.getNotificationWithValue("thinklink-disputed");
+	var buttons = [{
+		label: "More Info",
+		callback: function(){viewClaim(claimid,snipid);},
+		accessKey: "I",
+		popup: null
+		},{
+		label: "Goto Snippet",
+		callback: function(){marked[0].scrollIntoView(true);},
+		accessKey: "G",
+		popup: null
+		}];
+	 
+	var message = "disputed claim: "+claimtext;
+
+	const priority = notificationBox.PRIORITY_INFO_MEDIUM;
+	notificationBox.appendNotification(message, "thinklink-disputed",
+	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
+}
+
+
 function highlightMessage(marked,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
 	var notification =
@@ -516,6 +540,7 @@ function clearCache(){
 	var apipath = get_api_path();
 	globals.cache = {};		
 	globals.ignored = null;
+	globals.hotwords = null;
 }
 
 function loadIgnored(callback){
@@ -543,6 +568,13 @@ function emptyMap(keys){
 		map[keys[i]] = true;
 	}
 	return map;
+}
+
+function maybeClearCache(url){
+	var domain = getUrlDomain(url);
+	if(domain == "cs.berkeley.edu" || domain == "localhost"){
+		clearCache(); // they may be aware of very recent data
+	}
 }
 
 function snippetsForUrl(url,callback){
