@@ -6,7 +6,7 @@
 	
 	<div class='subphrases'>
 		<xt:foreach name="derivedparas" as="para" class='subphrase togglephrase'>
-		<q><para:bind name="text">Global warming hoax</xt:bind></q>
+		<para:bind name="text">Global warming hoax</xt:bind>
 		</xt:foreach>
 	</div>	
 	<button onclick="submitDerivedParas()" class='submit' style='margin-left:60px; margin-top: 10px'>Add Paraphrase and Derived Paraphrases</button>

@@ -29,10 +29,10 @@ object Paraphraser {
 			
 	def getSentences(xml : NodeSeq) : Seq[String] = {
 		val abstracts : Seq[Node] = xml \\ "abstract"
-		(abstracts flatMap (abs => splitSentences(abs.text.replaceAll("</?b>","")))) map (_.replaceAll("[^\\s\\w]"," ").replaceAll("\\s+"," ").toLowerCase)
+		(abstracts flatMap (abs => splitSentences(abs.text.replaceAll("</?b>","")))) map (_.replaceAll("\\s+"," ").toLowerCase)
 	}
 
-	def textWords(sentence : String) : Seq[String] = (sentence toLowerCase) split "\\s+"
+	def textWords(sentence : String) : Seq[String] = (sentence toLowerCase) split "[^\\w]+\\s*"
 	
 	def wordSet(words : Seq[String]) : HashSet[String] = {
 		val set = new HashSet[String]()
@@ -40,12 +40,16 @@ object Paraphraser {
 		set		                      
 	}
 //		
-	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
-		val words = textWords(sentence)
-		val goodwords = words filter (phraseset contains _) 
-		goodwords.length		
-	}
 	
+	def keywordCount(sentence : String, phraseset : Seq[String]) : Int = {
+		phraseset filter (sentence contains _) length
+	}
+//	def sentenceScore(sentence : String, phraseset : HashSet[String]) : Int = {
+//		val words = textWords(sentence)
+//		val goodwords = words filter (phraseset contains _) 
+//		goodwords.length		
+//	}
+//	
 	def trimSentence(sentence : String, phraseset : HashSet[String]) : String = {
 		val words = textWords(sentence)
 		if(words.length == 0) return ""
@@ -81,13 +85,14 @@ object Paraphraser {
 	
 	def paraphrases(phrase : String, extrawords : String) : Seq[String] = {
 		val bossxml = searchBigBoss(phrase)
-		val phraseset = wordSet(textWords(phrase) filter (s => !Data.stopwords.contains(s)))
+		val phrasewords = textWords(phrase) filter (s => !Data.stopwords.contains(s))
+		val phraseset = wordSet(phrasewords)
 		var sentences = getSentences(bossxml) filter (s => !s.contains(phrase))
-		if(!phrase.contains("not")){
-			sentences = sentences filter (s => ! s.contains("not"))
+		if(!(phrase.contains("not") || phrase.contains("n't"))){
+			sentences = sentences filter (s => ! (s.contains("not") || s.contains("n't")))
 		}
 		sentences = sentences map (s => trimSentence(s,phraseset))
-//		sentences = sentences filter (s => hasAll(s,phraseset))
+		sentences = sentences filter (s => hasAll(s,phraseset))
 		counts = new HashMap[String,Int]()
 		scores = new HashMap[String,Int]()
 		sentences foreach {sentence => 
@@ -95,13 +100,15 @@ object Paraphraser {
 				counts(sentence) += 1
 			}else{
 				counts(sentence) = 1
-				scores(sentence) = sentenceScore(sentence,phraseset)
+//				scores(sentence) = keywordCount(sentence,phrasewords)
 			}		
 		}
+//		sentences = sentences filter (s => scores(s) > 1)
 //		def weight(s : String) = scores(s) * scores(s) * counts(s) 
 		makeUnique(sentences.toList) sort {(x,y) => 
-			if(scores(x) > scores(y)) true
-			else counts(x) > counts(y)
+//			if(scores(x) != scores(y)) scores(x) > scores(y)
+			if(counts(x) != counts(y)) counts(x) > counts(y)
+			else x.length < y.length
 		}
 	}
 }

@@ -207,9 +207,33 @@ function popupDerivedParas(){
 	$.get("/thinklink/api/derivedparas",{claimid: claimid, text: text},function(content){
 		popupborder.get(0).innerHTML = content;
 		$(".togglephrase").click(function(e){
-			$(e.target).toggleClass("togglephrase-selected");
+			togglePhrase(e.target);
+//			$(e.target).toggleClass("togglephrase-selected");
 		})
 	});
+}
+
+function togglePhrase(node){
+	var txt = trimString(node.textContent);
+	var phrases = $(".togglephrase");
+	for(var i = 0; i < phrases.length; i++){
+		var other = phrases.get(i);
+		var othertxt = trimString(other.textContent);
+		if(othertxt == txt) continue;
+		if(othertxt.indexOf(txt) != -1){
+			if($(node).hasClass("togglephrase-selected")){
+				$(other).show();
+			}else{
+				$(other).hide();
+			}
+		}
+	}
+	$(node).toggleClass("togglephrase-selected");
+}
+
+
+function trimString(str){
+	return str.replace("/\n/"," ").replace(/\s+/," ").replace(/^\s+/,"").replace(/\s+$/,"");
 }
 
 function submitDerivedParas(){
@@ -219,7 +243,7 @@ function submitDerivedParas(){
 	var args = {phrase:mainphrase};
 	for(var i = 0; i < subphrases.length; i++){
 		var subphrase = subphrases.get(i);
-		var text = subphrase.textContent.replace(/\s+/," ").replace(/^\s/,"").replace(/\s$/,"");
+		var text = trimString(subphrase.textContent);
 		args["phrase-"+i] = text;
 		args["picked-"+i] = $(subphrase).hasClass("togglephrase-selected");		
 	}
