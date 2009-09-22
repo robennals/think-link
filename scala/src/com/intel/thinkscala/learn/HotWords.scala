@@ -1,20 +1,24 @@
 package com.intel.thinkscala.learn
 import scala.collection.mutable.HashMap
 import scala.io.Source
-import java.io.File
+import java.io._
+
 
 object HotWords {
 	def loadHotwords : HashMap[String,Int] = {
 		var map = new HashMap[String,Int]
-		val source = Source.fromFile(new File("/home/rob/wiki_wordfreqs"))
-		source.getLines("\n") foreach {line =>
+		val reader = new BufferedReader(new FileReader(new File("/home/rob/wiki_wordfreqs")))
+		var line : String = reader.readLine
+		while(line != null){
 			val split = line.indexOf(":")
 			if(split > 0){
 				val word = line.substring(0,split)
 				val count = Integer.parseInt(line.substring(split+1))
 				map(word) = count
 			}
+			line = reader.readLine
 		}
+		reader.close()
 		return map
 	}
 

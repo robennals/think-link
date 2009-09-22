@@ -45,7 +45,7 @@ object ExpandTurkResults {
             row("Input.searchtext"+i) = ""
             row("Input.position"+i) = "-1"
             missing += 1
-        }
+        } 
       }
     })
     

@@ -312,6 +312,19 @@ class MainServlet extends HttpServlet {
     UrlHandler("/apianon/pageinfo", c => {
       c.output(c.store.pageSnippets(Util.toUnsigned(c.argInt("domain")),Util.toUnsigned(c.argInt("page"))))
     }),
+    UrlHandler("/apianon/hotwords/(\\w*)/(\\w*)", c=> {}, c => {
+    	var topphrases = c.store.wordPhrases(c.urlArg(1),c.urlArg(2))
+    	topphrases foreach {phrase => 
+    		phrase("phrases") = c.store.subPhraseTexts(phrase.int("id"))
+    	}
+    	c.output(topphrases)
+    }),
+    UrlHandler("/apianon/hotwords/(\\w*)", c => {}, c => {
+        c.output(c.store.secondWords(c.urlArg(1)))
+    }),
+    UrlHandler("/apianon/hotwords", c => {}, c => {
+      c.output(c.store.hotWords())
+    }),
     UrlHandler("/turk/searchboss", c=> {
     },c => {
       SnipSearch.turkSearchBoss(c.arg("query"))   

@@ -58,8 +58,10 @@ object Paraphraser {
 		while(!phraseset.contains(words(start)) && start < words.length - 1) start+= 1
 		while(!phraseset.contains(words(end)) && end > 0) end -= 1
 		val goodwords = words.slice(start,end+1)
-		return goodwords.mkString(" ")
+		return fixEndings(goodwords.mkString(" "))
 	}
+	
+	def fixEndings(s : String) = s.replace(" t ","'t ").replace(" s ","'s ")
 	
 	def makeUnique[A](xs : List[A]) : List[A] = {
 		val set = new HashSet[A]()
@@ -83,13 +85,16 @@ object Paraphraser {
 		System.out.println(counts(x) + ":" + x) 
 	}
 	
+	def hasNegwords(s : String) = 
+		s.contains("not") || s.contains("n't") || s.contains("no") || s.contains("never") || s.contains("neither")
+	
 	def paraphrases(phrase : String, extrawords : String) : Seq[String] = {
 		val bossxml = searchBigBoss(phrase)
 		val phrasewords = textWords(phrase) filter (s => !Data.stopwords.contains(s))
 		val phraseset = wordSet(phrasewords)
 		var sentences = getSentences(bossxml) filter (s => !s.contains(phrase))
-		if(!(phrase.contains("not") || phrase.contains("n't"))){
-			sentences = sentences filter (s => ! (s.contains("not") || s.contains("n't")))
+		if(!hasNegwords(phrase)){
+			sentences = sentences filter (s => !hasNegwords(s))
 		}
 		sentences = sentences map (s => trimSentence(s,phraseset))
 		sentences = sentences filter (s => hasAll(s,phraseset))

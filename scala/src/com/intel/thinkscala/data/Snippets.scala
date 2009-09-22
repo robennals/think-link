@@ -1,5 +1,6 @@
 package com.intel.thinkscala.data
 import com.intel.thinkscala._
+import com.intel.thinkscala.learn.HotWords
 
 
 import com.intel.thinkscala.SqlQuery._
@@ -57,20 +58,37 @@ trait Snippets extends BaseData {
                                 "LIMIT 20 OFFSET ?")
     def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
 
-    def paraphrases(claimid : Int) = select("paraphrase").where("claim_id = ? AND derivedfrom = 0 AND enabled = 1",claimid)
+    def paraphrases(claimid : Int) = select("paraphrase").where("claim_id = ?",claimid)
     	.leftjoin("v2_user.name AS username","v2_user ON v2_user.id = paraphrase.user_id") rows
     
-    def subphrases(phraseid : Int) = select("paraphrase").where("derivedfrom = ? AND enabled = 1",phraseid) rows
+    def subphrases(phraseid : Int) = select("derivedpara").where("derivedfrom = ? AND enabled = 1",phraseid) rows
 
-    val addphrase = stmt("INSERT INTO paraphrase (claim_id,user_id,text,count,derivedfrom,enabled) VALUES(?,?,?,?,?,?)")
+    val addphrase = stmt("INSERT INTO paraphrase (claim_id,user_id,text,count,keyword,secondword) VALUES(?,?,?,?,?,?)")
+    val addsubphrase = stmt("INSERT INTO derivedpara (text,derivedfrom,enabled) VALUES(?,?,?)")
+    
     def addphrases(claimid : Int, phrase : String, subphrases : Seq[String], picked : Seq[String],userid : Int){
 		var count = 0
 		picked foreach {x => 
 			if(x == "true") count += 1
 		}
-		var paraid = addphrase.insert(claimid,userid,phrase,count,0,true)
+		val (keyword,secondword) = HotWords.hotWords(phrase)
+		var paraid = addphrase.insert(claimid,userid,phrase,count,keyword,secondword)
 		for(i <- 0 until subphrases.length){
-			addphrase.update(claimid,userid,subphrases(i),0,paraid,picked(i) == "true")
+			addsubphrase.update(subphrases(i),paraid,picked(i) == "true")
 		}	
 	}
+	
+	def hot_words = stmt("SELECT DISTINCT(keyword) FROM paraphrase")
+	def hotWords() = hot_words.querySeq()
+	
+	def second_words = stmt("SELECT DISTINCT(secondword) FROM paraphrase WHERE keyword = ?")
+	def secondWords(keyword : String) = second_words.querySeq(keyword)
+	
+	def wordPhrases(keyword : String,secondword : String) = select("paraphrase")
+		.where("keyword = ?",keyword).where("secondword = ?",secondword)
+		.leftjoin("v2_node.text AS claimtext","v2_node ON v2_node.id = paraphrase.claim_id")
+		.rows
+		
+	def subphrase_texts = stmt("SELECT text FROM derivedpara WHERE derivedfrom = ?")
+	def subPhraseTexts(phraseid : Int) = subphrase_texts.querySeq(phraseid)
  }
