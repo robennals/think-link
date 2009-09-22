@@ -71,6 +71,7 @@ function update_highlights(){
 	}
 	loadIgnored(function(){
 		mark_snippets(content.document);
+		find_phrases(content.document);
 	});
 }
 
@@ -139,7 +140,7 @@ function showMessage(message,doc){
 }
 
 function normalise(str){
-	return str.replace(/[^\w]/g,"")
+	return str.toLowerCase().replace(/[^\w]/g,"")
 }
 
 function unmark_snippet(node){
@@ -251,11 +252,11 @@ function splitText(nodetext,sniptext){
 	
 	var ni = 0;	
 	for(var nni = 0; nni < nodetext_n.length; nni++){
-		while(nodetext_n[nni] != nodetext[ni]) ni++;
+		while(nodetext_n[nni] != nodetext[ni].toLowerCase()) ni++;
 		
 		var pad = 0;
 		for(var sni = 0; sni < sniptext_n.length; sni++){
-			while(nodetext_n[nni+sni] != nodetext[ni+sni+pad]) pad++;
+			while(nodetext_n[nni+sni] != nodetext[ni+sni+pad].toLowerCase()) pad++;
 			if(sniptext_n[sni] != nodetext_n[nni+sni]) break;
 			if(sni == sniptext_n.length - 1){
 				return {

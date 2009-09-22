@@ -35,20 +35,20 @@ function searchWords(doc,words,hotwords,start){
 			// do nothing: common case
 		}else if(hotwords[words[i]] == true){
 			ajaxRequest(apipath+"/apianon/hotwords/"+words[i]+".json",function(secondwords){
-				var sechash = listToHash(secondwords);
+				hotwords[words[i]] = listToHash(secondwords);
 				searchWords(doc,words,hotwords,i);
 			});
 			return;
 		}else{
 			var secondwords = hotwords[words[i]];
 			var r_start = Math.max(0,i-20);
-			var r_end = Match.min(words.length-1,i+20);
+			var r_end = Math.min(words.length-1,i+20);
 			for(var j = r_start; j < r_end; j++){
 				if(!secondwords[words[j]]){
 					// do nothing			
 				}else if(secondwords[words[j]] == true){
 					ajaxRequest(apipath+"/apianon/hotwords/"+words[i]+"/"+words[j]+".json",function(claims){
-						secondwords[words[j]] = listToHash(claims);
+						secondwords[words[j]] = claims;
 						searchWords(doc,words,hotwords,i);
 					})
 					return;
@@ -67,8 +67,13 @@ function markClaimPhrases(doc,claim){
 	var normtext = doc.body.textContent.toLowerCase().replace(/[^\w]+/g," ");
 	var phrases = claim.phrases;
 	for(var i = 0; i < phrases.length; i++){
-		if(normtext.indexOf(phrases[i])){
-			mark_snippet(phrases[i],normalise(phrases[i]),claim.claim_id,phrases.id,claim.claimtext,doc.body);			
+		var normphrase = phrases[i].toLowerCase().replace(/[^\w]+/g," ");
+		if(normtext.indexOf(normphrase) != -1){
+			mark_snippet(phrases[i],normalise(phrases[i]),claim.claim_id,claim.id,claim.claimtext,doc.body);			
 		}
+	}
+	var normphrase = claim.text.toLowerCase().replace(/[^\w]+/g," ");
+	if(normtext.indexOf(normphrase) != -1){
+		mark_snippet(claim.text,normalise(claim.text),claim.claim_id,claim.id,claim.claimtext,doc.body);			
 	}
 }
