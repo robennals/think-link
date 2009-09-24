@@ -351,6 +351,17 @@ body {
 	max-height: 300px;
 	border-bottom: 1px solid grey;
 	padding-left: 20px;
+	background-color: white;
+}
+
+.paranewclaim .subphrases{
+	border: 1px solid black;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.paranewclaim h4 {
+	font-size: 15px;
 }
 
 .parapopup h4 {
@@ -397,4 +408,13 @@ body {
 	font-size: 18px;
 	padding: 40px;
 	background: white;
+}
+
+.claim-warning {
+	border-color: orange;
+	border-width: 10px;
+	padding: 10px;
+	max-width: 550px;
+	font-size: 15px;
+	margin-left: 20px;
 }

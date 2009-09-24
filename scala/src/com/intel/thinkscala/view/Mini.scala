@@ -48,7 +48,7 @@ object Mini {
     <div class="minicontent">
       <form id='newsnippet' action={MiniUrls.newsnippet} method="POST">        
      {if(disputed)
-        <h1>What claim is this snippet making?</h1>
+        <h1>What disputed claim is this a paraphrase of?</h1>
       else
         (<div><h1>What claim is this evidence for?</h1>
         This evidence <select name="rel">

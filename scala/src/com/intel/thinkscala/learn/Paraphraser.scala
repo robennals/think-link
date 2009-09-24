@@ -39,7 +39,6 @@ object Paraphraser {
 		words foreach (set += _)
 		set		                      
 	}
-//		
 	
 	def keywordCount(sentence : String, phraseset : Seq[String]) : Int = {
 		phraseset filter (sentence contains _) length
@@ -85,18 +84,24 @@ object Paraphraser {
 		System.out.println(counts(x) + ":" + x) 
 	}
 	
-	def hasNegwords(s : String) = 
-		s.contains("not") || s.contains("n't") || s.contains("no") || s.contains("never") || s.contains("neither")
+	// TODO: use regular expressions to avoid matching words like "snow"
+//	def hasNegwords(s : String) = 
+//		s.contains("not") || s.contains("n't") || s.contains("no") || s.contains("never") || s.contains("neither") || s.contains("nor")
+
+	def hasNegwords(s : Seq[String]) = s exists (Data.negwords contains _)
 	
 	def paraphrases(phrase : String, extrawords : String) : Seq[String] = {
 		val bossxml = searchBigBoss(phrase)
-		val phrasewords = textWords(phrase) filter (s => !Data.stopwords.contains(s))
-		val phraseset = wordSet(phrasewords)
+		val phrasewords = textWords(phrase)
+		val keywords = phrasewords filter (s => !Data.stopwords.contains(s))
+		val phraseset = wordSet(keywords)
 		var sentences = getSentences(bossxml) filter (s => !s.contains(phrase))
-		if(!hasNegwords(phrase)){
-			sentences = sentences filter (s => !hasNegwords(s))
-		}
 		sentences = sentences map (s => trimSentence(s,phraseset))
+		if(!hasNegwords(phrasewords)){
+			sentences = sentences filter (s => !hasNegwords(textWords(s)))
+		}else{
+			sentences = sentences filter (s => hasNegwords(textWords(s)))			
+		}
 		sentences = sentences filter (s => hasAll(s,phraseset))
 		counts = new HashMap[String,Int]()
 		scores = new HashMap[String,Int]()

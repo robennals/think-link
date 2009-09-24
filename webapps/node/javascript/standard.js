@@ -192,6 +192,11 @@ function paraKey(ev){
 }
 
 function popupDerivedParas(){
+	if(!loggedIn()){
+		alert("You need to be logged in to add a paraphrase");
+		return;
+	}
+	
 	var claimid = $("#claimid").val();
 	if($("#phrase").hasClass("tempinput")){
 		alert("You must enter a paraphrase first");
@@ -236,8 +241,11 @@ function trimString(str){
 	return str.replace("/\n/"," ").replace(/\s+/," ").replace(/^\s+/,"").replace(/\s+$/,"");
 }
 
-function submitDerivedParas(){
-	var claimid = $("#claimid").val();
+function newClaimDerivedParas(){
+	submitDerivedParas(true);
+}
+
+function submitDerivedParas(newclaim){
 	var mainphrase = $("#phrase").val();
 	var subphrases = $(".subphrase");
 	var args = {phrase:mainphrase};
@@ -247,11 +255,19 @@ function submitDerivedParas(){
 		args["phrase-"+i] = text;
 		args["picked-"+i] = $(subphrase).hasClass("togglephrase-selected");		
 	}
-	$("#addparabutton").attr("disabled",false);
-	$("#phrase").attr("disabled",false);
-	$.post("/thinklink/claim/"+claimid+"/addphrase",args,function(result){		
-		window.location.reload();
-	});
+	if(newclaim){
+		args["name"] = $("#name").val();
+		$.post("/thinklink/claim/new",args,function(id){
+			document.location.href = "/thinklink/claim/"+id;
+		});		
+	}else{
+		//$("#addparabutton").attr("disabled",false);
+		//$("#phrase").attr("disabled",false);
+		var claimid = $("#claimid").val();
+		$.post("/thinklink/claim/"+claimid+"/addphrase",args,function(result){		
+			window.location.reload();
+		});
+	}
 }
 
 function cancelDerivedParas(){
@@ -271,8 +287,10 @@ function loggedIn(){
 window.onload = function(){
 	$(".tempinput").focus(function(e){
 		var input = e.target;
-		$(input).removeClass("tempinput");
-		input.value = "";		
+		if($(input).hasClass("tempinput")){
+			$(input).removeClass("tempinput");
+			input.value = "";		
+		}
 	})
 	$(".togglephrase").click(function(e){
 		$(e.target).toggleClass("togglephrase-selected");

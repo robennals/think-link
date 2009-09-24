@@ -202,6 +202,10 @@ h2 {
 	font-weight: bold;
 }
 
+#newsnippet h1{
+	margin-top: 10px;
+}
+
 
 .count {
 	font-weight: bold;

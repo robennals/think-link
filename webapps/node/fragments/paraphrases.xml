@@ -1,8 +1,8 @@
 <div>
 	<div class='desc'>
-		User-provided <a href="/thinklink/docs/training.html">paraphrases</a> that the 
+		Enter <a href="/thinklink/docs/training.html">paraphrases</a> that the 
 		<a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Web Browser Extension</a>
-		will <a href="/thinklink/docs/highlight.html">highlight</a> on web pages
+		should <a href="/thinklink/docs/highlight.html">highlight</a> on web pages:
 	</div>
 	<div class='paraphrases'>
 		<div id="mainsearch" class="box yellowbox">

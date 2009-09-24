@@ -15,7 +15,7 @@ object Render {
       <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
       <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"created by")}
-      - <a href={Urls.findsnippets(row("id"))} class="instances">seen <span class="count">{row("instance_count")}</span> times on the web</a>  
+      - <a href={Urls.findparas(row("id"))} class="instances"><span class="count">{row("instance_count")}</span> paraphrases</a>  
       - 
       {if(c.user.userid == row.int("user_id")){
            <a onclick={"deleteClaim(this,"+row("id")+")"}>delete</a> 

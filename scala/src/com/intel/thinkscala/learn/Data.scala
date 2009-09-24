@@ -1,7 +1,8 @@
 package com.intel.thinkscala.learn
+import scala.collection.mutable.HashSet
 
 object Data {
-	val stopwords = List("a", "about", "above", "above", "across", "after", "afterwards", 
+	val stopwords = HashSet("a", "about", "above", "above", "across", "after", "afterwards", 
 			"again", "against", "all", "almost", "alone", "along", "already", "also",
 			"although","always","am","among", "amongst", "amoungst", "amount",  "an", 
 			"and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", 
@@ -42,7 +43,7 @@ object Data {
 			"why", "will", "with", "within", "without", "would", "yet", "you", "your", 
 			"yours", "yourself", "yourselves", "the","s");
 
-	val negwords = List("not");
+	val negwords = HashSet("not","t","no","nothing","non","nor","nobody","never","neither","nor");
 	
 	val stems = List("'s","n't","s","ed","es","ly","est","er","ing","ion","ly","e")
 	

@@ -6,6 +6,7 @@ import scala.collection.mutable.HashMap
 import com.intel.thinkscala.data.Snippets
 import scala.xml._
 import util.Timer.time
+import com.intel.thinkscala.learn.Paraphraser
 
 object Page {
   import Widgets._
@@ -159,17 +160,28 @@ object Page {
     <div class="content">
     	<h1>Create a New Disputed Claim</h1>
     	<div class="message">This should be a disputed claim that is made on web sites. 
-    		Once you have created a disputed claim, you can identify instances of this claim
-    		on the web, and associate the claim with evidence on either side.
+    		Once you have created a disputed claim, you enter paraphrases that should be highlighted
+    		when they appear on the web, and add opposing articles that should be shown to other users.
     	</div>
-    	<form class='form' id="newsnippet" action={PostUrls.newclaim} method="POST">
+    	<div class='form' id="newsnippet">
           <label for="name">Claim</label>
           <input type="text" id="name" name="name" value={query}/>
           <input type="hidden" class='hidden' name="addto" value={c.arg("addto")}/>
-          <label for="descr">Optional Description</label>
-          <textarea rows="5" id="descr" name="descr"></textarea>    
-          <input class='submit' type="submit" value="Create New Claim"/>
-        </form>
+          {
+        	  val paras = Paraphraser.paraphrases(query,"")
+        	  if(paras.length > 0){
+        		  val data = paras map (para => HashMap("text" -> para))
+        		  Docs.applyXml("fragments","derivedparasnew",HashMap("derivedparas" -> data))(c)
+        	  }else{
+        		  <div class='message'>
+        			  We did not find any phrases like this on the web. Please make sure to add some 
+        			  paraphrases for this claim after you create it.
+       			  </div>
+        	  }
+          }
+       	 <button onclick="newClaimDerivedParas()" class='submit' style='margin-left:10px; margin-top: 10px'>Create Claim and Highlight Selected Paraphrases</button>
+         <button class='submit' onclick="document.location.href='/thinklink/pages/claim.html'">Cancel</button>
+        </div>
     </div>
  
        
@@ -192,18 +204,24 @@ object Page {
     <div>
       <span id="notagainmain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
         	<label for="notagain">don't highlight this claim</label></span>
-       <div class="box mainbox thingbox">
+       	{if(row.int("disagree_count") == 0){
+       		<div class='claim-warning box'>
+       		This claim does not have any opposing articles. You need to <a href="/thinklink/docs/arguments.html">add an opposing article</a>
+       		before we can tell other users this claim is disputed.
+       		</div>
+       	}else{}}
+        <div class="box mainbox thingbox">
         <h1>Claim: {row("text")}</h1>  
         {Widgets.tabs(
           "Opposing Articles" -> (() => 
-          	  <div class='desc'><a href="/thinklink/docs/arguments.html">Articles found by users</a> that oppose the claim that <q>{row("text")}</q></div>
+          	  <div class='desc'><a href="/thinklink/docs/arguments.html">User-submitted articles</a> that oppose the claim that <q>{row("text")}</q></div>
               <div class='evidence' id="opposed">
             	{c.store.evidence(row.int("id"),"opposes",c.user.userid,0) flatMap Render.evidence}
                 <a class='add' href='/thinklink/docs/arguments.html'>use the firefox extension to add opposing articles</a>
               </div>
           ),
           "Supporting Articles" -> (() =>
-      	  <div class='desc'><a href="/thinklink/docs/arguments.html">Articles found by users</a> that support the claim that <q>{row("text")}</q></div>
+      	  <div class='desc'><a href="/thinklink/docs/arguments.html">User-submitted articles</a> that support the claim that <q>{row("text")}</q></div>
 
   	  	      <div class='evidence' id="supports">
                	{c.store.evidence(row.int("id"),"supports",c.user.userid,0) flatMap Render.evidence}

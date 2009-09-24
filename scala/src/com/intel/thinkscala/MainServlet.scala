@@ -33,6 +33,7 @@ object Urls {
   def topic(id : Any) = base + "/topic/"+id
   def user(id : Any) = base + "/user/" + id
   def findsnippets(id : Any) = claim(id) + "/findsnippets"
+  def findparas(id : Any) = claim(id) + "?tab=Highlight+on+the+Web"
   def findsnippets(id : Any, query : String) = claim(id) + "/findsnippets?query="+encode(query)
   def findsnippets(id : Any, manual : Boolean) = claim(id) + "/findsnippets?fromextension=true"
   def createClaim(query : String) = base+"/claim/new?query="+encode(query)
@@ -167,18 +168,24 @@ class MainServlet extends HttpServlet {
         c.outputMiniHtml(Mini.marked(claimid))
 	  }else{
 	    c.store.makeEvidence(c.userid,claimid,text,url,title,rel)
-        c.outputMiniHtml(Mini.addedEvidence(claimid))
+        c.store.updateEvidenceCount(claimid)
+        c.outputMiniHtml(Mini.addedEvidence(claimid))        
 	  }
     }),
     UrlHandler("/claim/new", c => {
       val name = c.arg("name")
-      val descr = c.arg("descr")
-      val claimid = c.store.makeClaim(name,descr,c.userid)
-      var foo = c.arg("addto")
-      if(c.arg("addto") != ""){
+      val claimid = c.store.makeClaim(name,"",c.userid)
+      val subparas = c.argArray("phrase")
+      val subpick = c.argArray("picked")
+      c.store.addphrases(claimid, name, subparas, subpick, c.userid) 			
+      c.store.updatePhraseCount(claimid)
+       var foo = c.arg("addto")
+      if(c.arg("addto") != "" && c.arg("addto") != null){
         c.store.addLink(claimid,c.argInt("addto"),c.userid)
       }
-      c.redirect(Urls.claim(claimid))
+      c.output(claimid)
+//      
+//      c.redirect(Urls.claim(claimid))
     }),
     UrlHandler("/topic/new", c => {
       val name = c.arg("name")
@@ -221,6 +228,7 @@ class MainServlet extends HttpServlet {
       val subparas = c.argArray("phrase")
       val subpick = c.argArray("picked")
       c.store.addphrases(claimid, phrase, subparas, subpick, c.userid) 			
+      c.store.updatePhraseCount(claimid)
     }),
     UrlHandler("/claim/(\\d*)/ignore", c => {
       val claimid = c.urlInt(1)
@@ -263,6 +271,7 @@ class MainServlet extends HttpServlet {
       val resultid = c.store.mkResult(searchid,urlid,position,text,"",claimid)
       c.store.setSnipVote(resultid,c.userid,vote == "true")
       c.store.updateSearchCounts(claimid, searchid)
+      c.store.updateEvidenceCount(claimid)
 
       c.outputFragment(<div>{Render.searchQueryList(c,claimid)}</div>)
     }),
@@ -272,6 +281,7 @@ class MainServlet extends HttpServlet {
       val text = c.arg("text")
       val rel = c.arg("rel")
       c.store.makeEvidence(c.userid,claimid,text,url,"",rel)
+      c.store.updateEvidenceCount(claimid)
 	  c.redirect(Urls.claim(claimid))      
     }),    
     UrlHandler("/api/badsnippet", c => {
@@ -302,6 +312,8 @@ class MainServlet extends HttpServlet {
     })
   ) 
    
+  val extension_version = 1
+  
   val gethandlers = List(
     UrlHandler("/apianon/search", c => {
       c.output(c.store.urlSnippets(c.arg("url")))
@@ -323,7 +335,7 @@ class MainServlet extends HttpServlet {
         c.output(c.store.secondWords(c.urlArg(1)))
     }),
     UrlHandler("/apianon/hotwords", c => {}, c => {
-      c.output(c.store.hotWords())
+      c.output(HashMap("version"->1,"hotwords"->c.store.hotWords()))
     }),
     UrlHandler("/turk/searchboss", c=> {
     },c => {

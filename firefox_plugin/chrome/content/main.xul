@@ -32,7 +32,7 @@
 
 	<popup id="contentAreaContextMenu" insertafter="context-searchselect">
 		<menuseparator/>
-		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb_red.png" label="This is disputed" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet(true)"/>
+		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb_red.png" label="This is disputed" id="thinklink_menu_newsnip" oncommand="thinklink_is_disputed()"/>
 		<menuitem class="menuitem-iconic" image="chrome://thinklink/skin/lightbulb.png" label="Use as evidence" id="thinklink_menu_newsnip" oncommand="thinklink_new_snippet(false)"/>
 	</popup>
 	

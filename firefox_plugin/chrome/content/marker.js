@@ -142,6 +142,24 @@ function highlightMessage(marked,doc){
 	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);		
 }
 
+function upgradeMessage(doc){
+	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
+	var notification =
+		notificationBox.getNotificationWithValue("thinklink-disputed");
+	var buttons = [{
+		label: "Upgrade",
+		callback: function(){window.open("https://addons.mozilla.org/en-US/firefox/addon/11712")},
+		accessKey: "G",
+		popup: null
+		}];
+	var message = "This version of Dispute Finder is no longer supported";
+
+	const priority = notificationBox.PRIORITY_INFO_MEDIUM;
+	notificationBox.appendNotification(message, "thinklink-disputed",
+	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);		
+	
+}
+
 function showMessage(message,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
 	var notification =
@@ -450,9 +468,10 @@ function viewFrame(url,snipid) {
 	
 	// add actual content
 	var frameholder = doc.createElement("div");
-	frameholder.style.height = "460px";
+	frameholder.style.height = "600px";
 	frameholder.style.width = "424px";
 	frameholder.style.marginTop = "34px";
+	frameholder.style.visibility = "hidden";
 
 	var pointframe = doc.createElement("iframe");
 	pointframe.src = url;
@@ -465,6 +484,10 @@ function viewFrame(url,snipid) {
 	frameholder.appendChild(pointframe);
 //	frameholder.style.width="100%";
 	win.appendChild(frameholder);
+	
+	pointframe.addEventListener("load",function(ev){
+		frameholder.style.visibility = "";
+	},true);
 
 	dragbar.addEventListener("mousedown",function(ev){
 		dragPopup(ev,win,pointframe);

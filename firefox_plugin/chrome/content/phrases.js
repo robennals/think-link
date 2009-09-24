@@ -25,8 +25,13 @@ function find_phrases(doc){
 	var globals = getGlobals();
 	if(!globals.hotwords){		
 		ajaxRequest(apipath+"/apianon/hotwords.json",function(hotwords){
-			globals.hotwords = listToHash(hotwords);		
-			find_phrases(doc);
+			if(hotwords.version == 1){
+				globals.hotwords = listToHash(hotwords.hotwords);		
+				find_phrases(doc);
+			}else{				
+				upgradeMessage();
+				globals.hotwords = {};
+			}
 		});
 		return;
 	}
