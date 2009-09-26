@@ -76,7 +76,7 @@ abstract class ConflictHandler {
 }
 
 object SpamHandler extends ConflictHandler {
-  val name = "spam"
+  val name = "spam" 
   def mkConflict(row : SqlRow) = 
     new SpamConflict(row.int("id"),row.str("text"),row.str("state"),new User(row.str("thatname"),row.int("thatid")), new User(row.str("thisname"),row.int("thisid")))
   def conflicts(page : Int)(implicit c : ReqContext) : Seq[Conflict] = 

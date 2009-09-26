@@ -13,7 +13,6 @@ object Render {
   def claim(row : SqlRow)(implicit c : ReqContext) = 
     <div class="claim">
       <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
-      <div class="description">{row("description")}</div>
       {userref(row.int("user_id"),row.str("username"),"created by")}
       - <a href={Urls.findparas(row("id"))} class="instances"><span class="count">{row("instance_count")}</span> paraphrases</a>  
       - 
@@ -23,6 +22,8 @@ object Render {
            <a onclick={"reportSpam(this,"+row("id")+")"}>report spam</a>
         }
       }
+      - 
+      <a target="_blank" href={Urls.searchGoogle(row.str("text"))}>see on the web</a>
   </div>  
 
   def miniclaim(row : SqlRow)(implicit c : ReqContext) = 

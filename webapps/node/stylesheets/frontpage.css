@@ -266,6 +266,26 @@ body {
 	margin: 20px;
 }
 
+#install-button {
+	padding: 8px 20px;
+	font-size: 20px;
+	border: 1px solid grey;
+	margin: 10px;
+	background-color: #eeeeee;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#install-button:hover{
+ 	background-color: #D1D1D1;
+
+}
+
+.button-box {
+	margin: 10px;
+	margin-bottom: 40px;
+}
+
 .thingbox h1{
 	margin-bottom: 0px;
 }
@@ -277,9 +297,14 @@ body {
 }
 
 .thingbox .tabs .header a {
+	background: none;
+	border: none;
+/*
 	background-color: #F6F6F6;
 	border-color: #F6F6F6;
+	*/
 }
+
 
 .thingbox .tabs .tabbody {
 	border: none;
@@ -417,4 +442,25 @@ body {
 	max-width: 550px;
 	font-size: 15px;
 	margin-left: 20px;
+}
+
+#hotclaims .desc {
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.feedback .desc {
+	width: 535px;
+}
+
+.minibody .box {
+	margin-top: 0px;
+}
+
+.box .goicon {
+	margin-left: 5px;
+}
+
+.minibody .box h1, .minibody .box h1 a {
+	font-size: 16px;
 }

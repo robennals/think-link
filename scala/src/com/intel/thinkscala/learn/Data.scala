@@ -28,7 +28,7 @@ object Data {
 			"onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", 
 			"out", "over", "own","part", "per", "perhaps", "please", "put", "rather", 
 			"re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", 
-			"several", "she", "should", "show", "side", "since", "sincere", 
+			"several", "she", "show", "side", "since", "sincere", 
 			"so", "some", "somehow", "someone", "something", "sometime", 
 			"sometimes", "somewhere", "still", "such", "system", "take",  
 			"than", "that", "the", "their", "them", "themselves", "then", "thence", 
@@ -45,6 +45,8 @@ object Data {
 
 	val negwords = HashSet("not","t","no","nothing","non","nor","nobody","never","neither","nor");
 	
-	val stems = List("'s","n't","s","ed","es","ly","est","er","ing","ion","ly","e")
-	
+	val stems = List("'s","n't","s","ed","es","ly","est","er","ing","ion","ly","e","ise","ized","ions")
+
+	// BETTER: use a Porter stemmer
+	// TODO: also stem-out double letters
 }

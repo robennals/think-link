@@ -9,7 +9,7 @@
 
   <prefwindow id="BrowserPreferences">
 
-    <prefpane id="ThinkLink-Prefs" label="Think Link" 
+    <prefpane id="ThinkLink-Prefs" label="Disute Finder" 
               onpaneload="populateSchedulesList()" 
               image="chrome://thinklink/skin/lightbulb.png">
 
@@ -38,7 +38,7 @@
                            
           <hbox align="center">
               <label value="Don't have an account yet?"/>
-              <button label="Sign Up for a Think Link Account" oncommand="window.open('http://factextract.cs.berkeley.edu/thinklink/signup')"/>
+              <button label="Sign Up for a Dispute Finder Account" oncommand="window.open('http://disputefinder.cs.berkeley.edu/thinklink/signup')"/>
           </hbox>
       
     </prefpane>

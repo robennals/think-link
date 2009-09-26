@@ -42,6 +42,7 @@ object Urls {
   def addlinks(id : Any, thistyp: String, thattyp: String) = base+"/connect"+"?addto="+id+"&thistype="+thistyp+"&thattype="+thattyp
   val connect = base+"/connect"
   val emailpass = base + "/emailpass"
+  def searchGoogle(query : String) = "http://www.google.com/search?q="+encode(query)
 }
 
 object HelpUrls {
@@ -229,6 +230,7 @@ class MainServlet extends HttpServlet {
       val subpick = c.argArray("picked")
       c.store.addphrases(claimid, phrase, subparas, subpick, c.userid) 			
       c.store.updatePhraseCount(claimid)
+      c.store.updateEvidenceCount(claimid)
     }),
     UrlHandler("/claim/(\\d*)/ignore", c => {
       val claimid = c.urlInt(1)
@@ -284,9 +286,32 @@ class MainServlet extends HttpServlet {
       c.store.updateEvidenceCount(claimid)
 	  c.redirect(Urls.claim(claimid))      
     }),    
+    UrlHandler("/api/deletepara", c => {
+      var paraid = c.argInt("id");
+      c.store.deletePara(paraid);
+    }),
+    UrlHandler("/api/abusepara", c => {
+      var paraid = c.argInt("id");
+      c.store.deletePara(paraid);
+      c.store.abusePara(paraid,c.userid);
+      SendMail.reportAbuse(c.user.name,paraid)
+    }),
     UrlHandler("/api/badsnippet", c => {
       val snipid = c.argInt("snipid")
       c.store.reportBadSnip(snipid,c.userid)
+    }),
+    UrlHandler("/api/sendfeedback", c => {
+      SendMail.sendFeedback(c.user.name,c.arg("email"),c.arg("text"))
+      c.outputRawHtml(Docs.page(readResource("pages/feedbackthanks.xml"),c))
+    }),
+    UrlHandler("/api/studytrack",c => {
+      val argnames = c.req.getParameterNames
+      val args = new HashMap[String,String]
+      while(argnames.hasMoreElements){
+    	  val key = argnames.nextElement.asInstanceOf[String]
+    	  args(key) = c.arg(key)    	  
+      }
+      c.store.addStudyRecord(args("kind"),printJSON(args))
     }),
     UrlHandler("/admin/pick", c => {
       Admin.pick(c.arg("type"),c.arg("id"),c.arg("vote"))(c)
@@ -376,6 +401,9 @@ class MainServlet extends HttpServlet {
     	val data = paras map (para => HashMap("text" -> para))
     	c.outputRawHtml(Docs.applyXml("fragments","derivedparas",HashMap("derivedparas" -> data)))
     }),
+    UrlHandler("/api/studytrack", c => {
+    	c.output(c.store.getStudyRecords(c.argInt("lastid")))
+    }),
     UrlHandler("/connect",c => {
       c.requireLogin
       val me = c.store.getInfo(c.argInt("addto"),c.maybe_userid)      
@@ -421,16 +449,20 @@ class MainServlet extends HttpServlet {
     UrlHandler("/mini/markedbad", c => {
       c.outputMiniHtml(Mini.markedbad);
     }),
-    UrlHandler("""/claim/(\d*)/findsnippets""", c => {
-      val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
-      val title = claim("text") + " - Find Instances with Dispute Finder"
-      var query = c.arg("query")
-      if(query == null) query = claim.str("text")
-      c.outputHtml(title,time("findsnippets",Page.findsnippets(claim,query)(c)))
-    }),
+//    UrlHandler("""/claim/(\d*)/findsnippets""", c => {
+//      val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)
+//      val title = claim("text") + " - Find Instances with Dispute Finder"
+//      var query = c.arg("query")
+//      if(query == null) query = claim.str("text")
+//      c.outputHtml(title,time("findsnippets",Page.findsnippets(claim,query)(c)))
+//    }),
     UrlHandler("""/claim/(\d*)/allsnippets""", c => {
     },c => {
       c.output(c.store.allSnippets(c.urlInt(1)))
+    }),
+    UrlHandler("/claim/hot",c => {
+      c.outputHtml("Hot Claims - Dispute Finder",Page.hotClaims(c))      
+//      c.outputHtml(Docs.applyXml("fragments","hot",HashMap("hot" -> c.hotClaims)))
     }),
     UrlHandler("/claim/new",c => {
       c.requireLogin

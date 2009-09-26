@@ -16,11 +16,11 @@ import scala.collection.Map
 import com.intel.thinkscala._
 
 trait UserData extends BaseData {
-  val get_user = stmt("SELECT id,password,name,admin FROM v2_user WHERE email = ? AND nonce = 0")
+  val get_user = stmt("SELECT id,password,name,admin,studytrack FROM v2_user WHERE email = ? AND nonce = 0")
   def getUser(email : String, password : String) : User = 
     get_user.queryMaybe(email) match {
       case Some(row) if row("password") == password => 
-        new User(row.str("name"),row.int("id"),row.bool("admin"))
+        new User(row.str("name"),row.int("id"),row.bool("admin"),row.bool("studytrack"))
       case _ => User.nouser
     }  
   
@@ -61,4 +61,11 @@ trait UserData extends BaseData {
                           
   val get_user_info = stmt("SELECT * FROM v2_user WHERE id = ?")
   def getUserInfo(id : Int) = get_user_info.queryOne(id)
+
+  val add_study_record = stmt("INSERT INTO studytrack (kind,data) VALUES (?,?)")
+  def addStudyRecord(kind : String, data : String) = add_study_record.update(kind,data)
+
+  val get_study_records = stmt("SELECT * FROM studytrack WHERE id > ?")
+  def getStudyRecords(lastid : Int) = get_study_records.queryRows(lastid)
+  
 }

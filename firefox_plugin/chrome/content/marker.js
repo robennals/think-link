@@ -325,7 +325,7 @@ function ajaxRequest(url,callback){
 	req.open("GET",url,true);
 	req.onreadystatechange = function(){
 		if(req.readyState == 4 && req.status == 200){
-			callback(parseJSON(req.responseText))
+			callback(JSON.parse(req.responseText))
 		}
 	}
 	req.send(null);

@@ -5,10 +5,10 @@
 	<ol>
 	<li>Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Extension</a></li>
 	<li>Dispute Finder <a href="docs/highlight.html">highlights disputed claims</a> on pages you read on the web
-		<img src="../images/highlight_snippet2.png"/>
+		<img src="/thinklink/images/highlight_snippet2.png"/>
 	</li>	   
 	<li>Click on a claim to <a href="docs/arguments.html">see web articles that support other points of view</a>
-	    <img src="../images/evidence_popup.png"/>
+	    <img src="/thinklink/images/evidence_popup.png"/>
 	</li>
 	</ol>
 </div>
@@ -18,10 +18,10 @@
 	<li>Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Dispute Finder Extension</a></li>
 	<li>Tell Dispute Finder about a <a href="pages/claims.html">claim on the web that you disagree with</a></li>	
 	<li><a href="docs/training.html">Train Dispute Finder</a> to find pages on the web that make this claim
-		<img src="../images/training.png"/>
+		<img src="/thinklink/images/training.png"/>
 	</li>
 	<li>Give Dispute Finder <a href="docs/arguments.html">arguments for other points of view</a>
-		<img src="../images/mark_evidence.png"/>
+		<img src="/thinklink/images/mark_evidence.png"/>
 	</li>
 	<li>Skeptical Readers will now be told that this claim is disputed when they read a page on the web that makes this claim</li>
 	</ol>

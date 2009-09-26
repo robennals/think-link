@@ -14,7 +14,7 @@
 //  limitations under the License.
 
 
-var thinklink_name = "Think Link";
+var thinklink_name = "Dispute Finder";
 
 
 function thinklink_error(msg,e){
@@ -99,10 +99,10 @@ function initCookieCatcher(){
 //}
 
 window.addEventListener("load", function(){
-	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","0.21");
-	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","0.21");
-        thinklink_setCookie("http://disputefinder.cs.berkeley.edu/","extension","0.21");
-	thinklink_setCookie("http://localhost:8180/","extension","0.21");
+	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","0.3");
+	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","0.3");
+        thinklink_setCookie("http://disputefinder.cs.berkeley.edu/","extension","0.3");
+	thinklink_setCookie("http://localhost:8180/","extension","0.3");
 
 	initCookieCatcher();
     

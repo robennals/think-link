@@ -53,6 +53,17 @@ object Page {
   def searchResults(implicit query : String, page : Int, c : ReqContext) =
      c.store.searchClaims(query,page).toSequence flatMap Render.claim
    
+  def hotClaims(implicit c : ReqContext) = 
+	  <div class='box mainbox' id='hotclaims'>
+  		<h1>Hot Claims</h1>
+  		<div class='desc'>
+  			Here are some disputed claims that users have <a href="/pages/claims.html">added</a> recently. You can also <a href="/pages/claims.html">search our entire database of disputed claims</a>.
+  		</div>
+  		<div class='claimresults'>
+  			{c.store.hotClaims flatMap Render.claim}
+  		</div>
+      </div>
+     
   def search(implicit c : ReqContext) = 
     <div class="box yellowbox mainbox">
 	  <div class='boxbody'>
@@ -69,7 +80,6 @@ object Page {
 	  </form>
   
      <div class="claimresults">
-        <h2>Claims already in our database</h2>
         {c.store.searchClaims(c.arg("query"),0) flatMap Render.claim}
       </div>
       </div>
@@ -180,7 +190,7 @@ object Page {
         	  }
           }
        	 <button onclick="newClaimDerivedParas()" class='submit' style='margin-left:10px; margin-top: 10px'>Create Claim and Highlight Selected Paraphrases</button>
-         <button class='submit' onclick="document.location.href='/thinklink/pages/claim.html'">Cancel</button>
+         <button class='submit' onclick="document.location.href='/thinklink/pages/claims.html'">Cancel</button>
         </div>
     </div>
  
@@ -234,6 +244,11 @@ object Page {
          		paras foreach {para =>
          			para("user") = <a class='user' href={Urls.user(para("user_id"))}>{para("username")}</a>
          			para("subphrases") = c.store.subphrases(para.int("id"))
+         			para("delmsg") = if(para.int("user_id") == c.user.userid){
+     					<a onclick={"deletePara("+para("id")+")"}>delete</a> 
+     				}else{
+        				<a onclick={"abusePara("+para("id")+")"}>report abuse</a>             				 
+     				}
          		}
          		Docs.applyXml("fragments","paraphrases",row)       		 
          }
@@ -241,8 +256,6 @@ object Page {
       </div>
       <div id="stats" class="box">
         {userref(row.int("user_id"),row.str("username"),"created by ")}
-        <span class="instances"><a href={Urls.findsnippets(row("id"))}>seen <span class="count">{row("instance_count")}</span> times on the web</a>
-	    </span>         
       </div>
     </div>
      

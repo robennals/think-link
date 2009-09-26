@@ -27,7 +27,7 @@ class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
   def next = it.nextElement
 }  
 
-class ReqContext(val store : Datastore, m : Match, req : HttpServletRequest, res : HttpServletResponse, path : String, servletcontext : ServletContext){
+class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest, res : HttpServletResponse, path : String, servletcontext : ServletContext){
   def urlInt(i : Int) = Integer.parseInt(m.group(i))
   def urlArg(i : Int) = m.group(i)
   def argInt(name : String) = 

@@ -3,36 +3,31 @@ import com.intel.thinkscala._
 
 object Mini {
   def claim(row : SqlRow)(implicit c : ReqContext) =
-  <div><div class="minicontent">
-      <h1>Disputed Claim:</h1>
-
-      {if (c.user.realuser) {
-      <div id="notagain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
-        	<label for="notagain">don't highlight this claim</label></div>
-      }else{
-        <a id="notagain" target="_blank" href={Urls.login_simple}>login to ignore or report spam</a>
-      }      
-      }
-      <div><a class='minititle' target="_blank" href={Urls.claim(row("id"))}>{row("text")}
-      <img src={Urls.img("application_go")}/>
-      </a></div>
-      
+  <div><div class="box thingbox">
+      <h1>Claim: <a class='minititle' target="_blank" href={Urls.claim(row("id"))}>
+      {row("text")}<img class='goicon' src={Urls.img("application_go")}/>
+      </a></h1>     
       {Widgets.tabs(
-          "Opposing Evidence" -> (() =>
+          "Opposing Articles" -> (() =>
 	  	      <div class='evidence' id="opposed">
 	            {c.store.evidence_one(row.int("id"),"opposes",c.user.userid) flatMap Render.evidence}
-	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"opposes")}>add opposing evidence</a>
 		      </div>
             ),
-          "Supporting Evidence" -> (() =>
+          "Supporting Articles" -> (() =>
 	   	      <div class='evidence' id="supports">
 	            {c.store.evidence_one(row.int("id"),"supports",c.user.userid) flatMap Render.evidence}
-	            <a class='add' target="_blank" href={Urls.addevidence(row.int("id"),"supports")}>add supporting evidence</a>
 		      </div>
             ))
          }
-  </div>
-  {if (c.user.realuser && c.arg("snippet") != "") {
+      {if (c.user.realuser) {
+          <div id="notagain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
+            	<label for="notagain">don't highlight this claim for me again</label></div>
+          }else{
+            <a id="notagain" target="_blank" href={Urls.login_simple}>login to ignore or report spam</a>
+          }      
+     }
+    </div>
+    {if (c.user.realuser && c.arg("snippet") != "") {
 //	      if(c.user.userid == row.int("user_id")){
 //	        <button id="badsnippet" onclick={"unmark("+c.arg("snippet")+")"}>unmark snippet</button>
 //	      }else{

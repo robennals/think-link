@@ -38,15 +38,15 @@ object Pool{
   } 
 }
 
-class User(val name : String, val userid : Int, val isadmin : Boolean){
-  def this(name : String, userid : Int) = this(name,userid,false)
+class User(val name : String, val userid : Int, val isadmin : Boolean, val studytrack : Boolean){
+  def this(name : String, userid : Int) = this(name,userid,false,false)
   val realuser = userid != 0
 }
 
 object User {
-  val autoimport = new User("autoimport",2,false)
-  val nouser = new User("no user",0,false)
-  val turk = new User("turk",2,false)
+  val autoimport = new User("autoimport",2)
+  val nouser = new User("no user",0)
+  val turk = new User("turk",2)
 }
 
 

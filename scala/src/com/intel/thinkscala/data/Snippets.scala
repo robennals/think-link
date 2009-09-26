@@ -59,6 +59,7 @@ trait Snippets extends BaseData {
     def foundSnippets(claimid : Int, page : Int) = found_snippets.queryRows(claimid,page*20)
 
     def paraphrases(claimid : Int) = select("paraphrase").where("claim_id = ?",claimid)
+        .where("disabled = 0")
     	.leftjoin("v2_user.name AS username","v2_user ON v2_user.id = paraphrase.user_id") rows
     
     def subphrases(phraseid : Int) = select("derivedpara").where("derivedfrom = ? AND enabled = 1",phraseid) rows
@@ -86,6 +87,7 @@ trait Snippets extends BaseData {
 	
 	def wordPhrases(keyword : String,secondword : String) = select("paraphrase")
 		.where("keyword = ?",keyword).where("secondword = ?",secondword)
+		.where("disabled = 0")
 		.leftjoin("v2_node.text AS claimtext","v2_node ON v2_node.id = paraphrase.claim_id")
 		.where("v2_node.disagree_count > 0")
 		.rows
@@ -102,4 +104,9 @@ trait Snippets extends BaseData {
 			"WHERE id = ?")
 	def updateEvidenceCount(claimid : Int) = update_evidence_count.update(claimid,claimid)
 	
+	val delete_para = stmt("UPDATE paraphrase SET disabled = 1 WHERE id = ?")
+	def deletePara(paraid : Int) = delete_para.update(paraid)
+
+	val abuse_para = stmt("UPDATE paraphrase SET abusereport = ? WHERE id = ?")
+	def abusePara(paraid : Int, userid : Int) = abuse_para.update(userid,paraid)
  }

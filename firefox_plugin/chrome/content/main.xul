@@ -21,12 +21,12 @@
 
 	<menupopup id="menu_viewPopup">
 		<menuseparator/>
-		<menuitem label="View Think Link" oncommand="window.open('http://disputefinder.cs.berkeley.edu')" />
+		<menuitem label="View Dispute Finder" oncommand="window.open('http://disputefinder.cs.berkeley.edu')" />
 	</menupopup>
 
     <menupopup id="menu_HelpPopup">
 		<menuseparator/>
-        <menuitem label="Dispute Finder Help" oncommand="window.open('http://confront.intel-research.net')"/>
+        <menuitem label="Dispute Finder Help" oncommand="window.open('http://disputefinder.cs.berkeley.edu')"/>
     </menupopup>
 
 

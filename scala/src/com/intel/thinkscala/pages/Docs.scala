@@ -6,12 +6,17 @@ import scala.xml._
 import com.intel.thinkscala._
 import scala.collection.mutable.HashMap
 import scala.collection.Map
+import com.intel.thinkscala.view.Template
 
 object Docs {
     def mkvar(varname : String, varval : String) = <input class='hidden' type='hidden' id={varname} name={varname} value={varval}/>
 	
 	def head(title : String)(implicit c : ReqContext) = 
-		bind(loadFrag("head"),"xt","title" -> Text(title)) 
+		if(c.user.studytrack){
+			bind(loadFrag("head_study"),"xt","title" -> Text(title)) 
+		}else{			
+			bind(loadFrag("head"),"xt","title" -> Text(title)) 
+		}
 
 	def analytics(implicit c : ReqContext) = loadPage("fragments/analytics.xml")	
 		
@@ -29,10 +34,10 @@ object Docs {
 		<div id="nav">
 			<ul>
 				<li><a href="/thinklink/">About</a></li>
-				<li><a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install</a></li>
+				<li><a href="/thinklink/docs/install.html">Install</a></li>
 			    <li><a href="/thinklink/docs/faq.html">FAQ</a></li>
 				<li><a href="/thinklink/pages/claims.html">Claims</a></li>
-				<li>Pages</li>
+				<li><a href="/thinklink/claim/hot.html">Hot</a></li>
 			    {if(c.user.realuser)
 			         <li><a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a></li>
 			         <li><a class="logout" href={Urls.logout}>logout</a></li>
@@ -40,9 +45,16 @@ object Docs {
 		             <li><a class="signup" href={Urls.signup}>sign up</a></li>
 			         <li><a class="login" href={Urls.login(Urls.base)}>login</a></li>           
 			    }
-				<li>Feedback</li>
+				<li><a href="/thinklink/pages/feedback.xml">Feedback</a></li>
+				<li><a href="http://disputefinder.blogspot.com/">Blog</a></li>
 			</ul>
 		</div>
+		{if(c.getCookie("extension") != null && c.getCookie("extension") != "" && c.getCookie("extension") != "0.3"){
+			<div class='claim-warning box'>
+			   You are using a discontinued version of the Dispute Finder plugin. 
+			   Please <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">upgrade</a>			   
+			</div>
+		}}
 		</div>
 		
 	def loadPage(respath : String)(implicit c : ReqContext) : Node = 
@@ -61,13 +73,46 @@ object Docs {
 	def docPage(xmlstr : String, c : ReqContext) : NodeSeq = {
 		val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 		val title : String = (xml \\ "h1").text
-		return <html>{head(title)(c)}<body class='body'>{nav(c) ++ docnav(c) ++ xml}</body></html>
+		Template.basics(c,title,nav(c) ++ docnav(c) ++ xml,"body")
+//		
+//		
+//		return <html>{head(title)(c)}<body class='body'>{nav(c) ++ docnav(c) ++ xml ++ analytics(c)}
+//	      <script type="text/javascript">
+//	        <xml:unparsed>
+//		  	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+//		  	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+//		  	</xml:unparsed>
+//		  </script>
+//		  <script type="text/javascript">
+//		  	<xml:unparsed>
+//		  	try {
+//		  	var pageTracker = _gat._getTracker("UA-10712508-1");
+//		  	pageTracker._trackPageview();
+//		  	} catch(err) {}
+//		  	</xml:unparsed>
+//		  </script>
+//		</body></html>
 	}
 	
 	def page(xmlstr : String, c : ReqContext) : NodeSeq = {
 			val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 			val title : String = (xml \\ "h1").text
-			return <html>{head(title)(c)}<body class='body'>{nav(c) ++ xml}</body></html>
+			return <html>{head(title)(c)}<body class='body'>{nav(c) ++ xml}
+		      <script type="text/javascript">
+		        <xml:unparsed>
+			  	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			  	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+			  	</xml:unparsed>
+			  </script>
+			  <script type="text/javascript">
+			  	<xml:unparsed>
+			  	try {
+			  	var pageTracker = _gat._getTracker("UA-10712508-1");
+			  	pageTracker._trackPageview();
+			  	} catch(err) {}
+			  	</xml:unparsed>
+			  </script>
+			</body></html>
 	}
 		
 	def bind(xml : Node, pre : String, margs : (String,Node)*) : Node = {

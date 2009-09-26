@@ -12,7 +12,7 @@ object SendMail {
       props.put("mail.smtp.host","localhost")
 	  val session = Session.getDefaultInstance(props,null)
 	  val msg = new MimeMessage(session)
-	  msg.setFrom(new InternetAddress("thinklink@thinklink.cs.berkeley.edu"))
+	  msg.setFrom(new InternetAddress("noreply@disputefinder.cs.berkeley.edu"))
 	  msg.setRecipients(Message.RecipientType.TO, to)
 	  msg.setSubject(subject)
 	  msg.setText(text)
@@ -44,8 +44,24 @@ object SendMail {
       "\n\n\n"
       "Thank you for using Dispute Finder\n"
       
-      sendMail(email,"Your Dispute Finder password",body)
-      
+      sendMail(email,"Your Dispute Finder password",body)      
+    }
+    
+    def reportAbuse(username : String, paraid : Int){
+       var body = 
+    	   "User "+username+" reported the following paraphrase as abuse: \n"+
+    	   "   id:"+paraid+"\n\n"
+    	   
+       sendMail("rob.ennals@gmail.com","Abusive Paraphrase",body)
+    }
+    
+    def sendFeedback(username : String, email : String, text : String){
+    	var body = 
+    		"Feedback received:\n\n"+
+    		"User name: "+username+"\n"+
+    		"Email: "+email+"\n"+
+    		"Comment: \n"+text+"\n\n"
+    	sendMail("rob.ennals@gmail.com","User Feedback from "+username+"("+email+")",body)
     }
  
 }

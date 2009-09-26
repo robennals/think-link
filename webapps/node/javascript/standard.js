@@ -167,6 +167,27 @@ function voteDown(node,id,typ){
 	}
 }
 
+function deletePara(paraid){
+	if(confirm("Are you sure you want to delete this paraphrase?\nThis action cannot be undone.")){
+		$.post("/thinklink/api/deletepara",{id:paraid},function(){
+			window.location.reload();
+		});
+	}
+}
+
+function abusePara(paraid){
+	if(!loggedIn()){
+		alert("You need to be logged in to report a paraphrase as abuse");
+		return;
+	}
+	if(confirm("Are you sure you want to report this paraphrase as abuse?\n\nYou should only report a paraphrase as abuse if it is highlighting lots of snippets that are not about this claim.")){
+		$.post("/thinklink/api/abusepara",{id:paraid},function(){
+			alert("The moderators have been notified. Thanks for letting us know");
+			window.location.reload();
+		});
+	}
+}
+
 function unmark(snipid){
 	$.post(url_base+"api/badsnippet?snipid="+snipid,function(){
 		window.location.href = url_base+"/mini/markedbad";
@@ -261,8 +282,8 @@ function submitDerivedParas(newclaim){
 			document.location.href = "/thinklink/claim/"+id;
 		});		
 	}else{
-		//$("#addparabutton").attr("disabled",false);
-		//$("#phrase").attr("disabled",false);
+		$("#addparabutton").attr("disabled",false);
+		$("#phrase").attr("disabled",false);
 		var claimid = $("#claimid").val();
 		$.post("/thinklink/claim/"+claimid+"/addphrase",args,function(result){		
 			window.location.reload();
