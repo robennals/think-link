@@ -1,0 +1,40 @@
+<div class="box docbox">
+<h1>The Browser Extension</h1>
+
+<div class='docbody'>
+
+<div class='button-box'><a id="install-button" href="https://addons.mozilla.org/en-US/firefox/addon/11712">Install the Firefox Extension</a></div>
+
+To use Dispute Finder, you need to install the <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">
+Dispute Finder Firefox Extension</a>. Support for other browsers may come later.
+
+<p>Once you have installed the extension, Dispute Finder will look for 
+known <a href="/thinklink/docs/phrases.html">disputed phrases</a> on 
+the web pages that you browse and 
+<a href="/thinklink/docs/highlight.html">highlight</a> them when it finds them.
+<img src="../images/highlight_snippet2.png"/>
+</p>
+
+<p>If a page contains something you think is disputed and Dispute Finder 
+isn't highlighting anything, then that probably means you need to either
+<a href="/thinlink/pages/claims.html">tell Dispute Finder that the claim is disputed</a>
+or <a href="/thinklink/docs/phrases.html">tell Dispute Finder about the paraphrase used on that page</a>.
+</p>
+
+<p>We recommend that you get started by searching the web for one of the claims
+that is already in our database. For example:
+
+<ul>
+<li><a href="http://www.google.com/search?q=global+warming+is+a+hoax">Global warming is a hoax</a></li>
+<li><a href="http://www.google.com/search?q=torture+works">Torture works</a></li>
+<li><a href="http://www.google.com/search?q=Obama+was+not+born+in+Hawaii">Obama was not born in Hawaii</a></li>
+<li><a href="http://www.google.com/search?q=eskimos+have+many+words+for+snow">Eskimos have many words for snow</a></li>
+<li><a href="http://www.google.com/search?q=World+Trade+Center+building+7+was+destroyed+in+a+controlled+demolition">World Trade Center Building 7 was destroyed in a controlled collapse</a></li>
+</ul>
+</p>
+
+<p>You can also try searching for some of the <a href="/thinklink/claim/hot.html">hot claims</a> 
+or any of the other <a href="/thinklink/pages/claims.html">claims in our database</a>.
+</p>
+</div>
+</div>

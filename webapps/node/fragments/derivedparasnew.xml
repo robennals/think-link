@@ -1,0 +1,13 @@
+<div class='paranewclaim'>
+	<h4>Which derived phrases should we highlight?</h3>
+	<div class='desc'>
+	We found these other phrases on the web that seem similar. Please select any of these phrases that you would like us to also highlight:
+	</div>
+	
+	<div class='subphrases'>
+		<xt:foreach name="derivedparas" as="para" class='subphrase togglephrase'>
+		<para:bind name="text">Global warming hoax</xt:bind>
+		</xt:foreach>
+	</div>	
+</div>
+

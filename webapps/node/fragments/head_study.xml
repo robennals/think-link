@@ -1,0 +1,11 @@
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+	<meta http-equiv="Content-Language" content="en-us"></meta>
+	<title><xt:bind name="title"/></title>
+	<link href="/thinklink/images/lightbulb_red.png" type="image/png" rel="icon"></link>
+	<link href="/thinklink/stylesheets/normal.css" rel="stylesheet" media="screen"></link>
+	<link href="/thinklink/stylesheets/frontpage.css" rel="stylesheet" media="screen"></link>
+	<script type="text/javascript" src="/thinklink/javascript/jquery-1.2.3.js"></script>
+	<script type="text/javascript" src="/thinklink/javascript/standard.js"></script>
+	<script type="text/javascript" src="/thinklink/javascript/study_tracker.js"></script>	
+</head>

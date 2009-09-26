@@ -1,0 +1,13 @@
+
+<div class="claimresults">
+  <xt:foreach name="hot" as="hot" class="claim">
+      <a class="title" href="/thinklink/claim/6162">9-11 was a hoax</a>
+      <span class="user">created by <a target="_blank" href="/thinklink/user/2">autoimport</a></span>
+      - <a class="instances" href="/thinklink/claim/6162?tab=Highlight+on+the+Web"><span class="count">98</span> paraphrases</a>  
+      - 
+      <a onclick="reportSpam(this,6162)">report spam</a>
+      - 
+      <a target="_blank" href="http://www.google.com/search?q=9-11+was+a+hoax">search on the web</a>
+  </xt:foreach>
+</div>
+
