@@ -1201,3 +1201,15 @@ h3 {
 	-webkit-border-radius: 4px;
 	padding: 7px;
 }
+
+.addprompt, .addprompt select {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+#addarticle {
+	margin-left: 210px;
+	margin-top: 8px;
+	
+}	

@@ -27,16 +27,16 @@ object EmptyClassifier extends Learner {
 	def dumpStatus = {}
 	def bestSentence(xs : Seq[String]) = xs.head
 }
-
-object Learner{
-	def getClassifier(store : Datastore, claimid : Int, query : String) = {
-		store.getSearchId(claimid,query) match {
-			case Some(searchid) => {
-				val classifier = new SimpleLearner(6)
-				classifier.trainForSearch(store,searchid)
-				classifier				
-			}
-			case None => EmptyClassifier
-		}
-	}
-}
+//
+//object Learner{
+//	def getClassifier(store : Datastore, claimid : Int, query : String) = {
+//		store.getSearchId(claimid,query) match {
+//			case Some(searchid) => {
+//				val classifier = new SimpleLearner(6)
+//				classifier.trainForSearch(store,searchid)
+//				classifier				
+//			}
+//			case None => EmptyClassifier
+//		}
+//	}
+//}

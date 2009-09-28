@@ -38,7 +38,7 @@ object Paraphraser {
 		val set = new HashSet[String]()
 		words foreach (set += _)
 		set		                      
-	}
+	} 
 	
 	def keywordCount(sentence : String, phraseset : Seq[String]) : Int = {
 		phraseset filter (sentence contains _) length
@@ -115,7 +115,7 @@ object Paraphraser {
 		}
 //		sentences = sentences filter (s => scores(s) > 1)
 //		def weight(s : String) = scores(s) * scores(s) * counts(s) 
-		makeUnique(sentences.toList) sort {(x,y) => 
+		makeUnique(sentences.toList) sortWith {(x,y) => 
 //			if(scores(x) != scores(y)) scores(x) > scores(y)
 			if(counts(x) != counts(y)) counts(x) > counts(y)
 			else x.length < y.length

@@ -181,7 +181,7 @@ body {
 .search {
 	font-size: 16px;
 	padding: 4px;
-	width: 450px;	
+	width: 370px;	
 }
 
 .newphrase {
@@ -405,14 +405,14 @@ body {
 	z-index: 1000;
 }
 
-.togglephrase {
+.togglephrase, .selectclaim {
 	cursor: pointer;
 	padding: 4px;
 	padding-left: 20px;
 	margin-right: 20px;
 }
 
-.togglephrase:hover {
+.togglephrase:hover, .selectclaim:hover {
 	background-color: #eeeeee;
 	color: black;
 }

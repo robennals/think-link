@@ -6,7 +6,7 @@
 <form id="mainsearch" method="get" action="/thinklink/search">
 <span class='prompt'>I dispute the claim that...</span>
 <input type="text" name="query" class='search tempinput' value="- enter a claim that you think is disputed - "/>
-<input class='submit' type="submit" value="Search"/>
+<input class='submit' type="submit" value="Search Claim Database"/>
 </form>
 
 <div class='claimsummary'>

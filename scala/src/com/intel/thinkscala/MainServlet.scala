@@ -472,14 +472,14 @@ class MainServlet extends HttpServlet {
       c.requireLogin
       c.outputHtml("Create New Topic - Dispute Finder",Page.newTopic(c,c.arg("query")))
     }),
-    UrlHandler("""/claim/(\d*)/addevidence""",c=>{
-      c.requireLogin
-      val claimid = c.urlInt(1)
-      val claim = c.store.getInfo(claimid,c.maybe_userid)
-      val rel = c.arg("rel")
-      val text = c.arg("text")
-      c.outputHtml("Add Evidence",Page.addEvidence(claimid,claim.str("text"),rel,text)(c))
-    }),
+//    UrlHandler("""/claim/(\d*)/addevidence""",c=>{
+//      c.requireLogin
+//      val claimid = c.urlInt(1)
+//      val claim = c.store.getInfo(claimid,c.maybe_userid)
+//      val rel = c.arg("rel")
+//      val text = c.arg("text")
+//      c.outputHtml("Add Evidence",Page.addEvidence(claimid,claim.str("text"),rel,text)(c))
+//    }),
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getClaim(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + " - Dispute Finder Claim"

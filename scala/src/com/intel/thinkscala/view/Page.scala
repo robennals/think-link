@@ -11,44 +11,44 @@ import com.intel.thinkscala.learn.Paraphraser
 object Page {
   import Widgets._
   import Render._
-  def home(implicit c : ReqContext) =
-    <div class="content">
-      <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
-
-      <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
-      <div class="tagline">Reveal the other side of the story</div>
-
-      <a class='videolink' href="http://confront.intel-research.net/Videos.html">Watch the Videos</a>
-  
-      <div class='boldmessage'>
-            The Dispute Finder <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox Extension</a> highlights <a href="http://confront.intel-research.net/Dispute_Finder.html">disputed claims</a> on web pages you browse
-            and shows you evidence for alternative points of view. <a href="http://confront.intel-research.net/Videos.html">Watch the Videos</a> to learn more.
-      
-      </div>
-      <div class='message'>
-          Use this web interface to tell Dispute Finder what snippets to highlight and what evidence to present for alternative viewpoints. You can create a new disputed claim, 
-       mark new instances of a claim on the web, and add evidence that supports or opposes a claim.
-      </div>
-
-      {extensionBig}
-        
-      <form id="bigsearch" action="search" method="GET">        
-        {greyInput("query","query","Enter a claim found on the web that you think is disputed")}
-        <input type="submit" class="submit" value="Search"/>
-      </form>
-      <div id="claimlist">
-        {Widgets.tabs(
-          "Hot Claims" -> (() => 
-            	Widgets.pagedList(c.store.getFrequentClaims(_), Render.claim)),
-          "Hot Topics" -> (() => 
-                Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
-          "Recently Marked Pages" -> (() => 
-                Widgets.pagedList(c.store.recentMarkedPages(_), Render.claimSnippet)),
-          "Top Users" -> (() =>
-            	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
-        )}
-      </div>
-  </div>
+//  def home(implicit c : ReqContext) =
+//    <div class="content">
+//      <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
+//
+//      <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
+//      <div class="tagline">Reveal the other side of the story</div>
+//
+//      <a class='videolink' href="http://confront.intel-research.net/Videos.html">Watch the Videos</a>
+//  
+//      <div class='boldmessage'>
+//            The Dispute Finder <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox Extension</a> highlights <a href="http://confront.intel-research.net/Dispute_Finder.html">disputed claims</a> on web pages you browse
+//            and shows you evidence for alternative points of view. <a href="http://confront.intel-research.net/Videos.html">Watch the Videos</a> to learn more.
+//      
+//      </div>
+//      <div class='message'>
+//          Use this web interface to tell Dispute Finder what snippets to highlight and what evidence to present for alternative viewpoints. You can create a new disputed claim, 
+//       mark new instances of a claim on the web, and add evidence that supports or opposes a claim.
+//      </div>
+//
+//      {extensionBig}
+//        
+//      <form id="bigsearch" action="search" method="GET">        
+//        {greyInput("query","query","Enter a claim found on the web that you think is disputed")}
+//        <input type="submit" class="submit" value="Search"/>
+//      </form>
+//      <div id="claimlist">
+//        {Widgets.tabs(
+//          "Hot Claims" -> (() => 
+//            	Widgets.pagedList(c.store.getFrequentClaims(_), Render.claim)),
+//          "Hot Topics" -> (() => 
+//                Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
+//          "Recently Marked Pages" -> (() => 
+//                Widgets.pagedList(c.store.recentMarkedPages(_), Render.claimSnippet)),
+//          "Top Users" -> (() =>
+//            	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
+//        )}
+//      </div>
+//  </div>
       
   def searchResults(implicit query : String, page : Int, c : ReqContext) =
      c.store.searchClaims(query,page).toSequence flatMap Render.claim
@@ -71,7 +71,7 @@ object Page {
 	  <form id="mainsearch" method="get" action="search">
 		  <span class='prompt'>I dispute the claim that...</span>
 		  <input name="query" type="text" class='search' value={c.arg("query")}/>
-		  <input class='submit' type="submit" value="Search"/>
+		  <input class='submit' type="submit" value="Search Claim Database"/>
 	  </form>
 	
 	  <form id="newthing" method="GET" action={Urls.createClaim(c.arg("query"))}>
@@ -210,7 +210,7 @@ object Page {
         </form>
     </div>
     
-  def claim(row : SqlRow)(implicit c : ReqContext) =
+  def claim(row : SqlRow)(implicit c : ReqContext) : NodeSeq =
     <div>
       <span id="notagainmain"><input type="checkbox" name="notagain" checked={if(row("ignored") != null) "true" else null} onClick={"notAgain(this,"+row("id")+")"}/>
         	<label for="notagain">don't highlight this claim</label></span>
@@ -258,59 +258,59 @@ object Page {
         {userref(row.int("user_id"),row.str("username"),"created by ")}
       </div>
     </div>
-     
-  def addEvidence(claimid : Int, claimtxt : String, rel : String, text : String)(implicit c : ReqContext) =    
-    <div class='content'>
-        <a href={Urls.claim(claimid)}><h1>{claimtxt}</h1></a>
-        <div class='subtitle'>Add Evidence that supports or opposes this claim</div>
-        <div class='message'>
-           The easiest way to add evidence to a claim is to use the <a href={Urls.extension}>Firefox Extension</a>.
-           If for some reason you cannot use the Firefox extension, you can also add evidence using the form below:
-        </div>
-        <form class='form' method='post' action={PostUrls.addEvidence(claimid)}>
-           <label for='url'>Url for evidence page:</label>
-           {Widgets.greyInput("input","url","Paste the URL of the page with evidence")}
-           This evidence <select name='rel'>
-             <option selected={if(rel=="supports") "selected" else null}>supports</option>
-             <option selected={if(rel=="opposes") "selected" else null}>opposes</option>
-           </select> the claim "{claimtxt}"
-           <label for='snip'>Copy and paste a representative quote below:</label>
-           <textarea rows="5" name="text"></textarea>    
-           <input class='submit' type="submit" value="Add Evidence"/>
-        </form>
-    </div>
-    
-  def findsnippets(row : SqlRow, query : String)(implicit c : ReqContext) = 
-    <div id="findsnippets">
-      <input type="hidden" id="data-query" value={query}/>
-      <input type="hidden" id="data-claim" value={""+row("id")}/>
-      <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
-      <div class="subtitle">Find snippets on the web that make this claim</div>
-   
-	  <div class='boldmessage'>
-	  This search interface allows you to rapidly find many snippets on the 
-	  web that make a claim.
-	</div>
-	
-	<div class='message'>
-	  Enter search keywords to find snippets on the web that make the claim. 
-	  Then click "mark" on all snippets that suggest or imply that the claim is true.
-	</div>
-         <div id="queries">
-        <h2>Previous Search Queries</h2>
-        {searchQueryList(c,row.int("id"))}
-      </div>
-      {if(c.arg("fromextension") == null){         
-    	  time("snipSearchResults",Render.snipSearchResults(query,row))
-       }else{
-    	  <div id="searchlist">
-		    <h2>Snippets marked with the Firefox extension</h2>
-            <div class='searchcontent'>
-		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.urlSnippet)}
-            </div>
-  	      </div>
-       }}
-    </div>
+//     
+//  def addEvidence(claimid : Int, claimtxt : String, rel : String, text : String)(implicit c : ReqContext) =    
+//    <div class='content'>
+//        <a href={Urls.claim(claimid)}><h1>{claimtxt}</h1></a>
+//        <div class='subtitle'>Add Evidence that supports or opposes this claim</div>
+//        <div class='message'>
+//           The easiest way to add evidence to a claim is to use the <a href={Urls.extension}>Firefox Extension</a>.
+//           If for some reason you cannot use the Firefox extension, you can also add evidence using the form below:
+//        </div>
+//        <form class='form' method='post' action={PostUrls.addEvidence(claimid)}>
+//           <label for='url'>Url for evidence page:</label>
+//           {Widgets.greyInput("input","url","Paste the URL of the page with evidence")}
+//           This evidence <select name='rel'>
+//             <option selected={if(rel=="supports") "selected" else null}>supports</option>
+//             <option selected={if(rel=="opposes") "selected" else null}>opposes</option>
+//           </select> the claim "{claimtxt}"
+//           <label for='snip'>Copy and paste a representative quote below:</label>
+//           <textarea rows="5" name="text"></textarea>    
+//           <input class='submit' type="submit" value="Add Evidence"/>
+//        </form>
+//    </div>
+//    
+//  def findsnippets(row : SqlRow, query : String)(implicit c : ReqContext) = 
+//    <div id="findsnippets">
+//      <input type="hidden" id="data-query" value={query}/>
+//      <input type="hidden" id="data-claim" value={""+row("id")}/>
+//      <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
+//      <div class="subtitle">Find snippets on the web that make this claim</div>
+//   
+//	  <div class='boldmessage'>
+//	  This search interface allows you to rapidly find many snippets on the 
+//	  web that make a claim.
+//	</div>
+//	
+//	<div class='message'>
+//	  Enter search keywords to find snippets on the web that make the claim. 
+//	  Then click "mark" on all snippets that suggest or imply that the claim is true.
+//	</div>
+//         <div id="queries">
+//        <h2>Previous Search Queries</h2>
+//        {searchQueryList(c,row.int("id"))}
+//      </div>
+//      {if(c.arg("fromextension") == null){         
+//    	  time("snipSearchResults",Render.snipSearchResults(query,row))
+//       }else{
+//    	  <div id="searchlist">
+//		    <h2>Snippets marked with the Firefox extension</h2>
+//            <div class='searchcontent'>
+//		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.urlSnippet)}
+//            </div>
+//  	      </div>
+//       }}
+//    </div>
     
   def topic(implicit c : ReqContext, row : SqlRow) = 
     <div id="topic">
@@ -336,8 +336,8 @@ object Page {
         {Widgets.tabs(
           "Claims Created" -> (() => 
             	Widgets.pagedList(c.store.nodesByUser("claim",row.int("id"),_), Render.claim)),
-          "Pages Marked" -> (() => 
-                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.urlSnippet)),
+//          "Pages Marked" -> (() => 
+//                Widgets.pagedList(c.store.userMarkedPages(row.int("id"),_), Render.urlSnippet)),
           "Evidence Found" -> (() =>
             	Widgets.pagedList(c.store.evidenceForUser(row.int("id"),_), Render.userEvidence))
         )}

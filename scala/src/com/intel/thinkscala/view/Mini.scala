@@ -45,8 +45,8 @@ object Mini {
      {if(disputed)
         <h1>What disputed claim is this a paraphrase of?</h1>
       else
-        (<div><h1>What claim is this evidence for?</h1>
-        This evidence <select name="rel">
+        (<div class='addprompt'>
+        This article <select name="rel">
             <option>choose...</option>
             <option value="opposes" selected={if(c.arg("rel")=="opposes") "selected" else null}>opposes</option>
             <option value="supports" selected={if(c.arg("rel")=="supports") "selected" else null}>supports</option>
@@ -59,14 +59,17 @@ object Mini {
         <input type='hidden' name='claimid' id='claimid' value="0"/>
         <input type='hidden' name='name'/>
         <input type='hidden' name='descr'/>
-      </form>
+        </form>
 	    {Widgets.tabs(
-	      "Search Claims" -> (() => searchForClaims(query)),
 	      "Recent Claims" -> (() => 
 	        	<div id='claimlist'>{c.store.getRecentClaims(c.userid) flatMap claimButton}</div>),
+	      "Search Claims" -> (() => searchForClaims(query)),
 	      "Create New Claim" -> (() =>
-	            createNewClaim)
+	            <div class='message'>
+	            To create a new claim, please use the <a target='_blank' href='/thinklink/pages/claims.html'>main web interface</a>.
+	            </div>)
 	    )}
+	  <button class='submit' type='submit' id='addarticle' onclick='checkAddArticle()'>Add Article to Claim</button>	    
    </div>
 
    def searchForClaims(query : String)(implicit c : ReqContext) =
@@ -75,6 +78,7 @@ object Mini {
         <input type='hidden' name='text' value={c.arg("text")}/>
         <input type='hidden' name='title' value={c.arg("title")}/>
         <input type='hidden' name='url' value={c.arg("url")}/>
+        <input type='hidden' name='tab' value="Search Claims"/>
         <input type='hidden' name='isdisputed' value={c.arg("isdisputed")}/>
         {   if(c.arg("query") != null){
 	          <input type="text" class="query" name="query" value={c.arg("query")}/>
@@ -89,10 +93,12 @@ object Mini {
       </div>
     </div>
 
-
-   def claimButton(row : SqlRow)(implicit c : ReqContext) = 
-     <a class='claimbutton' title="choose this claim" onclick={"addEvidence("+row("id")+")"}>
-         {row("text")}</a>
+    def claimButton(row : SqlRow)(implicit c : ReqContext) =
+    	<div class='selectclaim' id={"claim-"+row("id")}>{row("text")}</div>
+    
+//   def claimButton(row : SqlRow)(implicit c : ReqContext) = 
+//     <a class='claimbutton' title="choose this claim" onclick={"addEvidence("+row("id")+")"}>
+//         {row("text")}</a>
           
    def createNewClaim(implicit c : ReqContext) = 
      <div>

@@ -57,10 +57,24 @@ function setSnipStatus(button,vote){
 
 function addEvidence(id){
 	if(document.forms.newsnippet.rel && document.forms.newsnippet.rel.value == "choose..."){
-		alert("you must say whether the evidence supports or opposes the claim");
+		alert("You must say whether the evidence supports or opposes the claim");
 	}else{
 		submitForm('newsnippet','claimid',id)
 	}
+}
+
+function checkAddArticle(){
+	if(document.forms.newsnippet.rel && document.forms.newsnippet.rel.value == "choose..."){
+		alert("You must say whether the evidence supports or opposes the claim");
+		return;
+	}	
+	var selected = $(".togglephrase-selected");
+	if(selected.length == 0){
+		alert("You must select which claim this article supports or opposes");
+		return;
+	}
+	var id = selected.attr("id").substring(6);
+	submitForm('newsnippet','claimid',id)
 }
 
 function submitForm(formid,fieldname,fieldval){
@@ -315,6 +329,10 @@ window.onload = function(){
 	})
 	$(".togglephrase").click(function(e){
 		$(e.target).toggleClass("togglephrase-selected");
+	})
+	$(".selectclaim").click(function(e){
+		$(".togglephrase-selected").removeClass("togglephrase-selected");
+		$(e.target).addClass("togglephrase-selected");
 	})
 	$(".showlink").click(function(e){
 		var lnk = $(e.target);
