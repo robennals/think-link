@@ -109,7 +109,6 @@ window.addEventListener("load", function(){
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
 		find_phrases(ev.target);
-		mark_snippets(ev.target);
 	},false);
 		
 	loadIgnored();

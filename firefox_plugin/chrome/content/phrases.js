@@ -68,11 +68,6 @@ function searchWords(doc,words,hotwords,start){
 					return;
 				}else{
 					global_wordcombos[words[i]+"-"+words[j]] = secondwords[words[j]]
-					//var claims = secondwords[words[j]];
-					//for(var k = 0; k < claims.length; k++){
-						//global_claimphrases
-////						markClaimPhrases(doc,claims[k]);
-					//}
 				}
 			}
 		}

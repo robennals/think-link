@@ -204,6 +204,7 @@ function joinNormStrings(arr){
 }
 
 function divideSnip(parent,realtext){
+	realtext = realtext.replace(/^\s+/,"").replace(/\s$/,"")
 	var words = realtext.split(/\s+/)
 	for(var i = 1; i < words.length; i++){
 		var first = joinNormStrings(words.slice(0,words.length - i))
@@ -218,6 +219,9 @@ function divideSnip(parent,realtext){
 	}
 	return null;
 }
+
+
+var global_markcount = 0;
 
 function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 	if(isIgnored(claimid)) return;
@@ -236,42 +240,43 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 				insub = true;
 			}
 		}		
-		if(!insub && node.nodeName != "#text"){
-			var divided = divideSnip(node,realtext)			
-			if(divided){
-				mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
-				mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
-			}
-			return;
-		}
+		// TODO: make this work well and then re-enable it
+		//if(!insub && node.nodeName != "#text"){
+			//var divided = divideSnip(node,realtext)			
+			//if(divided){
+				//mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
+				//mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
+			//}
+			//return;
+		//}
 	}
 	if(insub){
 		return;
 	}
 	if(node.nodeName == "#text"){
 		var splitted = splitText(nodetext,text);
-//		var start = nodetext.indexOf(realtext);
-	//	if(start != -1 && node.tagName != "PRE"){   // only works if match exactly
 		if(splitted != false && node.tagName != "PRE"){
 			var pre = splitted.pre;
 			var post = splitted.post;
 		
-			//var pre = nodetext.substring(0,start)
-			//var post = nodetext.substring(start+realtext.length)
 			var span = content.document.createElement("span");
-			// span.appendChild(content.document.createTextNode(realtext));
 			span.appendChild(content.document.createTextNode(splitted.snip));
 			span.setAttribute("class","disputefinder_highlight");
 			node.parentNode.insertBefore(content.document.createTextNode(pre),node);
 			node.parentNode.insertBefore(span,node);
 			node.parentNode.insertBefore(content.document.createTextNode(post),node);
 			node.parentNode.removeChild(node);
-//			return;
 			node = span;
+			// node = node.parentNode
 		}else{
 			node = node.parentNode;
 		}
+	}else{
+		return;
 	}
+	//if(node.nodeName == "#text"){
+		//node = node.parentNode;
+	//}
 
 	node.style.backgroundColor = "#FFD3D3";
 	node.style.cursor = "pointer";
@@ -280,6 +285,7 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
     node.setAttribute("thinklink_snipid",snipid);				
 	node.addEventListener("click",showClaimPopup,true);
 	global_marked.push(node);
+	global_markcount++;
 }
 
 /* find where the snippet starts and ends in the nodetext */
@@ -294,11 +300,11 @@ function splitText(nodetext,sniptext){
 	
 	var ni = 0;	
 	for(var nni = 0; nni < nodetext_n.length; nni++){
-		while(nodetext_n[nni] != nodetext[ni].toLowerCase()) ni++;
+		while(nodetext_n[nni] != nodetext[ni].toLowerCase() && ni < nodetext.length) ni++;
 		
 		var pad = 0;
 		for(var sni = 0; sni < sniptext_n.length; sni++){
-			while(nodetext_n[nni+sni] != nodetext[ni+sni+pad].toLowerCase()) pad++;
+			while(nodetext_n[nni+sni] != nodetext[ni+sni+pad].toLowerCase() && ni+sni+pad < nodetext.length) pad++;
 			if(sniptext_n[sni] != nodetext_n[nni+sni]) break;
 			if(sni == sniptext_n.length - 1){
 				return {
@@ -562,7 +568,7 @@ function clearCache(){
 	var globals = getGlobals();
 	var apipath = get_api_path();
 	globals.cache = {};		
-	globals.ignored = null;
+	globals.ignored = {};
 	globals.hotwords = null;
 }
 
