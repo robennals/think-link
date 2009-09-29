@@ -40,7 +40,6 @@ function find_phrases(doc){
 	searchWords(doc,words,globals.hotwords,0);	
 }
 
-
 function searchWords(doc,words,hotwords,start){
 	var apipath = get_api_path();
 	
