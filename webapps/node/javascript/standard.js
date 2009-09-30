@@ -280,6 +280,14 @@ function newClaimDerivedParas(){
 	submitDerivedParas(true);
 }
 
+function addParaphrase(){
+	var claimid = $("#claimid").val();
+	var phrase = $("#phrase").val();
+	$.post("/thinklink/claim/"+claimid+"/addphrase",{phrase:phrase},function(result){
+		window.location.reload();
+	})
+}
+
 function submitDerivedParas(newclaim){
 	var mainphrase = $("#phrase").val();
 	var subphrases = $(".subphrase");

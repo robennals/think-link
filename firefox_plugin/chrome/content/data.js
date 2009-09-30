@@ -42,7 +42,7 @@ var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards"
 		"yours", "yourself", "yourselves", "the","s"];
 var stopwords_hash = listToHash(stopwords);
 
-var negwords = ["not","n't","t","no","nothing","non","nor","nobody","never","neither","nor"];
+var negwords = ["not","t","no","nothing","non","nor","nobody","never","neither","nor"];
 var negwords_hash = listToHash(negwords);
 
 // TODO: use a single regexp to remove all stems

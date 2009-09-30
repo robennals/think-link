@@ -241,14 +241,14 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 			}
 		}		
 		// TODO: make this work well and then re-enable it
-		//if(!insub && node.nodeName != "#text"){
-			//var divided = divideSnip(node,realtext)			
-			//if(divided){
-				//mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
-				//mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
-			//}
-			//return;
-		//}
+		if(!insub && node.nodeName != "#text" && nodetext.length < 500){
+			var divided = divideSnip(node,realtext)			
+			if(divided){
+				mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
+				mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
+			}
+			return;
+		}
 	}
 	if(insub){
 		return;

@@ -226,9 +226,10 @@ class MainServlet extends HttpServlet {
     UrlHandler("/claim/(\\d*)/addphrase", c => {
       val claimid = c.urlInt(1)
       val phrase = c.arg("phrase")
-      val subparas = c.argArray("phrase")
-      val subpick = c.argArray("picked")
-      c.store.addphrases(claimid, phrase, subparas, subpick, c.userid) 			
+//      val subparas = c.argArray("phrase")
+//      val subpick = c.argArray("picked")
+//      c.store.addphrases(claimid, phrase, subparas, subpick, c.userid) 			
+      c.store.addPhrase(claimid,phrase,c.userid)
       c.store.updatePhraseCount(claimid)
       c.store.updateEvidenceCount(claimid)
     }),

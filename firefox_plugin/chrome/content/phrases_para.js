@@ -112,8 +112,12 @@ function joinStrings(arr,start,end){
 	return buf;
 }
 
+function textWords(str){
+	return str.replace(/^\s+/g,"").replace(/\s+$/g,"").split(/[^\w]+/);
+}
+
 function trimSentence(sentence,keywords){
-	var words = sentence.split(/[^\w]+/);
+	var words = textWords(sentence);
 	var first = 0;
 	var last = words.length - 1;
 	while(!hashGet(keywords,words[first]) && first < words.length) first++;
@@ -131,9 +135,19 @@ function dropStopWords(words){
 	return arr;
 }
 
+//function isNegated(phrase){
+	//for(var i = 0; i < negwords.length; i++){
+		//if(phrase.indexOf(negwords[i]) != -1){
+			//return true;
+		//}
+	//}
+	//return false;
+//}
+
 function isNegated(phrase){
-	for(var i = 0; i < negwords.length; i++){
-		if(phrase.indexOf(negwords[i]) != -1){
+	var words = textWords(phrase);
+	for(var i = 0; i < words.length; i++){
+		if(hashGet(negwords_hash,words[i])){
 			return true;
 		}
 	}
@@ -141,7 +155,7 @@ function isNegated(phrase){
 }
 
 function markSentencePhrase(doc,sentence,words,phrase){
-	var keywords = dropStopWords(phrase.text.toLowerCase().split(/[^\w]+/));
+	var keywords = dropStopWords(textWords(phrase.text.toLowerCase()));
 
 	var phraseneg = false;
 	var sentenceneg = false;

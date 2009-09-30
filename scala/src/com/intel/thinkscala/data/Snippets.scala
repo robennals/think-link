@@ -79,6 +79,20 @@ trait Snippets extends BaseData {
 		}	
 	}
 	
+    def addPhrase(claimid : Int, phrase : String, userid : Int){
+		val (keyword,secondword) = HotWords.hotWords(phrase)
+    	addphrase.insert(claimid,userid,phrase,0,keyword,secondword)
+    }
+
+	
+	def addMissingPhrases(){
+		var missing = nodesWithoutParas
+		missing foreach {row =>
+			val (keyword,secondword) = HotWords.hotWords(row.str("text"))
+			addphrase.insert(row.int("id"),row.int("user_id"),row.str("text"),0,keyword,secondword)
+		}
+	}
+	
 	val hot_words = stmt("SELECT DISTINCT(keyword) FROM paraphrase")
 	def hotWords() = hot_words.querySeq()
 	
@@ -109,4 +123,7 @@ trait Snippets extends BaseData {
 
 	val abuse_para = stmt("UPDATE paraphrase SET abusereport = ? WHERE id = ?")
 	def abusePara(paraid : Int, userid : Int) = abuse_para.update(userid,paraid)
- }
+	
+	val nodes_without_paras = stmt("SELECT v2_node.id,v2_node.user_id,text FROM v2_node WHERE type='claim' AND NOT EXISTS (SELECT * FROM paraphrase WHERE claim_id = v2_node.id)")
+	def nodesWithoutParas = nodes_without_paras.queryRows()
+}

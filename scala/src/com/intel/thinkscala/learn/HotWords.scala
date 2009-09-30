@@ -26,14 +26,17 @@ object HotWords {
 
 	def hotWords(str : String) : (String,String) = {
 		val words = Paraphraser.textWords(str)	
-		val scored : Seq[(String,Option[int])]= words map (word => (word,wordfreqs.get(word)))
+		val scored : Seq[(String,Option[Int])]= words map (word => (word,wordfreqs.get(word)))
 		val sorted = scored.toList.sortWith((x,y) => (x._2,y._2) match {
 			case (Some(xf),Some(yf)) => xf < yf
 			case (None,Some(yf)) => false
 			case (Some(xf),None) => true
 			case (None,None) => x._1 < y._1
 		})
-		(sorted(0)._1,sorted(1)._1)
-	}
-	
+		if(sorted.length > 0){
+			(sorted(0)._1,sorted(1)._1)
+		}else{
+			("","")
+		}
+	}	
 }
