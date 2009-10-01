@@ -166,11 +166,11 @@ class MainServlet extends HttpServlet {
 	  	val resultid = c.store.mkResult(0,urlid,0,text,"",claimid)
     	c.store.setSnipHighlight(resultid,text)
 	  	c.store.setSnipVote(resultid,c.userid,true)
-        c.outputMiniHtml(Mini.marked(claimid))
+        c.outputMiniHtml(title,Mini.marked(claimid))
 	  }else{
 	    c.store.makeEvidence(c.userid,claimid,text,url,title,rel)
         c.store.updateEvidenceCount(claimid)
-        c.outputMiniHtml(Mini.addedEvidence(claimid))        
+        c.outputMiniHtml(title,Mini.addedEvidence(claimid))        
 	  }
     }),
     UrlHandler("/claim/new", c => {
@@ -430,7 +430,7 @@ class MainServlet extends HttpServlet {
       c.minimode = true
       val claimid = c.urlInt(1)
       val claim = c.store.getClaim(claimid,c.maybe_userid)
- 	  c.outputMiniHtml(Mini.claim(claim)(c))      
+ 	  c.outputMiniHtml(claim.str("text"),Mini.claim(claim)(c))      
     }),
     UrlHandler("/mini/newsnippet",c=>{
       c.minimode = true
@@ -443,7 +443,7 @@ class MainServlet extends HttpServlet {
         query = text;
       }
       c.userid
-      c.outputMiniHtml(Mini.newsnippet(text,url,title,isdisputed,query)(c))      
+      c.outputMiniHtml("New Snippet: "+text,Mini.newsnippet(text,url,title,isdisputed,query)(c))      
     }),
     UrlHandler("/docs/(\\w*)", c => {
       c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml"),c))
@@ -452,7 +452,7 @@ class MainServlet extends HttpServlet {
         c.outputRawHtml(Docs.page(readResource("pages/"+c.urlArg(1)+".xml"),c))
     }),
     UrlHandler("/mini/markedbad", c => {
-      c.outputMiniHtml(Mini.markedbad);
+      c.outputMiniHtml("Marked Bad",Mini.markedbad);
     }),
 //    UrlHandler("""/claim/(\d*)/findsnippets""", c => {
 //      val claim = c.store.getInfo(c.urlInt(1),c.maybe_userid)

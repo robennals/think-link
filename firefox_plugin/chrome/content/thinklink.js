@@ -108,7 +108,11 @@ window.addEventListener("load", function(){
     
 	window.addEventListener("DOMContentLoaded",function(ev){
 		thinklink_getLogin();
-		find_phrases(ev.target);
+		try{
+			find_phrases(ev.target);
+		}catch(e){
+			thinklink_error("error in find_phrases: "+e.message,e);
+		}
 	},false);
 		
 	loadIgnored();

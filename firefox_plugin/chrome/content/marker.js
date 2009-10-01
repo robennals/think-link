@@ -331,7 +331,11 @@ function ajaxRequest(url,callback){
 	req.open("GET",url,true);
 	req.onreadystatechange = function(){
 		if(req.readyState == 4 && req.status == 200){
+			try{
 			callback(JSON.parse(req.responseText))
+			}catch(e){
+				thinklink_error("exception in callback: "+e.message,e);
+			}
 		}
 	}
 	req.send(null);
@@ -388,7 +392,13 @@ function dragPopup(ev,win,frame){
 	frame.style.visibility = "hidden";
 }
 
-function viewFrame(url,snipid) {
+function viewFrame(url){
+	var win = window.open(url,"disputefinder_popup","menubar=false, toolbar=false, location=false, "+
+		"all=no, width=400px, height=500px"
+		+", left="+(window.screenX+100)+", top="+(window.screenY+100));
+}
+
+function viewFrame2(url,snipid) {
 	var doc = content.document;
 	var that = this;
 	

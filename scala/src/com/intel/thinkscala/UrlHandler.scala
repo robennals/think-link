@@ -109,8 +109,8 @@ class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest,
     UrlHandler.outputHtml(res,Template.normal(this,title,html),true)
   }
   
-  def outputMiniHtml(html : NodeSeq){
-    UrlHandler.outputHtml(res,Template.mini(this,html),true)
+  def outputMiniHtml(title: String, html : NodeSeq){
+    UrlHandler.outputHtml(res,Template.mini(this,title,html),true)
   }
   
   def outputRawHtml(html : NodeSeq){

@@ -13,16 +13,15 @@ could make it better, a reason why you think it is a bad idea,
 want to work with us, want to use our data, or just want
 to spout, then please either <a href="mailto:robert.ennals@intel.com">email us</a> us
 fill in the form below:</p>
-</desc>
+</div>
 
 <form class='form' action="/thinklink/api/sendfeedback" method="POST">
 
 <label for="email">Your email address (if you want a reply):</label>
-<input type="text" name="email">
+<input type="text" name="email"/>
 
 <label form="text">Your comments:</label>
 <textarea rows='8' name="text"/>
-</textarea>
 <input class='submit' type='submit' value="Send Feedback"/>
 </form>
 

@@ -40,12 +40,12 @@ object Docs {
 				<li><a href="/thinklink/claim/hot.html">Hot</a></li>
 			    {if(c.user.realuser)
 			         <li><a class="user" href={Urls.profile(c.user.userid)}>{c.user.name}</a></li>
-			         <li><a class="logout" href={Urls.logout}>logout</a></li>
+			         <li><a class="logout" href={Urls.logout}>Logout</a></li>
 			     else
-		             <li><a class="signup" href={Urls.signup}>sign up</a></li>
-			         <li><a class="login" href={Urls.login(Urls.base)}>login</a></li>           
+		             <li><a class="signup" href={Urls.signup}>Sign Up</a></li>
+			         <li><a class="login" href={Urls.login(Urls.base)}>Login</a></li>           
 			    }
-				<li><a href="/thinklink/pages/feedback.xml">Feedback</a></li>
+				<li><a href="/thinklink/pages/feedback.html">Feedback</a></li>
 				<li><a href="http://disputefinder.blogspot.com/">Blog</a></li>
 			</ul>
 		</div>
@@ -74,24 +74,6 @@ object Docs {
 		val xml = ConstructingParser.fromSource(Source.fromString(xmlstr),true).document
 		val title : String = (xml \\ "h1").text
 		Template.basics(c,title,nav(c) ++ docnav(c) ++ xml,"body")
-//		
-//		
-//		return <html>{head(title)(c)}<body class='body'>{nav(c) ++ docnav(c) ++ xml ++ analytics(c)}
-//	      <script type="text/javascript">
-//	        <xml:unparsed>
-//		  	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-//		  	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-//		  	</xml:unparsed>
-//		  </script>
-//		  <script type="text/javascript">
-//		  	<xml:unparsed>
-//		  	try {
-//		  	var pageTracker = _gat._getTracker("UA-10712508-1");
-//		  	pageTracker._trackPageview();
-//		  	} catch(err) {}
-//		  	</xml:unparsed>
-//		  </script>
-//		</body></html>
 	}
 	
 	def page(xmlstr : String, c : ReqContext) : NodeSeq = {

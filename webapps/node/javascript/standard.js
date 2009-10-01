@@ -374,5 +374,8 @@ window.onload = function(){
 		target.css("background-color","yellow");
 		$.post(url_base+"snippet/"+snipid+"/sethighlight",{highlight:target.text()});
 	})
+	if($("body").hasClass("minibody")){
+		window.innerHeight = document.body.offsetHeight;
+	}
 }
 

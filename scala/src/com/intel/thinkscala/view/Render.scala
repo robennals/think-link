@@ -310,8 +310,8 @@ object Template {
 //     Docs.bindFrag("template","title" -> Text(title), "content" -> <div>{body}</div>, "user_signup" -> user_signup, "login_logout" -> login_logout)(c)
 //  }	  
   
-  def mini(c : ReqContext, body : NodeSeq) =    
-    basics(c,"Dispute Finder Popup Interface",body,"minibody")
+  def mini(c : ReqContext, title : String, body : NodeSeq) =    
+    basics(c,title,body,"minibody")
   
   def nobar(c : ReqContext, body : NodeSeq) = 
     basics(c,"",body,"body")

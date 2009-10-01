@@ -96,11 +96,11 @@ trait Snippets extends BaseData {
 	val hot_words = stmt("SELECT DISTINCT(keyword) FROM paraphrase")
 	def hotWords() = hot_words.querySeq()
 	
-	val second_words = stmt("SELECT DISTINCT(secondword) FROM paraphrase WHERE keyword = ?")
-	def secondWords(keyword : String) = second_words.querySeq(keyword)
+	val second_words = stmt("SELECT DISTINCT(secondword) FROM paraphrase WHERE keyword LIKE ?")
+	def secondWords(keyword : String) = second_words.querySeq(keyword+"%")
 	
 	def wordPhrases(keyword : String,secondword : String) = select("paraphrase")
-		.where("keyword = ?",keyword).where("secondword = ?",secondword)
+		.where("keyword LIKE ?",keyword+"%").where("secondword LIKE ?",secondword+"%")
 		.where("disabled = 0")
 		.leftjoin("v2_node.text AS claimtext","v2_node ON v2_node.id = paraphrase.claim_id")
 		.where("v2_node.disagree_count > 0")

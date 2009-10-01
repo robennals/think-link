@@ -24,7 +24,7 @@ function find_phrases(doc){
 	if(!globals.hotwords){		
 		ajaxRequest(apipath+"/apianon/hotwords.json",function(hotwords){
 			if(hotwords.version == 1){
-				globals.hotwords = listToHash(hotwords.hotwords);		
+				globals.hotwords = listToHash(stemWords(hotwords.hotwords));		
 				find_phrases(doc);
 			}else{				
 				upgradeMessage();
@@ -59,22 +59,28 @@ function hashGet(hash,key){
 
 function searchSentences(doc,sentences,hotwords,start){
 	for(var i = start; i < sentences.length; i++){
+//		thinklink_msg("sentence "+i+" out of "+sentences.length);
 		var sentence = sentences[i];
-		var words = sentence.split(/\s*[^\w]+\s*/);
-		if(global_markcount > 10) return;
+		var stemmed = stemSentence(sentence);
+		var words = stemmed.split(/\s*[^\w]+\s*/);
+		if(global_markcount > 20){
+			thinklink_msg("reached maximum mark count for page. Stopping marking to avoid slowing things down.");
+			return;
+		}
 		for(var j = 0; j < words.length; j++){
 			var word = words[j];
 			var match = hashGet(hotwords,word);
 			if(!match){
 				// do nothing: common case
 			}else if(match == true){
-				thinklink_msg("matched keyword: "+word);
+//				thinklink_msg("matched keyword: "+word);
 				ajaxRequest(global_api_path+"/apianon/hotwords/"+word+".json",function(secondwords){
-					hotwords[word] = listToHash(secondwords);
+					hotwords[word] = listToHash(stemWords(secondwords));
 					searchSentences(doc,sentences,hotwords,i);
 				});
 				return;
 			}else{
+//				thinklink_msg("reusing keyword: "+word);
 				var secondwords = hotwords[word];
 				var donepairs = {};
 				for(var k = 0; k < words.length; k++){
@@ -83,19 +89,17 @@ function searchSentences(doc,sentences,hotwords,start){
 					if(!secondmatch){
 						// do nothing
 					}else if(secondmatch == true){
-						thinklink_msg("matched word pair: "+word+"-"+secondword);
+//						thinklink_msg("matched word pair: "+word+"-"+secondword);
 						ajaxRequest(global_api_path+"/apianon/majorwords/"+word+"/"+secondword+".json",function(claims){
 							secondwords[secondword] = claims;
 							searchSentences(doc,sentences,hotwords,i);
 						})
 						return;
 					}else{	
-						if(!donepairs[word+"-"+secondword]){
-							donepairs[word+"-"+secondword] = true;
-							var phrases = secondwords[secondword];
-							for(var c = 0; c < phrases.length; c++){														
-								markSentencePhrase(doc,sentence,words,phrases[c])
-							}
+//						thinklink_msg("reusing word pair: "+word+"-"+secondword);
+						var phrases = secondwords[secondword];
+						for(var c = 0; c < phrases.length; c++){														
+							markSentencePhrase(doc,sentence,words,phrases[c])
 						}
 					}
 				}
@@ -113,15 +117,20 @@ function joinStrings(arr,start,end){
 }
 
 function textWords(str){
-	return str.replace(/^\s+/g,"").replace(/\s+$/g,"").split(/[^\w]+/);
+	return str.replace(/^[^\w]+/g,"").replace(/[^\w]+$/g,"").split(/[^\w]+/);
+}
+
+function trimEnds(str){
+	return str.replace(/^\s+/g,"").replace(/\s+$/g,"");
 }
 
 function trimSentence(sentence,keywords){
 	var words = textWords(sentence);
+	var stemwords = stemWords(words);
 	var first = 0;
 	var last = words.length - 1;
-	while(!hashGet(keywords,words[first]) && first < words.length) first++;
-	while(!hashGet(keywords,words[last]) && last > first) last--;
+	while(!hashGet(keywords,stemwords[first]) && first < words.length) first++;
+	while(!hashGet(keywords,stemwords[last]) && last > first) last--;
 	return joinStrings(words,first,last);	
 }
 
@@ -154,17 +163,29 @@ function isNegated(phrase){
 	return false;
 }
 
+function arr_contains(arr,key){
+	for(var i = 0; i < arr.length; i++){
+		if(arr[i] == key){
+			return true;
+		}
+	}	
+	return false;
+}
+
 function markSentencePhrase(doc,sentence,words,phrase){
-	var keywords = dropStopWords(textWords(phrase.text.toLowerCase()));
+	var keywords = stemWords(dropStopWords(textWords(phrase.text.toLowerCase())));
 
 	var phraseneg = false;
 	var sentenceneg = false;
 	// does it have all the keywords
 	for(var i = 0; i < keywords.length; i++){
 		var keyword = keywords[i];
-		if(sentence.indexOf(keywords[i]) == -1){
+		if(!arr_contains(words,keyword)){
 			return;
 		}
+		//if(sentence.indexOf(keywords[i]) == -1){
+			//return;
+		//}
 	}
 	
 	if(isNegated(sentence) == isNegated(phrase.text)){
