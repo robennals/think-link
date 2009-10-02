@@ -1,0 +1,32 @@
+<div class="box mainbox">
+<h1>New Disputed Claim</h1>
+
+<div class='docbody'>
+
+
+   	<div class="desc">This should be a disputed claim that is made on web sites. 
+   		Once you have created a disputed claim, you should <a href="/thinklink/docs/training.html">enter paraphrases</a> that should be <a href="/thinklink/docs/highlight.html">highlighted</a>
+   		when they appear on the web, and add <a href="/thinklink/docs/arguments.html">opposing articles</a> that should be shown to other users.
+   	</div>
+
+<div class='desc'>
+	Try to use a minimal expression of the claim. For example:
+	
+	<ul>
+		<li>I dispute the claim that <q>global warming is a hoax</q></li>
+		<li>I dispute the claim that <q>gun control would reduce crime</q></li>
+		<li>I dispute the claim that <q>eskimos have many words for snow</q></li>
+		<li>I dispute the claim that <q>margarine is healthier than butter</q></li>
+		<li>I dispute the claim that <q>the world is running out of oil</q></li>
+	</ul>	
+</div>
+
+<form id="addclaim" method="post" action="/thinklink/claim/new">
+<span class='prompt'>I dispute the claim that...</span>
+<xt:bind name='input'>
+	<input type="text" name="query" class='search tempinput' value="- enter a claim that you think is disputed - "/>
+</xt:bind>
+<input class='submit' type="submit" value="Add Claim"/>
+</form>
+</div>
+</div>
