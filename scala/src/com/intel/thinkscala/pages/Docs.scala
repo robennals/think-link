@@ -51,10 +51,15 @@ object Docs {
 		</div>
 		{if(c.getCookie("extension") != null && c.getCookie("extension") != "" && c.getCookie("extension") != "0.3"){
 			<div class='claim-warning box'>
-			   You are using a discontinued version of the Dispute Finder plugin. 
+			   You are using a discontinued version of the Dispute Finder browser extension. 
 			   Please <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">upgrade</a>			   
 			</div>
-		}}
+		}else if(c.getCookie("extension") == null || c.getCookie("extension") == ""){
+			<div class='claim-warning box'>
+			   To use Dispute Finder you need to <a href="/thinklink/docs/install.html">install the Dispute Finder Extension</a>
+			</div>
+		}
+		}
 		</div>
 		
 	def loadPage(respath : String)(implicit c : ReqContext) : Node = 

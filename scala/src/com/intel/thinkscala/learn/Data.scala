@@ -2,7 +2,9 @@ package com.intel.thinkscala.learn
 import scala.collection.mutable.HashSet
 
 object Data {
-	val stopwords = HashSet("a", "about", "above", "above", "across", "after", "afterwards", 
+	val stopwords = HashSet("a", "about", "above", "above", "across", 
+			"actually",
+			"after", "afterwards", 
 			"again", "against", "all", "almost", "alone", "along", "already", "also",
 			"although","always","am","among", "amongst", "amoungst", "amount",  "an", 
 			"and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", 

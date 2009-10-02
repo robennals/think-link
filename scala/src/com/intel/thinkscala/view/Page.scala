@@ -11,44 +11,6 @@ import com.intel.thinkscala.learn.Paraphraser
 object Page {
   import Widgets._
   import Render._
-//  def home(implicit c : ReqContext) =
-//    <div class="content">
-//      <div id="intellogo"><img src="/images/intel_black_transparent_100w.png" /><div id="labs">Labs</div></div>
-//
-//      <h1 class="logo">Dispute Finder<span class='beta'>beta</span></h1>
-//      <div class="tagline">Reveal the other side of the story</div>
-//
-//      <a class='videolink' href="http://confront.intel-research.net/Videos.html">Watch the Videos</a>
-//  
-//      <div class='boldmessage'>
-//            The Dispute Finder <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">Firefox Extension</a> highlights <a href="http://confront.intel-research.net/Dispute_Finder.html">disputed claims</a> on web pages you browse
-//            and shows you evidence for alternative points of view. <a href="http://confront.intel-research.net/Videos.html">Watch the Videos</a> to learn more.
-//      
-//      </div>
-//      <div class='message'>
-//          Use this web interface to tell Dispute Finder what snippets to highlight and what evidence to present for alternative viewpoints. You can create a new disputed claim, 
-//       mark new instances of a claim on the web, and add evidence that supports or opposes a claim.
-//      </div>
-//
-//      {extensionBig}
-//        
-//      <form id="bigsearch" action="search" method="GET">        
-//        {greyInput("query","query","Enter a claim found on the web that you think is disputed")}
-//        <input type="submit" class="submit" value="Search"/>
-//      </form>
-//      <div id="claimlist">
-//        {Widgets.tabs(
-//          "Hot Claims" -> (() => 
-//            	Widgets.pagedList(c.store.getFrequentClaims(_), Render.claim)),
-//          "Hot Topics" -> (() => 
-//                Widgets.pagedList(c.store.getBigTopics(_), Render.topic)),
-//          "Recently Marked Pages" -> (() => 
-//                Widgets.pagedList(c.store.recentMarkedPages(_), Render.claimSnippet)),
-//          "Top Users" -> (() =>
-//            	(c.store.topUsers : Seq[SqlRow]) flatMap(x => Render.user(x)))
-//        )}
-//      </div>
-//  </div>
       
   def searchResults(implicit query : String, page : Int, c : ReqContext) =
      c.store.searchClaims(query,page).toSequence flatMap Render.claim
@@ -165,34 +127,25 @@ object Page {
       }
     </div>
 
+    def newClaim(c : ReqContext, query : String) = 
+    	Docs.bindPage("newclaim","input" -> <input type="text" name="query" class='search' value={query}/>)(c)
+
     
-  def newClaim(c : ReqContext, query : String) =
-    <div class="content">
-    	<h1>Create a New Disputed Claim</h1>
-    	<div class="message">This should be a disputed claim that is made on web sites. 
-    		Once you have created a disputed claim, you enter paraphrases that should be highlighted
-    		when they appear on the web, and add opposing articles that should be shown to other users.
-    	</div>
-    	<div class='form' id="newsnippet">
-          <label for="name">Claim</label>
-          <input type="text" id="name" name="name" value={query}/>
-          <input type="hidden" class='hidden' name="addto" value={c.arg("addto")}/>
-          {
-        	  val paras = Paraphraser.paraphrases(query,"")
-        	  if(paras.length > 0){
-        		  val data = paras map (para => HashMap("text" -> para))
-        		  Docs.applyXml("fragments","derivedparasnew",HashMap("derivedparas" -> data))(c)
-        	  }else{
-        		  <div class='message'>
-        			  We did not find any phrases like this on the web. Please make sure to add some 
-        			  paraphrases for this claim after you create it.
-       			  </div>
-        	  }
-          }
-       	 <button onclick="newClaimDerivedParas()" class='submit' style='margin-left:10px; margin-top: 10px'>Create Claim and Highlight Selected Paraphrases</button>
-         <button class='submit' onclick="document.location.href='/thinklink/pages/claims.html'">Cancel</button>
-        </div>
-    </div>
+//  def newClaim(c : ReqContext, query : String) =
+//    <div class="content">
+//    	<h1>Create a New Disputed Claim</h1>
+//    	<div class="desc">This should be a disputed claim that is made on web sites. 
+//    		Once you have created a disputed claim, you should enter paraphrases that should be highlighted
+//    		when they appear on the web, and add opposing articles that should be shown to other users.
+//    	</div>
+//    	<div class='form' id="newsnippet">
+//          <label for="name">Claim</label>
+//          <input type="text" id="name" name="name" value={query}/>
+//          <input type="hidden" class='hidden' name="addto" value={c.arg("addto")}/>
+//       	 <button onclick="newClaimDerivedParas()" class='submit' style='margin-left:10px; margin-top: 10px'>Add Disputed Claim to our Database</button>
+//         <button class='submit' onclick="document.location.href='/thinklink/pages/claims.html'">Cancel</button>
+//        </div>
+//    </div>
  
        
   def newTopic(c : ReqContext, query : String) =

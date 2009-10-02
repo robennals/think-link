@@ -240,8 +240,8 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 				insub = true;
 			}
 		}		
-		// TODO: make this work well and then re-enable it
-		if(!insub && node.nodeName != "#text" && nodetext.length < 500){
+		// TODO: make this work well so it doesn't highlight lots of crap
+		if(!insub && node.nodeName != "#text"){
 			var divided = divideSnip(node,realtext)			
 			if(divided){
 				mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
@@ -540,6 +540,9 @@ var thinklink_globals = null;
 
 function getGlobals(){
 	if(thinklink_globals){
+		if(!thinklink_globals.ignored){
+			loadIgnored();
+		}
 		return thinklink_globals;
 	}
 	var hiddenWindow = Components.classes["@mozilla.org/appshell/appShellService;1"]

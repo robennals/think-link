@@ -1,5 +1,5 @@
 <div class="box docbox">
-<h1>Arguments</h2>
+<h1>Arguments</h1>
 <div class='docbody'>
 
 Dispute Finder considers a claim to be disputed if a trustworthy source argues
@@ -34,7 +34,6 @@ add it to Dispute Finder.
 argument, select a representative paragraph of text to use as an excerpt, right click,
 and select <q>Use as evidence</q> from the popup menu</p>
 <img src="../images/mark_evidence.png"/>
-
 
 </div>
 </div>

@@ -222,7 +222,7 @@ function setToggle(box,vote){
 function paraKey(ev){
 	if(!ev) var ev = window.event;
 	if(ev.keyCode == 13){
-		popupDerivedParas();
+		addParaphrase();
 	}
 }
 
@@ -281,6 +281,14 @@ function newClaimDerivedParas(){
 }
 
 function addParaphrase(){
+	if(!loggedIn()){
+		alert("You need to be logged before you can add a paraphrase");
+		return;
+	}
+	if($("#phrase").hasClass("tempinput")){
+		alert("You must enter a paraphrase first");
+		return;
+	}
 	var claimid = $("#claimid").val();
 	var phrase = $("#phrase").val();
 	$.post("/thinklink/claim/"+claimid+"/addphrase",{phrase:phrase},function(result){

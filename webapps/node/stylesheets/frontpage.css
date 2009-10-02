@@ -34,7 +34,6 @@ body {
 }
 
 .box img {
-	align: right;
 	margin-left: 30px;
 	max-width: 270px;
 }
@@ -49,14 +48,14 @@ body {
 
 .frontlist ol li, .frontlist ul li {
 	font-size: 15px;
-	margin-bottom: 10px;
+	margin-top: 10px;
 	margin-right: 10px;
 }
 
 .frontlist {
 	float: left;
 	width: 350px;
-	min-height: 620px;
+	min-height: 590px;
 	margin-left: 20px;
 	margin-bottom: 20px;
 }
@@ -164,9 +163,14 @@ body {
 	margin-bottom: 10px;
 }
 
-#mainsearch {
+#mainsearch, #addclaim {
 	padding: 6px;
 	background-color: #FFFFAA;
+}
+
+#addclaim {
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
 }
 
 .yellowbox {
@@ -442,6 +446,7 @@ body {
 	max-width: 550px;
 	font-size: 15px;
 	margin-left: 20px;
+	margin-bottom: 10px;
 }
 
 #hotclaims .desc {

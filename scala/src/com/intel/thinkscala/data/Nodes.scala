@@ -40,7 +40,7 @@ trait Nodes extends BaseData {
 	  def searchTopics(query : String, page : Int) = topics(page) where ("MATCH(text) AGAINST(?)")
 	  
 	  def getRecentNodes(userid : Int, typ : String) = 
-		  	typnodes(typ,0) innerjoin ("v2_history.date AS hdate","v2_history ON v2_history.node_id = v2_node.id AND v2_history.user_id = ?",userid) orderdesc ("date") rows
+		  	typnodes(typ,0) innerjoin ("v2_history.date AS hdate","v2_history ON v2_history.node_id = v2_node.id AND v2_history.user_id = ?",userid) orderdesc ("v2_history.date") rows
 
 	  def getRecentClaims(userid : Int) = getRecentNodes(userid, "claim")
 	  def getRecentTopics(userid : Int) = getRecentNodes(userid, "topic")

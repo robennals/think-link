@@ -176,17 +176,17 @@ class MainServlet extends HttpServlet {
     UrlHandler("/claim/new", c => {
       val name = c.arg("name")
       val claimid = c.store.makeClaim(name,"",c.userid)
-      val subparas = c.argArray("phrase")
-      val subpick = c.argArray("picked")
-      c.store.addphrases(claimid, name, subparas, subpick, c.userid) 			
-      c.store.updatePhraseCount(claimid)
-       var foo = c.arg("addto")
-      if(c.arg("addto") != "" && c.arg("addto") != null){
-        c.store.addLink(claimid,c.argInt("addto"),c.userid)
-      }
-      c.output(claimid)
-//      
-//      c.redirect(Urls.claim(claimid))
+      c.store.addPhrase(claimid,name,c.userid)
+//      val subparas = c.argArray("phrase")
+//      val subpick = c.argArray("picked")
+//      c.store.addphrases(claimid, name, subparas, subpick, c.userid) 			
+//      c.store.updatePhraseCount(claimid)
+//       var foo = c.arg("addto")
+//      if(c.arg("addto") != "" && c.arg("addto") != null){
+//        c.store.addLink(claimid,c.argInt("addto"),c.userid)
+//      }
+//      c.output(claimid)      
+      c.redirect(Urls.claim(claimid))
     }),
     UrlHandler("/topic/new", c => {
       val name = c.arg("name")
