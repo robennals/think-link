@@ -54,7 +54,7 @@ abstract class BaseData {
 	def stmt(s : String) = new SqlStatement(con,s)
 	implicit val con = DriverManager.getConnection(
 	    "jdbc:mysql://localhost:3306/thinklink?autoReconnect=true",
-	    "thinklink","zofleby")  
+	    "thinklink",Secret.database_password)  
     
 	val connectdate = new Date getTime 
 	

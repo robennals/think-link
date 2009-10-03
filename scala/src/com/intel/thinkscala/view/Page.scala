@@ -128,7 +128,7 @@ object Page {
     </div>
 
     def newClaim(c : ReqContext, query : String) = 
-    	Docs.bindPage("newclaim","input" -> <input type="text" name="query" class='search' value={query}/>)(c)
+    	Docs.bindPage("newclaim","input" -> <input type="text" name="name" class='search' value={query}/>)(c)
 
     
 //  def newClaim(c : ReqContext, query : String) =

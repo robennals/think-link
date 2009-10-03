@@ -41,7 +41,7 @@ function mark_snippets(doc){
 			var frags = snip.text.split(/[\.\n\?\!]/)
 			for(var j = 0; j < frags.length; j++){
 				if(frags[j].length > 10){
-					mark_snippet(frags[j],normalise(frags[j]),snip.claimid,snip.id,snip.claimtext,doc.body);			
+					mark_snippet(frags[j],frags[j],normalise(frags[j]),snip.claimid,snip.id,snip.claimtext,doc.body);			
 				}
 			}
 		}
@@ -83,13 +83,13 @@ function findBrowser(doc){
 	}
 }
 
-function claimMessage(claimtext,claimid,snipid,doc){
+function claimMessage(claimtext,claimid,phrase,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
 	var notification =
 		notificationBox.getNotificationWithValue("thinklink-disputed");
 	var buttons = [{
 		label: "More Info",
-		callback: function(){viewClaim(claimid,snipid);},
+		callback: function(){viewClaim(claimid,phrase);},
 		accessKey: "I",
 		popup: null
 		}];
@@ -101,13 +101,13 @@ function claimMessage(claimtext,claimid,snipid,doc){
 	"chrome://thinklink/skin/lightbulb_red.png", priority, buttons);	
 }
 
-function claimMessageMove(marked,claimtext,claimid,snipid,doc){
+function claimMessageMove(marked,claimtext,claimid,phrase,doc){
 	var notificationBox = gBrowser.getNotificationBox(findBrowser(doc));
 	var notification =
 		notificationBox.getNotificationWithValue("thinklink-disputed");
 	var buttons = [{
 		label: "More Info",
-		callback: function(){viewClaim(claimid,snipid);},
+		callback: function(){viewClaim(claimid,phrase);},
 		accessKey: "I",
 		popup: null
 		},{
@@ -223,7 +223,7 @@ function divideSnip(parent,realtext){
 
 var global_markcount = 0;
 
-function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
+function mark_snippet(origtext,realtext,text,claimid,snipid,claimtext,node,childoff){
 	if(isIgnored(claimid)) return;
 	if(!childoff) childoff = 0
 	var nodetext = node.textContent;
@@ -236,7 +236,7 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 		for(var i = childoff; i < node.childNodes.length; i++){
 			var child = node.childNodes[i];
 			if(child.tagName != "SCRIPT" && normalise(child.textContent).indexOf(text) != -1){
-				mark_snippet(realtext,text,claimid,snipid,claimtext,child);
+				mark_snippet(origtext,realtext,text,claimid,snipid,claimtext,child);
 				insub = true;
 			}
 		}		
@@ -244,8 +244,8 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 		if(!insub && node.nodeName != "#text"){
 			var divided = divideSnip(node,realtext)			
 			if(divided){
-				mark_snippet(divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
-				mark_snippet(divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
+				mark_snippet(origtext,divided.first,normalise(divided.first),claimid,snipid,claimtext,divided.node);
+				mark_snippet(origtext,divided.second,normalise(divided.second),claimid,snipid,claimtext,node,divided.index);			
 			}
 			return;
 		}
@@ -282,7 +282,8 @@ function mark_snippet(realtext,text,claimid,snipid,claimtext,node,childoff){
 	node.style.cursor = "pointer";
 	node.setAttribute("title","disputed: "+claimtext);
 	node.setAttribute("thinklink_claimid",claimid);				
-    node.setAttribute("thinklink_snipid",snipid);				
+    node.setAttribute("thinklink_snipid",snipid);
+	node.setAttribute("thinklink_phrase",origtext);				
 	node.addEventListener("click",showClaimPopup,true);
 	global_marked.push(node);
 	global_markcount++;
@@ -322,8 +323,9 @@ function splitText(nodetext,sniptext){
 function showClaimPopup(ev){
 	var node = ev.currentTarget;
 	var claimid = node.getAttribute("thinklink_claimid");
-	var snipid = node.getAttribute("thinklink_snipid");
-	viewClaim(claimid,snipid);
+	var phrase = node.getAttribute("thinklink_phrase");
+	//var snipid = node.getAttribute("thinklink_snipid");
+	viewClaim(claimid,phrase);
 }
 
 function ajaxRequest(url,callback){
@@ -364,9 +366,10 @@ function addFader(viewframe){
 	return fader;
 }	
 
-function viewClaim(claimid,snipid) {
+function viewClaim(claimid,phrase) {
 	var apipath = get_api_path();
-	viewFrame(apipath+"/mini/claim/"+claimid+"?snippet="+snipid,snipid);
+	viewFrame(apipath+"/mini/claim/"+claimid+"?phrase="+encodeURIComponent(phrase)+"&url="
+		+encodeURIComponent(document.location.href));
 }
 
 function dragPopup(ev,win,frame){

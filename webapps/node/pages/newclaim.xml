@@ -24,7 +24,7 @@
 <form id="addclaim" method="post" action="/thinklink/claim/new">
 <span class='prompt'>I dispute the claim that...</span>
 <xt:bind name='input'>
-	<input type="text" name="query" class='search tempinput' value="- enter a claim that you think is disputed - "/>
+	<input type="text" name="name" class='search tempinput' value="- enter a claim that you think is disputed - "/>
 </xt:bind>
 <input class='submit' type="submit" value="Add Claim"/>
 </form>

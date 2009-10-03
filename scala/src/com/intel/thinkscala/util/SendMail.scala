@@ -64,4 +64,17 @@ object SendMail {
     	sendMail("rob.ennals@gmail.com","User Feedback from "+username+"("+email+")",body)
     }
  
+    def exception(e : Exception){
+    	val sw = new StringWriter
+    	val pw = new PrintWriter(sw,true)
+    	e.printStackTrace(pw)
+    	pw.flush
+    	sw.flush
+    	var body = 
+    		"Exception: "+e.getMessage()+"\\"+
+    		"Cause: "+e.getCause()+"\\"+
+    		"Stack Track: \n"+sw.toString+"\n\n"
+    	sendMail("rob.ennals@gmail.com","Exception",body)
+    }
+    
 }

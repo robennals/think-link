@@ -15,6 +15,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import com.intel.thinkscala.pages.Messages
 import com.intel.thinkscala.pages.Login
+import com.intel.thinkscala.util.SendMail
 //import scala.collection.Map
 // import java.util.Iterator;
 
@@ -244,6 +245,7 @@ object UrlHandler{
         w.println("cause: "+e.getCause())
         e.printStackTrace(w)
         w.close
+        SendMail.exception(e)
     }
     Pool.release(store)
   }

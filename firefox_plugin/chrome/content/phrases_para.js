@@ -192,10 +192,10 @@ function markSentencePhrase(doc,sentence,words,phrase){
 		sentence = trimSentence(sentence,listToHash(keywords));
 		if(!global_phrases[sentence]){
 			global_marked = [];
-			mark_snippet(sentence,normalise(sentence),phrase.claim_id,phrase.id,phrase.claimtext,doc.body);
+			mark_snippet(sentence,sentence,normalise(sentence),phrase.claim_id,phrase.id,phrase.claimtext,doc.body);
 			global_phrases[sentence] = true;
 			if(global_marked.length > 0){
-				claimMessageMove(global_marked,phrase.claimtext,phrase.claim_id,phrase.id,doc);
+				claimMessageMove(global_marked,phrase.claimtext,phrase.claim_id,sentence,doc);
 			}
 		}
 		thinklink_msg("highlighting phrase: "+sentence);
