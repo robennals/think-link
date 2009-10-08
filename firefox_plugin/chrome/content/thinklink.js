@@ -101,10 +101,10 @@ function initCookieCatcher(){
 //}
 
 window.addEventListener("load", function(){
-	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","0.3");
-	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","0.3");
-        thinklink_setCookie("http://disputefinder.cs.berkeley.edu/","extension","0.3");
-	thinklink_setCookie("http://localhost:8180/","extension","0.3");
+	thinklink_setCookie("http://factextract.cs.berkeley.edu/","extension","0.35");
+	thinklink_setCookie("http://thinklink.cs.berkeley.edu/","extension","0.35");
+        thinklink_setCookie("http://disputefinder.cs.berkeley.edu/","extension","0.35");
+	thinklink_setCookie("http://localhost:8180/","extension","0.35");
 
 	initCookieCatcher();
     

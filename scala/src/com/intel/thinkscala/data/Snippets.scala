@@ -93,10 +93,10 @@ trait Snippets extends BaseData {
 		}
 	}
 	
-	val hot_words = stmt("SELECT DISTINCT(keyword) FROM paraphrase")
+	val hot_words = stmt("SELECT DISTINCT(keyword) FROM paraphrase WHERE keyword != ''")
 	def hotWords() = hot_words.querySeq()
 	
-	val second_words = stmt("SELECT DISTINCT(secondword) FROM paraphrase WHERE keyword LIKE ?")
+	val second_words = stmt("SELECT DISTINCT(secondword) FROM paraphrase WHERE keyword LIKE ? AND secondword != ''")
 	def secondWords(keyword : String) = second_words.querySeq(keyword+"%")
 	
 	def wordPhrases(keyword : String,secondword : String) = select("paraphrase")
@@ -110,7 +110,7 @@ trait Snippets extends BaseData {
 	def subPhraseTexts(phraseid : Int) = subphrase_texts.querySeq(phraseid)
 	
 	val update_phrase_count = stmt("UPDATE v2_node SET instance_count = "+
-			"(SELECT SUM(count) FROM `paraphrase` WHERE claim_id = v2_node.id) WHERE id = ?")
+			"(SELECT COUNT(id) FROM `paraphrase` WHERE claim_id = v2_node.id) WHERE id = ?")
 	def updatePhraseCount(claimid : Int) = update_phrase_count.update(claimid)
 		
 	val update_evidence_count = stmt("UPDATE v2_node SET disagree_count = "+

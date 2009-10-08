@@ -29,7 +29,12 @@ class Enum[T](it:java.util.Enumeration[T]) extends Iterator[T]{
 }  
 
 class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest, res : HttpServletResponse, path : String, servletcontext : ServletContext){
-  def urlInt(i : Int) = Integer.parseInt(m.group(i))
+  def urlInt(i : Int) = 
+	  try{
+		  Integer.parseInt(m.group(i))
+	  }catch{
+		  case e : Exception => 0
+	  }
   def urlArg(i : Int) = m.group(i)
   def argInt(name : String) = 
     if(req.getParameter(name) != null){
@@ -231,6 +236,16 @@ object UrlHandler{
     c.notFound
   }  
   
+  def getPath(req : HttpServletRequest) : String = {
+	val path = req.getServletPath
+	val pathinfo = req.getPathInfo
+	if(pathinfo != null){
+		path+pathinfo
+	}else{
+		path
+	}
+  }
+  
   def runMatchingHandler(handlers : List[UrlHandler],
                          req : HttpServletRequest, res : HttpServletResponse,
                          ctx : ServletContext){
@@ -245,7 +260,7 @@ object UrlHandler{
         w.println("cause: "+e.getCause())
         e.printStackTrace(w)
         w.close
-        SendMail.exception(e)
+        SendMail.exception(e,getPath(req))
     }
     Pool.release(store)
   }

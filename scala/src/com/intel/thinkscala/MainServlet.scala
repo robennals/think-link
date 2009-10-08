@@ -219,7 +219,7 @@ class MainServlet extends HttpServlet {
     UrlHandler("/claim/(\\d*)/delete", c => {
       val claimid = c.urlInt(1)
 	  val claim = c.store.getClaim(claimid, c.userid)
-	  if(c.user.isadmin || c.user.userid == claim("userid")){
+	  if(c.user.isadmin || c.user.userid == claim("user_id")){
 		  c.store.setHidden(claimid)
 	  } 
     }),

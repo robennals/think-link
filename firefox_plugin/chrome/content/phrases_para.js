@@ -38,9 +38,11 @@ function find_phrases(doc){
 				.replace(/<script[^<]*<\/script>/g,"")
 				.replace(/<\/?(div|h.|li|form|br|cite|td|tr|caption)>/g,".")
 				.replace(/<\/?[^>]*>/g," ")
-				.replace(/\s+/g," ");
+				.replace(/\s+/g," ")
+				.replace(/U\.S\.A/g,"USA")
+				.replace(/U\.S\./g,"US");
 	
-	var sentences = pagetext.toLowerCase().split(/[\.\?\!]+/);
+	var sentences = pagetext.toLowerCase().split(/[\.\?\!]+[\.\?\!\s]*/);
 
 	thinklink_msg("got words");
 	
@@ -61,8 +63,8 @@ function searchSentences(doc,sentences,hotwords,start){
 	for(var i = start; i < sentences.length; i++){
 //		thinklink_msg("sentence "+i+" out of "+sentences.length);
 		var sentence = sentences[i];
-		var stemmed = stemSentence(sentence);
-		var words = stemmed.split(/\s*[^\w]+\s*/);
+//		var stemmed = stemSentence(sentence);
+		var words = stemWords(textWords(sentence));
 		if(global_markcount > 20){
 			thinklink_msg("reached maximum mark count for page. Stopping marking to avoid slowing things down.");
 			return;
@@ -121,7 +123,7 @@ function textWords(str){
 }
 
 function trimEnds(str){
-	return str.replace(/^\s+/g,"").replace(/\s+$/g,"");
+	return str.replace(/^[^\w]+/g,"").replace(/[^\w]+$/g,"");
 }
 
 function trimSentence(sentence,keywords){

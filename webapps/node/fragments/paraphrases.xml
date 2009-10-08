@@ -17,7 +17,9 @@
 		<xt:foreach name="paraphrases" as="para" class="paraphrase showcontext">
 			<q class='title'><para:bind name="text">Global Warming does not exist</para:bind></q>
 			<span class='details'>created by <para:bind name="user" class='user'>rob</para:bind> - 
-			<para:bind name="delmsg">report abuse</para:bind></span>
+			<para:bind name="delmsg">report abuse</para:bind> - 
+			<para:bind name="onweb"><a>see on the web</a></para:bind></span>
+
 <!--
 			- <a class='showlink'><span>show</span> <para:bind name="count"/> derived phrases</a></span>
 			<div class='subphrases showhide' style="display:none">

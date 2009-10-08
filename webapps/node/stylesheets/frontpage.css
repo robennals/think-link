@@ -55,7 +55,7 @@ body {
 .frontlist {
 	float: left;
 	width: 350px;
-	min-height: 590px;
+	min-height: 640px;
 	margin-left: 20px;
 	margin-bottom: 20px;
 }
@@ -468,4 +468,13 @@ body {
 
 .minibody .box h1, .minibody .box h1 a {
 	font-size: 16px;
+}
+
+.frontlist .desc {
+	background-color: #F6F6F6;
+	padding: 6px;
+}
+
+.frontlist h2 {
+	margin-bottom: 0px;
 }

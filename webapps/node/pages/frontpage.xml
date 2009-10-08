@@ -2,9 +2,12 @@
 <h1 class='hidden'>Dispute Finder : Reveal the other side of the story</h1>
 <div id="reader" class="box frontlist">
 	<h2>Skeptical Readers</h2>
+	<div class='desc'>
+	See disputed claims highlighted on web pages
+	</div>
 	<ol>
 	<li>Install the <a href="docs/install.html">Dispute Finder Extension</a></li>
-	<li>Dispute Finder <a href="docs/highlight.html">highlights disputed claims</a> on pages you read on the web
+	<li>The extension <a href="docs/highlight.html">highlights sentences</a> that make <a href="/thinklink/pages/claims.html">disputed claims</a>
 		<img src="/thinklink/images/highlight_snippet2.png"/>
 	</li>	   
 	<li>Click on a claim to <a href="docs/arguments.html">see web articles that support other points of view</a>
@@ -14,11 +17,14 @@
 </div>
 <div id="activist" class="box frontlist">
 	<h2>Activists</h2>
+	<div class='desc'>
+	Find disputed claims to highlight for Skeptical Readers
+	</div>
 	<ol>
 	<li>Install the <a href="docs/install.html">Dispute Finder Extension</a></li>
-	<li>Tell Dispute Finder about a <a href="/thinklink/pages/claims.html">claim on the web that you disagree with</a></li>	
+	<li><a href="/thinklink/pages/claims.html">Add a disputed claim</a> to the Dispute Finder database</li>	
 		<a href="/thinklink/pages/claims.html"><img src="/thinklink/images/add_claim_warming.png"/></a>
-	<li><a href="docs/training.html">Add paraphrases of the claim</a> 
+	<li><a href="docs/training.html">Show Dispute Finder</a> how to find sentences that make that claim on the web
 		<img style='height:90px; margin-left:100px;' src="/thinklink/images/paraphrases_warming.png"/>
 	</li>
 	<li>Give Dispute Finder <a href="docs/arguments.html">arguments for other points of view</a>

@@ -197,6 +197,7 @@ object Page {
          		paras foreach {para =>
          			para("user") = <a class='user' href={Urls.user(para("user_id"))}>{para("username")}</a>
          			para("subphrases") = c.store.subphrases(para.int("id"))
+         			para("onweb") = <a target="_blank" href={Urls.searchGoogle(para.str("text"))}>see on the web</a>
          			para("delmsg") = if(para.int("user_id") == c.user.userid){
      					<a onclick={"deletePara("+para("id")+")"}>delete</a> 
      				}else{
@@ -211,59 +212,7 @@ object Page {
         {userref(row.int("user_id"),row.str("username"),"created by ")}
       </div>
     </div>
-//     
-//  def addEvidence(claimid : Int, claimtxt : String, rel : String, text : String)(implicit c : ReqContext) =    
-//    <div class='content'>
-//        <a href={Urls.claim(claimid)}><h1>{claimtxt}</h1></a>
-//        <div class='subtitle'>Add Evidence that supports or opposes this claim</div>
-//        <div class='message'>
-//           The easiest way to add evidence to a claim is to use the <a href={Urls.extension}>Firefox Extension</a>.
-//           If for some reason you cannot use the Firefox extension, you can also add evidence using the form below:
-//        </div>
-//        <form class='form' method='post' action={PostUrls.addEvidence(claimid)}>
-//           <label for='url'>Url for evidence page:</label>
-//           {Widgets.greyInput("input","url","Paste the URL of the page with evidence")}
-//           This evidence <select name='rel'>
-//             <option selected={if(rel=="supports") "selected" else null}>supports</option>
-//             <option selected={if(rel=="opposes") "selected" else null}>opposes</option>
-//           </select> the claim "{claimtxt}"
-//           <label for='snip'>Copy and paste a representative quote below:</label>
-//           <textarea rows="5" name="text"></textarea>    
-//           <input class='submit' type="submit" value="Add Evidence"/>
-//        </form>
-//    </div>
-//    
-//  def findsnippets(row : SqlRow, query : String)(implicit c : ReqContext) = 
-//    <div id="findsnippets">
-//      <input type="hidden" id="data-query" value={query}/>
-//      <input type="hidden" id="data-claim" value={""+row("id")}/>
-//      <a href={Urls.claim(row("id"))}><h1>{row("text")}</h1></a>
-//      <div class="subtitle">Find snippets on the web that make this claim</div>
-//   
-//	  <div class='boldmessage'>
-//	  This search interface allows you to rapidly find many snippets on the 
-//	  web that make a claim.
-//	</div>
-//	
-//	<div class='message'>
-//	  Enter search keywords to find snippets on the web that make the claim. 
-//	  Then click "mark" on all snippets that suggest or imply that the claim is true.
-//	</div>
-//         <div id="queries">
-//        <h2>Previous Search Queries</h2>
-//        {searchQueryList(c,row.int("id"))}
-//      </div>
-//      {if(c.arg("fromextension") == null){         
-//    	  time("snipSearchResults",Render.snipSearchResults(query,row))
-//       }else{
-//    	  <div id="searchlist">
-//		    <h2>Snippets marked with the Firefox extension</h2>
-//            <div class='searchcontent'>
-//		    {Widgets.pagedList(c.store.foundSnippets(row.int("id"),_), Render.urlSnippet)}
-//            </div>
-//  	      </div>
-//       }}
-//    </div>
+
     
   def topic(implicit c : ReqContext, row : SqlRow) = 
     <div id="topic">

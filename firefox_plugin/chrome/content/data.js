@@ -26,7 +26,7 @@ var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards"
 		"onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", 
 		"out", "over", "own","part", "per", "perhaps", "please", "put", "rather", 
 		"re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", 
-		"several", "she", "show", "side", "since", "sincere", 
+		"several", "she", "show", "side", "since", "sincere", "should",
 		"so", "some", "somehow", "someone", "something", "sometime", 
 		"sometimes", "somewhere", "still", "such", "system", "take",  
 		"than", "that", "the", "their", "them", "themselves", "then", "thence", 
@@ -39,7 +39,7 @@ var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards"
 		"whereas", "whereby", "wherein", "whereupon", "wherever", "whether", 
 		"which", "while", "whither", "who", "whoever", "whole", "whom", "whose", 
 		"why", "will", "with", "within", "without", "would", "yet", "you", "your", 
-		"yours", "yourself", "yourselves", "the","s",""," "];
+		"yours", "yourself", "yourselves", "the","s",""," ","wants","want","called"];
 var stopwords_hash = listToHash(stopwords);
 
 var negwords = ["not","t","no","nothing","non","nor","nobody","never","neither","nor"];
@@ -48,9 +48,9 @@ var negwords_hash = listToHash(negwords);
 // TODO: use a single regexp to remove all stems
 var stems = ["'s","n't","s","ed","es","ly","est","er","ing","ion","ly","e","ise","ized","ions"]
 
-var stem_regex = /(s|ed|ing|es|ly|ise|ize|ized|ions)([^\w]|$)/g
+var stem_regex = /(s|ed|ing|es|ly|ise|ize|ized|ions|n)([^\w]|$)/g
 function stemSentence(sentence){
-	return trimEnds(sentence.replace(stem_regex," ").replace(/n't/g," not"));
+	return trimEnds(sentence.replace(stem_regex," "));
 }
 function stemWord(word){
 	var stemmed = word.replace(stem_regex,"");	

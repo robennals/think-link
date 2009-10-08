@@ -49,7 +49,7 @@ object Docs {
 				<li><a href="http://disputefinder.blogspot.com/">Blog</a></li>
 			</ul>
 		</div>
-		{if(c.getCookie("extension") != null && c.getCookie("extension") != "" && c.getCookie("extension") != "0.3"){
+		{if(c.getCookie("extension") != null && c.getCookie("extension") != "" && c.getCookie("extension") != "0.35"){
 			<div class='claim-warning box'>
 			   You are using a discontinued version of the Dispute Finder browser extension. 
 			   Please <a href="https://addons.mozilla.org/en-US/firefox/addon/11712">upgrade</a>			   
