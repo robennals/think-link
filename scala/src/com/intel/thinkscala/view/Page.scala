@@ -208,6 +208,12 @@ object Page {
          }
         )}
       </div>
+      <div class='box similar-claims'>
+      	<h2>Similar Claims</h2>
+      	<div class='claimresults'>
+      		{c.store.miniSearchClaims(row.str("text"),row.int("id")) flatMap Render.miniclaim}
+      	</div>
+      </div>
       <div id="stats" class="box">
         {userref(row.int("user_id"),row.str("username"),"created by ")}
       </div>

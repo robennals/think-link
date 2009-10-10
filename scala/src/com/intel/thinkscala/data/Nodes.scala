@@ -32,6 +32,9 @@ trait Nodes extends BaseData {
 	  def getBigTopics(page : Int) = topics(page) orderdesc ("instance_count") rows
 	  
 	  def searchClaims(query : String, page : Int) = claims(page) where ("MATCH(text) AGAINST(?)",query) rows
+
+	  val mini_search_claims = stmt("SELECT id,text FROM v2_node WHERE type='claim' AND disagree_count > 0 AND MATCH(text) AGAINST(?) AND id != ? LIMIT 5")
+	  def miniSearchClaims(query : String, notid : Int) = mini_search_claims.queryRows(query,notid)
 	  
 	  def searchLinked(query : String, typ : String, linkedto : Int, page : Int) = 
 		  typnodes(typ,page) where ("v2_node.id != ?",linkedto) where ("MATCH(text) AGAINST(?)",query) leftjoin ("v2_link.id AS linkid",

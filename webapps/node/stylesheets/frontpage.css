@@ -97,6 +97,7 @@ body {
 	left: 650px;
 	padding: 10px;
 	font-size: 14px;
+	top: 170px;
 }
 
 #stats .instances {
@@ -179,7 +180,9 @@ body {
 
 .mainbox {
 	margin-left: 20px;
+/*
 	position: absolute;
+*/
 }
 
 .search {
@@ -477,4 +480,27 @@ body {
 
 .frontlist h2 {
 	margin-bottom: 0px;
+}
+
+.similar-claims {
+	margin-left: 20px;
+}
+
+.claimlink {
+	display: block;
+}
+
+.similar-claims h2 {
+	font-size: 14px;
+	margin: 4px;
+	background-color: white;
+}
+
+.similar-claims .claimresults {
+	padding-top: 0px;
+}
+
+.similar-claims .claimlink {
+	margin-top: 2px;
+	margin-bottom: 2px;
 }

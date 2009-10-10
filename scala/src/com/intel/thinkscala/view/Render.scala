@@ -25,12 +25,10 @@ object Render {
       - 
       <a target="_blank" href={Urls.searchGoogle(row.str("text"))}>see on the web</a>
   </div>  
-
-  def miniclaim(row : SqlRow)(implicit c : ReqContext) = 
-    <div class='miniclaim'>
-      <a class="title" href={Urls.claim(row("id"))}>{row("text")}</a>
-    </div>
   
+  def miniclaim(row : SqlRow)(implicit c : ReqContext) = 
+    <a class="claimlink" href={Urls.claim(row("id"))}>{row("text")}</a>
+    
   def nodelink(row : SqlRow)(implicit c : ReqContext) =
     <div class="claimlink">
       {if(row("linkid") != null){
