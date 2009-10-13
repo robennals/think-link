@@ -57,7 +57,7 @@
        \email{john.m.agosta@intel.com}
 }
 
-\additionalauthors{+ Whoever else wants to join in}
+\additionalauthors{Whoever else wants to help out with the paper. Let me know.}
 
 
 \maketitle
@@ -66,12 +66,12 @@
 
 
 \abstract
-Dispute Finder is a tool that helps users know when information they read on the web is disputed. 
-As a user browses the web, Dispute Finder highlights snippets of text that make claims that users have identified as contentious. 
-If a user clicks on a highlighted snippet, Dispute Finder displays an argument graph showing the best evidence for and against the claim the snippet is making.
 
-Users provide all of Dispute Finder's information: they create new claims, mark new snippets, connect snippets to claims, and vote for the best evidence.
-Dispute Finder is designed to support two primary usage scenarios: (i) Activists care strongly about a particular issue and combine Dispute Finder with a search engine to find and mark snippets that make claims that they disagree with; and (ii) Sceptical Readers install Dispute Finder as a browser extension to see when statements they read are disputed and find other sources that present alternative viewpoints.
+We describe Dispute Finder, a browser extension that helps a user know when information they read online is disputed -- where by 'disputed' we mean that a source that they might trust expresses a different point of view.  As a user browses the web, Dispute Finder examines the text on pages that the user is browsing and highlights any phrases that appear to be supporting claims from its database of known disputed claims. If a user clicks on a highlighted phrase, Dispute Finder will show the user a summary of arguments from other sources that support other points of view.
+
+Disputed Claims can be submitted by users, or may be found automatically by crawling web sites that already maintain lists of disputed claims. Dispute Finder identifies instances of disputed claims by running a simple textual entailment algorithm inside the browser extension, referring to a cached local copy of a subset of our claim database.
+
+Performing these tasks well is a hard problem, and we do not yet claim to have an implementation that is good enough to be compelling for most users. We do however believe that Dispute Finder attacks an interesting problem that, if addressed well, could significantly improve the utility of the web.
 
 
 \category{H.4.m}{Information Systems}{Miscellaneous}
@@ -90,6 +90,20 @@ Dispute Finder is designed to support two primary usage scenarios: (i) Activists
 \section{INTRODUCTION}
 
 \todo{update screenshots}
+
+A great thing about the web is that it allows anyone to publish whatever they want without having to go through a higher authority that must approve everything that is written. However a consequence of this is that much of the information that one encounters on the web has not been certified by an authority that a user trusts, and so it becomes much harder for a user to decide whether they should trust the information they are reading.
+
+\idea{Of course, old media wasn't entirely trustworthy either}
+
+However the old way of doing things had certain advantages. 
+
+One frustrating consequence of this is that 
+
+ that much of the information on the web comes from sources that users do not know whether they can trust. 
+
+When the available media is filtered through a small number of publishers, 
+
+ 
 
 The web contains a huge amount of information, but some of this information is incorrect~\cite{Neumann2003,Resnik1998,Zhou2004} and some sites present only one side of a contentious issue~\cite{Herman2002}. 
 If a user is to gain a broad understanding of a topic then they will need to either spend time looking for alternative points of view, or restrict themselves to sources that they believe they can trust to provide accurate and balanced information.
