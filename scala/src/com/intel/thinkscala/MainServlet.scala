@@ -465,6 +465,10 @@ class MainServlet extends HttpServlet {
     },c => {
       c.output(c.store.allSnippets(c.urlInt(1)))
     }),
+    UrlHandler("/claim/all", c => {
+    },c => {
+      c.output(c.store.allClaims)
+    }),
     UrlHandler("/claim/hot",c => {
       c.outputHtml("Hot Claims - Dispute Finder",Page.hotClaims(c))      
 //      c.outputHtml(Docs.applyXml("fragments","hot",HashMap("hot" -> c.hotClaims)))

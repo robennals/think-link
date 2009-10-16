@@ -3,6 +3,21 @@
 Several of these articles are also syndicated by other publications.
 
 
+=== Christian Science Monitor - Dispute Finder: Making the Call on Web 'Facts' ===
+
+Chris Gaylord - October 13th, 2009
+
+The Christian Science Monitor wrote a nice article about Disputed Finder.
+
+<blockquote>
+To help readers, Mr. Ennals developed an online veracity alert system. The software, called Dispute Finder, sniffs through what you are reading online. If anything smells fishy – perhaps questionable poll results or references to “death panels” – Ennals’s code blows a whistle and says, “This is disputed. Here’s the evidence.”
+</blockquote>
+
+<a href="http://features.csmonitor.com/innovation/2009/10/13/dispute-finder-making-the-call-on-web-%E2%80%98facts%E2%80%99/">http://features.csmonitor.com/innovation/2009/10/13/dispute-finder-making-the-call-on-web-%E2%80%98facts%E2%80%99/</a>
+
+This story was also syndicated by <a href="http://cacm.acm.org/news/47511-dispute-finder-making-the-call-on-web-facts/fulltext">ACM TechNews</a>
+
+
 === The Toronto Star - At last, a shovel for all that BS ===
 
 Ben Rayner - September 5th, 2009
