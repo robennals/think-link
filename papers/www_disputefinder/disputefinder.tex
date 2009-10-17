@@ -5,16 +5,16 @@
 \usepackage{url}
 \usepackage{graphics}
 \usepackage{color}
+%
+%\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
+%\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
+%\newcommand{\idea}[1]{{[\color{blue} IDEA: #1]}}
+%\newcommand{\node}[1]{{[\color{blue} NOTE: #1]}}
 
-\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
-\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
-\newcommand{\idea}[1]{{[\color{blue} IDEA: #1]}}
-\newcommand{\node}[1]{{[\color{blue} NOTE: #1]}}
-
-%\newcommand{\want}[1]{}
-%\newcommand{\todo}[1]{}
-%\newcommand{\idea}[1]{}
-%\newcommand{\node}[1]{}
+\newcommand{\want}[1]{}
+\newcommand{\todo}[1]{}
+\newcommand{\idea}[1]{}
+\newcommand{\node}[1]{}
 
 
 \begin{document}
@@ -38,24 +38,28 @@
 \numberofauthors{5}
 
 \author{
-\alignauthor Rob Ennals\\
-       \affaddr{Intel Labs Berkeley}\\
-       \affaddr{2150 Shattuck Ave}\\
-       \affaddr{Berkeley, CA, USA}\\
-       \email{robert.ennals@intel.com}
-\alignauthor Beth Trushkowsky\\
-       \affaddr{Computer Science Division}\\
-       \affaddr{University of California at Berkeley}\\
-       \affaddr{Berkeley, CA, USA}\\
-       \email{trush@berkeley.edu}
-\alignauthor John Mark Agosta\\
-       \affaddr{Intel Labs Santa Clara}\\
-       \affaddr{2200 Mission College Blvd}\\
-       \affaddr{Santa Clara, CA, USA}\\
-       \email{john.m.agosta@intel.com}
+	Author list to be determined
 }
 
-\additionalauthors{Additional authors: Tad Hirsch (Intel Research PaPR, email: {\texttt{tad.hirsch@intel.com}}) and Tye Rattenbury (Intel Research PaPR), email: {\texttt{tye.rattenbury@intel.com}})}
+%\author{
+%\alignauthor Rob Ennals\\
+%       \affaddr{Intel Labs Berkeley}\\
+%       \affaddr{2150 Shattuck Ave}\\
+%       \affaddr{Berkeley, CA, USA}\\
+%       \email{robert.ennals@intel.com}
+%\alignauthor Beth Trushkowsky\\
+%       \affaddr{Computer Science Division}\\
+%       \affaddr{University of California at Berkeley}\\
+%       \affaddr{Berkeley, CA, USA}\\
+%       \email{trush@berkeley.edu}
+%\alignauthor John Mark Agosta\\
+%       \affaddr{Intel Labs Santa Clara}\\
+%       \affaddr{2200 Mission College Blvd}\\
+%       \affaddr{Santa Clara, CA, USA}\\
+%       \email{john.m.agosta@intel.com}
+%}
+%
+%\additionalauthors{Additional authors: Tad Hirsch (Intel Research PaPR, email: {\texttt{tad.hirsch@intel.com}}) and Tye Rattenbury (Intel Research PaPR), email: {\texttt{tye.rattenbury@intel.com}})}
 
 
 \maketitle
@@ -124,12 +128,11 @@ There are a number of design decisions that must be made when building a system 
 
 \item[What disputed claims should we tell the user about?] In some sense almost everything is disputed by someone. If we highlighted everything that was disputed by anyone then the tool would be too noisy to be useful. The challenge is to determine when the other point of view is something the user might take seriously. We do not yet have a large enough database of disputed claims for this to be a serious problem, but we believe that there may be interesting solutions.
 
-\item[How do we tell that a snippet is making a disputed claim?] If a user is reading a web page that might contain disputed claims, then how do we determine which sentences are making disputed claims? We have experimented with several different approaches, each of which has different advantages and disadvantages. One can ask users to mark snippets individually. One can build a search tool that allows a user to find and mark similar snippets in bulk. One can provide an interface that allows a user to train a machine learning classifier to recognize snippets. One can use a textual entailment algorithm to recognize phrases that seem to have a similar meaning to the claim. 
+\item[How do we tell that a snippet is making a disputed claim?] If a user is reading a web page that might contain disputed claims, then how do we determine which sentences are making disputed claims? We have experimented with several different approaches, each of which has different advantages and disadvantages. One can ask users to mark snippets individually. One can build a search tool that allows a user to find and mark similar snippets in bulk. One can provide an interface that allows a user to train a machine learning classifier to recognize snippets. One can use a textual entailment algorithm to recognize phrases that seem to have a similar meaning to the claim. We found advantages and disadvantages of all these approaches.
 
 \item[How do we add highlights to the pages a user browses?] If a user is reading web pages, how should we augment that experience with information about disputed claims? Using a browser extension allows us to examine all content the user browses, but limits us to users who are prepared to install a browser extension~\cite{nolike-extension?}. Using a proxy~\cite{proxy?} has similar adoption problems to a browser extension, and is likely to break some web sites. Providing an API allows external sites such as news readers and search engines to provide information about disputed claims, but limits coverage to those sites that support the API. The best approach may be a combination.
 
-\item[What information should we show someone about a disputed claim?] If someone clicked on a disputed claim on a web page, what information should we show them that will help them decide whether to talk the alternative points of view seriously. Alternatives include an argumentation graph, user comments, a wiki page, 
-We experimented with providing an argumentation graph, user comments, aut
+\item[What information should we show someone about a disputed claim?] If someone clicked on a disputed claim on a web page, what information should we show them that will help them decide whether to talk the alternative points of view seriously. We experimented with using an argumentation graph, a summary of snippets from sources that support the two sides, automatically-found articles, and user-curated articles. 
 \end{description}
 
 In order for Dispute Finder to be useful, it needs to provide a service that users will actually appreciate. It is thus important that we understand how users feel about disputed information. Dispute Finder is designed to cater to two personas. Each persona was created from interviews we conducted with people who we believe fit into these categories:
@@ -174,20 +177,70 @@ News Cube~\cite{Park2009} automatically finds articles that present different {\
 Services such as Skewz.com and Newstrust.net allow users to rate news articles for bias. Skewz rates stories as being either liberal or conservative and encourages readers to read what the other side is thinking. Newstrust allows users to rate news articles for quality and objectivity. 
 
 
-\subsection{Highlighting Disputed Information}
+\subsection{Web Annotation Tools}
 
-Several previous tools have used highlighting to alert an author about information that they should perhaps be suspicious of. WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that are statistically likely to be reverted, based on how recently they were written and the track-record of the author. 
+Annotation tools such as ReframeIt.com, ShiftSpace.org and SpinSpotter.com allow a user to manually annotate a web site that they disagree with, overlaying their own opinions on top of existing content Videolyzer~\cite{Diakopoulos2008} allows users to comment on disputed claims in video clips. There are many other web annotation tools, including Google SideWiki, Annotea~\cite{Koivunen2001} and ScreenCrayons~\cite{Olsen2004}. 
 
-Annotation tools such as ReframeIt.com, ShiftSpace.org and SpinSpotter.com allow a user to manually annotate a web site that they disagree with, so that they can put forward their own point of view. Videolyzer~\cite{Diakopoulos2008} allows users to comment on disputed claims in video clips. There are many other web annotation tools, including Google SideWiki, Annotea~\cite{Koivunen2001} and ScreenCrayons~\cite{Olsen2004}. 
-
-These annotation tools all allow a user to annotate a page with their thoughts on the same topic. In Dispute Finder, we do not allow a user to directly express their own opinions about a topic. Instead, the only way they can disagree with something that is said is to link it to an article from a trusted source that argues for a different point of view. We believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
+These annotation tools all allow a user to annotate a page with their thoughts on the same topic. Dispute Finder does not allow a user to directly express their own opinions about a topic. Instead, the only way they can disagree with something that is said is to link it to an article from a trusted source that argues for a different point of view. We believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
 
 Another key difference between these annotation tools and Dispute Finder is that these annotation tools all allow a user to annotate a {\it page} while Dispute Finder attempts to allow a user to annotate a {\it claim} everywhere it appears on the web. If a user of an annotation tool adds an annotation to a page then their annotation will only appear on that page. By contrast, if a user of Dispute Finder tells Dispute Finder to highlight a disputed claim, that claim will be highlighted on every web page on which Dispute Finder's algorithms determine that it appears.
 
-\todo{Cite google quotation stuff and Ed Chi movable quotations stuff}
+More generally, Dispute Finder is an example of an Open Hypermedia system~\cite{Bouvin2000,Wiil1996}. Like other Open Hypermedia systems, Dispute Finder lays an additional link structure over an existing hypertext document. In the case of Dispute Finder, the links are from disputed claims to information about those claims.
+
+Dispute Finder can also be seen as an example of a tagging tool~\cite{Marlow2006,Golder2006}. Tagging tools allow users to collectively catagorize information by associating it with a user-created set of tags. In the case of Dispute Finder, the tags are disputed claims, and the tagged entities are sentences that make those claims.
+
+
+\subsection{Sensemaking Tools}
+
+Several Sensemaking, Decision Support, and Argumentation tools allow a user to annotate a document with structured information that they may then share with other users. TRELLIS~\cite{Gil2002} helps a user annotate the rationale for their decisions and opinions by annotating source documents with the facts that have been extracted from them, and connecting these facts into a decision graph. ClaimSpotter~\cite{Sereno2005,Serono2004} applies a similar approach to scholarly papers, allowing a user to make up a paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} uses entity extraction algorithms to allow an intelligence analyst to easily mark up a source document with facts about it.
+
+Cohere~\cite{Shum2008} is a web based argumentation tool that allows people to connect {\it ideas} together using arbitrary verbs such as "is an example of", "supports", or "challenges". An idea can contain a link to a web page that contains that idea, and the Cohere Firefox Extension informs a user when the page that they are is part of a known idea.
+
+All these tools are intended to be used to identify the source of information that is being used to reach a conclusion. These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim. While Dispute Finder does allow a user to mark up a trustworthy article as being the source of information, the focus is on making it easy for a user to mark up large numbers of documets that make claims that are disputed.
+
+
+\subsection{Argumentation Tools}
+
+One of the design options we explored for Dispute Finder is to explain a disputed claim by showing a user a user-editable argument graph, explaining the various aspects of the issue, and linking to the various sources. This graph is inspired by IBIS\footnote{Issue Based Information System}~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. These tools model debate as a graph of issues, positions, and arguments. 
+
+Isenmann and Reuter~\cite{Isenmann1997} identified a number of problems with using IBIS tools to help people resolve disputes and make decisions. Broadly speaking, they found that opposing groups were unkeen to agree to use an IBIS tool to resolve their disputes, and that users found it difficult to properly encode a complex issue as an argument graph. We encountered similar problems with using an IBIS graph to describe claims, which is why the current version of Dispute Finder presents a user with a list of articles, rather than an argument graph.
+
+Several alternative graph structures have been proposed for describing arguments and design rationale. WinWin~\cite{Boehm2006} models the different stakeholders and their different motives. The Toulmin Model~\cite{toulmin1958} breaks down the logical way in which arguments are formed from evidence, rules, and exceptions. QOS~\cite{Maclean1991} explicitly states the criteria used to choose between positions. 
+
+
+\subsection{Recognizing Textual Entailment}
+
+The textual entailment problem is one of the standard problems in natural language processing. In the 3-way variant of the PASCAL Recognizing Textual Entailment (RTE) Challenge\footnote{http://pascallin.ecs.soton.ac.uk/Challenges/RTE/}, an algorithm is given two sentences T and H and asked to return one of three results: T {\it entails} H, T {\it contradicts} H, or the truth of H cannot be determined from T. 
+
+Dispute Finder uses the standard Local Lexical Matching (LLM) algorithm, which is commonly used as a non-trivial baseline to which other algorithms are compared~\cite{Braz2005}. LLM simply reduces a sentence to a bag of lemmatized words, removes stopwords, checks for negations, and then looks at what the overlap is. LLM is far from being state of the art and many more sophisticated algorithms exist. One popular approach is to treat a sentence as being a logical formula and then attempt a logical proof, taking into account knowledge about the world~\cite{Bayer2005,Bos2005}. Snow et al~\cite{Snow2006} parse a phrase into a syntax tree, and then use syntax heuristics to determine entailment.
+
+While Dispute Finder would probably improve its accuracy if it used a more sophisticated algorithm, LLM has the advantage of being simple enough to run efficiently inside a users web browser for every page they look at without causing a noticeable slowdown. 
+
+\todo{Do human-guided approach that works well? Talk more about human guided task.}
+
+
+\subsection{Finding Disputed Information on the Web}
+
+An important part of Dispute Finder is identifying what claims are disputed. Several other authors looked at disputed information on the web.
+
+Kittur et al~\cite{Kittur2007} developed an algorithm that can determine whether a wikipedia page is about a disputed topic. Kittur and Chi~\cite{Kittur2009} broke down the disputed pages by catagory and found that People, Society, and Religion were the categories with the most disputed pages.
+
+Information extration tools such as TextRunner~\cite{Etzioni2008} 
+
+TextRunner~\cite{Etzioni2008} 
+
+\todo{cite lots of Etzioni stuff}
+
+
+\todo{Online Dispute Resolution}
+
+\todo{Cite Kittur et al}
 
 
 \subsection{Finding Repeated Information on the Web}
+
+\todo{Cite google quotation stuff and Ed Chi movable quotations stuff}
+
 
 A key component of Dispute Finder is that in needs to identify phrases on the web that make a know disputed claim. The techniques that Dispute Finder uses have been influenced by related work that does similar things.
 
@@ -204,26 +257,13 @@ Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from 
 \todo{Talk about MemeTracker}
 
 
-\subsection{Textual Entailment}
+\subsection{Measuring Trust}
+
+Several authors have analysed trust on Wikipedia. WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that are statistically likely to be reverted, based on how recently they were written and the track-record of the author. Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is. Wiki Scanner\footnote{http://wikiscanner.virgil.gr} finds cases where a Wikipedia edit has been made by someone with a conflict of interest. All these tools determine trustworthiness by examining the edit history of a page.
+
+BJ Fogg et al~\cite{Fogg2000, Fogg2003} have looked at the metrics that users use to determine when they should trust a source online. They found that the most important factor was whether a web site had a professional-looking design. Gill and Arts~\cite{Gil2006} identified on a different set of factors, including topic (a medical site may not be trusted on car repair), popularity and authority.
 
 
-\subsection{Annotating, Tagging, Clipping, and Open Hypermedia}
-
-Dispute Finder is an example of an Open Hypermedia system~\cite{Bouvin2000}. Like other Open Hypermedia systems, Dispute Finder allows users to lay an additional link structure over an existing hypertext document. Dispute Finder differs from prior open hypermedia systems in its focus on revealing contentious arguments. While other systems such as HyperDISCO~\cite{Wiil1996} could be used to link a snippet to a contentious claim, they do not provide user interface support to make this easy.
-
-\todo{Say how different from other Open Hypermedia link annotation systems}
-
-Tagging Systems~\cite{Marlow2006,Golder2006} allow users to collect and organize information by associating it with an ad-hoc collection of tags. Notable tagging systems include del.icio.us\footnote{http://del.icio.us} which uses tags to organize web pages, and Flickr\footnote{http://flickr.com} which associates tags with photos. While Dispute Finder also allows users to organize information from other sources, it does not use tags.
-
-Annotation tools~\cite{Marshall1998} such as Annotea~\cite{Koivunen2001}, ScreenCrayons~\cite{Olsen2004}, and ReframeIt\footnote{http://reframeit.com} allow users to highlight sections of text on a page. Clipping tools such as Internet Scrapbook~\cite{Sugiura1998}, Hunter Gatherer~\cite{Schraefel2002}, ScratchPad~\cite{Gotz2007}, ClipMarks\footnote{http://clipmarks.com}, and Diigo\footnote{http://diigo.com} allow users to collect text snippets from web pages, tag them, and share them with friends. Some tools highlight snippets that have been clipped by other users. These tools do not attempt to identify when snippets make disputed claims or to connect them to opposing sides of an argument.
-
-SpinSpotter\footnote{http://spinspotter.com} allows a user to mark snippets that contain spin or bias. A user can comment on why a snippet is biased and rewrite the snippet in a neutral way. While SpinSpotter and Dispute Finder both draw attention to biased or inaccurate snippets, they do different things with the snippets. SpinSpotter lets users annotate a snippet with comments specific to that particular snippet, while Dispute Finder treats a snippet as being an instance of a shared claim, and links all snippets identified as making that claim to a shared node in the argument graph that is linked to other points of view.
-
-Videolyzer~\cite{Diakopoulos2008}\footnote{http://www.videolyzer.com} allows users to annotate and comment on political videos. A user can attach a comment to a section of video and tag it for bias, accuracy, or rhetorical technique. Comments can include references to external sources that back up the argument being made. Like SpinSpotter, Videolyzer does not attempt to gather multiple video sections that make a common contentious claim.
-
-ClaimSpotter~\cite{Sereno2005,Sereno2004} allows one to mark up a scholarly paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} does something similar for intelligence documents. Like Dispute Finder, these tools allow a user to mark the claims being made in a document, however these tools are more formal and are designed to extract knowledge rather than informally mark disputed snippets.
-
-\todo{Ask Nicholas if he would like to read the paper}
 
 \subsection{Augmented Web Navigation}
 
@@ -240,20 +280,6 @@ Several tools layer an alternative navigation graph over information on the web.
 % Importance of Lurkers~\cite{Takahashi2003}
 % Wikify~\cite{Mihalcea2007}. OpenCalais\footnote{http://opencalais.com}.
 
-\subsection{Argumentation and Design Rationale}
-
-Dispute Finder's argument graph is inspired by IBIS\footnote{Issue Based Information System}~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. IBIS tools model debate as a graph of issues, positions, and arguments. While the graph structure varies between tools, most tools allow a node to support or oppose another node and allow a node to be linked to an issue. 
-
-Cohere~\cite{Shum2008} allows a user to specify one or more related URLs when creating a new claim, and provides a Firefox extension to help a user create a claim about a web page they are reading. Unlike Dispute Finder, Cohere is not designed to be used to alert users about disputed snippets. Cohere works with URLs rather than snippets and does not allow one to connect a new URL to an existing claim created by someone else. 
-
-Although Dispute Finder's argument graph is similar to that used by IBIS tools, it is used for a different purpose. 
-In Dispute Finder the focus is on snippets; the argument graph is used to organize snippets, identify when snippets are disputed, and identify which snippets provide the best evidence for a particular claim. 
-A user is expected to create a new claim only when they want to group together several snippets that make that claim. 
-A Dispute Finder user is expected to form an opinion primarily by looking at the snippets and the pages in which they appear, rather than by looking at the argument graph itself. By contrast, in an IBIS tool such as gIBIS~\cite{Conklin1987a}, the focus is on the argument graph. A gIBIS user is encouraged to break their argument down into as many separate ideas as possible and is expected to use the graph itself to reach a conclusion. In Dispute Finder it is perfectly acceptable to have a claim that is not linked to any other claims but is associated with many snippets.
-
-Isenmann and Reuter~\cite{Isenmann1997} identified a number of problems with using IBIS tools to help people resolve disputes and make decisions. Broadly speaking, they found that opposing groups were unkeen to agree to use an IBIS tool to resolve their disputes, and that users found it difficult to properly encode a complex issue as an argument graph. We believe that while the problems they observe are important when an IBIS tool is being used for conflict modelling and conflict resolution, they are less of a problem for a tool like Dispute Finder that is designed for identifying snippets that represent conflicting points of view.
-
-Dispute Finder uses a simple IBIS-like graph structure in which claims support, oppose, or relate-to other claims. Several alternative graph structures have been proposed for describing arguments and design rationale. WinWin~\cite{Boehm2006} models the different stakeholders and their different motives. The Toulmin Model~\cite{toulmin1958} breaks down the logical way in which arguments are formed from evidence, rules, and exceptions. QOS~\cite{Maclean1991} explicitly states the criteria used to choose between positions. More formal models such as Carneades~\cite{Gordon2007} have been used for artificial intelligence.
 
 
 \section{The Dispute Finder System}
