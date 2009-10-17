@@ -9,7 +9,7 @@
 
   <prefwindow id="BrowserPreferences">
 
-    <prefpane id="ThinkLink-Prefs" label="Disute Finder" 
+    <prefpane id="ThinkLink-Prefs" label="Dispute Finder" 
               onpaneload="populateSchedulesList()" 
               image="chrome://thinklink/skin/lightbulb.png">
 
