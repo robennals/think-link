@@ -153,6 +153,8 @@ In order for Dispute Finder to be useful, it needs to provide a service that use
 
 The same user may be an Activist for some issues and a Sceptical Reader for others. Dispute Finder is not useful for everyone. In our interviews, we encountered several people who either didn't rely on the internet as an important source of information, or only obtained important information from sources that they trust. If a user never reads information they care about from web sites that they don't entirely trust, then Dispute Finder will not be useful to them.
 
+The design decisions made in Dispute Finder have been motivated by our interactions with potential users. We conducted a small survey, a series of interviews, and several rounds of user studies. 
+
 \todo{Should we explicitly list what we think are our key contributions?}
 
 
@@ -270,6 +272,8 @@ BJ Fogg et al~\cite{Fogg2000, Fogg2003} have looked at the metrics that users us
 Several tools layer an alternative navigation graph over information on the web. TextRunner~\cite{Etzioni2008} and Idea Navigation~\cite{Etzioni2008} look for instances of subject-verb-object triples on web pages and connect these together as a graph in which objects are linked by statements made about them on different web pages. ScentHighlights~\cite{Chi2005a} highlights snippets of text that relate to topics the user has expressed interest in. 
 
 
+\subsection{Persuasive Technology}
+
 % \subsection{Semantic Web}
 % 
 % Nobody is going to mark up their own web page as being wrong.
@@ -302,17 +306,66 @@ A user can discover what disputed claim Dispute Finder thinks a snippet is makin
 
 There is little point repeatedly telling a user that the same claim is disputed. In our current version, a user can ask Dispute Finder to not highlight a claim again by clicking on the ``ignore this claim]'' button in the popup interface. An alternative is to automatically stop highlighting a disputed claim, once the user has brought up the popup interface for it once. We have not yet conclusively decided which method works better. Requiring a user to manually opt out of a claim requires more work from the user, but also causes less user-confusion as users do not normally expect viewing something to be a destructive operation.
 
-The Dispute Finder Firefox extension is not the only way that a user can find disputed claims. A web site can also opt to use the Dispute Finder API to detect disputed claims on the content that they present to users. This API could be particularly useful to tools like search engines and RSS feed readers that a user may use to access a large proportion of the information they consume. The firefox extension itself uses the same API. The advantage of using the Firefox extension is that it can look for disputed claims on any web site. The disadvantage is that it can only be used by users who use a compatible browser and are prepared to install an extension (well known to be a significant barrier to adoption\cite{extension-bad?}
+A web site can also opt to use the Dispute Finder API to detect disputed claims on the content that they present to users. This API could be particularly useful to tools like search engines and RSS feed readers that a user may use to access a large proportion of the information they consume. The firefox extension itself uses the same API. The advantage of using the Firefox extension is that it can look for disputed claims on any web site. The disadvantage is that it can only be used by users who use a compatible browser and are prepared to install an extension (well known to be a significant barrier to adoption\cite{extension-bad?}
 
 \todo{Document API online}
 \todo{Change the highlight color to yellow? Auto-adjust highlight color based on background color?}
 \todo{Should we automatically adjust the highlight color, based on the background color of the page}
+\todo{Discuss previous work on highlighting here, rather than in related work?}
+
 
 \subsection{Explaining Disputed Claims}
 
-\subsection{Building a Database of Disputed Claims}
+Once a user has been informed that the page they are reading is making a disputed claim, they will typically be interested in learning more about that claim, so they can judge whether there are alternative points of view that they should take seriously.
+
+The simplest option would be to merely inform the user that the page is making a disputed claim, but provide no further information about that claim.The user could then use a tool such as a search engine to investigate the claim further. 
+
+There are several reasons why it is useful to associate a claim with information justifying alternative points of view:
+
+\begin{itemize}
+\item To allow a user to quickly determine whether alternative points of view are sufficiently credible that they should take them seriously
+\item To allow users who are moderating the database to determine when no arguments exist for other points of view, and thus the claim should not be in the database
+\item To allow Dispute Finder's algorithms to determine whether the claim is disputed by someone that that particular user would take seriously. Although we have not yet implemented such features, we believe they will be important.
+\end{itemize}
+
+We prototyped and tested two different ways of showing a user alternative points of view to the disputed claim they are looking at:
+
+\begin{description}
+\item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them an IBIS-style\cite{gibis} argumentation graph that explains the structure of the argument against the claim. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of sources that argue in favor of that claim (Figure\ref{arg-graph?})
+
+\item[Source lists:] Dispute Finder shows the user two lists of sources, one of which contains sources arguing in favor of the claim, and the other of which contains sources arguing against the claim (Figure~\ref{article-list})
+\end{description}
+
+The argumentation graph is potentially much more powerful. When a user is presented with a simple list of sources, several of them may be making the same core points and it may not be obvious that one of the sources is making a point that the user had not come across before. The argumentation graph also allows the user to browse around the network of different claims being made about an area, which can be interesting in itself.
+
+On important disadvantage of using an argumentation graph is that someone has to build it. In our prototype, the argumentation graph was built entirely by users. We found that our users had difficulty creating well structured argumentation graphs that were useful for other users, a result that is consistent with previous studies~\cite{ibis-bad?}. It is possible that an alternative (simpler?) graph structure or interface that made it easier to build such graphs might make them work better. Argumentation graphs might also work better if they could be built automatically by mining the web.
+
+Another point in favor of using a simple list of sources is that we found that users are far more concerned with ``who'' disputes a claim, than what their argument is. For example, if a user is a reader of the New York Times, and they hear that the New York Times argues against the claim they are reading, then they will take the dispute much more seriously than if the key article arguing against the claim is from a source they are not familiar with. The argumentation graph focusses on presenting the user with the structure of the argument against the claim, but our studies suggest that the user is likely to find this much less interesting than the authority behind the arguments against the claim. 
+
+In the present version of Dispute Finder, a source can be any web page that meets the Wikipedia criteria\footnote{http://en.wikipedia.org/wiki/Wikipedia:SOURCES} for being reliable. Good sources include newspapers, universities, respected organizations, and Wikipedia itself. Users can vote on whether they think a particular source is useful, and this voting determines the order in which sources are listed. A user can also request that a source be deleted if it is not relevant to the claim, or request that a claim be deleted if it is not disputed by any reliable sources. Users with moderator privileges review requests for deletion and delete claims and sources that do not meet requirements.
+
+\todo{study result: verify}
+There are significant weaknesses in this approach. In our studies, we found that users disagree about what they would consider a reliable source. Users consider a source to be reliable if it espouses opinions that they themselves agree with, and is accepted as being a reliable source within their social group. There may be little point showing liberal sources to a conservative, or vice-versa. Similarly, a global voting system can be gamed by people who want to hide good arguments against a claim that they support by voting up bad ones. Another problem is that, by resorting to moderators to decide which sources and claims are high enough quality to be included, we open ourselves up to charges of bias.
+
+In the future it may be better to learn what sources a particular user is likely to believe are reliable, and then adjust both what sources Dispute Finder shows to the user, and what claims are highlighted, based on this.
+
+There is a difficult trade-off here. If we only show users sources that we believe they are likely to trust, then we risk reinforcing the echo-chamber effect that Dispute Finder is intended to fight against. On the other hand, if we only provide information from sources that are widely regarded as being reliable, we risk enforcing the beliefs of the establishment, and stifling the voices of those who are less widely respected by the establishment, but may be right. If we pay no attention to what sources the user trusts, or what sources are regarded as respectable, then we may waste time trying to persuade users using sources that they would not take seriously. We do not yet claim to know a good solution for this problem.
+
+
+\subsection{What is Disputed?}
+
+One of the key challenges for Dispute Finder is determining what claims are Disputed. Dispute Finder takes the approach of maintaining a database of known disputed claims, which it then looks for on web pages.
+
+What we are after is not a list of everything that has every been disputed by anyone, but a list of claims that are frequently believed and are opposed by reliable sources. In some sense almost everything is disputed by someone on the web. There are enough people writing enough opinions that if we alerted users every time anything they read was disputed by anyone then Dispute Finder would would be so distracting as to be worthless. Similarly, there is little point spending effort rebutting claims that nobody believes. For example there is reliable evidence that the moon is made of cheese, but few people believe this claim is true.
+
+Fortunately, several web sites already maintain databases of disputed claims, together with arguments against them. For example Snopes.com maintains a list of urban legends and politifact.com maintains a list of false claims about politics. We automatically import all claims that these sites debunk into our database and treat the sites themselves as reliable sources about the claims they debunk. In the future we intend to also import claims from other such sites.
+
+We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{web-add?}. The web interface is modeled after common issue-reporting software such as UserVoice\footnote{url?}. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing source.
+
 
 \subsection{Finding Snippets that Make Disputed Claims}
+
+\todo{Do a load more people in a final user-study round. Try to get it up to 8.}
 
 \section{User Studies}
 
