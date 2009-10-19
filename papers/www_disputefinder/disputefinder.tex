@@ -121,7 +121,7 @@ Dispute Finder consists of a database, an API, and a firefox browser extension. 
 	\end{center}
 \end{figure}
 
-There are a number of design decisions that must be made when building a system such as this, which we will address in the remainder of the paper. In particular:
+There are several design decisions that must be made when building a system such as this, which we will address in the remainder of the paper. In particular:
 
 \begin{description}
 \item[What claims are disputed?] In order to highlight claims as being disputed, we need to know what claims these are. To be useful, the set of known disputed claims needs to be both large (so people see some benefit) and accurate (so that people don't get annoyed by things that aren't actually disputed. We currently use a combination of crowdsourcing from users, and mining web sites such as Snopes and Politifact that already maintain lists of disputed claims. There are also other interesting alternative approaches that may be worth exploring. 
@@ -284,160 +284,35 @@ Several tools layer an alternative navigation graph over information on the web.
 
 \section{The Dispute Finder System}
 
-For Sceptical Readers, Dispute Finder highlights disputed snippets and links them to snippets on other web sites that present alternative points of view. For Activists, Dispute Finder makes it easy for users to mark snippets about issues they care about and connect them into an argument graph.
-
-\subsection{Browsing the Disputed Web}
-
-If a sceptical reader has installed the Dispute Finder browser extension, Dispute Finder will draw attention to snippets that make or imply disputed claims by highlighting them in red (Figure~\ref{highlight}). If a user hovers their mouse over a highlighted snippet then Dispute Finder displays a tooltip giving the disputed claim. Clicking on a highlighted snippet reveals a visualization showing the best evidence for and against the claim, as determined by the user community (Figure~\ref{claimview}).
-
-\begin{figure*}[tb]
-	\begin{center}
-	\includegraphics[width=18cm]{../screenshots/v2_panels2.png}
-	\caption{The claim graph consists of an expanding sequence of linked panels}
-	\label{panels}
-	\end{center}
-\end{figure*}
-
-Since the purpose of a highlight is to alert the user to claims that they had not realized were contentious, there is little benefit in highlighting snippets that make claims that the user already realizes are contentious. A user can click the ``don't highlight this claim again'' button to tell Dispute Finder that they are aware of the contentious nature of this claim and do not wish to be alerted about it again.
-
-Normally Dispute Finder will only highlight snippets that make disputed claims that the user has not asked to ignore, and snippets marked by the user themselves. If the user wants to see all snippets on a page then they can do so by opening the Dispute Finder sidebar. 
-
-\todo{ignore button}
-\todo{talk about the margin?}
-\todo{Talk about snippet and topic previewing}
-
-\subsection{Exploring the Argument Graph}
-
-Once a sceptical reader has identified a claim that they are interested in, they can use Dispute Finder's claim browser interface (Figure~\ref{panels}) to investigate the evidence for and against it, and to see what other contentious claims have been made about related issues. 
-
-In our user studies, we found that sceptical readers wanted to be able to investigate the evidence for and against a claim without having to navigate away from that claim. We thus created an interface that consists of an expanding horizontal array of panels where each panel provides information about the item that is selected in the panel to its left (Figure~\ref{panels}). If a user clicks on a link in a panel then a new panel opens to the right giving more information about the linked node. To emphasize the connection between the panels, the claim browser places an arrow next to each selected item, pointing to the panel that gives more information about that item.
-
-The panel for a claim (third panel in Figure~\ref{panels}) lists evidence that will help inform the users opinion about the claim and alternative points of view. Evidence is categorized as either supporting, opposing, or being related-to the claim. The ``related-to'' category is used for evidence that does not fit neatly into one side of the argument. Evidence can either be a snippet that talks about that claim, or another claim whose truth would support or oppose this claim.  The panel for a snippet (last panel in Figure~\ref{panels}) shows the snippet text in the context of the web page it is part of. This, combined with the cascading panel interface allows a user to quickly read the evidence for and against a claim without having to leave the claim browser interface.
-
-\todo{Remove ``related`` from the topics list - confuses with related claims}
-\todo{Show the other panels?}
-
-% \begin{figure}[tb]
-% 	\begin{center}
-% 	\includegraphics[width=6cm]{../screenshots/v2_panel.png}
-% 	\caption{A claim panel presents information for and against a claim}
-% 	\label{panel}
-% 	\end{center}
-% \end{figure}
-
-We found that it was important to allow the claim browser interface to be used in two different ways. When a sceptical reader is browsing a web page and sees a disputed claim, they want to be able to quickly see a small popup window giving evidence for a disputed claim without having to navigate away from the page~(Figure~\ref{claimview}); however if they are interested in the claim and want to investigate the evidence for a claim in more detail, it is preferable to use a full-window interface, as the small popup interface is too small to easily view large amounts of information.
-
-To preserve visual consistency, Dispute Finder uses the same claim browser interface for the small popup interface as for the full-window interface. When used as a popup browser, the interface shows only one panel. Clicking on an item in the panel scrolls the display to the right to reveal a new panel. If the user clicks the ``back'' button, the interface will quickly scroll left back to the previous panel.
-
-%\todo{Key issue with hypertext was not talking about things that highlighted arguments?}
-
-Dispute Finder's claim graph is a variant of the IBIS~\cite{Rittel1973} model. There are three types of nodes: snippets, claims, and topics. 
-A snippet is a region of text taken from a web page; a claim is a statement about the world or a position that one can take on some issue; and a topic is an issue that a claim might address or a thing that a claim might be about. Nodes are connected together by typed, directed, links. 
-There are three link types: supports, opposes, and relates-to. A snippet or claim can support, oppose, or relate-to a claim; and any node can relate-to a topic. 
-
-Dispute Finder uses the list of page titles on Wikipedia as a seed-set for its topics. This allows Dispute Finder to use the Wikify~\cite{Mihalcea2007} algorithm to automatically suggest topics for snippets and provides us with a comprehensive ready-made set of topics with well-maintained descriptions and synonyms.
-
-Dispute Finder's graph model is simpler than that used by gIBIS~\cite{Conklin1987a}: we don't distinguish between an argument and a position, we allow a claim to relate-to another claim without supporting or opposing it, we merge issues with topics, and we collapse gIBIS's five ways of connecting issues together and four ways of connecting a claim to an issue into a single relates-to link type. 
-While Dispute Finder's simplified graph structure is arguably less useful for the argument modelling and resolution task that gIBIS was designed for, we have found that it is sufficient for the conflict discovery and snippet organization task that Dispute Finder is designed for. 
-We have also found that the smaller set of less precise link and node types reduces the mental effort required to create an argument graph.
-
-The order in which evidence is displayed is determined by user voting. A user can vote for or against a particular piece of evidence by clicking on the voting buttons next to that item~(Figure~\ref{voting}). When a user votes for something it will be moved to the top of their list, and also make that item appear earlier for other users.
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_vote.png}
-	\caption{Voting buttons let users say which evidence is important}
-	\label{voting}
-	\end{center}
-\end{figure}
+Users interact with Dispute Finder in two ways. Skeptical readers browse the web using the Dispute Finder Firefox extension and discover when pages they read make disputed claims. Activists tell Dispute Finder about disputed claims that they care about, and add evidence to support their point of view.
 
 
-One danger in a voting system is that a large group of people may drown out the opinions of their opponents by voting down their opinions. Dispute Finder uses two strategies to try to reduce this problem. Firstly, positive votes count for more than negative votes. Thus if two different groups are voting up their own evidence and voting down the opposing group's evidence, it is still likely that the opinions of both groups will be relatively prominent. Secondly, a piece of evidence only competes against other pieces of evidence on the same side of the argument, thus even if supporters of one side are voting up their own evidence, this will not push down evidence on the other side -- though of course they may vote up bad arguments for the opposing point of view. We anticipate that we will eventually need to introduce a moderation system similar to that used in Wikipedia, allowing trusted users to override popular opinion when things go wrong. 
-\todo{Talk about whether we know if this works}
+\subsection{Highlighting Disputed Claims}
 
-\todo{Talk about searches}
-\todo{Cite work on collaborative filtering}
-\todo{Mention the sidebar?}
+Dispute Finder aims to inform users when information they read on the web makes claims that are disputed by sources that they might trust. We are particularly interested in informing users about claims that they hadn't thought about before, hadn't realized were disputed by sources they repect, or have not yet established a strong opinion on.
 
-% If the current page contains snippets then a tab appears in the top left corner of the window. The tab contains a light bulb icon whose color changes according to the nature of the snippets on the page (Figure~\ref{bookmark_icons}) - red if a snippet contains a contentious claim. This allows a user to quickly tell if a page contains something of interest without having to scroll through the whole page. Clicking on the tab opens the margin. The margin provides a summary of all the interesting claims that users have identified on the current page and is designed to mimic the traditional margin notes that readers often write on physical documents~\cite{marginalia}. To emphasize the connection between a margin note and its associated snippet, each margin note is aligned vertically with its snippet and the snippet is highlighted more strongly when the user mouses over the associated margin note. 
+Dispute Finder uses two mechanisms to inform a user when information on the page they are reading is disputed. It highlights any snippets that make the disputed claims in red, and it displays a message bar.
 
-\subsection{Campaigning on the Disputed Web}
+The message bar alerts the user that they should look out for highlighted snippets on the current page. 
+Highlighted snippets can be difficult to see if the page is using a background color that is similar to our highlight color\footnote{We tried to choose a color that is rarely used as a background} or if the user is color blind. The message also provides a ``go to next snippet'' button that allows the user to step though the highlighted snippets one at a time.
 
-If an Activist has installed the Dispute Finder browser extension then they can create a snippet by selecting text on a web page and selecting either ``This is disputed'' or ``This is interesting'' from the context menu (Figure~\ref{createprocess}). A user selects ``This is disputed'' if they believe that readers of that snippet should be alerted that the snippet is making a claim that is disputed. A user selects ``This is interesting'' if they believe that the snippet contains useful evidence that could be useful for readers investigating a disputed claim. 
+The highlights show a user {\it why} Dispute Finder thinks that a page is making a disputed claim. In some cases Dispute Finder may have mistakenly thought an article was saying something it wasn't, or the disputed claim may be in text the user isn't interested in, such as a comment. If Dispute Finder has incorrectly marked a snippet as making a disputed claim then the user is encouraged to tell Dispute Finder this by clicking on the snippet and then cliking on the ``report incorrect highlighing'' button in the popup interface.
 
-The only difference between selecting ``this is disputed'' and ``this is interesting'' is that Dispute Finder remembers which you used when you marked a snippet. A snippet is only highlighted in red for other users if it is connected to a disputed claim. The main reason for having two different options is to show users what kinds of information Dispute Finder expects them to mark as snippets.
-\todo{Say something smart about the difference}
+A user can discover what disputed claim Dispute Finder thinks a snippet is making by hovering their mouse over it, and can bring up more information about a claim by clicking on the snippet (Figure\ref{claimview}).
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_snipmark.png}
-	\caption{Use the context menu to mark a new snippet}
-	\label{createprocess}
-	\end{center}
-\end{figure}
+There is little point repeatedly telling a user that the same claim is disputed. In our current version, a user can ask Dispute Finder to not highlight a claim again by clicking on the ``ignore this claim]'' button in the popup interface. An alternative is to automatically stop highlighting a disputed claim, once the user has brought up the popup interface for it once. We have not yet conclusively decided which method works better. Requiring a user to manually opt out of a claim requires more work from the user, but also causes less user-confusion as users do not normally expect viewing something to be a destructive operation.
 
-Dispute Finder does not require a user to specify the claim a snippet is making at the point at which they mark it. Instead, Dispute Finder encourages a user to gather many snippets and then use the claim browser interface to associate claims with snippets in bulk.
-One anticipated usage scenario for Dispute Finder is an activist user who uses a search engine to find a large number of snippets that make a claim that they disagree with. 
-In this case, the user can save time by first collecting all their snippets, and then attaching all the snippets to their disputed claim at the same time.
+The Dispute Finder Firefox extension is not the only way that a user can find disputed claims. A web site can also opt to use the Dispute Finder API to detect disputed claims on the content that they present to users. This API could be particularly useful to tools like search engines and RSS feed readers that a user may use to access a large proportion of the information they consume. The firefox extension itself uses the same API. The advantage of using the Firefox extension is that it can look for disputed claims on any web site. The disadvantage is that it can only be used by users who use a compatible browser and are prepared to install an extension (well known to be a significant barrier to adoption\cite{extension-bad?}
 
-Dispute Finder provides three ways for a user to associate a claim with a snippet:
+\todo{Document API online}
+\todo{Change the highlight color to yellow? Auto-adjust highlight color based on background color?}
+\todo{Should we automatically adjust the highlight color, based on the background color of the page}
 
-\begin{description}
-\item[Claim first:] If a user navigates to a claim and clicks the ``add snippet'' button, Dispute Finder will suggest unattached snippets that the user created recently and that are textually similar to the wording of the claim or other snippets currently attached to the claim (Figure~\ref{snipclaim}). A user can attach a suggested snippet to the claim by clicking on icons representing ``supports'', ``opposes'', or ``relates-to'' link types. If Dispute Finder does not suggest the right snippets then Dispute Finder can guide the suggestions by entering keywords into the text box above the suggestion list.
+\subsection{Explaining Disputed Claims}
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_sugsnippet.png}
-	\caption{Claim first: Pick unfiled snippets to attach to a claim}
-	\label{snipclaim}
-	\end{center}
-\end{figure}
+\subsection{Building a Database of Disputed Claims}
 
-\item[Snippet first:] If a user selects the ``unfiled'' tab at the top of the claim browser then Dispute Finder will show a list of all the snippets that they have marked but not yet associated with a claim or a topic (Figure~\ref{sniptopic}). If the user selects an unfiled snippet then Dispute Finder will suggest claims or topics that the user might want to associate with that snippet. As with the claim-first method, a user can guide the suggestions by entering keywords. If the correct claim is not suggested then the user can create a new claim by typing it into the text box and clicking the ``add'' button.
-
-\todo{Updated screenshot with ``enter new claim or search keywords'' present}
-
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=8.5cm]{../screenshots/v2_sniptopic.png}
-	\caption{Snippet first: Pick a claim or topic for each unfiled snippet}
-	\label{sniptopic}
-	\end{center}
-\end{figure}
-
-\item[Immediate:] A user can select a claim for a snippet that they have just marked. When a user marks a snippet, Dispute Finder will initially highlight it in blue to show that the snippet is not currently associated with a claim or topic and will not be shown to other users. If the user clicks on the highlighted snippet, then Dispute Finder will bring up the same suggestion panel used in the ``snippet first'' method.
-\end{description}
-
-Dispute Finder uses the same suggestion system to suggest connections between claims. It is important to make sure that the argument graph stays well connected as it grows. If users create duplicate claims or don't connect their claims to existing claims then the graph becomes less useful. Dispute Finder tries to make it easy for users to keep the claim graph well connected by suggesting claims that should be linked together and allowing a user to create a suggested connection with a single click. 
-
-When gathering ``interesting'' snippets, a user may not yet know what argument they might want to use the snippet to support, or even whether they want to use it at all. In such cases the user can either leave the snippet unfiled until they thing of something to use it for, or attach it to a topic in the hope that another user might find it useful.
-
-Dispute Finder uses the Wikify algorithm~\cite{Mihalcea2007} to suggest topics for snippets or claims. The Wikify algorithm imagines that a piece of text was on a Wikipedia page and predicts what pages that text would most likely link to based on the probability that any particular n-gram links to any particular page. Recall that the set of Dispute Finder topics is seeded with the set of Wikipedia page titles. The Wikify algorithm performs significantly better than a word-frequency comparison as it biases towards topics that are heavily linked to. Connecting claims and snippets to topics makes it easier to find other claims and snippets that might be related.
-
-\todo{Talk about previewing a topic by showing wikipedia page}
-
-Even though Dispute Finder tries to make creating and linking snippets as easy as possible, it still requires a non-trivial amount of work. Fortunately, several activist users we talked to told us that they already spend a lot of time performing similar tasks: currently they search for web pages about issues they care about and respond to disputed claims by posting comments or talking about them on their own blog. Some users use tools like Google Alerts\footnote{http://www.google.com/alerts} to learn when a new page appears about an issue they are interested in. Moreover, although it would not be practical for activists to mark up all pages on the web, web page popularity follows a Zipf law~\cite{Krashakov2006}, and so one can achieve useful coverage by only marking up the relatively small number of very popular pages (for example major news sites).
-
-\todo{Mention about topic previewing}
-
-\todo{Allow two claims to be marked as being identical.}
-
-\todo{BUG: don't have 'add' button for snippets}
-
-
-\subsection{Implementation}
-
-Dispute Finder consists of a browser extension, a page annotation script, a shared database server, and a web-based claim browser interface. These four components are largely independent of each other and talk to each other using an open API that can also be used by other tools. 
-
-The page annotation script is a javascript file that can be included into any HTML page. When it is run on a page it sends the page URL to the server, asking it to send back any snippets on that page. There are of course privacy issues here since this could allow user browsing to be tracked. We lessen this problem by not sending cookies or other identifying information, and making the protocol cacheable. 
-In the future we hope to devise a way to reduce concerns further. 
-One idea we are exploring is to use hashing similar to that used by Google Safe Browsing\footnote{http://code.google.com/p/google-safe-browsing/} to identify pages that might contain disputed information and require a user to explicitly ask for Dispute Finder to highlight snippets on a particular site.
-
-The browser extension inserts the page annotation script onto every page the browser loads. One can get the same affect by browsing through a proxy or if the page included directly by the page author.
-
-
-%The protocol used by the Dispute Finder server is an open REST API that other tools are free to use. In the future, the server may support one or more of the argumentation interchange formats that have been proposed~\cite{Rahwan2007a,McGinnis2007}.
-
+\subsection{Finding Snippets that Make Disputed Claims}
 
 \section{User Studies}
 
