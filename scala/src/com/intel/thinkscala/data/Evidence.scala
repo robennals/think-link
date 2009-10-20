@@ -14,7 +14,12 @@ trait Evidence extends BaseData {
 	  def evidence(claimid : Int, verb : String, userid : Int, page : Int) = get_evidence.queryRows(userid,claimid,verb,20,page * 20)
 	  def evidence_one(claimid : Int, verb : String, userid : Int) = get_evidence.queryRows(userid,claimid,verb,1,0)
 
-	  
+  	  val evidence_for_claim = stmt("SELECT evidence.*,v2_user.name AS username "+                            
+			  "FROM evidence "+
+	          "LEFT JOIN v2_user ON v2_user.id = user_id "+
+	          "WHERE claim_id=?")
+	  def evidenceForClaim(claimid : Int) = evidence_for_claim.queryRows(claimid)	          
+ 
 	  val evidence_for_user = stmt("SELECT evidence.*,v2_node.id AS claimid, v2_node.text AS claimtext "+
 	                                 "FROM evidence,v2_node "+
 	                                 "WHERE evidence.user_id = ? AND claim_id = v2_node.id "+

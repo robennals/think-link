@@ -489,6 +489,10 @@ class MainServlet extends HttpServlet {
 //      val text = c.arg("text")
 //      c.outputHtml("Add Evidence",Page.addEvidence(claimid,claim.str("text"),rel,text)(c))
 //    }),
+    UrlHandler("""/claim/(\d*)/evidence""",c => {
+      },c => {
+        c.output(c.store.evidenceForClaim(c.urlInt(1)))
+    }),
     UrlHandler("""/claim/(\d*)""",c => {
       val claim = c.store.getClaim(c.urlInt(1),c.maybe_userid)
       val title = claim("text") + " - Dispute Finder Claim"
