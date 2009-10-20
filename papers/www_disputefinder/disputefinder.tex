@@ -351,6 +351,8 @@ In the future it may be better to learn what sources a particular user is likely
 
 There is a difficult trade-off here. If we only show users sources that we believe they are likely to trust, then we risk reinforcing the echo-chamber effect that Dispute Finder is intended to fight against. On the other hand, if we only provide information from sources that are widely regarded as being reliable, we risk enforcing the beliefs of the establishment, and stifling the voices of those who are less widely respected by the establishment, but may be right. If we pay no attention to what sources the user trusts, or what sources are regarded as respectable, then we may waste time trying to persuade users using sources that they would not take seriously. We do not yet claim to know a good solution for this problem.
 
+\todo{Cite Pew Research study saying people like to read news that supports their own point of view, but many others like neutral sources. http://people-press.org/report/?pageid=1353}
+
 
 \subsection{What is Disputed?}
 
@@ -360,12 +362,52 @@ What we are after is not a list of everything that has every been disputed by an
 
 Fortunately, several web sites already maintain databases of disputed claims, together with arguments against them. For example Snopes.com maintains a list of urban legends and politifact.com maintains a list of false claims about politics. We automatically import all claims that these sites debunk into our database and treat the sites themselves as reliable sources about the claims they debunk. In the future we intend to also import claims from other such sites.
 
-We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{web-add?}. The web interface is modeled after common issue-reporting software such as UserVoice\footnote{url?}. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing source.
+We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{web-add?}). The web interface is modeled after common issue-reporting software such as UserVoice\footnote{url?}. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing source.
+
+\todo{Actually import the Politifact data}
+
+\subsection{Finding Snippets}
+
+Given a web page that the user is browsing, and a database of claims that we believe are disputed, how can we determine what snippets on the page are making claims that are in our database? We implemented and tested four approaches:
+
+\begin{description}
+\item[Explicit page marking:] If the page a user is reading contains a snippet that makes a disputed claim, the user can mark that snippet by selecting it, right clicking, and selecting "mark as disputed" from a popup menu.
+
+\item[Bulk page marking:] The user enters a paraphrase of the claim into a web UI. The server searches the web for snippets that resemble this phrase using Yahoo BOSS~\cite{boss?} and shows the user the snippets it found. The user clicks on all of the snippets that they would like to mark.
+
+\item[Server-side classification:] The server uses the examples from the bulk page marking interface to train a classifier. We used a simple baysian classifier with n-grams as its features. As the user gives examples of snippets that do or do not entail the original claim, the classifier learns what n-grams should or should not be in a snippet. Once the classifier is sufficiently trained, the server applies it to the rest of the results from Yahoo BOSS to automatically mark web pages. We have only partially implemented this approach.
+
+\todo{Has anyone done something like this before.}
+\todo{We only partially implemented this approach}
+
+\item[Client-side entailment:] The browser extension runs a simple textual entailment algorithm over all sentences on every web page the user browse, checking to see if any sentence on the page entails any claim in the database. A user can enter additional paraphrases of a claim to help the entailment algorithm. This is the implementation used by the currently released version of Dispute Finder.
+\end{description}
+
+Explicit page marking has the highest accuracy, but the poorest coverage. Since a user is looking at the page in its entirity, they can read the snippet in context and make a good judgement about whether the snippet is indeed making the claim. However the manual effort required per page makes it difficult for this approach to scale. It can also be hard to motivate a user to mark snippets if it is unlikely that another user with the Dispute Finder extension will read exactly this page. This is the same problem that has hindered the adoption of web page annotation tools.
+
+Bulk page marking trades off some accuracy for better coverage. When a user searches for a phrase, they can quickly find hundreds of snippets and mark them by clicking on them. Since they are reading the snippet out of context, they are more likely to mark a phrase incorrectly. 
+
+Server side classification trades off more accuracy for more coverage. The classifier can mark more pages than a user could ever mark manually, but is inevitably less accurate than a human.
+
+Client side entailment gets even more coverage. Since the classification algorithm is run inside the client, the client can highlight snippets on pages that the server has not examined. This is particularly important for news pages, which are frequently read only a few minutes after they have been written. Moreover, the client-side approach can highlight snippets on web pages that would not be accessible to the server, such as web-based email, and information on an intranet.
+
+The client side entailment method uses the standard Local Lexical Matching algorithm that is a common baseline in NLP. It divides the page into sentences, strips out stopwords, does stemming, and then looks for sentences that contain the keywords contained in a paraphrase of a known claim. If the claim contains a negation word (e.g. not, never, can't) then so must the matching sentence.
+
+\todo{Discuss how and why this is simpler than the server-side classification method}
+\todo{Explain how we avoid downloading the entire database}
 
 
-\subsection{Finding Snippets that Make Disputed Claims}
+The client side entailment method uses a simpler algorithm than the server-side classifier. 
 
+
+
+\todo{Should we have a version where the interface merely suggests n-grams that should be used by the classifier}
+\todo{Can we present all these systems without giving detailed stats about how they compare?}
+\todo{Add support for a user to enter 'anti-phrases' when a snippet is wrongly highlighted}
+\todo{Add support for a user to enter a paraphrase that will match the snippet they are looking at}
 \todo{Do a load more people in a final user-study round. Try to get it up to 8.}
+\todo{Explain how our algorithm relates to existing NLP work - due to unusual domain}
+
 
 \section{User Studies}
 
