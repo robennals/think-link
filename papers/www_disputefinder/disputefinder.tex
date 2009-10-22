@@ -409,118 +409,70 @@ The client side entailment method uses a simpler algorithm than the server-side 
 \todo{Explain how our algorithm relates to existing NLP work - due to unusual domain}
 
 
-\section{User Studies}
+\section{Studying the Users}
 
-We performed two qualitative ``think aloud'' user studies. The aim of these studies was to inform the development of Dispute Finder. The studies were not intended to validate the design of Dispute Finder as being correct. Dispute Finder is designed to be used by a large number of users gathering a vast amount of evidence for many different claims. To confidently state that our design was successful we would need to be able to test Dispute Finder on a much greater scale than we currently have resources for.
+The Design of Dispute Finder has been influenced by several different kinds of input from potential users. We performed a series of "think aloud" user studies to evaluate the user interface, we circulated a survey among members of a local debate club, and we performed a series of interviews with people selected from those who completed the survey.
 
-The aim of the first study was to see how users normally browse the web and see their reactions to an early version of the Dispute Finder argument graph. The aim of the second study was to evaluate user responses to an updated version of the interface and evaluate how users responded to seeing highlighted snippets on the page. We present the results of the two studies together.
+\subsection{Survey}
 
-These studies identified some usability problems which we responded to with changes to the user interface which we describe below. We conducted a lightweight evaluation of our final interface and it seemed our revisions successfully addressed the usability concerns.
+\subsection{Interviews}
 
-\todo{Test with at least 4 people}
-\todo{Say something about final informal evaluation}
-%After the second study, we made minor changes to our user interface (described below) and performed an informal user study with people in our organization to 
+\subsection{Think-Aloud User Studies}
 
+We performed three qualitative "think aloud" user studies. The aim of these studies was to inform the iterative design of the Dispute Finder tool. The studies were not intended to validate the design of Dispute Finder as being correct. The only way we will be able to truly validate Dispute Finder is by having it be adopted by a large community of active users - something it is not yet mature enough for.
 
-\subsection{Procedure for the First Study}
+\subsubsection{Procedure}
 
-For the first study we recruited twelve paid participants, five female, seven male, aged 18 to 52. Nine participants maintained a blog. We recruited participants by posting an advert on Craigslist\footnote{http://craigslist.org}.
-Our intention was to recruit users who fit our ``sceptical reader'' and ``activist'' personas. In our advert, we asked people to tell us what kind of information they looked at on the web and how they shared information with others. We selected participants who looked at information that was likely to be disputed (e.g. political commentary) and who said they regularly shared information with friends. 
+For the first two studies, we recruited participants using Craigslist. We posted a message asking people to tell us how they used the web to form and promote their opinions, and used this to select people who we thought might fit our "skeptical reader" and "activist" personas. After these studies, we decided that the kind of person who looks for jobs of craigslist is unlikely to be a good fit for our personas, and so for the final study we instead used people we knew personally and thought fit our personas well. All study groups were small. The first study had twelve participants (five female, seven male), the second study had six participants (four female, two male), and the final study had ?? participants (?? male, ?? male). 
 
-\todo{This was a bad recruiting strategy. We should have recruited people that fitted one of our two personas and then set them tasks that fitted our vision for that persona.}
+Each batch of users was shown a different iteration of the Dispute Finder design. The first two batches used versions in which users marked snippets explicitly, and the popup window for a claim showed an argumentation graph describing the structure of the different alternative points of view. The final group used a version in which a textual entailment algorithm on the client was used to determine what to mark, and the popup window showed lists of sources that support or oppose the claim. We present the findings of the three user studies together. Where a comment refers to particular version we make this clear.
 
-Study sessions took approximately forty five minutes. Participants were seated at a single-screen workstation with the Firefox browser augmented with the Dispute Finder extension. We first demonstrated Dispute Finder's interface, and then asked them to find information as they would normally and use Dispute Finder to mark snippets that made claims that they thought were interesting or disputed. For the first half of the study, we asked them to constrain their browsing to political news articles, to increase the likelihood that there would be existing claims about the topic they were browsing.
+Study sessions took approximately fourty five minutes. Participants were seated at a workstatation with the Firefox browser augemented with the Dispute Finder extension. They were asked to view pages that had highlighted claims on them, and to attempt to add new disputed claims to our database.
 
-In this initial study, users were exposed to the prototype interface shown in Figures~\ref{oldsnippetbox} and \ref{oldbrowser}, rather than the final interface described earlier in this paper. We discuss some of the key differences in the findings section.
+\todo{Need to finish the third wave of user studies}
 
-\subsection{Procedure for the Second Study}
+\subsubsection{Findings}
 
-For the second study, we recruited six paid participants, four female, two male. Four participants had a blog. Although we recruited participants using the same advert as the first study, the timing of our second advert around the beginning of the local university semester meant that five of the participants were college students. 
+Response was generally positive, with many participants being very keen to use the tool soon. Several participants asked as to notify them when it is properly deployed. Most of the participants expressed an interest in using the tool, with some wanting to use it now, and others wanting to use it ``when it is more mature''.
 
-In the second study we were more confident about usability and so told the participants nothing about how to use it. We gave each user a brief description of the aims of the tool, similar to the introduction of this paper, and then asked them to perform two tasks with it. The first task was to look at a selection of web pages that already had highlighted snippets and to explore the interface while thinking aloud about what they saw (the ``sceptical reader'' use case). The second task was to identify disputed claims on a set of pages we gave them about global warming and connect them appropriately to existing claims that we had pre-populated the claim graph with (the ``activist'' use case). 
+Most participants said that they would want to use Dispute Finder to tell them when information they read was disputed (skeptical reader). One participant said ``The web needs to be taken with a grain of salt, and this gives you salt goggles''. A smaller number said they would be likely to enter claims they disagreed with (activist). One participant who was a political blogger was very excited about the mark things he thought were lies.
 
-Participants were shown the prototype interface shown in Figures~\ref{secondbrowser} and \ref{secondsnippetbox}. This was similar to the interface described earlier in this paper, except that it used drag and drop to make connections rather than a suggestion system, it did not offer a ``relates-to'' link between claims, it required a user to choose a claim at the point at which they create a snippet, and the claim browser only showed one panel at a time. 
+Most users were able to use Dispute Finder compentently as a skeptical reader (browsing information about disputed claims) but found it harder to act compentently as an activist (adding new disputed claims).
 
-\subsection{Findings}
+When browsing a page that had disputed claims highlighted, most users correctly inferred that these were sentences they should be skeptical about, but some users thought that we were saying they were wrong, rather than merely disputed. Not all users realised that one could click on a disputed claim to bring up more information.
 
-In this section we present the findings from our two user studies. Findings from the two studies are presented together and clustered by topic.
+%In the first study, a user could mark a snippet by 
+%
+%In the interface used in the first two studies, a user could mark a snippet by selecting it, right clicking on it, and clicking "mark as disputed". They were then prompted to either select an existing claim or create a new one.
 
-\subsubsection{High-Level Impressions}
+When asked to mark snippets on a particular page that make disputed claims, users often did not appreciate that they should either re-use existing claims or create claims that would be applicable to snippets on many other pages. Several users tried to create a new claim with exactly the same text as the snippet they were marking, and several users asked why they had to "enter the text again". Similarly, users got confused when a snippet made two different disputed claims. The correct behavior is to mark the same text with two different claims, but several participants tried to create a new compound claim such as "Global warming will cause X and Y". 
 
-Response was generally positive, with many participants being very keen to use the tool soon. One participant said ``I can see myself getting addicted to this'', and several participants asked as to notify them when it is properly deployed. Most of the participants expressed an interest in using the tool, with some wanting to use it now, and others wanting to use it ``when it is more mature''.
+Conversely, when adding a claim to the Dispute Finder web site, users would often enter claims that are not disputed anywhere on the web, or enter paraphrases that do not resemble the wording used on any web site. The challenge of how to help users come up with claims that occur on many web sites is one that we have not yet solved.
 
-Most participants said that they would want to use Dispute Finder to tell them when information they read was disputed (sceptical reader). One participant said ``The web needs to be taken with a grain of salt, and this gives you salt goggles''. A smaller number said they would be likely to mark up claims they disagreed with (activist). One participant who was a political blogger was very excited about the ability to mark up things he thought were lies.
+Several users expressed confusion about how specific a claim they created should be. For example, if a snippet says ``Global temperatures will rise by X degrees by 2050'' then is that making the claim ``Global temperatures will rise'', or should the claim include the extra information? In order to make a good judgement, one needs to know the range of similar claims that are being made by other web sites, and what claims one has good evidence against. If one makes the claim too specific then one will be able to find less web pages that make it, but if one makes the claim too general then it might be harder to find solid evidence against it.
 
-Most participants in the first study, and all participants in the second study were able to use the tool competently. Participants in the second study were able to use Dispute Finder competently without it being demonstrated in advance and were able to correctly deduce what the different parts of the interface meant. Participants said they found the tool ``very intuitive'' and ``really cool''.
+When adding sources that support or oppose a claim, a user would frequently mark the first paragraph of the article rather than seeking out the sentence that best summarized the argument that the article was using against the claim. In some cases the first paragraph is indeed the right text to select, since the first paragraph is typically a summary of the core argument made by the articles. Several users wanted to mark up a table or image as the summary of an article, which is not currently supported.
 
-\subsubsection{Choosing a Claim for a Snippet}
+In the first two studies, the popup interface for a claim showed an argumentation graph. This graph connected the graphs in our database using "supports" or "opposes" links, and allowed each claim to also be associated with supporting articles. 
 
-\begin{figure}[t]
-	\includegraphics[width=8.5cm]{../screenshots/oldsnipcreate_diagram.png}
-	\caption{First Prototype Snippet Creation Dialog}
-	\label{oldsnippetbox}
-\end{figure}
+When shown an argumentation graph for a claim, users seemed to have little difficulty navigating and understanding it and appreciated the ability to explore the structure of an argument and see how different claims were connected. One user said "I can see myself getting addicted to this", and another said "it's very intuitivet".
 
-\begin{figure}[t]
-\begin{center}
-	\includegraphics[width=5cm]{../screenshots/newsnip_browseopen.png}
-	\caption{Second Prototype Snippet Creation Dialog}
-	\label{secondsnippetbox}
-\end{center}
-\end{figure}
+Users seemed to have difficulty creating such graph structures however. Some users linked one claim as supporting another when it would have been more logically correct for them to both support a third claim. For example "Global warming is causing more hurricanes" does not support "Global warming is causing rising sea levels", but both support "Global warming is causing problems". Users correctly realised that the claims were related, but were not sure how best to connect them. Some users were confused by claims that had a ``because'' relationship rather than a ``supports'' or ``opposes'' relationship. For example ``America did not sign the Kyoto Protocol'' {\it because} ``Signing Kyoto would harm the US economy''.  It is possible that creating logically correct claim structures may be too difficult for some people (see Isenmann and Reuter~\cite{Isenmann1997}).
 
-The prototype interfaces required that a user enter a claim for a snippet at the point at which they created the snippet. When the user marked a snippet, Dispute Finder would display a dialog box asking them what claim to associate it with (Figure~\ref{oldsnippetbox} for the first prototype and Figure~\ref{secondsnippetbox} for the second prototype). There turned out to be several problems with this approach:
+Several users got confused by claims that referred to similar events at different points in time. For example, one participant in the first study marked two claims as opposing each other when each was true at the time that it was written. This is a particular problem when talking about breaking news events, where the facts can change fast. If Dispute Finder is to be effective for describing such events then it will need to have better support associating times with claims and snippets.
 
-Users would often encounter a snippet that could be interpreted as making several interesting claims and were confused by the need to pick only one claim. Some users dealt with this by writing a compound claim such as ``Global warming will cause X and Y'', while other users marked several overlapping snippets making different claims. In the final interface one can associate a snippet with several claims.
+Several users expressed an interest in being able to add a disputed claim without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. 
 
-Some users wanted to associate a snippet with a topic but without associating it with a specific claim. For example, they might find the text of an important speech, or the results of a sporting event. While they might want to use this as evidence for a claim in the future, they didn't yet know what that claim might be. In the final interface one can choose to associate a snippet with a topic.
-
-Some users seemed to be deterred from marking interesting snippets by the mental effort required to choose an appropriate claim. In several cases, we saw a user pause to decide whether an interesting snippet was worth marking up. Similarly, some users seemed to find it difficult to decide what the right claim to use for a snippet was, since they had not yet decided how they wanted to structure their argument, or even if this was a topic they wanted to argue about. The final interface does not require a user to associate a snippet with a claim at the time they create the snippet. Instead a user can mark snippets with minimal effort and then later search through their snippets to find evidence for particular claims.
-
-Several users expressed confusion about how specific the claim made by a snippet should be, or when they should pick an existing claim rather than create a new one. For example, if a snippet says ``Global temperatures will rise by X degrees by 2050'' then is that making the claim ``Global temperatures will rise'', or should the claim include the extra information? In the final interface, users are expected to only create a claim when they have several snippets that support or oppose the same claim. This makes it easier to know how broad the claim should be as the user knows how much information is shared by claims.
-
-Since a user was required to enter a claim whenever they created a snippet, there was an incentive for the user to enter a claim as quickly as possible so they could make the dialog go away. 
-Several users created a new claim that was equivalent to a claim that already existed, and several users repeatedly created a claim that had the exact same text as the snippet. The final interface reduces this problem by not requiring a user to associate a claim with a snippet until they decide that this is something that they want to do, and have a particular disputed claim in mind.
-
-\todo{Need to do some kind of evaluation to show that the new interface solves these problems}
+Several users created claims that had ambiguous meanings. One user entered a disputed claim about "Wood", meaning the guitarist "Ronnie Wood" of the Rolling Stones. Similar problems occured with claims that were specific to a particular country, or a particular point in time. 
 
 
-\subsubsection{Choosing what to mark as a snippet}
-
-Users would frequently mark the first paragraph of an article as a snippet. This paragraph would frequently summarize the arguments made in the rest of the document document and often made an important claim that other claims in the document supported or provided context for. 
-
-Several users wanted to mark up a table or an image as a snippet. This is valid behavior -- a table or image is often useful evidence for a claim; however it is not currently supported by Dispute Finder. In future versions of Dispute Finder we intend to support this behavior.
+\todo{Need to say that the argumentation graph contains all existing claims and that it was a simple "supports"/"oppsose" graph.}.
 
 
-\subsubsection{Connecting Claims}
 
-Several participants expressed a desire to connect related claims during their session. 
-
-Some users marked one claim as supporting another when it would have been more logically correct to mark them both as supporting a third claim that needed to be created. For example ``Global warming is causing more hurricanes'' does not support ``Global warming is causing rising sea levels'', but both support ``Global warming is causing problems''. Users realized that the claims were related, but were not sure how best to connect them. It is possible that creating logically correct claim structures may be too difficult for some people (see Isenmann and Reuter~\cite{Isenmann1997}). We believe that this problem can be addressed to some extent though voting by other users who recognize that a claim does not provide useful evidence. 
-
-Some users were confused by claims that had a ``because'' relationship rather than a ``supports'' or ``opposes'' relationship. For example ``America did not sign the Kyoto Protocol'' {\it because} ``Signing Kyoto would harm the US economy''. Similarly, many users expressed a desire to mark claims as being related without supporting or opposing each other. For example ``America did not sign the Kyoto Protocol'' {\it  relates-to} ``America was right to not sign the Kyoto Protocol''. In the final interface we introduced a ``relates-to'' link type to allow users to connect claims that they thought should be related but which didn't confirm to a simple pro/con relationship. 
-
-Several users got confused by claims that referred to similar events at different points in time. 
-For example, one participant in the first study marked two claims as opposing each other when each was true at the time that it was written. This is a particular problem when talking about breaking news events, where the facts can change fast. If Dispute Finder is to be effective for describing such events then it will need to have better support associating times with claims and snippets.
-
-Several users expressed an interest in being able to mark a claim as disputed without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. In the future we are planning to allow users to say what claims they personally believe are true or false and see what claims their friends agreed or disagreed with.
-
-\begin{figure}[tb]
-	\includegraphics[width=8cm]{../screenshots/oldpoint_diagram.png}
-	\caption{First Prototype Claim Browser}
-	\label{oldbrowser}
-\end{figure}
-
-\begin{figure}[tb]
-\begin{center}
-	\includegraphics[width=5.5cm]{../screenshots/claimbrowse.png}
-	\caption{Second Prototype Claim Browser}
-	\label{secondbrowser}
-\end{center}
-\end{figure}
-
-The prototype versions of Dispute Finder used a drag-and-drop interface to allow a user to create links between claims. In the first interface (Figure~\ref{oldbrowser}) a user could use a search box to find others' claims and then drag them into appropriate positions in the argument graph. The second interface (Figure~\ref{secondbrowser}) followed a file-manager metaphor, providing two identical browser windows that a user could drag and drop claims between. 
-In both cases, we found that users would often not realize they could use drag and drop to organize claims, even when we added a prominent information message at the top of the display (Figure~\ref{secondbrowser}). We believe that part of the problem was that users are not used to using drag-and-drop in a web interface, and the rendering of a claim did not have any visual clue to suggest that they could use drag and drop to create connections. In the final interface we resolved this issue by moving to a ``click to link'' interface and having the connection actions (``add claim'' etc) prominently visible.
+\todo{Come up with terminology for marking an evidence snippet, and agree on evidence vs source vs article}
+\todo{Talk about how the early versions conflated evidence and snippets - and whether it makes sense to distinguish between them}
+\todo{Screenshot of the claim graph interface}
 
 \section{Conclusions and Future Work}
 
