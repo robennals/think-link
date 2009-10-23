@@ -69,12 +69,11 @@
 
 \abstract
 
-We describe Dispute Finder, a browser extension that helps a user know when information they read online is disputed -- where by 'disputed' we mean that a source that they might trust expresses a different point of view.  As a user browses the web, Dispute Finder examines the text on pages that the user is browsing and highlights any phrases that appear to be supporting claims from its database of known disputed claims. If a user clicks on a highlighted phrase, Dispute Finder will show the user a summary of arguments from other sources that support other points of view.
+We describe Dispute Finder, a browser extension that alerts a user when information they read online is disputed by a source that they might trust. Dispute Finder examines the text on the page that the user is browsing and highlights any phrases that appear to entail claims in its database of known disputed claims. If a user clicks on a highlighted phrase then Dispute Finder will show the user a summary of articles that support other points of view.
 
-Disputed Claims can be submitted by users, or may be found automatically by crawling web sites that already maintain lists of disputed claims. Dispute Finder identifies instances of disputed claims by running a simple textual entailment algorithm inside the browser extension, referring to a cached local copy of a subset of our claim database.
+Dispute Finder builds it's database of disputed claims by crawling web sites that already maintain lists of disputed claims, and by allowing users to enter claims that they believe are disputed. Dispute Finder identifies instances of disputed claims by running a simple textual entailment algorithm inside the browser extension, referring to a cached local copy of a subset of our claim database.
 
 Performing these tasks well is a hard problem, and we do not yet claim to have an implementation that is good enough to be compelling for most users. We do however believe that Dispute Finder attacks an interesting problem that, if addressed well, could significantly improve the utility of the web.
-
 
 \category{H.4.m}{Information Systems}{Miscellaneous}
 \category{H.4.2}{Information Systems}{Decision Support}
@@ -465,28 +464,28 @@ Several users expressed an interest in being able to add a disputed claim withou
 
 Several users created claims that had ambiguous meanings. One user entered a disputed claim about "Wood", meaning the guitarist "Ronnie Wood" of the Rolling Stones. Similar problems occured with claims that were specific to a particular country, or a particular point in time. 
 
-
 \todo{Need to say that the argumentation graph contains all existing claims and that it was a simple "supports"/"oppsose" graph.}.
-
-
 
 \todo{Come up with terminology for marking an evidence snippet, and agree on evidence vs source vs article}
 \todo{Talk about how the early versions conflated evidence and snippets - and whether it makes sense to distinguish between them}
 \todo{Screenshot of the claim graph interface}
 
+
 \section{Conclusions and Future Work}
 
-We have introduced the idea of highlighting disputed claims and connecting them to sources that give alternative points of view. We have created an interface that makes it easy for users to explore evidence that supports or opposes a claim, and makes it easy for users to gather and connect new snippets. 
+We have introduced the idea of creating an Open Hypermedia system that automatically highlight snippets on the web that are disputed by sources you might trust. We have explored several different design options, tested multiple variants on users, and reported insights from this testing.
 
-At present Dispute Finder relies on users to mark up snippets and connect them to claims. In the future we plan to explore using natural language and machine learning techniques to assist in this process. Our plan is to allow a user to request that Dispute Finder search the web to find potential snippets that make a claim that they disagree with, and then quickly select which of these are indeed making the claim.
+An experimental preview version of Dispute Finder is available at the following URL:
+\url{http://disputefinder.org}
 
-Dispute Finder is designed to be used as a social tool in which large numbers of people collaborate to find large numbers of claims and snippets about interesting topics. Since our graph and user base are currently small, we have not yet evaluated how Dispute Finder works when data sets are huge, many users are concurrently editing data, and some users are malicious.
+Performing these tasks well is a hard problem, and we do not yet claim to have an implementation that is is good enough to be compelling for most users. We do however believe that Dispute Finder attacks an interseting problem that, if solved well, could significantly improve the utility of the web.
 
-We hope that Dispute Finder will make it easier for people to be informed about the world and be exposed to alternative points of view that they might not otherwise be exposed to.
 
 \section{Acknowledgments}
 
-Acknowledgements omitted for blind submission. Dispute Finder uses icons from the free FamFamFam Silk\footnote{http://famfamfam.com} collection.
+\todo{Do we want to have acknowledgements}
+% We would like to Thank Barbara Rosario for help with textual entailment, and 
+% Acknowledgements omitted for blind submission. Dispute Finder uses icons from the free FamFamFam Silk\footnote{http://famfamfam.com} collection.
 
 
 \todo{Sort out bad references}
