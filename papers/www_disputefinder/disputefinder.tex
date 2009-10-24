@@ -91,133 +91,164 @@ Performing these tasks well is a hard problem, and we do not yet claim to have a
 \section{INTRODUCTION}
 
 \todo{update screenshots}
+\todo{should this be spun as about news, or information in general}
+\todo{need to talk more about what we know about people}
+ 
+% The last few years have seen the rapid decline of printed newspapers and rapid rise of the web as a source of news~\cite{pew-news?}.
 
-The web contains a huge amount of information, but some of this information is factually incorrect~\cite{Neumann2003,Resnik1998,Zhou2004} and some sites present only one side of a contentious issue~\cite{Herman2002}. 
-If a user is to gain a broad understanding of a topic then they will need to either spend time looking for alternative points of view, or restrict themselves to sources that they believe they can trust to provide accurate and balanced information.
-Even if a user tries to be careful, they can still be caught out by claims that they had not realized were disputed.
-\todo{word this better}\todo{update all screenshots}
+The web contains a huge amount of information, but some of this information is factually incorrect~\cite{Neumann2003,Resnik1998,Zhou2004} and some sites present only one side of a contentious issue~\cite{Herman2002}. If a user is to gain a broad understanding of a topic then they will need to either spend time looking for alternative points of view, or restrict themselves to sources that they believe they can trust to provide accurate and balanced information.
 
-In this paper we describe Dispute Finder, a service that informs a user when information they read online is disputed by a source that they might trust. Our hope is that Dispute Finder will make it easier for a user to gain a broad view of a topic that they are interested in.
-
-If a user has installed the Dispute Finder browser extension then it will highlight snippets of text on the web that make claims that Dispute Finder believes are disputed (Figure~\ref{highlight}). 
-When a user clicks on a highlighted snippet, Dispute Finder will present a list of articles that present alternative points of view, each of which is from a source we believe the user is likely to trust (Figure~\ref{claimview}). 
-
-Dispute Finder consists of a database, an API, and a firefox browser extension. The database contains information about the disputed claims that are known to be made on web sites, and hints about how to tell when a web page is making such a claim. The API allows an external client to determine whether particular content is making a disputed cliam. The firefox extension uses the API to determine whether the web pages a user browses make disputed claims. The API could also be used by other services that present users with potentially-disputed content, such as search engines, news readers, email programs, or content management systems.
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{../screenshots/v2_highlight_shadow.png}
-	\caption{Dispute Finder highlights snippets that make disputed claims}
+	\includegraphics[width=8cm]{pictures/highlight_abortion.png}
+	\caption{A highlighted snippet that makes a disputed claim}
 	\label{highlight}
 	\end{center}
 \end{figure}
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{../screenshots/v2_popup_dim2.png}
-	\caption{Click on a snippet to investigate evidence for the claim it makes}
+	\includegraphics[width=6cm]{pictures/popup_abortion.png}
+	\caption{Popup interface with articles for and against a claim}
 	\label{claimview}
 	\end{center}
 \end{figure}
+\todo{Popup interface should contain a "don't mark this" button}
 
-There are several design decisions that must be made when building a system such as this, which we will address in the remainder of the paper. In particular:
+\todo{More screenshots/graphs/visual information}
+
+In the realm of News, Pew~\cite{pew-news} report that, while internet news is rapidly gaining ground on traditional news sources, most online news sources are not considered credible. Even when users are getting news from the websites of traditional news providers, it is likely that they read news from a variety of unfamiliar news sources~\cite{pew-news}, rather than the small set of newspapers and TV stations that they might have followed in the past.
+
+\todo{word this better}\todo{update all screenshots}
+
+In this paper we describe Dispute Finder, a tool that alerts a user when information they read online is disputed by a source that they might trust. Our hope is that Dispute Finder will make it easier for a user to gain a broad view of a topic that they are interested in, understand why other people hold different points of view, and avoid being mislead by misinformation.
+
+A user can install Disute Finder as an extension to the Firefox\footnote{http://www.mozilla.org/firefox} web browser. When installed Dispute Finder will highlight snippets of text that make disputed claims (Figure~\ref{highlight}). 
+If a user clicks on a highlighted snippet, Dispute Finder will show articles that put forward different points of view,  each of which is from a source we believe the user is likely to trust (Figure~\ref{claimview}). 
+
+Dispute Finder consists of a database, an API, and a Firefox browser extension. The database contains a set of known disputed claims that appear on the web, articles that support or oppose each disputed claim, and hints about how to recognise them when they appear on a web page. The API allows an external client to access the information in the database and use it to tell whether particular text is likely to be making a known disputed claims. The Firefox extension uses the API to determine whether the web page a user is viewing makes disputed claims. The API could also be used by other services that present users with potentially-disputed content, such as search engines, news readers, email programs, or content management systems.
+
+
+\todo{Figure that does a smaller highlight}
+
+There are several design decisions that must be made when building a system such as this. In particular:
 
 \begin{description}
-\item[What claims are disputed?] In order to highlight claims as being disputed, we need to know what claims these are. To be useful, the set of known disputed claims needs to be both large (so people see some benefit) and accurate (so that people don't get annoyed by things that aren't actually disputed. We currently use a combination of crowdsourcing from users, and mining web sites such as Snopes and Politifact that already maintain lists of disputed claims. There are also other interesting alternative approaches that may be worth exploring. 
+\item[What is disputed?] To be useful, the set of known disputed claims needs to be both large (so a user is likely to see snippets highlighted reasonably often) and accurate (so users aren't distracted by things that they would not consider to be disputed). We currently use a combination of crowdsourcing from users, and mining web sites such as Snopes and Politifact that already maintain lists of disputed claims. More generally, the challenge is not to determine if a claim is disputed by {\it anyone} but to determine whether there is an alternative point of view that this particular user would take seriously.
 
-\item[What disputed claims should we tell the user about?] In some sense almost everything is disputed by someone. If we highlighted everything that was disputed by anyone then the tool would be too noisy to be useful. The challenge is to determine when the other point of view is something the user might take seriously. We do not yet have a large enough database of disputed claims for this to be a serious problem, but we believe that there may be interesting solutions.
+\item[How do we find disputed snippets?] Given a particular web page, how do we determine which phrases on that page are making known disputed claims? We have experimented with several different approaches, each of which has different advantages and disadvantages. One can ask users to mark snippets individually. One can build a search tool that allows a user to find and mark similar snippets in bulk. One can provide an interface that allows a user to train a machine learning classifier to recognize snippets. One can run a textual entailment algorithm on the client that looks for phrases that look similar to a known claim. 
 
-\item[How do we tell that a snippet is making a disputed claim?] If a user is reading a web page that might contain disputed claims, then how do we determine which sentences are making disputed claims? We have experimented with several different approaches, each of which has different advantages and disadvantages. One can ask users to mark snippets individually. One can build a search tool that allows a user to find and mark similar snippets in bulk. One can provide an interface that allows a user to train a machine learning classifier to recognize snippets. One can use a textual entailment algorithm to recognize phrases that seem to have a similar meaning to the claim. We found advantages and disadvantages of all these approaches.
+\item[How do we highlight snippets?] How do we tell what web page a user is reading, and augment their interface to alert them about disputed claims? Using a browser extension allows us to examine all content the user browses, but limits us to users who are prepared to install a browser extension~\cite{nolike-extension?}. Using a proxy~\cite{proxy?} has similar adoption problems to a browser extension, and is likely to break some web sites. If external sites such as news readers and search engines use our API then they can provide information about disputed claims to users without them having to install anything, but this limits coverage to content accessed through sites that use the API.
 
-\item[How do we add highlights to the pages a user browses?] If a user is reading web pages, how should we augment that experience with information about disputed claims? Using a browser extension allows us to examine all content the user browses, but limits us to users who are prepared to install a browser extension~\cite{nolike-extension?}. Using a proxy~\cite{proxy?} has similar adoption problems to a browser extension, and is likely to break some web sites. Providing an API allows external sites such as news readers and search engines to provide information about disputed claims, but limits coverage to those sites that support the API. The best approach may be a combination.
-
-\item[What information should we show someone about a disputed claim?] If someone clicked on a disputed claim on a web page, what information should we show them that will help them decide whether to talk the alternative points of view seriously. We experimented with using an argumentation graph, a summary of snippets from sources that support the two sides, automatically-found articles, and user-curated articles. 
+\item[How should we explain a disputed claim?] If someone requests more information about a disputed claim by clicking on a highlighted snippet, what information should we show them that will help them decide whether to consider alternative points of view? We tried an argumentation graph and lists of articles that support or oppose the claim.
 \end{description}
 
-In order for Dispute Finder to be useful, it needs to provide a service that users will actually appreciate. It is thus important that we understand how users feel about disputed information. Dispute Finder is designed to cater to two personas. Each persona was created from interviews we conducted with people who we believe fit into these categories:
 
+If users are going to adopt Dispute Finder, it is important that it provides users with a service that they feel will be of benefit to them, and has an interface that they can use. Dispute Finder is designed to cater to two personas. Each persona was created from interviews we conducted with people who we believe fit into these categories.
+
+{\it Skeptical Readers} want to know when something they read is disputed by a source that they might trust. Their are skeptical about the accuracy of the information that they read and often check multiple sources to get different opinions on a topic. A user may behave like a skeptical reader for some topics and not others. For example a user may be skeptical when reading about topics that affect them (e.g. health, things important to their job, or things they are expected to be knowledgable about), but disengaged when reading about topics that don't affect them (e.g. entertainment) or topics for 
 \todo{Use interviews to get some actual observations here. These are just fillers.}
 
-\begin{description}
+{\it Activists} care strongly about particular issues and are prepared to spend some time helping others know that something that they disagree with is disputed. They are the same kinds of people who join protest groups, write blogs, email news stories, or argue about topics online. They are motivated by a desire to influence others and to gain status by being seen to do so. A user is likely to be an activist on some issues, but not for others. An activist will often also be a skeptical reader.
 
-\item[Skeptical Readers] want to know when information they read is disputed. They are primarily motivated by a desire to avoid being misled. Although there are some sources that they strongly trust, they also regularly read web sites that they do not trust, and they are worried about being misled. In the abscence of Dispute Finder, they often try to verify information they read online by searching several web sites on the same topic, or checking something they have read on a known trusted site.
+Many users fall into neither of these two personas. If a user does not regularly read information online that they feel they need to need to understand well, or restricts their reading to sources that they believe they can trust, then Dispute Finder is unlikely to be useful for them.
 
-\item[Activists] care strongly about particular issues and are prepared to spend some time helping other users know that something they read is disputed. They are the same kinds of people who join protest groups, argue about topics online, post stories to news aggregators, or edit wikipedia. They are motivated by a desire to gain status by being publically seen to have led others to discover that important issues are disputed. They are also motivated by a desire to entertain themselves by seeing what disputed claims are being made and where online they are being made.
-
-\end{description}
+We used several different methods to gain input from users. We performed three rounds of users studies, circulated a survey within a target group, and conducted a series of interviews. We discuss the conclusions of these studies throught the paper, and in a section at the end. These studies were intended to inform the design of Dispute Finder, rather than to validate it. The only way to conclusively demonstrate that Dispute Finder is useful would be for it to be adopted by many active users -- something that the current implementation is not mature enough to support.
 
 \todo{Improve the paraphraser UI so it shows users what pages are making the claim}
 \todo{Improve the ``see examples on the web'' UI to it shows the pages that were found with the activists training work}
 \todo{Provide a customized RSS reader and search engine that does dispute tracking. - future work?}
-
-The same user may be an Activist for some issues and a Sceptical Reader for others. Dispute Finder is not useful for everyone. In our interviews, we encountered several people who either didn't rely on the internet as an important source of information, or only obtained important information from sources that they trust. If a user never reads information they care about from web sites that they don't entirely trust, then Dispute Finder will not be useful to them.
-
-The design decisions made in Dispute Finder have been motivated by our interactions with potential users. We conducted a small survey, a series of interviews, and several rounds of user studies. 
 
 \todo{Should we explicitly list what we think are our key contributions?}
 
 
 \section{Related Work}
 
-Dispute Finder builds on prior work in several different areas. The idea of highlighting potentially untrustworthy information was applied to Wikipedia by WikiTrust~\cite{Adler2008a}. Tagging Systems~\cite{Marlow2006} influenced the way Dispute Finder uses the community to collect and filter information. Dispute Finder's snippets are influenced by clipping tools such as Internet Scrapbook~\cite{Sugiura1998}. Many people have developed textual entailment algorithms~\cite{entail?} that determine when one sentence implies the trust of another, or contradiction detection algorithms that determine when one sentence contradicts another.
+Dispute Finder builds on prior work in many different areas. The idea of highlighting potentially untrustworthy information was applied to Wikipedia by WikiTrust~\cite{Adler2008a}. Tagging Systems~\cite{Marlow2006} influenced the way Dispute Finder uses the community to collect and filter information. Dispute Finder's snippets are influenced by clipping tools such as Internet Scrapbook~\cite{Sugiura1998}. Many people have developed textual entailment algorithms~\cite{entail?} that determine when one sentence implies the trust of another, or contradiction detection algorithms that determine when one sentence contradicts another.
 
 \todo{Add more references from the NewsCube paper}
 
-
 \subsection{Fact Checking Sites}
 
-If a user suspects that something they read online may be false then they can look it up on one of many fact checking sites such as Snopes.com, FactCheck.org, or Politifact.com. If one is aware that an issue is controversial and wants to understand the different sides, then one can use sites like Wikipedia.org, Debate.org, and ProCon.org. These sites do an excellent job at presenting accurate and balanced information about controversial topics. 
+If a user suspects that something they read online may be false then they can look it up on one of many fact checking sites such as Snopes.com, FactCheck.org, or Politifact.com. If one is aware that an issue is controversial and wants to understand the different sides, then one can use sites like Wikipedia.org, Debate.org, and ProCon.org. These sites do an excellent job presenting accurate and balanced information about controversial topics. 
 
-Dispute Finder is designed to deal with the cases where the user is not aware that the information they are reading is disputed and so does not realise that they should check it on one of these services, or does not know which of these services might have more information. Dispute Finder is designed to work together with fact checking sites like Snopes and Politifact. Indeed Dispute Finder automatically imports disputed claims made on Snopes or Politifact into its claim database, and will use articles from Snopes and Politifact as evidence about disputed claims.
-
+Dispute Finder is designed to deal primarily with cases where a user is not aware that the information they are reading is disputed and so does not realise that they should check it on one of these services. Dispute Finder is designed to work together with fact checking sites. Indeed Dispute Finder automatically imports disputed claims and opposing articles from Snopes and Politifact.
 
 \subsection{Analysing News}
 
-News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader persective of the issue. Dispute Finder is trying to do something similar, but working at the finer granularity of specific claims made in an article, rather than the slant of the entire article. A reader may not have the patience to read multiple articles about the same topic, or may not find the article that rebuts the claim made in an article they read. 
+While Dispute Finder is not intended to be applied only to news content, News is a particularly interesting source of disputed information, and one that others have looked at before. 
+
+News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader persective of the issue. Dispute Finder is trying to do something similar, but working at the finer granularity of specific claims made in an article, rather than the overal slant of the article. A reader may not have the patience to read multiple articles about the same topic, or may not find the article that rebuts the claim made in an article they read. 
 
 Services such as Skewz.com and Newstrust.net allow users to rate news articles for bias. Skewz rates stories as being either liberal or conservative and encourages readers to read what the other side is thinking. Newstrust allows users to rate news articles for quality and objectivity. 
 
 
 \subsection{Web Annotation Tools}
 
-Annotation tools such as ReframeIt.com, ShiftSpace.org and SpinSpotter.com allow a user to manually annotate a web site that they disagree with, overlaying their own opinions on top of existing content Videolyzer~\cite{Diakopoulos2008} allows users to comment on disputed claims in video clips. There are many other web annotation tools, including Google SideWiki, Annotea~\cite{Koivunen2001} and ScreenCrayons~\cite{Olsen2004}. 
+Annotation tools such as ReframeIt.com, ShiftSpace.org and SpinSpotter.com allow a user to manually annotate a web site that they disagree with, overlaying their own opinions on top of existing content. Videolyzer~\cite{Diakopoulos2008} allows users to comment on disputed claims in video clips. There are many other web annotation tools, including Google SideWiki, Annotea~\cite{Koivunen2001} and ScreenCrayons~\cite{Olsen2004}, each of which presents a different combination of features.
 
-These annotation tools all allow a user to annotate a page with their thoughts on the same topic. Dispute Finder does not allow a user to directly express their own opinions about a topic. Instead, the only way they can disagree with something that is said is to link it to an article from a trusted source that argues for a different point of view. We believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
+Unlike these annotation tools Dispute Finder does not allow a user to directly express their own opinions about a topic. Instead, the only way they can add promote an opinion is to link to an article from a trusted source that argues for that opinion. Our interviews lead us to believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
 
-Another key difference between these annotation tools and Dispute Finder is that these annotation tools all allow a user to annotate a {\it page} while Dispute Finder attempts to allow a user to annotate a {\it claim} everywhere it appears on the web. If a user of an annotation tool adds an annotation to a page then their annotation will only appear on that page. By contrast, if a user of Dispute Finder tells Dispute Finder to highlight a disputed claim, that claim will be highlighted on every web page on which Dispute Finder's algorithms determine that it appears.
+Another key difference between prior annotation tools and Dispute Finder is that prior annotation tools allow a user to annotate a {\it page} while Dispute Finder attempts to allow a user to annotate a {\it claim} everywhere it appears on the web. If a user of an annotation tool adds an annotation to a page then their annotation will only appear on that page. If a user of Dispute Finder tells Dispute Finder to highlight a disputed claim, that claim will be highlighted on every web page on which Dispute Finder's algorithms determine that the claim appears. The closest annotation system to Dispute Finder is perhaps SparTag.us~\cite{Hong2009}, which uses an SHA hash to attach an annotation to an exact paragraph, irrespective of where it appears on the web; however a claim may be written in many different ways, and be part of many different paragraphs.
 
 More generally, Dispute Finder is an example of an Open Hypermedia system~\cite{Bouvin2000,Wiil1996}. Like other Open Hypermedia systems, Dispute Finder lays an additional link structure over an existing hypertext document. In the case of Dispute Finder, the links are from disputed claims to information about those claims.
 
 Dispute Finder can also be seen as an example of a tagging tool~\cite{Marlow2006,Golder2006}. Tagging tools allow users to collectively catagorize information by associating it with a user-created set of tags. In the case of Dispute Finder, the tags are disputed claims, and the tagged entities are sentences that make those claims.
 
 
-\subsection{Sensemaking Tools}
+\subsection{Sensemaking and Argumentation Tools}
 
-Several Sensemaking, Decision Support, and Argumentation tools allow a user to annotate a document with structured information that they may then share with other users. TRELLIS~\cite{Gil2002} helps a user annotate the rationale for their decisions and opinions by annotating source documents with the facts that have been extracted from them, and connecting these facts into a decision graph. ClaimSpotter~\cite{Sereno2005,Serono2004} applies a similar approach to scholarly papers, allowing a user to make up a paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} uses entity extraction algorithms to allow an intelligence analyst to easily mark up a source document with facts about it.
+Several Sensemaking, Decision Support, and Argumentation tools allow a user to annotate a document with structured information that they may then share with other users. TRELLIS~\cite{Gil2002} helps a user annotate the rationale for their decisions and opinions by annotating source documents with the facts that have been extracted from them, and connecting these facts into a decision graph. ClaimSpotter~\cite{Sereno2005,Sereno2004} applies a similar approach to scholarly papers, allowing a user to make up a paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} uses entity extraction algorithms to allow an intelligence analyst to easily mark up a source document with facts about it.
 
-Cohere~\cite{Shum2008} is a web based argumentation tool that allows people to connect {\it ideas} together using arbitrary verbs such as "is an example of", "supports", or "challenges". An idea can contain a link to a web page that contains that idea, and the Cohere Firefox Extension informs a user when the page that they are is part of a known idea.
+Cohere~\cite{Shum2008} is a web based argumentation tool that allows people to connect {\it ideas} together using arbitrary verbs such as "is an example of", "supports", or "challenges". An idea can contain a link to a web page that contains that idea, and the Cohere Firefox Extension informs a user when the page that they are is the source for a known idea.
 
-All these tools are intended to be used to identify the source of information that is being used to reach a conclusion. These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim. While Dispute Finder does allow a user to mark up a trustworthy article as being the source of information, the focus is on making it easy for a user to mark up large numbers of documets that make claims that are disputed.
+The intention behind these tools is that a user uses them to identify the source of information that is being used to motivate a conclusion. These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim. 
 
+We experimented with several different ways of explaining a disputed claim to a user. One of the approaches we implemented was a user-editable argumentation graph that connected each claim to other claims that support and oppose it, in addition to articles that argue in favor of that claim. This graph was inspired by IBIS\footnote{Issue Based Information System}~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. 
 
-\subsection{Argumentation Tools}
-
-One of the design options we explored for Dispute Finder is to explain a disputed claim by showing a user a user-editable argument graph, explaining the various aspects of the issue, and linking to the various sources. This graph is inspired by IBIS\footnote{Issue Based Information System}~\cite{Rittel1973} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. These tools model debate as a graph of issues, positions, and arguments. 
-
-Isenmann and Reuter~\cite{Isenmann1997} identified a number of problems with using IBIS tools to help people resolve disputes and make decisions. Broadly speaking, they found that opposing groups were unkeen to agree to use an IBIS tool to resolve their disputes, and that users found it difficult to properly encode a complex issue as an argument graph. We encountered similar problems with using an IBIS graph to describe claims, which is why the current version of Dispute Finder presents a user with a list of articles, rather than an argument graph.
-
-Several alternative graph structures have been proposed for describing arguments and design rationale. WinWin~\cite{Boehm2006} models the different stakeholders and their different motives. The Toulmin Model~\cite{toulmin1958} breaks down the logical way in which arguments are formed from evidence, rules, and exceptions. QOS~\cite{Maclean1991} explicitly states the criteria used to choose between positions. 
+Isenmann and Reuter~\cite{Isenmann1997} identified a number of problems with using IBIS tools to help people resolve disputes and make decisions. Broadly speaking, they found that opposing groups were unkeen to agree to use an IBIS tool to resolve their disputes, and that users found it difficult to properly encode a complex issue as an argument graph. We encountered similar problems with using an argumentation graph in Dispute Finder, which is why the current version of Dispute Finder presents a user with a list of articles rather than an argument graph.
 
 
 \subsection{Recognizing Textual Entailment}
 
-The textual entailment problem is one of the standard problems in natural language processing. In the 3-way variant of the PASCAL Recognizing Textual Entailment (RTE) Challenge\footnote{http://pascallin.ecs.soton.ac.uk/Challenges/RTE/}, an algorithm is given two sentences T and H and asked to return one of three results: T {\it entails} H, T {\it contradicts} H, or the truth of H cannot be determined from T. 
+\todo{Trim this down??}
 
-Dispute Finder uses the standard Local Lexical Matching (LLM) algorithm, which is commonly used as a non-trivial baseline to which other algorithms are compared~\cite{Braz2005}. LLM simply reduces a sentence to a bag of lemmatized words, removes stopwords, checks for negations, and then looks at what the overlap is. LLM is far from being state of the art and many more sophisticated algorithms exist. One popular approach is to treat a sentence as being a logical formula and then attempt a logical proof, taking into account knowledge about the world~\cite{Bayer2005,Bos2005}. Snow et al~\cite{Snow2006} parse a phrase into a syntax tree, and then use syntax heuristics to determine entailment.
+The textual entailment problem is one of the standard problems in natural language processing. In the 3-way variant of the PASCAL Recognizing Textual Entailment (RTE) Challenge\footnote{http://pascallin.ecs.soton.ac.uk/Challenges/RTE/}, an algorithm is given two sentences T and H and asked to return one of three answers: T {\it entails} H, T {\it contradicts} H, or the truth of H cannot be determined from T. 
 
-While Dispute Finder would probably improve its accuracy if it used a more sophisticated algorithm, LLM has the advantage of being simple enough to run efficiently inside a users web browser for every page they look at without causing a noticeable slowdown. 
+Several of the core challenges in Dispute Finder are forms of the textual entailment problem. Finding disputed claims is a special case of finding two sentences on the web, such that one {\it contradicts} the other. Finding a snippet that makes a disputed claim is a special case of finding a snippet that {\it entails} a disputed claim. 
 
+One could in theory determine which snippets to highlight by using a textual entailment algorithm to determine whether any snippet is {\it condradicted} by any other sentence on the web, however the vast number of sentences that one would have to compare makes this approach impractical. Dispute Finder thus instead uses separate approaches to identify disputed claims, and then looks for snippets that {\it entail} known disputed claims. Another advantage of this two-stage approach is that, by tying snippets to a simplified set of unique disputed claims, it becomes easier to organize articles that support and oppose a particular claim.
+
+Dispute Finder runs a simple textual entailment algorithm inside the browser extension to detect snippets that imply disputed claims. The algorithm we use is a simple varient of the widely used Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006} which is a baseline to which other algorithms are often compared~\cite{Braz}. LLM simply reduces a sentence to a bag of lemmatized words, removes stopwords, checks for negations, and then looks at what the overlap is between the words in the two phrases. Since it would not be practical for us to apply a textual entailment algorithm to all combinations of phrases on a page and disputed claims in our database, textual entailment is only attempted if a potential match is indicated by a key-phrase co-occurrence algorithm, which we discuss further in Section~\ref{our-nlp}.
+
+\todo{Implement word weighting and word similarity?}
+
+%Following the taxonomy used by Jijkoun and Rijke~\cite{Jijkoun2006} our algorithm is M-sim-imp, that is, we assign entailment scores based soley on word overl
+%
+%The algorithm we use is a simple Local Lexical Matching (LLM) algorithm.
+
+LLM is far from being state of the art and many more sophisticated algorithms exist. Modern approaches include treating the sentence as a logical formula and attempting a logical proof~\cite{Bayer2001,Bos2005}, parsing each phrase into a syntax tree and using syntax heuristics~\cite{Snow2006}, infering inference rules that can transform one sentence into another while preserving meaning~\cite{Lin2002,Dinu2009,Bhagat2009}, and using baysian inference to infer whether one phrase looks like the kind of phrase that would have included each word in the other phrase~\cite{Glickman2005}. 
+
+While Dispute Finder would almost certainly improve its precision and recall if it used a more sophisticated algorithm, LLM has the advantage of being simple enough to run efficiently inside a user's web browser for every page they look at without causing a noticeable slowdown. Naturally, as processor speeds improve, it will become practical to use increasingly sophisticated algorithms.
+
+\todo{Talk about Glickman et all 2005 and MT system of Bayer et al 2005}
+\todo{Cite Web Based probabalistic textual entailment}
+\todo{Cite MITRE's submission to the EU PASCAL RTE Challenge}
+
+\todo{Talk a lot about how people do textual entailment now}
 \todo{Do human-guided approach that works well? Talk more about human guided task.}
+
+
+\subsection{Finding Repeated Information on the Web}
+
+\todo{is this important}
+
+When Dispute Finder highlights many snippets that make a single disputed claim, this is a special case of the more general task of finding repeated information on the web. Kolak and Schillit~\cite{Kolak2008} look for passages places where one book quotes another, qSign~\cite{Kim2009} looks for places where one blog has quoted another, Plagarism detectors like COPS~\cite{COPS} and SCAM~\cite{SCAM} look for places where students have copied each other, and duplicate-detection is often used to clean up web searches~\cite{web-copy-detect}. MemeTracker~\cite{Backstrom2009} looked for phrases shared by multiple news stories, accounting for minor variations, and used this to track the way that news flows between traditional news soures and blogs.
+
+\todo{Cite plagarism detection}
+\todo{Talk about how our algorithm looks for key terms used in disputed claims}
+\todo{Talk about how our first pass NLP algo is rather like }
 
 
 \subsection{Finding Disputed Information on the Web}
@@ -226,36 +257,24 @@ An important part of Dispute Finder is identifying what claims are disputed. Sev
 
 Kittur et al~\cite{Kittur2007} developed an algorithm that can determine whether a wikipedia page is about a disputed topic. Kittur and Chi~\cite{Kittur2009} broke down the disputed pages by catagory and found that People, Society, and Religion were the categories with the most disputed pages.
 
+\subsection{Extracting Information from the Web}
+
 Information extration tools such as TextRunner~\cite{Etzioni2008} 
+Read The Web
 
 TextRunner~\cite{Etzioni2008} 
 
 \todo{cite lots of Etzioni stuff}
 
+\cite{SnowBall}
+\cite{Read The Web}
+\cite{Information Extraction from Wikipedia}
+\cite{KnowItAll}
+\cite{TextRunner}
 
 \todo{Online Dispute Resolution}
 
 \todo{Cite Kittur et al}
-
-
-\subsection{Finding Repeated Information on the Web}
-
-\todo{Cite google quotation stuff and Ed Chi movable quotations stuff}
-
-
-A key component of Dispute Finder is that in needs to identify phrases on the web that make a know disputed claim. The techniques that Dispute Finder uses have been influenced by related work that does similar things.
-
-\cite{Kim2009} Efficient Overlap and Content Reuse Detection.
-
-\cite{schillit?}
-
-Kolak and Schillit~\cite{Kolak2008} detect cases where one book has quoted from another one, and use this to create links between books. Dispute Finder also creates new links between information, but it's links are created by users, rather than being mined automatically.
-
-\cite{Something by Ed CHi about this}
-
-\todo{Talk about textual entailment}
-
-\todo{Talk about MemeTracker}
 
 
 \subsection{Measuring Trust}
@@ -290,7 +309,7 @@ Several tools layer an alternative navigation graph over information on the web.
 Users interact with Dispute Finder in two ways. Skeptical readers browse the web using the Dispute Finder Firefox extension and discover when pages they read make disputed claims. Activists tell Dispute Finder about disputed claims that they care about, and add evidence to support their point of view.
 
 
-\subsection{Highlighting Disputed Claims}
+\subsection{Highlighting Snippets}
 
 Dispute Finder aims to inform users when information they read on the web makes claims that are disputed by sources that they might trust. We are particularly interested in informing users about claims that they hadn't thought about before, hadn't realized were disputed by sources they repect, or have not yet established a strong opinion on.
 
@@ -329,6 +348,15 @@ There are several reasons why it is useful to associate a claim with information
 
 We prototyped and tested two different ways of showing a user alternative points of view to the disputed claim they are looking at:
 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{pictures/popup_graph_crop.png}
+	\caption{Argumentation graph interface for a disputed claim}
+	\label{popup_graph}
+	\end{center}
+\end{figure}
+
+
 \begin{description}
 \item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them an IBIS-style\cite{gibis} argumentation graph that explains the structure of the argument against the claim. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of sources that argue in favor of that claim (Figure\ref{arg-graph?})
 
@@ -359,6 +387,15 @@ One of the key challenges for Dispute Finder is determining what claims are Disp
 
 What we are after is not a list of everything that has every been disputed by anyone, but a list of claims that are frequently believed and are opposed by reliable sources. In some sense almost everything is disputed by someone on the web. There are enough people writing enough opinions that if we alerted users every time anything they read was disputed by anyone then Dispute Finder would would be so distracting as to be worthless. Similarly, there is little point spending effort rebutting claims that nobody believes. For example there is reliable evidence that the moon is made of cheese, but few people believe this claim is true.
 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{pictures/add_claim.png}
+	\caption{Interface for adding a new disputed claim}
+	\label{add_claim}
+	\end{center}
+\end{figure}
+
+
 Fortunately, several web sites already maintain databases of disputed claims, together with arguments against them. For example Snopes.com maintains a list of urban legends and politifact.com maintains a list of false claims about politics. We automatically import all claims that these sites debunk into our database and treat the sites themselves as reliable sources about the claims they debunk. In the future we intend to also import claims from other such sites.
 
 We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{web-add?}). The web interface is modeled after common issue-reporting software such as UserVoice\footnote{url?}. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing source.
@@ -368,6 +405,23 @@ We also allow users to add their own disputed claims using the Dispute Finder we
 \subsection{Finding Snippets}
 
 Given a web page that the user is browsing, and a database of claims that we believe are disputed, how can we determine what snippets on the page are making claims that are in our database? We implemented and tested four approaches:
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{pictures/mark_disputed.png}
+	\caption{Explicit page marking}
+	\label{mark_disputed}
+	\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=7cm]{pictures/training.png}
+	\caption{Bulk page marking}
+	\label{training}
+	\end{center}
+\end{figure}
+
 
 \begin{description}
 \item[Explicit page marking:] If the page a user is reading contains a snippet that makes a disputed claim, the user can mark that snippet by selecting it, right clicking, and selecting "mark as disputed" from a popup menu.
@@ -463,6 +517,16 @@ Several users got confused by claims that referred to similar events at differen
 Several users expressed an interest in being able to add a disputed claim without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. 
 
 Several users created claims that had ambiguous meanings. One user entered a disputed claim about "Wood", meaning the guitarist "Ronnie Wood" of the Rolling Stones. Similar problems occured with claims that were specific to a particular country, or a particular point in time. 
+
+
+The biggest problem that Dispute Finder has right now is that it is rare that Dispute Finder will highlight a snippet that makes a claim that the user did not already know was disputed. This is for two reasons: our database of disputed claims is currently too small (around two thousand claims at the time of writing), and our textual entailment algorithm is not sufficiently sophisticated to stand a good chance of highlighting snippets when they make those claims.
+
+
+
+The biggest problem that Dispute Finder has right now is that its coverage is not very high. Both our database of disputed claims, and the number of snippets that we highlight that make each disputed claim
+
+In its current state, it is unlikely that a user will see a snippet highlighted that makes a claim that they did 
+
 
 \todo{Need to say that the argumentation graph contains all existing claims and that it was a simple "supports"/"oppsose" graph.}.
 
