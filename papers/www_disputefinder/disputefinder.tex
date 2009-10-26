@@ -127,7 +127,15 @@ In this paper we describe Dispute Finder, a tool that alerts a user when informa
 A user can install Disute Finder as an extension to the Firefox\footnote{http://www.mozilla.org/firefox} web browser. When installed Dispute Finder will highlight snippets of text that make disputed claims (Figure~\ref{highlight}). 
 If a user clicks on a highlighted snippet, Dispute Finder will show articles that put forward different points of view,  each of which is from a source we believe the user is likely to trust (Figure~\ref{claimview}). 
 
-Dispute Finder consists of a database, an API, and a Firefox browser extension. The database contains a set of known disputed claims that appear on the web, articles that support or oppose each disputed claim, and hints about how to recognise them when they appear on a web page. The API allows an external client to access the information in the database and use it to tell whether particular text is likely to be making a known disputed claims. The Firefox extension uses the API to determine whether the web page a user is viewing makes disputed claims. The API could also be used by other services that present users with potentially-disputed content, such as search engines, news readers, email programs, or content management systems.
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8cm]{pictures/snippet_claim_article_fancy2.png}
+	\caption{Snippets entail claims, which are entailed or contradicted by articles}
+	\label{snippet_claim_article}
+	\end{center}
+\end{figure}
+
+Dispute Finder consists of a database, an API, and a Firefox browser extension. The database contains a set of known disputed claims that appear on the web, articles that support or oppose each disputed claim, and hints about how to determine whether a text snippet entails a known disputed claim (Figure~\ref{snippet_clim_article}). The API allows an external client to access the information in the database and use it to tell whether particular text is likely to be making a known disputed claims. The Firefox extension uses the API to determine whether the web page a user is viewing makes disputed claims. The API could also be used by other services that present users with potentially-disputed content, such as search engines, news readers, email programs, or content management systems.
 
 \todo{Figure that does a smaller highlight}
 
@@ -210,6 +218,7 @@ Isenmann and Reuter~\cite{Isenmann1997} identified a number of problems with usi
 
 
 \subsection{Recognizing Textual Entailment}
+\label{related:entailment}
 
 \todo{Trim this down??}
 
@@ -217,7 +226,7 @@ The textual entailment problem is one of the standard problems in natural langua
 
 Several of the core challenges in Dispute Finder are forms of the textual entailment problem. Finding disputed claims is a special case of finding two sentences on the web, such that one {\it contradicts} the other. Finding a snippet that makes a disputed claim is a special case of finding a snippet that {\it entails} a disputed claim. 
 
-One could in theory determine which snippets to highlight by using a textual entailment algorithm to determine whether any snippet is {\it condradicted} by any other sentence on the web, however the vast number of sentences that one would have to compare makes this approach impractical. Dispute Finder thus instead uses separate approaches to identify disputed claims, and then looks for snippets that {\it entail} known disputed claims. Another advantage of this two-stage approach is that, by tying snippets to a simplified set of unique disputed claims, it becomes easier to organize articles that support and oppose a particular claim.
+One could in theory determine which snippets to highlight by using a textual entailment algorithm to determine whether any snippet is {\it condradicted} by any other sentence on the web, however the vast number of sentences that one would have to compare makes this approach impractical. Dispute Finder thus instead uses specialized approaches to identify disputed claims, and then looks for snippets that {\it entail} known disputed claims. Another advantage of this two-stage approach is that, by tying snippets to a simplified set of unique disputed claims, it becomes easier to organize articles that support and oppose a particular claim.
 
 Dispute Finder runs a simple textual entailment algorithm inside the browser extension to detect snippets that imply disputed claims. The algorithm we use is a simple varient of the widely used Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006} which is a baseline to which other algorithms are often compared~\cite{Braz}. LLM simply reduces a sentence to a bag of lemmatized words, removes stopwords, checks for negations, and then looks at what the overlap is between the words in the two phrases. Since it would not be practical for us to apply a textual entailment algorithm to all combinations of phrases on a page and disputed claims in our database, textual entailment is only attempted if a potential match is indicated by a key-phrase co-occurrence algorithm, which we discuss further in Section~\ref{our-nlp}.
 
@@ -366,11 +375,20 @@ We prototyped and tested two different ways of showing a user alternative points
 	\end{center}
 \end{figure}
 
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=6cm]{pictures/popup_abortion_shadow.png}
+	\caption{Article List interface for a disputed claim}
+	\label{article_list}
+	\end{center}
+\end{figure}
+
+
 
 \begin{description}
 \item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them a simple user-editable argumentation graph~\cite{Conklin1987a}. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of articles that argue in favor of that claim (Figure\ref{popup_graph})
 
-\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{claimview}). For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting "use as evidence" from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
+\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{article_list}). For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting "use as evidence" from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
 \end{description}
 
 The argumentation graph makes it easier to see {\it why} a claim is disputed, while the article lists make it easier to see {\it who} supports or opposes the claim. 
@@ -418,22 +436,29 @@ There is a difficult trade-off here. If we only show users sources that we belie
 
 \subsection{What is Disputed?}
 
-One of the key challenges for Dispute Finder is determining what claims are Disputed. Dispute Finder takes the approach of maintaining a database of known disputed claims, which it then looks for on web pages.
+One of the biggest challenges in Dispute Finder, is how to build a list of disputed claims that should be highlighted for users. As discussed in Section~\ref{related:entailment}, rather than directly inferring whether a snippet is disputed by a trusted article on the web, Dispute Finder instead builds a database of known disputed claims and tries to determine whether a snippet on a web page entails the truth of one of these claims.
 
-What we are after is not a list of everything that has every been disputed by anyone, but a list of claims that are frequently believed and are opposed by reliable sources. In some sense almost everything is disputed by someone on the web. There are enough people writing enough opinions that if we alerted users every time anything they read was disputed by anyone then Dispute Finder would would be so distracting as to be worthless. Similarly, there is little point spending effort rebutting claims that nobody believes. For example there is reliable evidence that the moon is made of cheese, but few people believe this claim is true.
+\todo{We are repeating information between here and the related work section on Recognizing Textual Entailment}
+
+We do not want the database of disputed claims to contain everything that has every been disputed by anyone. In some sense almost everything is disputed by someone on the web. There are enough people writing enough opinions that if we alerted users every time anything they read was disputed by anyone then Dispute Finder would would be so distracting as to be worthless. Similarly, there is little point spending effort rebutting claims that nobody believes. For example there is reliable evidence that the moon is made of cheese, but few people believe this claim is true. What we want is a set of claims that are widely believed and for which there is credible evidence supporting other points of view.
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/add_claim.png}
-	\caption{Interface for adding a new disputed claim}
+	\includegraphics[width=8cm]{pictures/add_claim_list.png}
+	\caption{Interface for adding a new disputed claim manually}
 	\label{add_claim}
 	\end{center}
 \end{figure}
 
+Fortunately, several web sites already maintain databases of disputed claims, together with arguments against them. For example Snopes.com maintains a list of urban legends and Politifact.com maintains a list of false claims about politics. We automatically import all claims that either of these sites debunk into our database and treat the sites themselves as reliable sources about the claims they debunk. In the future we intend to also import claims from other such sites, and allow users to choose which feeds of disputed claims should be used to highlight snippets on pages they browse.
 
-Fortunately, several web sites already maintain databases of disputed claims, together with arguments against them. For example Snopes.com maintains a list of urban legends and politifact.com maintains a list of false claims about politics. We automatically import all claims that these sites debunk into our database and treat the sites themselves as reliable sources about the claims they debunk. In the future we intend to also import claims from other such sites.
+We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{add_claim}). The web interface is modeled after common issue-reporting software such as Uservoice.com and Bugzilla.org. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing article.
 
-We also allow users to add their own disputed claims using the Dispute Finder web interface (Figure\ref{web-add?}). The web interface is modeled after common issue-reporting software such as UserVoice\footnote{url?}. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing source.
+The automatic import feeds allow Dispute Finder to bootstrap a large database of disputed claims without needing a large active user community and the crowdsourcing aspect allows users to clean up claims that were not phrased well when imported, and add claims that are not part of any of our input feeds.
+
+\todo{Say how many disputed claims}
+
+\todo{talk about duplicates}
 
 \todo{Actually import the Politifact data}
 
