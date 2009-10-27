@@ -41,25 +41,27 @@
 	Author list to be determined
 }
 
-%\author{
-%\alignauthor Rob Ennals\\
-%       \affaddr{Intel Labs Berkeley}\\
-%       \affaddr{2150 Shattuck Ave}\\
-%       \affaddr{Berkeley, CA, USA}\\
-%       \email{robert.ennals@intel.com}
-%\alignauthor Beth Trushkowsky\\
-%       \affaddr{Computer Science Division}\\
-%       \affaddr{University of California at Berkeley}\\
-%       \affaddr{Berkeley, CA, USA}\\
-%       \email{trush@berkeley.edu}
-%\alignauthor John Mark Agosta\\
-%       \affaddr{Intel Labs Santa Clara}\\
-%       \affaddr{2200 Mission College Blvd}\\
-%       \affaddr{Santa Clara, CA, USA}\\
-%       \email{john.m.agosta@intel.com}
-%}
-%
-%\additionalauthors{Additional authors: Tad Hirsch (Intel Research PaPR, email: {\texttt{tad.hirsch@intel.com}}) and Tye Rattenbury (Intel Research PaPR), email: {\texttt{tye.rattenbury@intel.com}})}
+\author{
+\alignauthor Rob Ennals\\
+       \affaddr{Intel Labs Berkeley}\\
+       \affaddr{2150 Shattuck Ave}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{robert.ennals@intel.com}
+\alignauthor Beth Trushkowsky\\
+       \affaddr{Computer Science Division}\\
+       \affaddr{University of California at Berkeley}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{trush@berkeley.edu}
+\alignauthor John Mark Agosta\\
+       \affaddr{Intel Labs Santa Clara}\\
+       \affaddr{2200 Mission College Blvd}\\
+       \affaddr{Santa Clara, CA, USA}\\
+       \email{john.m.agosta@intel.com}
+}
+
+%\sloppy
+
+\additionalauthors{Tye Rattenbury and Tad Hirsch, Intel Research Principles and Practices,\texttt{[tye.rattenbury,tad.hirsch]@intel.com}}
 
 
 \maketitle
@@ -545,7 +547,18 @@ The Design of Dispute Finder has been influenced by several different kinds of i
 
 \subsection{Survey}
 
-\subsection{Interviews}
+We circulated a survey amongst members of a local debate club - a set of people who we believe is a good match for our Skeptical Reader and Activist personas. They survey asked respondants to tell us how often they typically engaged in various behaviours on the web. Although the survey was too small to be statistically useful, the results gave some useful information that we believe is worth reporting.
+
+Most people 65\% said that some of the information they read is not trustworthy, but they know which sites they can trust. Nobody said that they trusted the most of the information they read. 17\% trust very little of the information they read, and 9\% feel confused about what they can trust.
+
+Everyone had used another source to double-check information they had read online. 74\% "often" search the web to find web pages that confirm a claim they have read. 64\% "often" check a website they trust. 55\% "sometimes" ask a friend and 55\% "sometimes" check a book.
+
+When deciding whether to trust a web site, the most important factor was whether the site was run by an organization they trusted (61\% often, 30\% sometimes), followed by whether the site was linked from another site they trusted (18\%,50\%), and whether the site was well written (18\%,50\%).
+
+% \subsection{Interviews}
+
+\todo{Do we have enough interview content to integrate it? Probably not yet...}
+\todo{Is the survey interesting enough to quote here? Only 23 people, and not exciting. Just quote inline with findings.}
 
 \subsection{Think-Aloud User Studies}
 
@@ -553,7 +566,7 @@ We performed three qualitative "think aloud" user studies. The aim of these stud
 
 \subsubsection{Procedure}
 
-For the first two studies, we recruited participants using Craigslist. We posted a message asking people to tell us how they used the web to form and promote their opinions, and used this to select people who we thought might fit our "skeptical reader" and "activist" personas. After these studies, we decided that the kind of person who looks for jobs of craigslist is unlikely to be a good fit for our personas, and so for the final study we instead used people we knew personally and thought fit our personas well. All study groups were small. The first study had twelve participants (five female, seven male), the second study had six participants (four female, two male), and the final study had ?? participants (?? male, ?? male). 
+For the first two studies, we recruited participants using Craigslist. We posted a message asking people to tell us how they used the web to form and promote their opinions, and used this to select people who we thought might fit our "skeptical reader" and "activist" personas. After these studies, we decided that the kind of person who looks for jobs of craigslist is unlikely to be a good fit for our personas, and so for the final study we instead used people we knew personally and thought fit our personas well. All study groups were small. The first study had twelve participants (five female, seven male), the second study had six participants (four female, two male), and the final study had six participants participants (all male). 
 
 Each batch of users was shown a different iteration of the Dispute Finder design. The first two batches used versions in which users marked snippets explicitly, and the popup window for a claim showed an argumentation graph describing the structure of the different alternative points of view. The final group used a version in which a textual entailment algorithm on the client was used to determine what to mark, and the popup window showed lists of sources that support or oppose the claim. We present the findings of the three user studies together. Where a comment refers to particular version we make this clear.
 
