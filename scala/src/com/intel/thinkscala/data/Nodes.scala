@@ -80,7 +80,7 @@ trait Nodes extends BaseData {
 	val unignore_claim = stmt("DELETE FROM ignore_claim WHERE claim_id = ? AND user_id = ?")
 	def unIgnoreClaim(claimid : Int, userid : Int) = unignore_claim.update(claimid,userid)
 
-	def hotClaims = claims(0) where ("disagree_count > 0") orderdesc ("id") rows
+	def hotClaims = claims(0) where ("disagree_count > 0") orderdesc ("date") rows
 	
 	val all_claims = stmt("SELECT id,text FROM v2_node WHERE type=?")
 	def allClaims = all_claims.queryRows("claim")
