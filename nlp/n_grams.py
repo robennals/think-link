@@ -13,7 +13,7 @@ $ python n_grams.py ptree.pkl the_text
  -d debug
  -f read the text from file rather than cmd line
 """
-csv_id =   '$Id: n_grams.py 658 2009-07-09 00:39:04Z jmagosta $'
+csv_id =   '$Id: n_grams.py 62 2009-10-22 07:38:18Z jmagosta $'
 
 dbg        = False
 test_file   = None
@@ -171,7 +171,7 @@ class ngram:
         self.ng_node = the_node
         if collect_text:
             self.text.append(the_node.pt_node.w_index)
-        ## Assume a binary state
+        ## Dont assume a binary state
         for (lbl, ct) in the_node.pt_node.counts.iteritems():
             self.counts[lbl] = ct
             self.count_sum += ct
@@ -272,6 +272,7 @@ def n_grams_prior(ngrams):
 
 def embellish_tree(token_seq, pt_tree_to_classify_with):
     """Create the ng_tree from the test text sequence.
+    Tokenize the words before passing in the token_seq.
     """
     the_tree = ng_tree(pt_tree_to_classify_with)
     token_index_seq = [pt_tree_to_classify_with.words.word2index(w) for w in token_seq]
