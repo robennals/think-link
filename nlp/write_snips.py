@@ -18,7 +18,7 @@ Also convert the ptree into ngrams and print them
 Usage:
 $ python write_snips.py -n 2 [-v] data.csv
 """
-svn_id =   '$Id: write_snips.py 654 2009-07-05 16:02:57Z jmagosta $'
+svn_id =   '$Id: write_snips.py 50 2009-10-13 16:35:08Z jmagosta $'
 
 ## Hash the turk excel csv files into a 2 dim vector of
 ## two text vectors - the first of yes text, the second of no text

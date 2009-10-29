@@ -18,11 +18,13 @@
 Usage:
 $ python ptree.py file_of_test_tokens
 """
-csv_id =   '$Id: ptree.py 654 2009-07-05 16:02:57Z jmagosta $'
+csv_id =   '$Id: ptree.py 62 2009-10-22 07:38:18Z jmagosta $'
 ########################################################################
 
 import pprint, string, sys, time
 import word_dict
+
+dbg = True
 
 #_______________________________________________________________________
 
@@ -42,17 +44,27 @@ class labels(dict):
     def print_class_count(self):
         for (keys, values) in self.iteritems():
             print keys, values,
-
+ 
 
 #_______________________________________________________________________
-class pt_node:
+class pt_node(object):
     """prefix tree node. Contains the word-token, its children
     and the counts for that sequence."""
-    def __init__(self, words, token):
+
+    pt_node_ct = 0
+    
+    def __init__(self, words, token, lbls=None):
+
+        pt_node.pt_node_ct +=1
+        if dbg and pt_node.pt_node_ct % 100 == 0:
+            print '.',
         self.w_index = words.add_word(token)
         ## position in the ngram (e.g. the first node seq_no == 1
         self.seq_no = 0
-        self.counts = labels()
+        if lbls:
+            self.counts = labels(labels_list=lbls.keys()) # really?
+        else:
+            self.counts = labels()
         ## list of child nodes
         self.kids =[]
 
@@ -71,8 +83,9 @@ class pt_node:
     def print_pt_node(self, words=None, kids_p = False):
         print self.w_index,
         if words:
-            print ":'"+ words.index2word(self.w_index),
-        print "' @", self.seq_no,
+            print ":'"+ words.index2word(self.w_index) + "' @", self.seq_no,
+        else:
+            print "' @", self.seq_no,
         #print 4*"%d\t" % (self.seq_no, self.yes_ct, self.no_ct, self.un_ct)
         self.counts.print_class_count()
         if kids_p:
@@ -81,19 +94,22 @@ class pt_node:
 
 #_______________________________________________________________________
 ### A tree of tokens, for text from multiple classes.
-class ptree:
+class ptree(object):
 
-    def __init__(self, words, depth = 2, dent = '__'):
+    def __init__(self, words, depth = 2, dent = '__', lbls = labels()):
         ## How deep a tree to build; the n in n-gram
         self.depth = depth
         ## Indent level for printing tree
         self.dent = dent
+        ## The immutable list of class labels
+        self.labels = lbls
         ## which dictionary to use, object of type word_dict
         self.words = words
         ## only root can be the word ''
-        self.root = pt_node(self.words, '')
+        self.root = pt_node(self.words, '', self.labels)
         # a list of the last place pt_nodes were added.
         self.last_leaves = []
+
 
     def find_sibling_or_create(self, parent, word, which_class):
         # and don't duplicate it if it already exists.
@@ -105,7 +121,7 @@ class ptree:
                 old_node.inc_count(which_class)
         # else create a new one
         if not old_node:
-            new_node = pt_node(self.words, word)
+            new_node = pt_node(self.words, word, lbls = self.labels)
             new_node.make_me_a_child(parent, which_class)
             old_node = new_node
         return old_node
@@ -131,6 +147,9 @@ class ptree:
     def print_tree(self):
         self.root.print_pt_node(self.words, kids_p=True)
         self.print_tree_aux(self.root, self.dent)
+        if dbg:
+            print '1-grams ', len(self.root.kids)
+            print 'nodes   ', pt_node.pt_node_ct
 
     def print_tree_aux(self, node, indent):
         "Recur down the tree"

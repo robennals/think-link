@@ -20,7 +20,7 @@ from turkdata import *
 Better yet - import this class into both the writing and reading app,
 and don't execute this file.
 """
-csv_id =   '$Id: turkdata.py 654 2009-07-05 16:02:57Z jmagosta $'
+csv_id =   '$Id: turkdata.py 50 2009-10-13 16:35:08Z jmagosta $'
 ########################################################################
 
 
