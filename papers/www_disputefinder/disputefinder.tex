@@ -129,7 +129,9 @@ In recent years, we have seen the emergence of a new class of applications that 
 A user can install Dispute Finder as an extension to the Firefox\footnote{http://www.mozilla.org/firefox} web browser. When installed Dispute Finder will highlight snippets of text that make disputed claims (Figure~\ref{highlight}). 
 If a user clicks on a highlighted snippet, Dispute Finder will show articles that put forward different points of view,  each of which is from a source we believe the user is likely to trust (Figure~\ref{claimview}). 
 
-Dispute Finder consists of a server-side database and a Firefox browser extension. The database contains a set of known disputed claims that appear on the web. For each claim, the database contains references to articles on the web that support or oppose it, and hints about how to recognize that disputed claim on the web (Figure~\ref{snippet_claim_article}). The browser extension maintains its own local copy of the database, and runs a textual entailment algorithm on every sentence the user views to determine whether it is likely to be making a known disputed claim. 
+Dispute Finder consists of a server-side database and a Firefox browser extension. The database contains a set of known disputed claims that appear on the web. A disputed claim is a statement about the world that some people disagree with. For example ``global warming is a hoax'', ``gun control will reduce crime'', ``eskimos have many words for snow'', or ``margarine is healthier than butter''. A claim can be stated in many ways. For example ``margarine is healthier than butter'' and ``butter is worse for you than margarine'' are paraphrases of the same claim. For each claim, the database contains references to articles on the web that support or oppose it, and hints about how to recognize that disputed claim on the web (Figure~\ref{snippet_claim_article}).
+
+The browser extension maintains its own local copy of the database, and scans the text on the current page for text snippets that appear to {\it entail} a claim. A snippet is a continuous region of text on a web page. A snippet is defined to entail a claim if a normal user reading that snippet would reasonably conclude that the author of the page believed the claim was true. For example ``the english have as many words for rain as the eskimos have for snow'' {\it entails} ``eskimos have many words for snow'', even though this claim is never stated explicitly.
 
 \todo{Should we mention the API? Cut from this version as tangential}
 
@@ -142,6 +144,7 @@ In this paper, we describe the design of Dispute Finder, the constituent problem
 	\label{snippet_claim_article}
 	\end{center}
 \end{figure}
+
 
 \subsection{Personas}
 
@@ -160,7 +163,7 @@ There is ample evidence that at least some people are skeptical about the inform
 
 According to Pew Research~\cite{PewResearch2008}, a substantial proportion of people regularly get information from sources that they do not fully trust. Their 2008 survey found that 33\% of Democrats regularly watch Fox News, and yet only 19\% believe all or most of what Fox News says. Similarly, 51\% of Democrats regularly watch CNN, and yet only 35\% believe all or most of what CNN says. While these figures covered TV, rather than the web, Pew report that 48\% of web users people regularly follow search links to unfamiliar sources, and that users view online sources such as blogs with more skepticism that their print, broadcast, and cable counterparts. 
 
-These findings were backed up by our interviews. Several participants told us that they regularly get information from sources that they do not entirely trust. A user might read information from an untrusted source because the source is interesting, entertaining, linked to from somewhere else, or it came up in a search. For example they might read Michael Moore because he is entertaining, or read articles mailed to them by friends. 
+These findings were backed up by our interviews (Section~\ref{sec:interviews}). Several participants told us that they regularly get information from sources that they do not entirely trust. A user might read information from an untrusted source because the source is interesting, entertaining, linked to from somewhere else, or it came up in a search. For example they might read Michael Moore because he is entertaining, or read articles mailed to them by friends. 
 
 \todo{Talk about people reading from a wide range of sources.}
 
@@ -176,13 +179,13 @@ Dispute Finder is designed to deal primarily with cases where a user is not awar
 
 Many other tools highlight disputed information on web pages. ReframeIt.com, ShiftSpace.org and SpinSpotter.com allow a user to manually annotate a web site that they disagree with, overlaying their own opinions on top of existing content. Videolyzer~\cite{Diakopoulos2008} allows users to comment on disputed claims in video clips. There are many other web annotation tools, including Google SideWiki, Annotea~\cite{Koivunen2001} and ScreenCrayons~\cite{Olsen2004}, each of which presents a different combination of features, and most of which could be used to annotate disputed content.
 
-Unlike these annotation tools Dispute Finder does not allow a user to directly express their own opinions about a topic. Instead, the only way they can add or promote an opinion is to link to an article from a trusted source that argues for that opinion. Our interviews lead us to believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
+Rather than allowing a user to directly express their own opinions about a topic, Dispute Finder instead requires a user who wants to promote a particular opinion to do so by linking to an article from a trusted source that argues for that opinion. Our interviews (Section~\ref{sec:interviews}) lead us to believe that most users would rather know the cases where a trusted source disagrees with what is being written, rather than when an unknown user disagrees.
 
-Another key difference between prior annotation tools and Dispute Finder is that prior annotation tools allow a user to annotate {\it text on a page} while Dispute Finder attempts to allow a user to annotate a {\it claim} everywhere it appears on the web. If a user of an annotation tool adds an annotation to a page then their annotation will only appear on that page. If a user of Dispute Finder tells Dispute Finder to highlight a disputed claim, that claim will be highlighted on every web page on which Dispute Finder's algorithms determine that the claim appears. The closest annotation system to Dispute Finder is perhaps SparTag.us~\cite{Hong2009}, which uses an SHA hash to attach an annotation to an exact paragraph, irrespective of where it appears on the web; however a claim may be written in many different ways, and be part of many different paragraphs.
+Another key difference between prior annotation tools and Dispute Finder is that prior annotation tools allow a user to annotate {\it text on a particular page} while Dispute Finder attempts to allow a user to annotate a {\it general claim, everywhere it appears on the web, however it is worded}. If a user of an annotation tool adds an annotation to a page then their annotation will only appear on that page. If a user of Dispute Finder tells Dispute Finder to highlight a disputed claim, that claim will be highlighted on every web page on which Dispute Finder's algorithms determine that the claim appears. The closest annotation system to Dispute Finder is perhaps SparTag.us~\cite{Hong2009}, which uses an SHA hash to attach an annotation to an exact paragraph, irrespective of where it appears on the web; however a claim may be written in many different ways, and be part of many different paragraphs.
 
 Several Sensemaking, Decision Support, and Argumentation tools allow a user to annotate a document with structured information that they may then share with other users. TRELLIS~\cite{Gil2002} helps a user annotate the rationale for their decisions and opinions by annotating source documents with the facts that have been extracted from them, and connecting these facts into a decision graph. ClaimSpotter~\cite{Sereno2005,Sereno2004} applies a similar approach to scholarly papers, allowing a user to make up a paper with logical subject-verb-object triples describing important claims made in the document. Entity Workspace~\cite{Bier2006} uses entity extraction algorithms to allow an intelligence analyst to easily mark up a source document with facts about it. Cohere~\cite{Shum2008} is a web based argumentation tool that allows people to connect {\it ideas} together using arbitrary verbs such as ``is an example of'', ``supports'', or ``challenges''. An idea can contain a link to a web page that contains that idea, and the Cohere Firefox Extension informs a user when the page that they are is the source for a known idea.
 
-The intention behind these tools is that a user uses them to identify the source of information that is being used to motivate a conclusion. These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim. 
+These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim, or to automatically inform a user when other sources disagree with what they are reading.
 
 There are also several tools that find pages that put forward different points of view, rather than identifying disputed claims within a page. News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader perspective of the issue. 
 Services such as Skewz.com and Newstrust.net allow users to rate news articles for bias. Skewz rates stories as being either liberal or conservative and encourages readers to read what the other side is thinking. Newstrust allows users to rate news articles for quality and objectivity. 
@@ -191,7 +194,7 @@ On Wikipedia, WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that 
 
 More generally, Dispute Finder is an example of an Open Hypermedia system~\cite{Bouvin2000,Wiil1996}. Like other Open Hypermedia systems, Dispute Finder lays an additional link structure over an existing hypertext document. In the case of Dispute Finder, the links are from disputed claims to information about those claims.
 
-Dispute Finder also has some similarity to tagging tools~\cite{Marlow2006,Golder2006}. Tagging tools allow users to collectively categorize information by associating it with a user-created set of tags. In the case of Dispute Finder, the tags are disputed claims, and the tagged entities are sentences that make those claims.
+Dispute Finder also has some similarity to tagging tools~\cite{Marlow2006,Golder2006}. Tagging tools allow users to collectively categorize information by associating it with a user-created set of tags. In the case of Dispute Finder, the tags are disputed claims, and the tagged entities are sentences that make those claims. 
 
 
 \todo{Improve the paraphraser UI so it shows users what pages are making the claim}
@@ -252,11 +255,13 @@ In future work, we hope to automatically find disputed claims on the web by look
 \todo{Actually import the Politifact data}
 
 
-\subsection{Detecting Disputed Claims}
+\subsection{Detecting Known Disputed Claims}
 
-To highlight disputed snippets on a web page, Dispute Finder needs to identify which snippets are making known disputed claims. Our current implementation runs a simple textual entailment algorithm inside the browser to look for sentences that entail known disputed claims. 
+To highlight disputed snippets on a web page, Dispute Finder needs to be able to determine when a snippet entails the truth of a known disputed claim. This is complicated by the fact that a claim can be phrased many different ways, and a snippet does not need to explicitly state a claim in order to entail its truth. For example ``I prefer margarine to butter because it is healthier'' entails ``margarine is healthier than butter''. Our implementation maintains a local copy of our claim database inside the browser extension and runs a simple textual entailment algorithm inside the browser to look for sentences that appear to entail known disputed claims. 
 
-We implemented and tested four different approaches:
+There is a trade-off between precision and recall. We want to maximize the likelihood that Dispute Finder will highlight a snippet if it is making a known disputed claim, while minimizing the likelihood that it will highlight a snippet that is not making a known disputed claim.
+
+We implemented and tested four different approaches that represent different points along this trade-off:
 
 \begin{figure}[tb]
 	\begin{center}
@@ -303,7 +308,7 @@ We implemented and tested four different approaches:
 \todo{Has anyone done something like this before.}
 \todo{We only partially implemented this approach}
 
-\item[Client-side entailment:] The browser extension runs a simple textual entailment algorithm over all sentences on every web page the user browses, checking to see if any sentence on the page entails any claim in the database (Figure~\ref{nlp_client_server}). A user can enter additional paraphrases of a claim to help the entailment algorithm (Figure~\ref{paraphrases}). This is the implementation used by the currently released version of Dispute Finder.
+\item[Client-side entailment:] The browser extension runs a simple textual entailment algorithm over all sentences on every web page the user browses, checking to see if any sentence on the page entails any claim in the database (Figure~\ref{nlp_client_server}). A user can enter additional paraphrases of a claim to help the entailment algorithm (Figure~\ref{paraphrases}). This is the implementation used by the released version of Dispute Finder.
 \end{description}
 
 Explicit page marking has the highest precision, but the poorest coverage. Since a user is looking at the page in its entirety, they can read the snippet in context and make a good judgment about whether the snippet is indeed making the claim. However the manual effort required per page makes it difficult for this approach to scale. We also found that it can also be hard to motivate a user to mark snippets if they think that it is unlikely that another user with the Dispute Finder extension will read exactly this page. This same problem that has hindered the adoption of numerous web page annotation tools.
@@ -315,6 +320,8 @@ Server side classification trades off more precision for more coverage. The clas
 Client side entailment gets the most coverage. Since the classification algorithm is run inside the client, the client can highlight snippets on pages that the server has not examined. This is particularly important for news pages, which are frequently read only a few minutes after they are posted. Moreover, the client-side approach can highlight snippets on web pages that would not be accessible to the server, such as web-based email, and information on an intranet. 
 
 A further advantage of the client-side approach is that it avoids the need for the client to give the server any information about what pages the user is browsing. The list of all URLs and snippets that make disputed claims is too large and updates too frequently for it to be practical for the client to store it locally, so the client instead asks the server for information about each URL the user browses, reducing user privacy. By contrast, the list of paraphrases is small enough and changes slowly enough that the client can maintain its own local copy of the database, removing the need for the client to tell the server what pages the user is browsing.
+
+\subsubsection{Textual Entailment}
 
 Detecting entailment between texts is a semantic analysis problem. Our client side entailment method uses the standard Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006} that is a common baseline to which other algorithms are often compared~\cite{Braz}. Our implementation divides the page into sentences, strips out stop-words, does stemming, and then looks for sentences that contain the keywords contained in a paraphrase of a known claim. If the claim contains a negation word (e.g. not, never, can't) then so must the matching sentence. To improve performance, rather than always running the LLM algorithm on every sentence on every page the user browses, the client starts by quickly scanning the page for ``hot terms'' such as ``Global Warming'' that are known to appear in disputed claims. The hot terms are selected such that every claim contains at least one hot term. If a hot term is found, then the sentence that contained the hot term compared against all claims about that hot term.
 
@@ -462,6 +469,7 @@ BJ Fogg et al~\cite{Fogg2003} found that the most important factor was whether a
 
 
 \section{Evaluation}
+\label{sec:interviews}
 
 We gathered information from users using user-studies, a survey, and a set of interviews. We performed three qualitative ``think aloud'' user studies. The aim of these studies was to inform the iterative design of the Dispute Finder tool. The studies were not intended to validate the design of Dispute Finder as being correct. We also interviewed most of our user study participants, and five additional people.
 
