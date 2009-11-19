@@ -73,7 +73,7 @@ class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest,
   def getParams : Map[String,String] = {
     val keys : Iterator[String] = new Enum(req.getParameterNames.asInstanceOf[java.util.Enumeration[String]])
     val maps : Iterator[(String,String)] = keys map (key => (key,req.getParameterValues(key)(0)))
-    return HashMap(maps.toSequence : _*)
+    return HashMap(maps.toSeq : _*)
   }
   
   var minimode = false

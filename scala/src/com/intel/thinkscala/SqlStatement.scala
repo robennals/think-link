@@ -105,7 +105,7 @@ class SqlStatement(con : Connection, s : String){
   
   def queryRows(args : Any*) : Seq[SqlRow] = {
     setArgs(args)
-    time("SQL",readResults(stmt.executeQuery()).toSequence)
+    time("SQL",readResults(stmt.executeQuery()).toSeq)
   }
   
   def queryMaybe(args : Any*) : Option[SqlRow] = {

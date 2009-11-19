@@ -13,7 +13,7 @@ object Page {
   import Render._
       
   def searchResults(implicit query : String, page : Int, c : ReqContext) =
-     c.store.searchClaims(query,page).toSequence flatMap Render.claim
+     c.store.searchClaims(query,page).toSeq flatMap Render.claim
    
   def hotClaims(implicit c : ReqContext) = 
 	  <div class='box mainbox' id='hotclaims'>
@@ -217,7 +217,7 @@ object Page {
       <div id="stats" class="box">
         {userref(row.int("user_id"),row.str("username"),"created by ")}
       </div>
-    </div>
+    </div> 
 
     
   def topic(implicit c : ReqContext, row : SqlRow) = 

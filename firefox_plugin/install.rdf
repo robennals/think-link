@@ -4,7 +4,7 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
     <Description about="urn:mozilla:install-manifest">
         <em:id>thinklink@intel.com</em:id>
-        <em:version>0.35</em:version>
+        <em:version>0.36</em:version>
         <em:type>2</em:type>
         
         <em:targetApplication>

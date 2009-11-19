@@ -81,6 +81,7 @@ function findBrowser(doc){
 			return gBrowser.browsers[i];
 		}
 	}
+	return null;
 }
 
 function claimMessage(claimtext,claimid,phrase,doc){
