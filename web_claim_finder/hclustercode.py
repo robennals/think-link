@@ -1,4 +1,5 @@
 from numpy import *
+from PIL import Image,ImageDraw
 
 """
 Code for hierarchical clustering
@@ -8,8 +9,6 @@ Modified from "Programming Collective Intelligence" by Toby Segaran
 See also http://jesolem.blogspot.com/2009/04/hierarchical-clustering-in-python.html
 
 """
-
-from PIL import Image,ImageDraw
 
 class cluster_node:
 	def __init__(self,vec,left=None,right=None,distance=0.0,id=None,count=1):
@@ -220,13 +219,15 @@ def getdepth(clust):
 	  
 def drawdendrogram(clust,labels,jpeg='dendrogram.jpg'):
 	# height and width
-	h=getheight(clust)*25
-	w=800
+	# print 'height: ' + str(getheight(clust))
+	h=getheight(clust)*20
+	# print h
+	w=1200
 	depth=getdepth(clust)
-	
+	# print 'depth: ' + str(depth)
 	# width is fixed, so scale distances accordingly
-	scaling=float(w-150)/depth
-	
+	scaling=float(w-630)/depth
+	print 'scaling: ' + str(scaling)
 	# Create a new image with a white background
 	img=Image.new('RGB',(w,h),(255,255,255))
 	draw=ImageDraw.Draw(img)
