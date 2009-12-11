@@ -6,12 +6,11 @@ Created by Dan Byler on 2009-11-21.
 Clusters lines from a text file; outputs to image.
 
 Known bugs:
-- Method A still doesn't work
+- Method A still doesn't work properly
 - Problem if a document is shorter than the "title" length
 
 To do:
 - Populate to-do list
-
 """
 
 import sys, os, string, numpy, re
@@ -25,7 +24,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 porter = nltk.PorterStemmer()
-allstopwords = nltk.corpus.stopwords.words('english') + ['','ET','\'', 'falsely', 'claimed', 'woman', 'man', 'politics', 'environment', 'world','think', 'progress','foxnews.com', 'newsvine','realclearpolitics','factcheck.org','article','cnn']
+allstopwords = nltk.corpus.stopwords.words('english') + ['','ET','\'', 'woman', 'man', 'politics', 'environment', 'world','think', 'progress','foxnews.com', 'newsvine','realclearpolitics','factcheck.org','article','cnn', 'css', 'news', 'header']
 
 def get_documents(sourcedoc):
 	"""Reads source text file; returns list of strings, one per line"""
@@ -202,7 +201,7 @@ def printclusttext(clust, documents, labels=None,n=0):
 	if clust.left!=None: printclusttext(clust.left, documents, labels=labels,n=n+1)
 	if clust.right!=None: printclusttext(clust.right, documents, labels=labels,n=n+1)
 
-def promoteclusters(clust, documents, result, threshold=1.00, labels=None, n=0):
+def promoteclusters(clust, documents, result, threshold=.75, labels=None, n=0):
 	# promotes close cluster matches
 	if clust.id<0:
 		# negative id means that this is branch
@@ -247,9 +246,10 @@ def getwords(html):
 	return [word.lower() for word in words if word!='']
 
 def getstringwordcounts(mystring):
+	# print mystring
 	transtable = string.maketrans('','')
 	mystring = mystring.expandtabs()
-	title = mystring[:50]
+	title = mystring[:100]
 	wc = {}
 	for word in mystring.split():
 		word = word.translate(transtable, string.punctuation).lower()
@@ -257,43 +257,57 @@ def getstringwordcounts(mystring):
 			word = porter.stem(word)
 			wc.setdefault(word,0)
 			wc[word]+=1
+	if len(title) == 0: title = 'NO_TITLE'
+	if len(wc) == 0: wc.setdefault('NO_WORDS', 0)
 	return title,wc
+
+def dedupe(sourcedoc, deduped):
+	"""Weeds out duplicate entries"""
+	lines=[line for line in file(sourcedoc)] 
+	res = set(lines)
+	out=file(deduped,'w') 
+	for i in res:
+		out.write(i)
 
 def main(args):
 	# Settings
-	sourcedoc = 'abstracts10.txt'
+	sourcedoc = 'abstracts750.txt'
+	deduped = 'abstracts-deduped.txt'
 	method = 1
-		
+			
 	#_____ Method 1 _____#
 	# Produces bad results
 	if method == 1:
+		dedupe(sourcedoc, deduped)
 		tokendict = {}							#initialize master term dictionary
-		documents = get_documents(sourcedoc)	#get the documents
+		documents = get_documents(deduped)	#get the documents
 		
 		docnames = []							#extract 45 chars for document identification
 		for i in documents:
-			docnames.append(i['text'][:45])
+			docnames.append(i['text'])
 		
 		tokenize(documents, tokendict)			#add tokens to doc, populate tokendict
+
+		print documents
 		add_tfidf_to(documents)					#add tfidf to docs
-		
 		## populate features matrix. True-->use TF/IDF
-		features = populate_features(documents, tokendict)
+		features = populate_features(documents, tokendict, True)
+		print features
 		
 		## generate tree
 		tree = hclustercode.hcluster(features)		#cosine_distance is slow!
 		
 		# draw dendogram
-		# hclustercode.drawdendrogram(tree,docnames,'dendr000.jpg')
+		hclustercode.drawdendrogram(tree,docnames,'dendrogram.jpg')
 		
-		## promote clusters
+		# promote clusters
 		promoted = []
 		promoteclusters(tree, documents, promoted)
 		for i in range(len(promoted)):
 			name = 'dendr%03d.jpg' % i
 			print name
 			print documents[promoted[i].id]['text']
-			# hclustercode.drawdendrogram(promoted[i], docnames,name)
+			hclustercode.drawdendrogram(promoted[i], docnames,name)
 	
 		## Debug code
 		# printclusttext(tree, documents)	 #prints documents
@@ -302,11 +316,14 @@ def main(args):
 
 	#_____ Method 2: Prepare document matrix, called in method 3 _____#
 	if method == 2:
+		dedupe(sourcedoc, deduped)
 		apcount={}						# number of documents the word appeared in
 		wordcounts={}					# number of appearances of the word
-		for line in file(sourcedoc):
+		for line in file(deduped):
 			title,wc=getstringwordcounts(line)
+			# print title, wc
 			wordcounts[title]=wc
+			# print wc
 			for word,count in wc.items():
 				apcount.setdefault(word,1)
 				if count>1:
@@ -320,21 +337,36 @@ def main(args):
 		out.write('Doc')
 		for word in wordlist: out.write("\t%s" % word)
 		out.write('\n')
-		for doc,wc in wordcounts.items(): 
-			out.write(doc)
+		for doc,wc in wordcounts.items():
+			out.write(doc.replace('\n',''))
 			for word in wordlist: 
 				out.write("\t%d" % wc.get(word,0))
 			out.write("\n") 
+			
 
 	#_____ Method 3: Use document matrix created in method 2 _____#
 	if method == 3:
 		filenames,words,data=hclustercode.readfile('wordcountmatrix.txt')
+
 		# print filenames
+		print data
 		tree=hclustercode.hcluster2(data)
 		# printclusttext(clust)
 		hclustercode.drawdendrogram(tree,filenames)
-		
-		
+	
+		documents = get_documents(deduped)	#get the documents
+		docnames = []							#extract 45 chars for document identification
+		for i in documents:
+			docnames.append(i['text'])
+		promoted = []
+		promoteclusters(tree, "documents", promoted)
+		for i in range(len(promoted)):
+			if promoted[i].distance > 0:
+				name = 'dendr%03d.jpg' % i
+				print promoted[i].distance
+				print documents[promoted[i].id]['text']
+				hclustercode.drawdendrogram(promoted[i], docnames, name)
+	
 		
 	# Create distance graph matrix
 	# dist_graph = get_distance_graph(documents)
