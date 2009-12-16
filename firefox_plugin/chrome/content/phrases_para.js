@@ -221,10 +221,11 @@ function markSentencePhrase(doc,sentence,words,phrase){
 		sentence = trimSentence(sentence,listToHash(keywords));
 		if(!global_phrases[sentence]){
 			global_marked = [];
-			mark_snippet(sentence,sentence,normalise(sentence),phrase.claim_id,phrase.id,phrase.claimtext,doc.body);
+//			mark_snippet(sentence,sentence,normalise(sentence),phrase.claim_id,phrase.text,phrase.claimtext,doc.body,0,phrase.id);
+			mark_snippet(sentence,sentence,normalise(sentence),phrase.claim_id,phrase.text,phrase.claimtext,doc.body,0,phrase.id);
 			global_phrases[sentence] = true;
 			if(global_marked.length > 0){
-				claimMessageMove(global_marked,phrase.claimtext,phrase.claim_id,sentence,doc);
+				claimMessageMove(global_marked,phrase.claimtext,phrase.claim_id,sentence,doc,phrase.text,phrase.id);
 			}
 		}
 		thinklink_msg("highlighting phrase: "+sentence);

@@ -207,9 +207,11 @@ h2 {
 	font-weight: bold;
 }
 
+/*
 #newsnippet h1{
 	margin-top: 10px;
 }
+*/
 
 
 .count {
@@ -984,7 +986,7 @@ img {
 
 #badsnippet{
 	margin: 4px;
-	float: right;
+/*	float: right; */
 }
 
 .conflict {

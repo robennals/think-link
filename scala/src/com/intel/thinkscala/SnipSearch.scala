@@ -4,7 +4,6 @@ import javax.servlet.http._;
 import java.io._;
 import java.net._;
 import java.net.URL;
-import com.intel.thinklink._;
 import com.intel.thinkscala.Util._;
 import scala.xml.NodeSeq;
 import scala.xml.Node;

@@ -3,7 +3,6 @@ package com.intel.thinkscala
 import java.util.regex._;
 import javax.servlet.http._;
 import java.io._;
-import com.intel.thinklink._;
 import java.net._;
 import scala.io._;
 import scala.xml.parsing._;
@@ -14,15 +13,18 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import com.intel.thinkscala.util.MiniJSON
 
+
 object Util {
   
+ def fileExists(filename : String) = (new File(filename)).exists	 
+	
  def log(s : String) = System.out.println(s) 
   
  def encode(claim : String) = URLEncoder.encode(claim,"UTF-8")
  def decode(claim : String) = URLDecoder.decode(claim,"UTF-8")
   
  def mkUrl(path : String, args : Map[String,Any]) = 
-    path + (args map {case (key,value) => key + "=" + encode(com.intel.thinklink.Util.toUTF8(value.toString))}).mkString("?","&","")  
+    path + (args map {case (key,value) => key + "=" + encode(value.toString)}).mkString("?","&","")  
 
  def writeFile(filename : String, content : String) = {
    val writer = new FileWriter(filename)
@@ -240,13 +242,13 @@ object Util {
     return strings
   }
 
-  val shortdom = """\w*\.(?:com|org|net)""".r;
+  val shortdom = """(\w*\.(?:com|org|net))[^\w\.]""".r;
   val longdom = """(\w+\.\w+.\w+)[^\w\.]""".r;
   val otherdom = """(\w+\.\w+\.)[^\w\.]""".r;
  
   def domainForUrl(url : String) : String = {
     shortdom.findFirstMatchIn(url) match {
-      case Some(m) => return m.group(0)
+      case Some(m) => return m.group(1)
       case _ => ()
     }
     longdom.findFirstMatchIn(url) match {
@@ -259,6 +261,14 @@ object Util {
     }
     return "undefined"
   }
+  
+  val hostexp = """\w*\.([\w\.\-]*)""".r  
+  def hostForUrl(url : String) : String = 
+	 hostexp.findFirstMatchIn(url) match {
+	  case Some(m) => return m.group(0)
+	  case _ => return "undefined"
+  }
+  
       
   val max32 = 4294967296L
   

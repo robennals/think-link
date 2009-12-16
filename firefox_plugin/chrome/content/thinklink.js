@@ -31,7 +31,7 @@ function thinklink_is_disputed(){
 	window.open("http://disputefinder.cs.berkeley.edu/pages/claims.html");
 }
 
-function thinklink_new_snippet(isdisputed){
+function thinklink_new_snippet(isdisputed,supports){
 	var text = content.document.getSelection();
 	if(!text){
 		alert("You might first select some text that makes the disputed claim");
@@ -45,6 +45,7 @@ function thinklink_new_snippet(isdisputed){
 	viewFrame(apipath+"/mini/newsnippet?text="+encodeURIComponent(text)+
 		"&url="+encodeURIComponent(content.document.location.href)+
 		"&title="+encodeURIComponent(content.document.title)+
+		"&supports="+supports+
 		"&isdisputed="+isdisputed)
 }
 

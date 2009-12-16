@@ -81,9 +81,8 @@ object Render {
   
   def evidence(row : SqlRow)(implicit c : ReqContext) : NodeSeq = 
     <div class="webquote">
-        <span class="title">{row.getOrElse("title","")}</span>
-        <div class="text">{row("text")}</div>
-        <a target="_blank" class="url" href={row.str("url")}>{row("url")}</a>                                                     
+        <a target="_blank" href={row.str("url")} class="text">{Util.trimString(row.str("text"),160)}</a>
+        <div class='quotedetails'>from <a target="_blank" class="url" href={row.str("url")}>{Util.domainForUrl(row.str("url"))}</a>                                                     
         {userref(row.int("user_id"), row.str("username"), "found by")} 
         -
         {if(row("user_id") == c.maybe_userid){
@@ -92,6 +91,7 @@ object Render {
             <a onclick={"reportSpamEvidence(this,"+row("id")+")"}>report spam</a>   
          }
         }
+        </div>
         {voter(row.str("vote"),"evidence",row.int("id"))}
     </div>
    
