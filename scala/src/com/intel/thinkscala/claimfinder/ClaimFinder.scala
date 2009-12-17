@@ -6,6 +6,7 @@ import scala.io._
 import java.io._
 import com.intel.thinkscala.Util._
 import scala.collection.mutable.ListBuffer
+import scala.runtime.NonLocalReturnException
  
 object ClaimFinder {
 	val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
@@ -16,29 +17,25 @@ object ClaimFinder {
 	
 	def getUrls(phrase : String, page : Int) : Seq[String] = {
 	    val url = bossUrl(phrase,page) 
-	    val xmltext = download(url)
+	    val xmltext = download(url).replaceAll("\\]\\]+>","]]>")
 	    val parser = ConstructingParser.fromSource(Source.fromString(xmltext),false)
 	    val doc = parser.document   
 	    val results = doc \\ "result"
 	    val realstart = doc \\ "resultset_web" \ "@start" text;
 	    if(realstart == (page * 50).toString){
-	    	return results map {result => result \ "url" text}    
+	    	results map {result => result \ "url" text}    
 	    }else{
-	    	return null   // we reached the end
+	    	null   // we reached the end
 	    }
 	}
 
 	def getAllUrls(query : String) : Seq[String] = {
 		var allurls = new ListBuffer[String]
 		for(i <- 0 until 20){
-			try{
-				val urls = getUrls(query,i)
-				if(urls == null) return allurls
-				allurls.appendAll(urls)
-				if(urls.length < 50) return allurls
-			}catch{
-				case _ => System.out.println("exception on batch "+i)
-			}
+			val urls = getUrls(query,i)
+			if(urls == null) return allurls;
+			allurls.appendAll(urls)
+			if(urls.length < 50) return allurls
 		}
 		return allurls
 	}
@@ -65,6 +62,26 @@ object ClaimFinder {
 			Thread.sleep(2000)
 		}
 	}	
+
+	def urlFileForPhraseYear(phrase : String, year : Int){
+		val filename = new File(basepath+"/urlphrases_year/"+year+"/"+phrase.replace(" ","_")+".urls")
+		filename.getParentFile.mkdirs()
+		if(filename.exists) return
+		val writer = new PrintWriter(new FileWriter(filename))
+		val urls = getAllUrls('"'+phrase+'"'+" +"+year)
+		urls.foreach(url => writer.println(url))
+		writer.close		
+	}
+	
+	def getUrlsForAllPhrasesYear(year : Int){
+		phrases_that.foreach{phrase => 
+			System.out.print("getting urls for phrase: "+phrase+"...")
+			urlFileForPhraseYear(phrase,year)
+			System.out.println("DONE")
+			Thread.sleep(2000)
+		}
+	}	
+
 	
 	def getDomains(filename : String){
 		val source = Source.fromFile(new File(filename))		
@@ -77,6 +94,8 @@ object ClaimFinder {
 		writer.close
 	}
 	
+	val bad_firstwords = List(
+			"they","this","he","she","their","the","we")
 		
 	val phrases_that = List(
 			"into believing that",
@@ -114,9 +133,13 @@ object ClaimFinder {
 			"falsely believe that",
 			"wrongly believe that",
 			"falsely suggests that",
-			"falsely claims that"
+			"falsely claims that",
+			"falsely stated that"
 			)
+			
+	 val phrases_nothat = phrases_that map (phrase => phrase.replace(" that",""))
 	
+			
 }
 
 

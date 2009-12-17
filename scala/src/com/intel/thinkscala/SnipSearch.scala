@@ -160,21 +160,5 @@ object SnipSearch {
   
   def cleanString(str : String) = 
     str.replace("<b>","").replace("</b>","").replace("<wbr>","")
-
-  def htmlToString(html : String) : String = {
-    var str = html;
-    str = str.replaceAll("(?s:<script.*?>.*?</script>)","")
-    str = str.replaceAll("(?s:<style.*?>.*?</style>)","")
-    str = str.replaceAll("<!--.*-->","")
-    str = str.replaceAll("\\s+"," ")
-    str = str.replaceAll("</title>","\n")
-    str = str.replaceAll("</h.>","\n")
-    str = str.replaceAll("</?p>","\n")
-    str = str.replaceAll("(?s:<![.*?]]>)"," ")
-    str = str.replaceAll("(?s:<.*?>)"," ")
-    str = str.replaceAll("\n+","\n")
-    str = StringEscapeUtils.unescapeHtml(str);     
-    return str;
-  }
 }
 
