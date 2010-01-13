@@ -82,6 +82,26 @@ object ClaimFinder {
 		}
 	}	
 
+	def urlFileForPhraseDate(phrase : String, date : String){
+		val filename = new File(basepath+"/urlphrases_date/"+date+"/"+phrase.replace(" ","_")+".urls")
+		filename.getParentFile.mkdirs()
+		if(filename.exists) return
+		val writer = new PrintWriter(new FileWriter(filename))
+		val urls = getAllUrls('"'+phrase+'"'+" +\""+date+"\"")
+		urls.foreach(url => writer.println(url))
+		writer.close		
+	}
+	
+	def getUrlsForAllPhrasesDate(date : String){
+		phrases_that.foreach{phrase => 
+			System.out.print("getting urls for phrase: "+phrase+"...")
+			urlFileForPhraseDate(phrase,date)
+			System.out.println("DONE")
+			Thread.sleep(2000)
+		}
+	}	
+
+	
 	
 	def getDomains(filename : String){
 		val source = Source.fromFile(new File(filename))		
@@ -113,7 +133,6 @@ object ClaimFinder {
 			"false claim that",
 			"mistakenly believe that",
 			"mistaken belief that",
-			"the absurdity that",
 			"the absurd idea that",
 			"the hoax that",
 			"the deceit that",
