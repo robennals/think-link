@@ -19,13 +19,16 @@ import tempfile
 from BeautifulSoup import BeautifulSoup
 import textwrap
 
+import scrape_news as sc # url_read() parse_search() 
+
 ## obscure trick to make unicode() work. 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 #-----------------------------------------------------------------------
 
-db_files = '../db'
+dbg = True
+db_files = '../../db'
 
 kPrepP   = 1  # prepositional phrase
 kDispute = 2  # disputed claim
@@ -35,6 +38,7 @@ cn_str = 'DRIVER={myodbc_driver};DATABASE=phrase;UID=url;PWD=0url;SOCKET=/var/ru
 url_dir = 'urlphrases/'
 all_urls = {}
 
+# Create a hash of site urls hashed with their claims, just to inspect them
 def add_to_hash(the_urls, the_file):
 
     ml = 0
@@ -59,19 +63,22 @@ class db:
     def __init__(self):
         try:
             cn = pyodbc.connect(cn_str)
-            self.cursor = cn.cursor
+            self.cursor = cn.cursor()
         except Exception, e:
-            print e
+            print 'Connection error:', e
+        if dbg: print self.cursor.execute('SHOW DATABASES;').fetchall()
 
-    ## check first if the claim already exists
+
     def add_claim(self, the_claim, claim_type = kDispute):
         claim_hash = hash(the_claim)
-        self.cursor.execute(r'INSERT INTO claim VALUES ('\
-                            + the_claim + ', '\
+        sql_tst = r'SELECT claim_hash WHERE claim_hash = '+ str(claim_hash) + ';'
+        sql_c = r'INSERT INTO claim VALUES ('\
+                            + the_claim + "', "\
                             + str(claim_type) + ', '\
-                            + str(claim_hash) + ', '\
-                            + 'NULL );')              # page key
-        return( claim.hash )
+                            + str(claim_hash) + ');'
+        if dbg: print sql_c
+        self.cursor.execute(sql_c)              
+        return( claim_hash )
 
     def add_url(self, the_url, the_claim_hash):
         # Split out the site and path
@@ -105,8 +112,21 @@ class db:
         else:
             print >> sys.stderr, 'Could not parse url: ', the_url
 
+
     def retrieve_url(self, the_page_hash, renew=False):
-        pass
+
+        # Reconstruct the url for that page
+        r_sql = r'''SELECT CONCAT(s.url_root, p.path_str)
+        FROM site as s INNER JOIN page as p USING(page_id)
+        WHERE page_id=''' + str(the_page_hash) + ';'
+
+        # find the url for that page
+        a_url = self.cursor.execute(r_sql).fetchone()
+        if dbg: print 'url: ', a_url
+        full_page_contents = sc.url_read(a_url[0])
+        # save it to a file in the db filesystem
+        return(sc.body_title_text(full_page_contents))
+    
 
     def find_claim(self, the_claim):
         f_sql = 'SELECT * FROM claim WHERE claim = ' + the_claim + ';'
