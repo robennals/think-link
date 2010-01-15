@@ -21,9 +21,9 @@ def main(args):
     # The claim is the file name, the file a list of urls
     cl_fn = args[0]
     cl_fd = open(cl_fn)
-    cl_fn = re.sub(r'urls', '', cl_fn)
+    cl_fn = re.sub(r'.url[s]?', '', cl_fn)
     # replace underscores with spaces.
-    the_claim = re.sub(r'.url', '', re.sub('_', ' ', os.path.basename(cl_fn)))
+    the_claim = re.sub('_', ' ', os.path.basename(cl_fn))
     print 'claim: ', the_claim
 
     for a_url in cl_fd.readlines():
