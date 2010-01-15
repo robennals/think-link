@@ -6,7 +6,6 @@ import javax.servlet.ServletContext;
 import java.io._;
 import scala.util.matching._;
 import scala.util.matching.Regex._;
-import com.intel.thinkscala.Util._
 import com.intel.thinkscala._
 import scala.xml.NodeSeq;
 import com.intel.thinkscala.view.Template
@@ -16,6 +15,7 @@ import scala.collection.mutable.ArrayBuffer
 import com.intel.thinkscala.pages.Messages
 import com.intel.thinkscala.pages.Login
 import com.intel.thinkscala.util.SendMail
+import com.intel.thinkscala.Util._
 //import scala.collection.Map
 // import java.util.Iterator;
 
@@ -35,6 +35,7 @@ class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest,
 	  }catch{
 		  case e : Exception => 0
 	  }
+  def hasArg(name : String) = req.getParameter(name) != null
   def urlArg(i : Int) = m.group(i)
   def argInt(name : String) = 
     if(req.getParameter(name) != null){
@@ -60,7 +61,7 @@ class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest,
   }
   
   def argIntDflt(name : String, dflt : Int) = if(req.getParameter(name) != null) argInt(name) else dflt 
-  def arg(name : String) = com.intel.thinklink.Util.toUTF8(req.getParameter(name))
+  def arg(name : String) = req.getParameter(name)
   lazy val user = store.getUser(getCookie("email"), getCookie("password"));
   def userid = if(user.realuser) user.userid else throw new NoLogin
   def requireLogin = userid
@@ -73,7 +74,7 @@ class ReqContext(val store : Datastore, m : Match, val req : HttpServletRequest,
   def getParams : Map[String,String] = {
     val keys : Iterator[String] = new Enum(req.getParameterNames.asInstanceOf[java.util.Enumeration[String]])
     val maps : Iterator[(String,String)] = keys map (key => (key,req.getParameterValues(key)(0)))
-    return HashMap(maps.toSequence : _*)
+    return HashMap(maps.toSeq : _*)
   }
   
   var minimode = false

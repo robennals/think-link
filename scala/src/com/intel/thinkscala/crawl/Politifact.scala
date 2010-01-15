@@ -19,7 +19,8 @@ object Politifact {
 	}
 	
 	def personal(s : String) = 
-		s.contains("I ") || s.contains("I'") || s.toLowerCase.contains("we ") || s.toLowerCase.contains("my ")
+		s.contains("I ") || s.contains("I'") || s.toLowerCase.contains("we ") || s.toLowerCase.contains("my ") || s.toLowerCase.contains("He ") || s.toLowerCase.contains(" he ")
+
 	
 	def ratedFalse(s : String) = s match {
 		case "False" => true
@@ -51,5 +52,5 @@ object Politifact {
 			store.addPhrase(claimid,claim,userid)
 			store.updateEvidenceCount(claimid)
 		}
-	}
+	} 
 }

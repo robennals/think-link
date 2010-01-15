@@ -446,10 +446,18 @@ class MainServlet extends HttpServlet {
       c.outputMiniHtml("New Snippet: "+text,Mini.newsnippet(text,url,title,isdisputed,query)(c))      
     }),
     UrlHandler("/docs/(\\w*)", c => {
-      c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml"),c))
+      try{
+    	  c.outputRawHtml(Docs.docPage(readResource("docs/"+c.urlArg(1)+".xml"),c))
+      }catch{
+      	case e : FileNotFoundException => throw new NotFound
+      }
     }),
     UrlHandler("/pages/(\\w*)", c => {
-        c.outputRawHtml(Docs.page(readResource("pages/"+c.urlArg(1)+".xml"),c))
+      try{
+    	  c.outputRawHtml(Docs.page(readResource("pages/"+c.urlArg(1)+".xml"),c))
+      }catch{
+    	  case e : FileNotFoundException => throw new NotFound
+      }
     }),
     UrlHandler("/mini/markedbad", c => {
       c.outputMiniHtml("Marked Bad",Mini.markedbad);

@@ -1,18 +1,19 @@
 <div>
 	<div class='desc'>
-		Enter <a href="/thinklink/docs/training.html">paraphrases</a> of this claim that the 
-		<a href="/thinklink/docs/install.html">browser extension</a>
-		should <a href="/thinklink/docs/highlight.html">highlight</a> on web pages:
+		Dispute Finder will <a href="/thinklink/docs/highlight.html">highlight</a> text on a web page if it resembles 
+		any of the <a href="/thinklink/docs/training.html">match-phrases</a> provided below.  
 	</div>
 	<div class='paraphrases'>
 		<div id="mainsearch" class="box yellowbox">
-			<span class='prompt'><q><xt:bind name="text">Global warming is a hoax</xt:bind></q> can also be reworded as...</span>
+			<span class='prompt'>If a web page uses a phrase similar to...</span>
 			<xt:bind name="idnode"/>
 			<input id="phrase" type="text" class="newphrase tempinput" value="- enter a paraphrase of the claim -" onkeypress="paraKey(event)"/>
-			<input id="addparabutton" type="submit" class='submit' value="Add Paraphrase" onclick="addParaphrase()"/>
+			<input id="addparabutton" type="submit" class='submit' value="Add Match Phrase" onclick="addParaphrase()"/>
+			<span class='prompt indent'>then we should highlight it, and link it to the claim <q><xt:bind name="text">Global warming is a hoax</xt:bind></q></span>
+
 		</div>
 		
-		<h3>Paraphrases already added by users</h3>
+		<h3>Match phrases already added by users</h3>
 		
 		<xt:foreach name="paraphrases" as="para" class="paraphrase showcontext">
 			<q class='title'><para:bind name="text">Global Warming does not exist</para:bind></q>

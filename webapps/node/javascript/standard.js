@@ -194,7 +194,7 @@ function abusePara(paraid){
 		alert("You need to be logged in to report a paraphrase as abuse");
 		return;
 	}
-	if(confirm("Are you sure you want to report this paraphrase as abuse?\n\nYou should only report a paraphrase as abuse if it is highlighting lots of snippets that are not about this claim.")){
+	if(confirm("Are you sure you want to report this paraphrase as bad?\n\nYou should only report a paraphrase as abuse if it is highlighting lots of snippets that are not about this claim.")){
 		$.post("/thinklink/api/abusepara",{id:paraid},function(){
 			alert("The moderators have been notified. Thanks for letting us know");
 			window.location.reload();
@@ -206,6 +206,11 @@ function unmark(snipid){
 	$.post(url_base+"api/badsnippet?snipid="+snipid,function(){
 		window.location.href = url_base+"/mini/markedbad";
 	});
+}
+
+function reportBadParaphrase(badbutton){
+	var paraid = badbutton.attr("data-paraid");
+	abusePara(paraid);
 }
 
 var foo = null;
@@ -367,6 +372,9 @@ window.onload = function(){
 		box.removeClass("state-yes");
 		setToggle(box,"no");
 	})
+	$("#badpara").click(function(e){
+		reportBadParaphrase($(e.target));
+	})	
 	$(".clicksentence").click(function(e){
 		if(!loggedIn()){
 			alert("You need to be logged in to mark a snippet");

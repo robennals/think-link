@@ -38,4 +38,5 @@ backup_database.sh
 Secret.scala
 */docweb/*
 \.*
-
+output
+*.dvi

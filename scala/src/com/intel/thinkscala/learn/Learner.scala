@@ -12,9 +12,9 @@ abstract class Learner {
 	def bestSentence(sentences : Seq[String]) : String
 	
     def trainForSearch(store : Datastore,searchid : Int){
-		val yes = store.snippetText(searchid,"true").map(_.str("abstract"))
-        val no = store.snippetText(searchid,"false").map(_.str("abstract"))        
-		train(yes,no)
+//		val yes = store.snippetText(searchid,"true").map(_.str("abstract"))
+//        val no = store.snippetText(searchid,"false").map(_.str("abstract"))        
+//		train(yes,no)
 	}
 	
 	def dumpStatus : Unit

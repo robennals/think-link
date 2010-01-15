@@ -1,4 +1,55 @@
 
+%\section{Related Work}
+%
+%Dispute Finder builds on prior work in many different areas. The idea of highlighting potentially untrustworthy information was applied to Wikipedia by WikiTrust~\cite{Adler2008a}. Tagging Systems~\cite{Marlow2006} influenced the way Dispute Finder uses the community to collect and filter information. Dispute Finder's snippets are influenced by clipping tools such as Internet Scrapbook~\cite{Sugiura1998}. Many people have developed textual entailment algorithms~\cite{entail?} that determine when one sentence implies the trust of another, or contradiction detection algorithms that determine when one sentence contradicts another.
+%
+%\todo{Add more references from the NewsCube paper}
+
+
+%
+%\subsection{Finding Disputed Information on the Web}
+%
+%An important part of Dispute Finder is identifying what claims are disputed. Several other authors looked at disputed information on the web.
+%
+%Kittur et al~\cite{Kittur2007} developed an algorithm that can determine whether a wikipedia page is about a disputed topic. Kittur and Chi~\cite{Kittur2009} broke down the disputed pages by catagory and found that People, Society, and Religion were the categories with the most disputed pages.
+%
+%\subsection{Extracting Information from the Web}
+%
+%Information extration tools such as TextRunner~\cite{Etzioni2008} 
+%Read The Web
+%
+%TextRunner~\cite{Etzioni2008} 
+%
+%\todo{cite lots of Etzioni stuff}
+%
+%\cite{SnowBall}
+%\cite{Read The Web}
+%\cite{Information Extraction from Wikipedia}
+%\cite{KnowItAll}
+%\cite{TextRunner}
+%
+%\todo{Online Dispute Resolution}
+%
+%\todo{Cite Kittur et al}
+
+
+
+\subsection{Augmented Web Navigation}
+
+
+%\subsection{Persuasive Technology}
+
+% \subsection{Semantic Web}
+% 
+% Nobody is going to mark up their own web page as being wrong.
+
+% \subsection{To discuss in the body}
+% 
+% Paraphrases~\cite{Chklovski2005}. Suggested formal paraphrases~\cite{Blythe2004}.
+% Importance of Lurkers~\cite{Takahashi2003}
+% Wikify~\cite{Mihalcea2007}. OpenCalais\footnote{http://opencalais.com}.
+
+
 Unlike most prior forms 
 
 
@@ -73,3 +124,33 @@ Several authors have created tools that help users know when to trust informatio
 % WikiTrust~\cite{Adler2008}. Wiki Dashboard~\cite{Kittur2008}.
 % Wiki Scanner\footnote{http://wikiscanner.virgil.gr}.
 % SourceWatch\footnote{http://sourcewatch.org}, Snopes\footnote{http://snopes.com}, FactCheck\footnote{http://factcheck.org}.
+
+
+\subsection{Textual Entailment}
+\label{related:entailment}
+
+The textual entailment problem is a common problems in natural language processing. In the 3-way variant of the PASCAL Recognizing Textual Entailment (RTE) Challenge\footnote{http://pascallin.ecs.soton.ac.uk/Challenges/RTE/}, an algorithm is given two sentences T and H and asked to return one of three answers: T {\it entails} H, T {\it contradicts} H, or the truth of H cannot be determined from T. 
+
+Our client side textual entailment algorith approach. 
+
+
+Several of the core challenges in Dispute Finder are forms of the textual entailment problem. Finding disputed claims is a special case of finding a sentence on the web that is {\it contradicted} by a sentence on a trusted page. Finding a snippet that makes a disputed claim is a special case of finding a snippet that {\it entails} a disputed claim. 
+
+One could in theory determine which snippets to highlight by using a textual entailment algorithm to determine whether any snippet is {\it contradicted} by any other sentence on the web, however the vast number of sentences that one would have to compare makes this approach impractical. Dispute Finder thus instead uses specialized approaches to identify disputed claims, and then looks for snippets that {\it entail} known disputed claims. Another advantage of this two-stage approach is that, by tying snippets to a simplified set of unique disputed claims, it becomes easier to organize articles that support and oppose a particular claim.
+
+Dispute Finder runs a simple textual entailment algorithm inside the browser extension to detect snippets that imply disputed claims. The algorithm we use is a simple variant of the widely used Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006} which is a baseline to which other algorithms are often compared~\cite{Braz}. LLM simply reduces a sentence to a bag of lemmatized words, removes stop-words, checks for negations, and then looks at what the overlap is between the words in the two phrases. Since it would not be practical for us to apply a textual entailment algorithm to all combinations of phrases on a page and disputed claims in our database, textual entailment is only attempted if a potential match is indicated by a key-phrase co-occurrence algorithm, which we discuss further in Section~\ref{our-nlp}.
+
+\todo{Implement word weighting and word similarity?}
+
+%Following the taxonomy used by Jijkoun and Rijke~\cite{Jijkoun2006} our algorithm is M-sim-imp, that is, we assign entailment scores based soley on word overl
+%
+%The algorithm we use is a simple Local Lexical Matching (LLM) algorithm.
+
+
+\todo{Talk about Glickman et all 2005 and MT system of Bayer et al 2005}
+\todo{Cite Web Based probabalistic textual entailment}
+\todo{Cite MITRE's submission to the EU PASCAL RTE Challenge}
+
+\todo{Talk a lot about how people do textual entailment now}
+\todo{Do human-guided approach that works well? Talk more about human guided task.}
+
