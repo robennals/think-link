@@ -27,7 +27,7 @@ sys.setdefaultencoding('utf-8')
 
 #-----------------------------------------------------------------------
 
-dbg = True
+dbg = False
 db_files = '../../db'
 
 kPrepP   = 1  # prepositional phrase
@@ -71,44 +71,55 @@ class db:
 
     def add_claim(self, the_claim, claim_type = kDispute):
         claim_hash = hash(the_claim)
-        sql_tst = r'SELECT claim_hash WHERE claim_hash = '+ str(claim_hash) + ';'
-        sql_c = r'INSERT INTO claim VALUES ('\
-                            + the_claim + "', "\
-                            + str(claim_type) + ', '\
-                            + str(claim_hash) + ');'
-        if dbg: print sql_c
-        self.cursor.execute(sql_c)              
+        sql_tst = 'SELECT claim_id FROM claim WHERE claim_id =?'
+        if dbg: print sql_tst
+        if self.cursor.execute(sql_tst, str(claim_hash)).fetchone():
+            print >> sys.stderr, the_claim, ' is already in the DB.'
+        else:
+            sql_c = r"INSERT INTO claim VALUES ('"\
+                    + the_claim + "', "\
+                    + str(claim_type) + ', '\
+                    + str(claim_hash) + ');'
+            if dbg: print sql_c
+            self.cursor.execute(sql_c)              
         return( claim_hash )
 
-    def add_url(self, the_url, the_claim_hash):
+    def add_site(self, the_site):
+        site_hash = hash(the_site)
+        sql_tst = 'SELECT site_id FROM site WHERE site_id =?'
+        if self.cursor.execute(sql_tst, str(site_hash)).fetchone():
+            print >> sys.stderr, 'site ', the_site, ' is already in the db.'
+        else:
+            sql_s = r"INSERT INTO site VALUES ('"\
+                    + the_site + "', 1, "\
+                     + str(site_hash) + ');'
+            if dbg: print sql_s
+            self.cursor.execute(sql_s)              
+        return( site_hash )
+
+
+    def add_url(self, the_url, the_claim):
         # Split out the site and path
         m_obj = re.match(r'(http[s]?://[^/]+/)(.*)', the_url)
         if m_obj:
             url_pieces = m_obj.groups()
             (site, path) = url_pieces
-            site_hash = hash(site)
+            claim_hash = self.add_claim(the_claim)
+            site_hash = self.add_site(site)
             path_hash = hash(path)
-            # First create the empty page entry
-            p_sql = r'INSERT INTO page VALUES ("'\
-                  + path + '", '\
-                  + '0, NULL, NULL, NULL, 10000000, NULL, '\
-                  + str(path_hash) + ', '\
-                  + str(the_claim_hash) + ', '\
-                  + str(site_hash) + ');'
-            if dbg: print p_sql
-            self.cursor.execute(p_sql)
-            s_sql = r'INSERT INTO site VALUES("'\
-                    + site + '", 0,'\
-                    + str(site_hash) + ','\
-                    + str(path_hash) + ');'
-            if dbg: print s_sql
-            self.cursor.execute(s_sql)
-            c_sql = r'UPDATE claim SET page_id = '\
-                  + str(path_hash) + ' WHERE claim_id = '\
-                  + str(the_claim_hash) + ';'
-            self.cursor.execute(c_sql)
-            if dbg: print c_sql                    
-            
+            sql_tst = 'SELECT page_id FROM page WHERE page_id =?'
+            if self.cursor.execute(sql_tst, str(path_hash)).fetchone():
+                print >> sys.stderr, 'page ', path_hash, ' is already in the db.'
+            else:
+                # First create the empty page entry
+                p_sql = r'INSERT INTO page VALUES ("'\
+                        + path + '", '\
+                        + '0, NULL, NULL, NULL, 10000000, NULL, '\
+                        + str(path_hash) + ', '\
+                        + str(claim_hash) + ', '\
+                        + str(site_hash) + ');'
+                if dbg: print p_sql
+                self.cursor.execute(p_sql)
         else:
             print >> sys.stderr, 'Could not parse url: ', the_url
 
