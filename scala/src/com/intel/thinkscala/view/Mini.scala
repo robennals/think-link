@@ -51,10 +51,10 @@ object Mini {
         	<h1 class='snipprompt'>What disputed claim does the supported text make?
         	<input type='hidden' name='rel' value='entails' /></h1>
         }else if(c.arg("supports") == "true"){
-        	<h1 class='snipprompt'>What claim does the quoted text support?
+        	<h1 class='snipprompt'>What claim does the selected text support?
         	<input type='hidden' name='rel' value='supports' /></h1>
         }else if(c.arg("supports") == "false"){
-        	<h1 class='snipprompt'>What claim does the quoted text oppose?
+        	<h1 class='snipprompt'>What claim does the selected text oppose?
         	<input type='hidden' name='rel' value='opposes' /></h1>
         }else{ 
 	        <div>This article <select name="rel">
@@ -82,8 +82,6 @@ object Mini {
 	    )}
 	  <button class='submit' type='submit' id='addarticle' onclick='checkAddArticle()'>Add Article to Claim</button>	    
    </div>
-
-
   
   
 //  def newsnippet(text : String, url : String, title : String, disputed : Boolean, query : String)(implicit c : ReqContext) =
