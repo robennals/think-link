@@ -29,7 +29,8 @@ object ExtractClaims {
 	def extractClaimsFromUrl(url : String) : Seq[UrlClaim] = {
 		var claims = new ListBuffer[UrlClaim]
 		val html = downloadUrlStart(url).toLowerCase
-		val content = htmlToSentences(html)
+//		val content = htmlToSentences(html)
+		val content = html.replaceAll("\\s+", " ")
 		val title = getTitle(html)
 		ClaimFinder.phrases_that.foreach{prefix => 
 			val phrase_claims = findPrefix(content,prefix,url,title)
