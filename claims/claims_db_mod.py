@@ -19,7 +19,7 @@ import tempfile
 from BeautifulSoup import BeautifulSoup
 import textwrap
 
-import scrape_news as sc # url_read() parse_search() 
+# import scrape_news as sc # url_read() parse_search() 
 
 ## obscure trick to make unicode() work. 
 reload(sys)
@@ -55,6 +55,18 @@ def add_to_hash(the_urls, the_file):
     print "max(len(url)", ml
     fd.close()
     return(the_urls)
+
+## _________________________________________________________________________
+def url_read(the_url):
+    "Replace the module retrieval functions with one that works"
+    #import urllib
+    #page = urllib.urlopen(the_url)
+
+    import subprocess
+    contents = subprocess.Popen(["curl", the_url], stdout=subprocess.PIPE).communicate()[0]
+    contents = unicode(contents, 'utf-8',  'replace')
+    print "retrieved ", len(contents), 'bytes; '
+    return(contents)
 
 
 ########################################################################
@@ -124,15 +136,15 @@ class db:
 
         # Reconstruct the url for that page
         r_sql = r'''SELECT CONCAT(s.url_root, p.path_str)
-        FROM site as s INNER JOIN page as p USING(page_id)
+        FROM site as s INNER JOIN page as p USING(site_id)
         WHERE page_id=''' + str(the_page_hash) + ';'
 
         # find the url for that page
         a_url = self.cursor.execute(r_sql).fetchone()
         if dbg: print 'url: ', a_url
-        full_page_contents = sc.url_read(a_url[0])
+        full_page_contents = url_read(a_url[0])
         # save it to a file in the db filesystem
-        return(sc.body_title_text(full_page_contents))
+        return(full_page_contents)
     
 
     def find_claim(self, the_claim):
@@ -141,6 +153,11 @@ class db:
         if len(claim_set) != 1:
             print >> sys.stderr, len(claim_set), ' found for claim ', the_claim
         return(claim_set)
+
+    # Find the next url
+    
+    def add_page(self, the_page_url):
+        pass
 
     
     def all_sites_for(self, the_claim):

@@ -69,7 +69,7 @@ INSERT INTO claim VALUES('All is flux'
     );
 
 INSERT INTO page VALUES ('Writing/all_is_flux.html'
-    , 0
+    , 1
     , 'all_is_flux.html'
     , '2010-01-05 15:59:59'
     , 'ALL IS FLUX'
