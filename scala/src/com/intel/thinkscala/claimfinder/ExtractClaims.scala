@@ -3,6 +3,8 @@ package com.intel.thinkscala.claimfinder
 import java.io._
 import java.net._
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashSet
 import com.intel.thinkscala.Util._
 import com.intel.thinkscala.util.Dataflow._
 import com.intel.thinkscala.util.TabData
@@ -29,13 +31,23 @@ object ExtractClaims {
 		val html = downloadUrlStart(url).toLowerCase
 		val content = htmlToSentences(html)
 		val title = getTitle(html)
-		ClaimFinder.phrases_nothat.foreach{prefix => 
+		ClaimFinder.phrases_that.foreach{prefix => 
 			val phrase_claims = findPrefix(content,prefix,url,title)
 			claims.appendAll(phrase_claims)
 		}
-		claims
+		removeDuplicates(claims)
 	}
 	
+	def removeDuplicates(claims : Seq[UrlClaim]) : Seq[UrlClaim] = {
+		val map = new HashMap[String,UrlClaim]
+		claims foreach {x =>
+			if(!map.isDefinedAt(x.claim)){
+				map(x.claim) = x
+			}
+		}
+		map.valuesIterator.toList
+	}
+		
 	def extractAllClaims(infile : String,outfile : String) = 
 		mapFile(infile,outfile,extractClaimsFromUrl)
 			
@@ -49,7 +61,7 @@ object ExtractClaims {
 			val end = content.indexOf('.',start+prefix.length+1)
 			val statement = content.substring(start+prefix.length, end)
 			val context = trimPartWords(fuzzySubstring(content,start-500,start+500))
-			claims.append(new UrlClaim(url,title,statement,context))
+			claims.append(new UrlClaim(url,title,normalizeString(statement),context))
 			start = content.indexOf(prefix,start+1)
 		}
 		claims

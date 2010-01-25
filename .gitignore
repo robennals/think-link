@@ -1,3 +1,4 @@
+*.pyc
 */mt_files
 */.svn
 *.csv
@@ -16,6 +17,7 @@ Edit.000
 *.jar
 *.zip
 *.tcp
+*.dvi
 *.pdf
 *.aux
 *.out
@@ -28,7 +30,6 @@ init.d
 *~
 .manager
 scala/.manager
-*~
 pastrevs
 test
 *#

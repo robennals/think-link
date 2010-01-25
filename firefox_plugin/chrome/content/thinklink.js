@@ -28,7 +28,12 @@ function thinklink_msg(msg){
 }
 
 function thinklink_is_disputed(){
-	window.open("http://disputefinder.cs.berkeley.edu/pages/claims.html");
+	var text = content.document.getSelection();
+	if(!text){
+		window.open("http://disputefinder.cs.berkeley.edu/pages/claims.html");
+	}else{
+		window.open("http://disputefinder.cs.berkeley.edu/thinklink/search?query="+encodeURIComponent(text));
+	}
 }
 
 function thinklink_new_snippet(isdisputed,supports){

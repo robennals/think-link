@@ -86,7 +86,7 @@ class db:
         sql_tst = 'SELECT claim_id FROM claim WHERE claim_id =?'
         if dbg: print sql_tst
         if self.cursor.execute(sql_tst, str(claim_hash)).fetchone():
-            print >> sys.stderr, the_claim, ' is already in the DB.'
+            if dbg: print >> sys.stderr, the_claim, ' is already in the DB.'
         else:
             sql_c = r"INSERT INTO claim VALUES ('"\
                     + the_claim + "', "\
@@ -100,7 +100,7 @@ class db:
         site_hash = hash(the_site)
         sql_tst = 'SELECT site_id FROM site WHERE site_id =?'
         if self.cursor.execute(sql_tst, str(site_hash)).fetchone():
-            print >> sys.stderr, 'site ', the_site, ' is already in the db.'
+            if dbg: print >> sys.stderr, 'site ', the_site, ' is already in the db.'
         else:
             sql_s = r"INSERT INTO site VALUES ('"\
                     + the_site + "', 1, "\
@@ -124,14 +124,10 @@ class db:
                 print >> sys.stderr, 'page ', path_hash, ' is already in the db.'
             else:
                 # First create the empty page entry
-                p_sql = r'INSERT INTO page VALUES ("'\
-                        + path + '", '\
-                        + '0, NULL, NULL, NULL, 10000000, NULL, '\
-                        + str(path_hash) + ', '\
-                        + str(claim_hash) + ', '\
-                        + str(site_hash) + ');'
+                p_sql = r'INSERT INTO page VALUES (?, 0, NULL, NULL, NULL, 10000000, NULL, ?, ?, ?)'
+
                 if dbg: print p_sql
-                self.cursor.execute(p_sql)
+                self.cursor.execute(p_sql, path, path_hash, claim_hash, site_hash)
         else:
             print >> sys.stderr, 'Could not parse url: ', the_url
 

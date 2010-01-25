@@ -1,12 +1,11 @@
 package com.intel.thinkscala.claimfinder
-import scala.xml.NodeSeq
-import scala.xml.Node
+import scala.xml.{Node,NodeSeq}
 import scala.xml.parsing._
 import scala.io._
 import java.io._
 import com.intel.thinkscala.Util._
-import scala.collection.mutable.ListBuffer
-import scala.runtime.NonLocalReturnException
+import collection.mutable.ListBuffer
+import runtime.NonLocalReturnException
  
 object ClaimFinder {
 	val bossKey = "NpeiOwLV34E5KHWPTxBix1HTRHe4zIj2LfTtyyDKvBdeQHOzlC_RIv4SmAPuBh3E";
@@ -83,13 +82,19 @@ object ClaimFinder {
 	}	
 
 	def urlFileForPhraseDate(phrase : String, date : String){
-		val filename = new File(basepath+"/urlphrases_date/"+date+"/"+phrase.replace(" ","_")+".urls")
+		val filename = new File(basepath+"/urlphrases_date/"+date.replace(" ","_")+"/"+phrase.replace(" ","_")+".urls")
 		filename.getParentFile.mkdirs()
 		if(filename.exists) return
 		val writer = new PrintWriter(new FileWriter(filename))
 		val urls = getAllUrls('"'+phrase+'"'+" +\""+date+"\"")
 		urls.foreach(url => writer.println(url))
 		writer.close		
+	}
+	
+	def getUrlsForDateRange(year : Int, month : String, daystart : Int, dayend : Int){
+		for(day <- daystart until dayend){
+			getUrlsForAllPhrasesDate(month + " " + day + " " + year)
+		}
 	}
 	
 	def getUrlsForAllPhrasesDate(date : String){
@@ -131,6 +136,7 @@ object ClaimFinder {
 			"the deception that",
 			"the misunderstanding that",
 			"false claim that",
+			"false claim is that",
 			"mistakenly believe that",
 			"mistaken belief that",
 			"the absurd idea that",
@@ -147,13 +153,17 @@ object ClaimFinder {
 			"urban legend that",
 			"the fantasy that",
 			"incorrectly claim that",
+			"incorrectly claimed that",
 			"incorrectly believe that",
 			"stupidly believe that",
 			"falsely believe that",
 			"wrongly believe that",
 			"falsely suggests that",
 			"falsely claims that",
-			"falsely stated that"
+			"falsely stated that",
+			"absurdity of the claim that",
+			"false ad claiming that",
+			"crazies who believe that"
 			)
 			
 	 val phrases_nothat = phrases_that map (phrase => phrase.replace(" that",""))
