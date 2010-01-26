@@ -1,0 +1,174 @@
+%\documentclass{article}
+\documentclass{www2010-submission}
+\usepackage{times}
+%\usepackage{uist}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{color}
+%
+%\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
+%\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
+%\newcommand{\idea}[1]{{[\color{blue} IDEA: #1]}}
+%\newcommand{\node}[1]{{[\color{blue} NOTE: #1]}}
+
+\newcommand{\want}[1]{}
+\newcommand{\todo}[1]{}
+\newcommand{\idea}[1]{}
+\newcommand{\node}[1]{}
+
+% Mark up a point that we want to flesh out into more text
+\newcommand{\x}[1]{{\color{blue} #1}\\}
+
+
+\begin{document}
+
+\toappear
+
+\bibliographystyle{plain}
+
+\title{What is disputed on the web?}
+
+%%
+%% Note on formatting authors at different institutions, as shown below:
+%% Change width arg (currently 7cm) to parbox commands as needed to
+%% accommodate widest lines, taking care not to overflow the 17.8cm line width.
+%% Add or delete parboxes for additional authors at different institutions. 
+%% If additional authors won't fit in one row, you can add a "\\"  at the
+%% end of a parbox's closing "}" to have the next parbox start a new row.
+%% Be sure NOT to put any blank lines between parbox commands!
+%%
+
+\numberofauthors{5}
+
+\author{
+\alignauthor Dan Byler\\
+       \affaddr{School of Information}\\
+       \affaddr{University of California at Berkeley}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{dan@ischool.berkeley.edu}
+\alignauthor Rob Ennals\\
+       \affaddr{Intel Labs Berkeley}\\
+       \affaddr{2150 Shattuck Ave}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{robert.ennals@intel.com}
+\alignauthor John Mark Agosta\\
+       \affaddr{Intel Labs Santa Clara}\\
+       \affaddr{2200 Mission College Blvd}\\
+       \affaddr{Santa Clara, CA, USA}\\
+       \email{john.m.agosta@intel.com}
+}
+
+%\sloppy
+
+\additionalauthors{Barbara Rosario, Intel Labs Santa Clara, \\\texttt{[barbara.rosario@intel.com]}; Tye Rattenbury and Tad Hirsch, Intel Research Principles and Practices,\\\texttt{[tye.rattenbury,tad.hirsch]@intel.com}}
+
+
+\maketitle
+
+%RULE: Don't cite media reports unless I have to - some reviewers don't like it
+
+
+\abstract
+[Final author list is to be determined]
+
+
+
+%\subsection{Categories and Subject Descriptors}
+%\todo{Categories, terms, and keywords need updating}
+\category{H.3.1}{INFORMATION STORAGE AND RETRIEVAL}{Content Analysis and Indexing}
+\category{I.2.7}{ARTIFICIAL INTELLIGENCE}{Natural Language Processing}
+
+\terms{Design, Human Factors}
+
+\keywords{Sensemaking, Annotation, Argumentation, Web, CSCW}
+
+
+\tolerance=400 
+  % makes some lines with lots of white space, but 	
+  % tends to prevent words from sticking out in the margin
+
+\section{Introduction}
+
+\x{Information credibility is important.}
+\x{People are increasingly relying on the web for information.}
+\x{People read a wider range of sources that before, many of which they do not know whether to trust.}
+
+\section{Background and Related Work}
+
+\subsection{What is credible?}
+
+
+\subsection{The distributional hypothesis}
+
+\subsection{Contradiction Detection}
+
+\subsection{Sentiment Analysis}
+
+\subsection{Crowdsourcing disputed claims}
+
+\x{Dispute Finder. Wikipedia. WikiTrust}
+
+\subsection{Curated Databases of Disputed Claims}
+
+\x{Dispute Finder.}
+
+
+\section{Finding Disputed Claims}
+
+\subsection{Disputed Templates}
+
+\x{Include a table with templates we use and templates we generated}
+
+\subsection{Selecting Good Statements}
+
+\subsection{Generating New Templates}
+
+\x{Following the distributional hypothesis.}
+\x{Search for known disputed claims and find most frequent words that surround them.}
+
+\section{Using Disputed Claims}
+
+\x{We are building lots of applications that will use this data set.}
+\x{Dispute Finder highlights disputed claims on the web.}
+\x{Tell people when audio they hear is disputed.}
+\x{Tell people when a source you trust disagrees with others.}
+\x{Tell me when a source I read in the past is now disputed.}
+\x{Tell me how contentious a topic is.}
+\x{Let me explore what is disputed about a particular topic.}
+\x{Tell me when something new is disputed about a topic I care about.}
+\x{Examine the zeitgeist of disputes.}
+\x{Tell me about things that are disputed by the kind of sites I trust.}
+\x{We also want to make this data set available to others.}
+
+\section{Analysing the Data}
+
+\subsection{Data Quality}
+
+\x{Look at a random sample of the data and say how clean it is.}
+\x{Evaluate the quality of the claims that we extracted.}
+\x{Evaluate the quality of the clusters that we created.}
+\x{Evaluate the quality of the different individual templates - which ones have the highest quality claims.}
+
+\subsection{Trends over time}
+
+\x{Look at what noun phrases were most disputed at particular years.}
+\x{Look at what noun phrases were most disputed on particular days.}
+
+
+\section{Conclusions}
+
+\x{We can use the web as a corpus to determine what people think is disputed.}
+
+
+%\section{Acknowledgments}
+
+\todo{Do we want to have acknowledgements}
+% We would like to Thank Barbara Rosario for help with textual entailment, and 
+% Acknowledgements omitted for blind submission. Dispute Finder uses icons from the free FamFamFam Silk\footnote{http://famfamfam.com} collection.
+
+\bibliography{refs}
+
+\end{document}
+
+
+

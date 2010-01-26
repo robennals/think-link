@@ -40,3 +40,14 @@ Secret.scala
 \.*
 output
 *.dvi
+*.claims
+*.freqs
+*.fixedfreqs
+*.dedup
+*.odp
+package/*.rdf
+package/chrome
+events
+unused
+wiki_wordfreqs
+

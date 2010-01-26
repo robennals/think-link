@@ -1,0 +1,32 @@
+
+Background:
+	Information credibility is important
+		We are increasingly reliant on information from the web
+		People read a wider range of sources that before
+		People do not trust information from the web
+	People do not posses sufficient skills to know what information in credible
+		Do not rigorously evaluate sources
+	
+Approaches to credibility:
+	Focus on helping people know when particular information is disputed.
+	Alternative is to focus on reputation of a person.
+	Our aim is to let you know when someone credible disagrees with
+		something you read.
+		
+What we have done:
+	Built a database of disputed claims
+	A disputed claim is a claim that someone thinks others are making and believes is wrong
+	
+How might people use this data:
+	Auto-detect whether a document you are reading now contains disputed claims.
+	Auto-detect whether a document you read previously is disputed.
+	Tell me about disputed claims about a topic I'm interested in, so I know if I'm being duped.
+	Tell me what new disputed claims have appeared, so I can get a feel of the dialog going on.
+	Let me explore what is being disputed.
+	
+	
+	
+Related work:
+	Several ways to determine if something is credible
+		Can determine if the source is credible
+		Or can determine if the content is credible

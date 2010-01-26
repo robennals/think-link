@@ -1,0 +1,33 @@
+
+How to write the paper
+
+Changes from the UIST submission:
+
+* Talk about auto-finding stuff on the web
+* Talk about KnowItAll
+* Talk about lots of NLP stuff
+* Talk about our survey
+* Talk about issues with past annotation systems
+
+
+-- features we may need --
+
+Configure which sources you trust, and learn what sources you take seriously.
+	- leave for future work, or do we have time now.
+
+
+-- key points --
+
+
+-- Introduction --
+
+* The internet exposes people to more information with unknown providence and bias
+* But it also provides us with the tools to deal with the problem
+
+
+-- Related Work --
+
+* Argumentation tools allow people to structure an argument into a correct argument
+* There are political hurdles with making such methods work : people don't always want to reach the most logical conclusion, or trust the method
+* Our survey suggests that a trusted authority is more important than a good argument
+* We experimented with including an argumentation graph, but our current version does not include one

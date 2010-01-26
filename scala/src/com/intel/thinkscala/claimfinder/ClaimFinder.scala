@@ -92,7 +92,7 @@ object ClaimFinder {
 	}
 	
 	def getUrlsForDateRange(year : Int, month : String, daystart : Int, dayend : Int){
-		for(day <- daystart until dayend){
+		for(day <- daystart to dayend){
 			getUrlsForAllPhrasesDate(month + " " + day + " " + year)
 		}
 	}
