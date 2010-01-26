@@ -325,6 +325,27 @@ object Util {
     return str;
   }
 
+  def htmlToSentences2(html : String) : String = {
+    var str = html;
+    str = str.replaceAll("(?s:<script.*?>.*?</script>)","")
+    str = str.replaceAll("(?s:<style.*?>.*?</style>)","")
+    str = str.replaceAll("</title>",".")
+    str = str.replaceAll("</h.>",".")
+    str = str.replaceAll("</?p>",".")
+    str = str.replaceAll("</?td>",".")
+    str = str.replaceAll("</?tr>",".")
+    str = str.replaceAll("<br[^\\>]*>",".")
+    str = str.replaceAll("(?s:<![.*?]]>)"," ")
+    str = str.replaceAll("(?s:<.*?>)"," ")
+    str = str.replaceAll("\n+"," ")
+    str = str.replaceAll("\\s+"," ")
+    str = str.replaceAll(" - ",".")    
+    str = str.replaceAll("[\\!\\?\\|]",".")
+    str = StringEscapeUtils.unescapeHtml(str);     
+    return str;
+  }
+
+  
   def fuzzySubstring(str : String, start : Int, end : Int) =
 	  str.substring(Math.max(0,start), Math.min(str.length-1,end))
 	  

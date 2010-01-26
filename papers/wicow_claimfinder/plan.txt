@@ -1,11 +1,55 @@
 
-Background:
+-- All points --
+
+
+
+-- Top Level --
+
+Information credibility on the web is important
+
+We build a database of factual claims that people believe are disputed
+
+We use the distributional hypotheses to create additional templates
+
+We are making this data set available to other researchers who want to use it
+
+
+
+
+-- Structure --
+
+Abstract
+	Information credibility on the web is important
+	We have built a database of factual claims that people believe are disputed
+	We have done this by searching for phrases like "falsely claimed that"
+	
+Introduction
 	Information credibility is important
 		We are increasingly reliant on information from the web
 		People read a wider range of sources that before
 		People do not trust information from the web
 	People do not posses sufficient skills to know what information in credible
 		Do not rigorously evaluate sources
+	
+Background and Related Work
+	Studies on how credible things are
+	Approaches to credibility:
+		Credibility = is this person trustworthy + are they an expert
+		Some approaches focus on telling how trustworthy they are
+	Work that finds particular grammatic features:
+		Hyponyms - Marti Hearst
+		DIRT - finding templates that mean the same thing
+	Sentiment analysis
+		Finds out when someone is positive or negative about something
+	Find disputes by looking for contradictions
+		Is very difficult to do automatically.
+		Textual entailment vs contradiction
+	
+		
+Finding Disputed Claims
+	
+
+		
 	
 Approaches to credibility:
 	Focus on helping people know when particular information is disputed.
@@ -24,9 +68,21 @@ How might people use this data:
 	Tell me what new disputed claims have appeared, so I can get a feel of the dialog going on.
 	Let me explore what is being disputed.
 	
+
 	
 	
 Related work:
 	Several ways to determine if something is credible
 		Can determine if the source is credible
 		Or can determine if the content is credible
+
+
+-- established beliefs from 2009 reportout --
+
+Research on content credibility is necessary.
+the web influences our daily lives.
+Web lacks publishing barriers and has poor quality control.
+
+Common goal of improving the quality of information on the web, and 
+providing users with effective tools for supporting credibility estimation
+of web content.

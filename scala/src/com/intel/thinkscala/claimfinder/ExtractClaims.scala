@@ -8,6 +8,8 @@ import scala.collection.mutable.HashSet
 import com.intel.thinkscala.Util._
 import com.intel.thinkscala.util.Dataflow._
 import com.intel.thinkscala.util.TabData
+import org.apache.commons.lang.StringEscapeUtils
+
 
 class UrlClaim(val url : String, val title : String, val claim : String, val context : String) extends Object with TabData{
 	override def toString = claim
@@ -29,6 +31,7 @@ object ExtractClaims {
 	def extractClaimsFromUrl(url : String) : Seq[UrlClaim] = {
 		var claims = new ListBuffer[UrlClaim]
 		val html = downloadUrlStart(url).toLowerCase
+		// val html = StringEscapeUtils.unescapeHtml(html)
 //		val content = htmlToSentences(html)
 		val content = html.replaceAll("\\s+", " ")
 		val title = getTitle(html)
