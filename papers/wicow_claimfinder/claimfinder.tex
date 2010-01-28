@@ -1,24 +1,19 @@
-%\documentclass{article}
-\documentclass{www2010-submission}
+\documentclass{acm_proc_article-sp}
 \usepackage{times}
-%\usepackage{uist}
 \usepackage{url}
 \usepackage{graphics}
 \usepackage{color}
-%
-%\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
-%\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
-%\newcommand{\idea}[1]{{[\color{blue} IDEA: #1]}}
-%\newcommand{\node}[1]{{[\color{blue} NOTE: #1]}}
-
 \newcommand{\want}[1]{}
-\newcommand{\todo}[1]{}
 \newcommand{\idea}[1]{}
 \newcommand{\node}[1]{}
 
 % Mark up a point that we want to flesh out into more text
 \newcommand{\x}[1]{{\color{blue} #1}\\}
 
+% Mark up some work that we need to do in order for this paper to be telling the truth
+\newcommand{\todo}[1]{{\color{red} #1}\\}
+
+\newcommand{\maybe}[1]{}
 
 \begin{document}
 
@@ -41,12 +36,35 @@
 \numberofauthors{5}
 
 \author{
-Author List to be Determined
+\alignauthor Rob Ennals\\
+       \affaddr{Intel Labs Berkeley}\\
+       \affaddr{2150 Shattuck Ave}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{robert.ennals@intel.com}
+\alignauthor Dan Byler\\
+       \affaddr{School of Information}\\
+       \affaddr{University of California at Berkeley}\\
+       \affaddr{Berkeley, CA, USA}\\
+       \email{trush@cs.berkeley.edu}
+\alignauthor John Mark Agosta\\
+       \affaddr{Intel Labs Santa Clara}\\
+       \affaddr{2200 Mission College Blvd}\\
+       \affaddr{Santa Clara, CA, USA}\\
+       \email{john.m.agosta@intel.com}
+\and
+\alignauthor Barbara Rosario\\
+       \affaddr{Intel Labs Santa Clara}\\
+       \affaddr{2200 Mission College Blvd}\\
+       \affaddr{Santa Clara, CA, USA}\\
+       \email{john.m.agosta@intel.com}
+\alignauthor Tye Rattenbury\\
+       \affaddr{Intel Principles and Practices}\\
+       \affaddr{2200 Mission College Blvd}\\
+       \affaddr{Santa Clara, CA, USA}\\
+       \email{tye.l.rattenbury@intel.com}
 }
 
 %\sloppy
-
-\additionalauthors{Barbara Rosario, Intel Labs Santa Clara, \\\texttt{[barbara.rosario@intel.com]}; Tye Rattenbury and Tad Hirsch, Intel Research Principles and Practices,\\\texttt{[tye.rattenbury,tad.hirsch]@intel.com}}
 
 
 \maketitle
@@ -55,14 +73,12 @@ Author List to be Determined
 
 
 \abstract
-[Final author list is to be determined]
 
-Not everything on the Web is accurate or unbiased. One way to determine that information on the web should not be trusted is if a trustworthy source elsewhere on the web is explicitly disagreeing 
+We describe a method for the automatic acquisition of a corpus of disputed claims from the web. We consider a claim to be disputed if a document on the web suggests that this claim is wrong and that other people on the web are suggesting that it is true.
 
-We describe a method for the automatic acquisition of a database of 
+Our tool extracts disputed claims by searching the web for templates such as ``falsely claimed that X'' or ``the myth that X'', and then analysing the parsed sentence structure to identify claims that seem to have the correct form. Given a set of known disputed claims, we can infer further templates by searching for other contexts in which known disputed claims appear.
 
-We describe a method for automatically aquiring a collection of claims that 
-
+We believe that our corpus of disputed claims could be useful for a wide range of applications related to information credibility on the web. 
 
 %\subsection{Categories and Subject Descriptors}
 %\todo{Categories, terms, and keywords need updating}
@@ -73,30 +89,144 @@ We describe a method for automatically aquiring a collection of claims that
 
 \keywords{Sensemaking, Annotation, Argumentation, Web, CSCW}
 
-
 \tolerance=400 
   % makes some lines with lots of white space, but 	
   % tends to prevent words from sticking out in the margin
 
 \section{Introduction}
 
+The web contains a vast number of documents written by a vast number of people. In many cases, these people disagree with each other, and the documents they write contain conflicting information. If a user is to extract reliable information from a the web, then it is useful for them to be able to determine when different documents disagree about a topic.
+
+In this paper we describe a method for automatically aquiring a corpus of disputed claims from the web. By {\it disputed claim} we mean a statement about the world that some sources believe are true, and other sources believe is false. Our intention is that this corpus of disputed claims will be used as input to tools that help users know what information they encounter in their lives is potentially unreliable.
+
+We identify disputed claims by searching the web for patterns that indicate that a particular phrase is a disputed claim. One such pattern is ``the misconception that $S$'', an instance of which would be ``the minconception that {\it the moon is made of cheese}''. If we find a document that contains this text then that suggests that the author of the document believes both that the statement ``{\it the moon is made of cheese}'' is false, and that there are other authors who claim that ``{\it the moon is made of cheese}'' is true.
+
+We have found many other patterns that have this property, some of which we list in Figure~\ref{templates}. Pattern searching methods like these have been used by other authors previously, most notably by Marti Hearst~\cite{hearst-hyponyms} who looked for patterns such as ``{\it animals} such as {\it cats}'' to identify hyponyms.
+
+\todo{TODO: we need to use template mining to get a more complete list of the templates that are good.}
+
+Given a corpus of disputed claims $S$, we can identify other patterns that suggest that a claim is disputed by searching the web for contexts in which known disputed claims appear. This is an instance of the distributional hypothesis~\cite{distributional-hypothesis}, that theorises that if a pattern occurs with similar phrases filling it's slots (it is distributionally similar) then it has a similar meaning.
+
+We believe that this corpus will be useful for many purposes. We are using it as part of our Dispute Finder~\cite{www-disputefinder} project, to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including visualization tools that let users see what is disputed about topics they are interested in, or what has been disputed at particular times.
+
+We are making our corpus publically available so that other researchers who believe it would be useful for them can download it. We plan to continue to update our corpus as new pages are added to the web, and to develop tool that allow people to query it in useful ways.
+
+We believe that our corpus is the first large-scale corpus of disputed claims.
+
+\todo{Need to put our data online somewhere so that others can download it.}
+
+In this paper, we describe in more detail the way that we built this corpus, we explain ways that we think this corpus could be used, and we describe some features that we found in our data.
+
+\x{Include graph showing process by which we import claims.}
+
+
+\section{Background and Related Work}
+
 \x{Information credibility is important.}
 \x{People are increasingly relying on the web for information.}
 \x{People read a wider range of sources that before, many of which they do not know whether to trust.}
 
-\section{Background and Related Work}
+Information credibility on the web is becoming increasingly important. In the past people typically obtained information from a relatively small set of sources such as books, TV channels, and radio stations. Each of these sources had a known reputation, and had publishing barriers and quality control to make sure that all information they provided met the standards expected from that source. The web is very different. A user has access to a vast number of different sources, but a user will know the reputation of only a small subset of these. Moreover, the internet has little in the way of publishing barriers or quality control. If users are going to extract trustworthy information from the web then they need to either restrict themselves to a small set of sources that they trust, or use some kind of mechanism to determine the credibility of the information that they read.
+
+\x{Cite Pew study on this? Cite other people talking about misinformation}.
+
+Given a document that contains information that may or may not be trustworthy, there are several ways that a reader can determine whether they should trust the information. They can check the reputation of the source; they can check whether it looks like a reliable document; or they can check whether the information in the document is consistent with information available from other sources.
+
+To check the reputation of a source, a user can use a web site such as SourceWatch.org, which publishes manually curated information about the reputation and known biases of various sources. Trustpilot.com produce a Firefox extension that warns a user when they are looking at a web page hosted by a company that they believe is not trustworthy. Alternatively, a user can simply use a search engine such as Google to look for information about the source. These tools can be very useful; however trustworthy sources sometimes publish unreliable information. For example a source may have been misled by an unreliable source they were using themselves. Moreover, a user may have a document from a source that is not known to be reliable, and still wish to know if the information itself is trustworthy.
+
+Researchers have identified a variety of metrics that can be used to automatically estimate the quality of a document based on looking at its content. For Wikipedia, Blumenstock~\cite{Blumenstock2008} estimates the quality of an article by the word count and WikiTrust~\cite{wikitrust} identifies potentially unreliable sections of an article by looking at the edit history. Custard and Sumner~\cite{Custard2005} use a combination of metrics to measure web site quality, including number of links and whether there are videos. Fogg et al~\cite{Fogg} have shown that users commonly evaluate the credibility of a web site based on factors such as the design look, the information structure of the site, and the tone of the writing. Some of the factors identified by Fogg et al could potentially be measured automatically and used to guide a user.
+
+In our research, we are following the third approach. We aim to inform users when information that they encounter is disputed by another source. We have built an extension to the Firefox web browser called Dispute Finder~\cite{www-disputefinder} that informs users when a web page that they are reading makes a claim that it knows to be disputed. For example, if a user is reading a page that says ``Elvis is Alive'' then Dispute Finder will highlight that statement as being disputed and direct the user to other sources that put forward alternative points of view. In the currently released version of Dispute Finder, it builds a corpus of disputed claims by allowing users to enter disputed claims manually, and scraping a small set of web sites that manually curate such claims; however it is difficult to make this approach scale to the huge number of claims on the web that are disputed.
+
+Our primary motivation for automatically acquiring a large corpus of disputed claims is to use this corpus to enable tools like Dispute Finder to automatically inform users when they encounter information that this corpus says is disputed.
+
+
+\todo{Want some kind of numerical estimate of how many disputed claims we have. Maybe measure this by pair of unique nouns and verbs. Noun + verb or noun + noun = disputed claim?}
+
+\maybe{Want to apply wikify to get nouns, and then use Chi-style catagory rules to find out what catagories are disputed on the web?}
 
 \input{relatedwork.tex}
 
 
 \section{Finding Disputed Claims}
 
+We distinguish between a {\it contradiction} and a {\it dispute}. A claim $H$ is {\it contradicted} if a document somewhere on the web makes a claim that implies that $H$ cannot be true. For example, the claim ``The moon is made of rock'' {\it contradicts} the claim ``The moon is made of cheese''.
+A claim $H$ is {\it disputed} if a document somewhere on the web suggests both that some people are claiming $H$ and that those people are wrong. For example the text ``only idiots think that the moon is made of cheese'' {\it disputes the claim} ``the moon is made of cheese''. A {\it contradiction} is logical, while a {\it dispute} is social. It is possible to have a contradiction without a dispute and a dispute without a contradiction. While the concepts are different, they are obviously closely related. Usually if someone disputes a claim it is because they believe an alternative claim that contradicts it. 
+
+
+
+
+We distinguish between a claim that is {\it contradicted} and a claim that is {\it disputed}. 
+A claim in a document is {\it contradicted} if there is another document somewhere else that makes a contradictory claim. A claim is {\it disputed} if another document explicitly says 
+
+A claim is {\it disputed} if another document 
+
+For example if one document says ``The moon is made of cheese'' and another document says ``The moon is made of rock'' then then the first statement is contradicted by the first. 
+
+We consider a claim to be disputed if at least one source suggests that the claim is true, and at least one source suggests that the claim is not true. 
+
+One way to find disputed claims is to compare statements on different web pages and look for contradictions. AuContraire~\cite{Ritter2008} uses TextRunner~\cite{textrunner} to infer subject-verb-object relationships, looks for cases where a {\it functional} verb maps the same subject to multiple different objects and the difference cannot be resolved using a semantic knowledge. 
+
+Harabagiu et al\cite{Harabagiu2006}
+
+
+\x{A contradiction is not the same as a dispute. A contradiction is where the information is different. A dispute is where the different parties BELIEVE the disagree. }
+
+
+
+The RTE-3 Recognizing Textual entailment task 
+
+
+
+This turned out to be a hard problem; 
+
+
+scanning 117 million web pages yielded only 110 genuine contradictions.
+
+
+
+
+\todo{We might want to try using TextRunner ourselves.}
+
+and then infers a contradiction when 
+
+
+infers which verbs should have like functions, and then reports a contradiction when different statements infer that a verb maps a subject to a different object. The authors found that approximately 99\% of the apparent contradictions that they found were not genuine contradictions, and that it would require domain knowledge to understand why. 
+
+\x{Need to talk about Harabagiu et al 2006 about contradiction detection through negation.}
+\x{Need to talk about three-way RTE task}.
+
+always map the subject to the same object, and then reports a contradiction when different statements 
+
+In theory, one could find disputed claims by comparing statements on different web pages and looking for contradictions. 
+
+However the problem of detecting contradictions has been found to be very difficult in practice~\cite{contradiction-hard}. Does ``
+
+\todo{Need to give a good citation of why contradiction detection is hard.}
+
+
+We consider a claim to be disputed if at least one author both believes that the claim is false and believes that 
+
+In theory, the best way to find disputed claims would be to find places where two documents make statements that contradict each other. However this problem has been found to be very difficult in practice~\cite{contradiction-hard}. 
+
+We obtain such statements $S$ by using the Yahoo BOSS search API to search for strings such as ``the misconception that''. We then parse the text that follows using a natural language parser and discard any text that either does not appear to be a valid statement, or that includes referents such as ``it'' or ``he'' that would otherwise need to be resolved based on the context.
+
+
 \subsection{Disputed Templates}
+
+\x{We use Yahoo BOSS.}
+\x{Yahoo BOSS limits us to 1000 results per query.}
+\x{We use dates to target pages that were published on a particular date.}
+\x{We have not yet done a details analysis of what proportion of pages were actually written on this date}
+\todo{Analyse how well our date targetting works}
+
+\x{We have a database of XXX different text strings, some of which may be the same claim.}
+
 
 \begin{figure}[tb]
   \begin{tabular}{|ll|}
     \hline
-    {\bf Google Count} & {\bf Template}\\ 
+    {\bf Google Count\footnotemark} & {\bf Template}\\ 
     \hline
     \multicolumn{2}{|c|}{\it Something that could be challenged}\\
     163,000,000 & believe that \\
@@ -112,32 +242,34 @@ We describe a method for automatically aquiring a collection of claims that
     9,430,000 & claiming that \\
     \hline
     \multicolumn{2}{|c|}{\it Something false}\\
-    9,960,000 & into believing that \\
+    243,000,000 & it is not the case that \\
+    30,700,000 & it is not true that \\
     15,600,000 & the misconception that \\
     13,000,000 & the delusion that \\
     12,400,000 & the myth that \\
+    9,960,000 & into believing that \\
     7,190,000 & the mistaken belief that \\
     4,950,000 & the fallacy that \\
     3,720,000 & the lie that \\
+    3,700,000 & mistaken belief that \\
     3,600,000 & the false belief that \\
+    3,440,000 & the deceit that \\
     2,140,000 & the deception that \\
     1,760,000 & the misunderstanding that \\
-    148,000 & false claim that \\
-    1,090,000 & false claim is that \\
     1,630,000 & mistakenly believe that \\
-    3,700,000 & mistaken belief that \\
-    530,000 & the absurd idea that \\
+    1,090,000 & false claim is that \\
     1,290,000 & the hoax that \\
-    3,440,000 & the deceit that \\
+    698,000 & absurdity of the claim that \\
     681,000 & falsely claimed that \\
-    103,000 & falsely claiming that \\
+    659,000 & no longer think that \\
+    654,000 & urban legend that \\
+    530,000 & the absurd idea that \\
     373,000 & erroneously believe that \\
-    140,000 & erroneous belief that \\
     334,000 & the fabrication that \\
+    103,000 & falsely claiming that \\
+    140,000 & erroneous belief that \\
     72,600 & falsely claim that \\
     152,000 & bogus claim that \\
-    65,300 & urban myth that \\
-    654,000 & urban legend that \\
     224,000 & the fantasy that \\
     171,000 & incorrectly claim that \\
     249,000 & incorrectly claimed that \\
@@ -147,12 +279,14 @@ We describe a method for automatically aquiring a collection of claims that
     376,000 & wrongly believe that \\
     189,000 & falsely suggests that \\
     280,000 & falsely claims that \\
-    59,500 & falsely stated that \\
-    698,000 & absurdity of the claim that \\
+    148,000 & false claim that \\
     136,000 & no longer believe that \\
-    659,000 & no longer think that \\
+    65,300 & urban myth that \\
+    59,500 & falsely stated that \\
     \hline
   \end{tabular}
+  \label{templates}
+  \caption{Some of the templates that we use to search for disputed claims, and Google's rough estimate of how many times each one appears on the web}
  
 \end{figure}
 
@@ -201,6 +335,9 @@ We describe a method for automatically aquiring a collection of claims that
 \x{Look at what noun phrases were most disputed at particular years.}
 \x{Look at what noun phrases were most disputed on particular days.}
 
+\x{We remove exact-match strings from the same domain - to avoid republishing of same article.}
+
+
 
 \section{Conclusions}
 
@@ -213,7 +350,10 @@ We describe a method for automatically aquiring a collection of claims that
 % We would like to Thank Barbara Rosario for help with textual entailment, and 
 % Acknowledgements omitted for blind submission. Dispute Finder uses icons from the free FamFamFam Silk\footnote{http://famfamfam.com} collection.
 
-\bibliography{refs}
+% mendelybib is the bibliograph from our shared mendely space and is auto-generated
+% localbib is used for manually adding anything we don't want to add to mendeley, particularly for
+% people who are not mendeley users
+\bibliography{mendeleybib,localbib}
 
 \end{document}
 
