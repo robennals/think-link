@@ -96,7 +96,7 @@ In this paper we describe a method for automatically acquiring a corpus of dispu
 
 We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$''. For example, if a document contains the text ``the minconception that {\it the moon is made of cheese}'', this suggests that the author of the document believes both that the statement ``{\it the moon is made of cheese}'' is false, and that there are other authors who claim that ``{\it the moon is made of cheese}'' is true.
 
-We have found many other patterns that can be used in this way, some of which we list in Figure~\ref{templates}. Pattern searching methods like these have been used by other authors previously, most notably by Marti Hearst~\cite{hearst-hyponyms} who looked for patterns such as ``{\it animals} such as {\it cats}'' to identify hyponyms.
+We have found many other patterns that can be used in this way, some of which we list in Figure~\ref{templates}. Pattern searching methods like these have been used by other authors previously, most notably by Marti Hearst~\cite{Hearst1992} who looked for patterns such as ``{\it animals} such as {\it cats}'' to identify hyponyms.
 
 \todo{TODO: we need to use template mining to get a more complete list of the templates that are good.}
 
@@ -138,7 +138,7 @@ Our primary motivation for automatically acquiring a large corpus of disputed cl
 The problem of detecting disputed claims is closely related to the well-studied problem of detecting contradictions. A claim $H$ is {\it contradicted} if a document somewhere on the web makes a claim that implies that $H$ cannot be true. For example, the claim ``The moon is made of rock'' {\it contradicts} the claim ``The moon is made of cheese''.
 A claim $H$ is {\it disputed} if a document somewhere on the web suggests both that some people are claiming $H$ and that those people are wrong. For example the text ``we disagree with the assertion that the moon is made of cheese'' {\it disputes the claim} ``the moon is made of cheese''. A {\it contradiction} is logical, while a {\it dispute} is social. In order for a claim to be disputed, the authors of the documents must be aware that there is a contradiction between their beliefs.
 
-There has been significant work on detecting contradictions. Condoravdi et al~\cite{Condoravdi2003} argue that contradiction detection is one of the key tasks in language understanding. de Marneffe et al~\cite{deMarneffe2008} present a taxonomy of the different ways that claims can contradict each other and describe a system that combines many techniques to detect different kinds of contradiction. AuContraire~\cite{Ritter2008} uses TextRunner~\cite{textrunner} to infer subject-verb-object relationships, looks for cases where a verb maps the same subject to multiple objects, and uses semantic knowledge to determine when this implies that there is a contradiction. Harabagiu et al~\cite{Harabagiu2006} look for contradictions where one claim is a negated paraphrase of another. The RTE-3 Recognizing Textual Entailment challenge~\cite{rte-3} included an optional contradiction detection task, allowing different groups building contradiction detection algorithms to compare their results. 
+There has been significant work on detecting contradictions. Condoravdi et al~\cite{Condoravdi2003} argue that contradiction detection is one of the key tasks in language understanding. de Marneffe et al~\cite{deMarneffe2008} present a taxonomy of the different ways that claims can contradict each other and describe a system that combines many techniques to detect different kinds of contradiction. AuContraire~\cite{Ritter2008} uses TextRunner~\cite{Banko2007} to infer subject-verb-object relationships, looks for cases where a verb maps the same subject to multiple objects, and uses semantic knowledge to determine when this implies that there is a contradiction. Harabagiu et al~\cite{Harabagiu2006} look for contradictions where one claim is a negated paraphrase of another. The RTE-3 Recognizing Textual Entailment challenge~\cite{Giampiccolo2007} included an optional contradiction detection task, allowing different groups building contradiction detection algorithms to compare their results. 
 
 Detecting contradictions has proven to be a hard problem. Much of the difficulty comes from the fact that it typically requires deep semantic knowledge to determine whether two statements that look like they might be contradictory actually are. ``George Bush is married to Barbara Bush'' does not contradict ``George Bush is married to Laura Bush'' because there is more than one George Bush. ``Alan Turing was born in England'' does not contradict ``Alan Turing was born in London'' because London is in England. ``It is raining is San Francisco'' does not contradict ``It is not raining in San Francisco'' if the statements were made at different times. 
 
@@ -184,6 +184,46 @@ Another advantage of including the date in the search query is it reduces the im
 Since we are using an existing search engine, we are limited to searching for simple text strings. This leads us to generate multiple patterns that are almost the same, other than for synonyms. E.g. ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. While we could do the search anyway, and then filter out all pages in which the parts were not in the same sentence, this would be inefficient, since many pages would not contain the pattern.
 
 In the longer term we would like to have a more elegant search infrastructure, but for the time being this approach seems to work reasonably well.
+
+
+\subsection{Filtering Statements}
+\label{filterclaim}
+
+Not every chunk of text identified by one of our patterns is a well-formed disputed claim. Consider for example the text chunks in Figure~\ref{filtered}. 
+
+
+
+We use a simple natural language parser to filter the chunks of text that match our patterns. 
+
+
+
+
+
+We pass each such chunk of raw text to a natural language parser (custom grammar, and an NLTK~\cite{nltk} regexp parser). We throw away any chunk of text that does not appear to be a statement, or which uses a referent (such as ``it'' or ``he'') that cannot be easily resolved. Figure~\ref{filtered} shows examples of phrases that we filter.
+
+\begin{figure*}[t]
+\begin{tabular}{|l|l|l|}
+  \hline
+  {\bf extracted text} & {\bf accepted} & {\bf reason} \\
+  \hline
+  {\it the false claim that} won't go away & reject & ``wont go away'' is not a statement \\
+  {\it falsely claimed that} he didn't do it & reject & ``he'' and ``it'' are unbound referents \\ 
+  {\it wrongly believe that} the moon is made of cheese & accept & \\
+  {\it false claim that} Elvis is alive despite all evidence & \\
+  \hline
+\end{tabular}
+\label{filtered}
+\caption{We filter out text that does not look like a statement}
+
+\end{figure*}
+
+\todo{Our parser is currently a bit rubbish. Need to work out how to do this properly.}
+\todo{We need to use the correct terminology here.}
+
+\x{Remove anything containing stuff like 'if'}
+\x{Disallow possesives like its/his etc unless a noun has come first}
+\x{Strip HTML tags}
+
 
 
 \subsection{Generating Patterns}
@@ -282,33 +322,12 @@ We started with an initial set of patterns that we wrote by hand. We then found 
 \end{figure}
 
 
-\subsection{Filtering Statements}
-\label{filterclaim}
 
-We pass each such chunk of raw text to a natural language parser (custom grammar, and an NLTK~\cite{nltk} regexp parser). We throw away any chunk of text that does not appear to be a statement, or which uses a referent (such as ``it'' or ``he'') that cannot be easily resolved. Figure~\ref{filtered} shows examples of phrases that we filter.
+\subsection{Context}
 
-\begin{figure*}[t]
-\begin{tabular}{|l|l|l|}
-  \hline
-  {\bf extracted text} & {\bf accepted} & {\bf reason} \\
-  \hline
-  {\it the false claim that} won't go away & reject & ``wont go away'' is not a statement \\
-  {\it falsely claimed that} he didn't do it & reject & ``he'' and ``it'' are unbound referents \\ 
-  {\it wrongly believe that} the moon is made of cheese & accept & \\
-  {\it false claim that} Elvis is alive despite all evidence & \\
-  \hline
-\end{tabular}
-\label{filtered}
-\caption{We filter out text that does not look like a statement}
-
-\end{figure*}
-
-\todo{Our parser is currently a bit rubbish. Need to work out how to do this properly.}
-\todo{We need to use the correct terminology here.}
-
-\x{Remove anything containing stuff like 'if'}
-\x{Disallow possesives like its/his etc unless a noun has come first}
-\x{Strip HTML tags}
+\x{Importance of dates}
+\x{Work meaning depending on surrounding text}
+\x{We do not yet do anything useful with context, but we believe it is important and intend to use it}
 
 
 \section{Using Disputed Claims}
