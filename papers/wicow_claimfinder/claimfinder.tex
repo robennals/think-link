@@ -88,7 +88,7 @@ We believe that our corpus of disputed claims could be useful for a wide range o
 \keywords{Sensemaking, Annotation, Argumentation, Web, CSCW}
 
 \tolerance=400 
-  % makes some lines with lots of white space, but 	
+  % makes some lines with lots of white space, but  
   % tends to prevent words from sticking out in the margin
 
 \section{Introduction}
@@ -197,7 +197,7 @@ Given a set of known disputed claims, we then go back and generate new patterns 
 \subsection{Searching for Patterns}
 \label{searchpattern}
 
-We search the web for patterns that indicate that a claim is disputed, such as ``false claim that $X$'' or or ``it is not true that $X$''. Figure~\ref{templates} shows a subset of the patterns that we search for. For each pattern, we show the number of times that Google estimates that the pattern appears on the web. 
+We search the web for patterns that indicate that a claim is disputed, such as ``false claim that $X$'' or or ``it is not true that $X$''. Figure~\ref{templates} shows a subset of the patterns that we search for. For each pattern, we show the number of times that Yahoo estimates that the pattern appears on the web. 
 
 This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
 
@@ -266,8 +266,6 @@ This approach is an example of the Distributional Hypothesis. The distributional
 
 
 \todo{Give some stats about our patterns}
-\todo{Use Yahoo BOSS counts rather than Google}
-\note{It seems silly to use Google's counts for these when we are using Yahoo BOSS. Someone should write a script to re-generate this table using Yahoo BOSS counts.}
 
 \todo{Analyse how well our date targetting works}
 
@@ -275,70 +273,70 @@ This approach is an example of the Distributional Hypothesis. The distributional
 \begin{center}
   \begin{tabular}{|ll|}
     \hline
-    {\bf Google Count\footnotemark} & {\bf Template}\\ 
+    {\bf Yahoo Count\footnotemark} & {\bf Template}\\ 
     \hline
-    \multicolumn{2}{|c|}{\it Something that could be challenged}\\
-    163,000,000 & believe that \\
-    206,000,000 & think that \\
-    49,500,000 & idea that \\
-    33,600,000 & claim that \\
-   \hline
-   \multicolumn{2}{|c|}{\it Something others believe}\\
-    120,000,000 & the belief that \\
-    49,000,000 & who believe that \\
-    50,500,000 & who think that \\
-    10,100,000 & believing that \\
-    9,430,000 & claiming that \\
-    \hline
-    \multicolumn{2}{|c|}{\it Something false}\\
-    243,000,000 & it is not the case that \\
-    30,700,000 & it is not true that \\
-    15,600,000 & the misconception that \\
-    13,000,000 & the delusion that \\
-    12,400,000 & the myth that \\
-    9,960,000 & into believing that \\
-    8,970,000 & disagree with the claim that \\
-    7,190,000 & the mistaken belief that \\
-    6,160,000 & disagree with the assertion that \\
-    4,950,000 & the fallacy that \\
-    3,720,000 & the lie that \\
-    3,700,000 & mistaken belief that \\
-    3,600,000 & the false belief that \\
-    3,440,000 & the deceit that \\
-    2,290,000 & cast doubt on the claim that \\
-    2,140,000 & the deception that \\
-    1,760,000 & the misunderstanding that \\
-    1,630,000 & mistakenly believe that \\
-    1,090,000 & false claim is that \\
-    1,290,000 & the hoax that \\
-    698,000 & absurdity of the claim that \\
-    681,000 & falsely claimed that \\
-    659,000 & no longer think that \\
-%     654,000 & urban legend that \\
-%     530,000 & the absurd idea that \\
-%     373,000 & erroneously believe that \\
-%     334,000 & the fabrication that \\
-%     103,000 & falsely claiming that \\
-%     140,000 & erroneous belief that \\
-%     72,600 & falsely claim that \\
-%     152,000 & bogus claim that \\
-%     224,000 & the fantasy that \\
-%     171,000 & incorrectly claim that \\
-%     249,000 & incorrectly claimed that \\
-%     232,000 & incorrectly believe that \\
-%     98,900 & stupidly believe that \\
-%     429,000 & falsely believe that \\
-%     376,000 & wrongly believe that \\
-%     189,000 & falsely suggests that \\
-%     280,000 & falsely claims that \\
-%     148,000 & false claim that \\
-%     136,000 & no longer believe that \\
-%     65,300 & urban myth that \\
-%     59,500 & falsely stated that \\
+        \multicolumn{2}{|c|}{\it Something that could be challenged}\\
+        570,000,000 & think that \\
+        495,000,000 & believe that \\
+        145,000,000 & idea that \\
+        101,000,000 & claim that \\
+       \hline
+       \multicolumn{2}{|c|}{\it Something others believe}\\
+        40,100,000 & claiming that \\
+        30,600,000 & the belief that \\
+        28,600,000 & believing that \\
+        11,700,000 & who believe that \\
+        8,400,000 & who think that \\
+        \hline
+        \multicolumn{2}{|c|}{\it Something false}\\
+        5,790,000 & the myth that \\
+        3,260,000 & into believing that \\
+        1,690,000 & the lie that \\
+        1,410,000 & it is not true that \\
+        1,220,000 & the delusion that \\
+        1,140,000 & the misconception that \\
+        995,000 & mistaken belief that \\
+        676,000 & the mistaken belief that \\
+        593,000 & mistakenly believe that \\
+        583,000 & the fantasy that \\
+        501,000 & it is not the case that \\
+        459,000 & false claim that \\
+        405,000 & the fallacy that \\
+        351,000 & falsely claimed that \\
+        264,000 & urban legend that \\
+        250,000 & no longer believe that \\
+        216,000 & the false belief that \\
+        215,000 & falsely claiming that \\ 
+        178,000 & falsely believe that \\
+        171,000 & bogus claim that \\
+        163,000 & erroneous belief that \\
+        154,000 & the deception that \\
+        147,000 & the misunderstanding that \\
+        135,000 & urban myth that \\
+    %    131,000 & wrongly believe that \\
+    %    126,000 & falsely claim that \\
+    %    109,000 & erroneously believe that \\
+    %    101,000 & falsely claims that \\
+    %    83,900 & incorrectly believe that \\
+    %    83,200 & no longer think that \\
+    %    82,400 & falsely stated that \\
+    %    79,200 & the absurd idea that \\
+    %    74,100 & the hoax that \\
+    %    41,500 & the deceit that \\
+    %    23,700 & incorrectly claimed that \\
+    %    21,900 & disagree with the claim that \\
+    %    15,900 & falsely suggests that \\
+    %    15,300 & disagree with the assertion that \\
+    %    14,200 & the fabrication that \\
+    %    9,640 & incorrectly claim that \\
+    %    2,110 & cast doubt on the claim that \\
+    %    2,080 & absurdity of the claim that \\
+    %    1,820 & false claim is that \\
+    %    1,750 & stupidly believe that \\
     \hline
   \end{tabular}
   \label{templates}
-  \caption{Some of the templates that we use to search for disputed claims, and Google's rough estimate of how many times each one appears on the web}
+  \caption{Some of the templates that we use to search for disputed claims, and Yahoo's rough estimate of how many times each one appears on the web}
 \end{center}
 \end{figure}
 
@@ -404,6 +402,5 @@ This approach is an example of the Distributional Hypothesis. The distributional
 \bibliography{mendeleybib,localbib}
 
 \end{document}
-
 
 
