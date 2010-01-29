@@ -6,14 +6,17 @@
 \newcommand{\want}[1]{}
 \newcommand{\idea}[1]{}
 \newcommand{\note}[1]{}
+\newcommand{\x}[1]{}
+\newcommand{\todo}[1]{}
+\newcommand{\maybe}[1]{}
 
 % Mark up a point that we want to flesh out into more text
-\newcommand{\x}[1]{{\color{blue} #1}\\}
+%\newcommand{\x}[1]{{\color{blue} #1}\\}
 
 % Mark up some work that we need to do in order for this paper to be telling the truth
-\newcommand{\todo}[1]{{\color{red} #1}\\}
+%\newcommand{\todo}[1]{{\color{red} #1}\\}
 
-\newcommand{\maybe}[1]{}
+%\newcommand{\maybe}[1]{}
 
 \begin{document}
 
@@ -100,7 +103,7 @@ We have found many other patterns that can be used in this way, some of which we
 
 \todo{TODO: we need to use template mining to get a more complete list of the templates that are good.}
 
-Given a corpus of disputed claims $S$, we can identify other patterns that suggest that a claim is disputed by searching the web for contexts in which known disputed claims appear. This is an instance of the distributional hypothesis~\cite{distributional-hypothesis}, which theorises that if a pattern occurs with similar phrases filling its slots (it is distributionally similar) then it has a similar meaning.
+Given a corpus of disputed claims $S$, we can identify other patterns that suggest that a claim is disputed by searching the web for contexts in which known disputed claims appear. This is an instance of the distributional hypothesis~\cite{Harris1954,Systems2000}, which theorises that if a pattern occurs with similar phrases filling its slots (it is distributionally similar) then it has a similar meaning.
 
 We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{www-disputefinder} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including visualization tools that let users see what is disputed about topics they are interested in, or what has been disputed at particular times.
 
@@ -123,13 +126,13 @@ In this paper, we describe in more detail the way that we built this corpus, we 
 
 Information credibility on the web is becoming increasingly important. In the past people typically obtained information from a relatively small set of sources such as books, TV channels, and radio stations. Most of these sources had a known reputation, and had publishing barriers and quality control to ensure that the information they provided met the standards expected from that source. The web is very different. A user has access to a vast number of different sources, but a user will know the reputation of only a small subset of these. Moreover, the internet has little in the way of publishing barriers or quality control. If users are to extract trustworthy information from the web, they need to either restrict themselves to a small set of trusted sources, or use some kind of mechanism to determine the credibility of the information that they access.
 
-\x{Cite Pew study on this? Cite other people talking about misinformation}.
+\x{Cite Pew study on this? Cite other people talking about misinformation.}
 
 Given a document that contains information which may or may not be trustworthy, there are several ways that a reader can determine whether they should trust the information. They can check the reputation of the source; they can check whether it looks like a reliable document; or they can check whether the information in the document is consistent with information available from other sources.
 
 To check the reputation of a source, a user can use a web site such as SourceWatch.org, which publishes manually curated information about the reputation and known biases of various sources. Trustpilot.com produce a Firefox extension that warns a user when they are looking at a web page hosted by a company that they believe is not trustworthy. Alternatively, a user can simply use a search engine such as Google to look for information about the source. While these tools can be very useful, trustworthy sources sometimes publish unreliable information. For example, a source may have been misled by an unreliable source they were using themselves. Moreover, a user may have a document from a source that is not known to be reliable, and still wish to know if the information itself is trustworthy.
 
-Researchers have identified a variety of metrics that can be used to automatically estimate the quality of a document based on looking at its content. For Wikipedia, Blumenstock~\cite{Blumenstock2008} estimates the quality of an article by the word count and WikiTrust~\cite{wikitrust} identifies potentially unreliable sections of an article by analyzing its edit history. Custard and Sumner~\cite{Custard2005} use a combination of metrics to measure web site quality, including number of links and whether it contains videos. Fogg et al~\cite{Fogg} have shown that users commonly evaluate the credibility of a web site based on factors such as the design look, the information structure of the site, and the tone of the writing. Some of the factors identified by Fogg et al could potentially be measured automatically and used to guide a user.
+Researchers have identified a variety of metrics that can be used to automatically estimate the quality of a document based on looking at its content. For Wikipedia, Blumenstock~\cite{Blumenstock2008} estimates the quality of an article by the word count and WikiTrust~\cite{wikitrust} identifies potentially unreliable sections of an article by analyzing its edit history. Custard and Sumner~\cite{Custard2005} use a combination of metrics to measure web site quality, including number of links and whether it contains videos. Fogg et al~\cite{Fogg2003} have shown that users commonly evaluate the credibility of a web site based on factors such as the design look, the information structure of the site, and the tone of the writing. Some of the factors identified by Fogg et al could potentially be measured automatically and used to guide a user.
 
 In our research, we are following the third approach. We aim to inform users when information that they encounter is disputed by another source. We have built an extension to the Firefox web browser called Dispute Finder~\cite{www-disputefinder} that informs users when a web page that they are reading makes a claim that it knows to be disputed. For example, if a user is reading a page that says ``Elvis is Alive'' then Dispute Finder will highlight that statement as being disputed and direct the user to other sources that put forward alternative points of view. In its currently released version, Dispute Finder builds a corpus of disputed claims by allowing users to enter disputed claims manually, and scraping a small set of web sites that manually curate such claims; however it is difficult to make this approach scale to the huge number of claims on the web that are disputed.
 
@@ -138,7 +141,7 @@ Our primary motivation for automatically acquiring a large corpus of disputed cl
 The problem of detecting disputed claims is closely related to the well-studied problem of detecting contradictions. A claim $H$ is {\it contradicted} if a document somewhere on the web makes a claim that implies that $H$ cannot be true. For example, the claim ``The moon is made of rock'' {\it contradicts} the claim ``The moon is made of cheese''.
 A claim $H$ is {\it disputed} if a document somewhere on the web suggests both that some people are claiming $H$ and that those people are wrong. For example the text ``we disagree with the assertion that the moon is made of cheese'' {\it disputes the claim} ``the moon is made of cheese''. A {\it contradiction} is logical, while a {\it dispute} is social. In order for a claim to be disputed, the authors of the documents must be aware that there is a contradiction between their beliefs.
 
-There has been significant work on detecting contradictions. Condoravdi et al~\cite{Condoravdi2003} argue that contradiction detection is one of the key tasks in language understanding. de Marneffe et al~\cite{deMarneffe2008} present a taxonomy of the different ways that claims can contradict each other and describe a system that combines many techniques to detect different kinds of contradiction. AuContraire~\cite{Ritter2008} uses TextRunner~\cite{Banko2007} to infer subject-verb-object relationships, looks for cases where a verb maps the same subject to multiple objects, and uses semantic knowledge to determine when this implies that there is a contradiction. Harabagiu et al~\cite{Harabagiu2006} look for contradictions where one claim is a negated paraphrase of another. The RTE-3 Recognizing Textual Entailment challenge~\cite{Giampiccolo2007} included an optional contradiction detection task, allowing different groups building contradiction detection algorithms to compare their results. 
+There has been significant work on detecting contradictions. Condoravdi et al~\cite{Condoravdi2003} argue that contradiction detection is one of the key tasks in language understanding. de Marneffe et al~\cite{deMarneffe2008} present a taxonomy of the different ways that claims can contradict each other and describe a system that combines many techniques to detect different kinds of contradiction. AuContraire~\cite{Ritter} uses TextRunner~\cite{Etzioni2008,Banko2008} to infer subject-verb-object relationships, looks for cases where a verb maps the same subject to multiple objects, and uses semantic knowledge to determine when this implies that there is a contradiction. Harabagiu et al~\cite{Harabagiu2006} look for contradictions where one claim is a negated paraphrase of another. The RTE-3 Recognizing Textual Entailment challenge~\cite{Giampiccolo2007} included an optional contradiction detection task, allowing different groups building contradiction detection algorithms to compare their results. 
 
 Detecting contradictions has proven to be a hard problem. Much of the difficulty comes from the fact that it typically requires deep semantic knowledge to determine whether two statements that look like they might be contradictory actually are. ``George Bush is married to Barbara Bush'' does not contradict ``George Bush is married to Laura Bush'' because there is more than one George Bush. ``Alan Turing was born in England'' does not contradict ``Alan Turing was born in London'' because London is in England. ``It is raining is San Francisco'' does not contradict ``It is not raining in San Francisco'' if the statements were made at different times. 
 
@@ -148,7 +151,14 @@ We detect disputes rather than contradictions. Rather than looking for claims th
 
 \maybe{Want to apply wikify to get nouns, and then use Chi-style category rules to find out what categories are disputed on the web?}
 
-\input{relatedwork.tex}
+This work is also closely related to the NLP areas of opinion mining and/or sentiment analysis, 
+textual entailment and contradiction detection. Sentiment analysis aims to determine the attitude 
+(usually positive, negative and neutral) of a writer with respect to some topic\cite{pangLee}. 
+Textual entailment is the task of deciding, given two text fragments, whether the meaning of one 
+text can be inferred from the other text (add references). 
+
+% I think I've folded the stuff from this file into the main body now
+%\input{relatedwork.tex}
 
 
 \section{Finding Disputed Claims}
@@ -164,10 +174,32 @@ For every page that contains the pattern, we grab the raw text from the end of t
 Given a set of known disputed claims, we then go back and generate new patterns by searching for those claims on the web and looking for contexts in which those claims often appear.
 
 
+\begin{figure*}[tb]
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+  \hline
+  & {\bf extracted text} & {\bf valid} & {\bf details} \\
+  \hline
+  1. & the false claim that {\it won't go away} & no & ``wont go away'' is not a statement \\
+  2. & falsely claimed that {\it he didn't do it} & no & ``he'' and ``it'' are unbound referents \\
+  3. & falsely claimed that {\it federal labor laws do not apply} & no & object of the verb is not present\\
+  4. & false claim that {\it Elvis is alive} despite all evidence & yes & but drop everything after ``despite''\\
+  5. & wrongly believe that {\it the moon is made of cheese} & yes & it is a statement about the world \\
+\hline
+\end{tabular}
+\end{center}
+\label{filtered}
+\caption{We filter out text that does not look like a statement}
+
+\end{figure*}
+
+
 \subsection{Searching for Patterns}
 \label{searchpattern}
 
-We search the web for patterns that indicate that a claim is disputed. Figure~\ref{templates} shows a subset of the patterns that we search for. For each pattern, we show the number of times that Google estimates that the pattern appears on the web. 
+We search the web for patterns that indicate that a claim is disputed, such as ``false claim that $X$'' or or ``it is not true that $X$''. Figure~\ref{templates} shows a subset of the patterns that we search for. For each pattern, we show the number of times that Google estimates that the pattern appears on the web. 
+
+This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
 
 Rather than building our own search engine, we use the Yahoo BOSS search API~\cite{yahoo-boss} to search for patterns. We search Yahoo BOSS for a raw string such as ``the misconception that'' and then download every web page that Yahoo lists in its search results.
 
@@ -189,41 +221,22 @@ In the longer term we would like to have a more elegant search infrastructure, b
 \subsection{Filtering Statements}
 \label{filterclaim}
 
-Not every chunk of text identified by one of our patterns is a well-formed disputed claim. Consider for example the text chunks in Figure~\ref{filtered}. 
+Not every chunk of text identified by one of our patterns is a well-formed disputed claim. Consider for example the text chunks in Figure~\ref{filtered}. A chunk of text might not be a statement (case 1), it might include unbound referents such is ``it'', or ``they'' (case 2), or it might only make sense within the context of a particular document (case 3).
+
+We use a simple filter that looks for cases 1 and 2, but does not yet deal with case 3. We use the part-of-speech tagger from NLTK~\cite{nltk}, and then use a simple regexp parser to apply a series of simple rules.
+
+\begin{enumerate}
+\item To ensure that the text represent a real statement (case 1) we accept only text that contains either two noun phrases (e.g. ``{\it George Bush} is from {\it Texas}''), or a noun phrase and an adjective (e.g. ``{\it Cocaine} is {\it addictive}''). We do not accept text that contains merely a noun and a verb (e.g. ``{\it Federal laws} do not {\it apply}'') since manual inspection of our data set suggests that in such phrases the verb typically refers to a noun that is defined outside the statement itself.
+
+\item We also discard any statement that contains a personal pronoun such as ``he'', ``she'', ``it'', or ``they'' unless it is proceeded by a noun (addressing case 2). We allow a personal pronoun after a noun, since manual inspection suggests that in most cases the personal pronoun refers to the noun, for example ``Bill Clinton said he wants to slow down the economy''. While we could in theory resolve other references, this is known to be a hard problem, and we have access to a large enough set of candidate claims that we can afford to throw away claims that are not easy for us to process.
+
+\item In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was''.
+\end{enumerate}
+
+These rules were crafted by hand, based on trial and error and manual inspection of a relatively small number of claims. In the future we would like to use a more rigorous statistical method to produce more sophisticated rules for selecting high quality disputed claims, guided by a larger hand-annotated data set. We are also considering adopting an external framework such as TextRunner~\cite{Etzioni2008,Banko2008}.
 
 
-
-We use a simple natural language parser to filter the chunks of text that match our patterns. 
-
-
-
-
-
-We pass each such chunk of raw text to a natural language parser (custom grammar, and an NLTK~\cite{nltk} regexp parser). We throw away any chunk of text that does not appear to be a statement, or which uses a referent (such as ``it'' or ``he'') that cannot be easily resolved. Figure~\ref{filtered} shows examples of phrases that we filter.
-
-\begin{figure*}[t]
-\begin{tabular}{|l|l|l|}
-  \hline
-  {\bf extracted text} & {\bf accepted} & {\bf reason} \\
-  \hline
-  {\it the false claim that} won't go away & reject & ``wont go away'' is not a statement \\
-  {\it falsely claimed that} he didn't do it & reject & ``he'' and ``it'' are unbound referents \\ 
-  {\it wrongly believe that} the moon is made of cheese & accept & \\
-  {\it false claim that} Elvis is alive despite all evidence & \\
-  \hline
-\end{tabular}
-\label{filtered}
-\caption{We filter out text that does not look like a statement}
-
-\end{figure*}
-
-\todo{Our parser is currently a bit rubbish. Need to work out how to do this properly.}
-\todo{We need to use the correct terminology here.}
-
-\x{Remove anything containing stuff like 'if'}
-\x{Disallow possesives like its/his etc unless a noun has come first}
-\x{Strip HTML tags}
-
+\todo{Need a rough evaluation of what proportion of claims get thrown away by each rule, and how accurate these rules are.}
 
 
 \subsection{Generating Patterns}
@@ -245,6 +258,13 @@ Which patterns one should use depends on what one wishes to use the resulting co
 
 We started with an initial set of patterns that we wrote by hand. We then found additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected patterns that we believed would lead us, as a human, to infer that the author thought the claim was disputed, believed by others, or open to challenge.
 
+Rather that searching for an arbitrary collection of known disputed claims, we found that we generated better templates by searching for claims that most documents disagee with (e.g. ``eskimos have many words for snow'') rather than claims that many people agree with (e.g. ``there is a God''). If many people agree with a claim is true then many of the patterns that we find will not be patterns that indicate that the claim is disputed. Even when we search for claims that are highly disputed, our algorithm still finds many patterns that do not indicate dispute. We thus rely on a human to pick which prefixes to use.
+
+We also find that we get higher quality results if we limit ourselves to prefixes that end in ``that''. For example, if we search for ``that eskimos have many words for snow'' then most prefixes we find do indeed indicate dispute, however if we just search for ``eskimos have many words for snow'' then we get a much lower hit rate. 
+
+This approach is an example of the Distributional Hypothesis. The distributional hypothesis, as originally framed~\cite{Harris1954,Systems2000}, theorised that words that appear in similar contexts have similar meanings. This has more recently been extended to patterns. If two patterns appear in a corpus with similar text filling their slots, then it is likely that the patterns have similar meanings. DIRT~\cite{Lin2001} discovers inference rules such as (``$X$ is author of $Y$'' $\equv$ ``$X$ wrote $Y$'') by looking for patterns that have a similar distribution of text filling their slots. Pasca and Dienes~\cite{Pasca2005} detect paraphrases on the web by searching for text fragments that appear in similar contexts on web pages. 
+
+
 \todo{Give some stats about our patterns}
 \todo{Use Yahoo BOSS counts rather than Google}
 \note{It seems silly to use Google's counts for these when we are using Yahoo BOSS. Someone should write a script to re-generate this table using Yahoo BOSS counts.}
@@ -252,6 +272,7 @@ We started with an initial set of patterns that we wrote by hand. We then found 
 \todo{Analyse how well our date targetting works}
 
 \begin{figure}[tb]
+\begin{center}
   \begin{tabular}{|ll|}
     \hline
     {\bf Google Count\footnotemark} & {\bf Template}\\ 
@@ -318,7 +339,7 @@ We started with an initial set of patterns that we wrote by hand. We then found 
   \end{tabular}
   \label{templates}
   \caption{Some of the templates that we use to search for disputed claims, and Google's rough estimate of how many times each one appears on the web}
- 
+\end{center}
 \end{figure}
 
 

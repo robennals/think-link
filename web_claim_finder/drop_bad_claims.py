@@ -20,6 +20,33 @@ Possible extensions:
 import fileinput
 import nltk
 
+split_words = set(["despite","although","however",",",";","but","was"])
+
+def trim_statement(claim):
+	words = nltk.word_tokenize(claim)
+	taggedwords = nltk.pos_tag(words)
+	tags = [tword[1] for tword in taggedwords]
+	noun1 = False
+	gap = False
+	thing2 = False
+	good = False
+	i = 0
+	for tag in tags:
+		if tag=="PRP" and not noun1:
+			 return False
+		if tag.startswith("NN") and not noun1:
+			noun1 = True
+		if not tag.startswith("NN") and noun1 and  not gap:
+			gap = True
+		if (tag.startswith("NN") or tag.startswith("JJ")) and gap:
+			good = True
+		if words[i] in split_words:
+			return " ".join(words[0:i])
+		i+=1	
+	return claim
+
+	
+
 def is_statement(claim):
 	taggedwords = tag_claim(claim)
 	tags = [tword[1] for tword in taggedwords]
@@ -28,7 +55,7 @@ def is_statement(claim):
 	thing2 = False
 	for tag in tags:
 		if tag=="PRP":
-			 return False
+			 return null
 		if tag.startswith("NN") and not noun1:
 			noun1 = True
 		if not tag.startswith("NN") and noun1 and  not gap:
@@ -36,6 +63,7 @@ def is_statement(claim):
 		if (tag.startswith("NN") or tag.startswith("JJ")) and gap:
 			return True
 	return False
+
 	
 def tag_claim(claim):
 	return nltk.pos_tag(nltk.word_tokenize(claim))
