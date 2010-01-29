@@ -100,10 +100,12 @@ In this paper we describe a method for automatically acquiring a corpus of dispu
 We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$''. For example, if a document contains the text ``the minconception that {\it the moon is made of cheese}'', this suggests that the author of the document believes both that the statement ``{\it the moon is made of cheese}'' is false, and that there are other authors who claim that ``{\it the moon is made of cheese}'' is true.
 
 We have found many other patterns that can be used in this way, some of which we list in Figure~\ref{templates}. Pattern searching methods like these have been used by other authors previously, most notably by Marti Hearst~\cite{Hearst1992} who looked for patterns such as ``{\it animals} such as {\it cats}'' to identify hyponyms.
+{\bf either put here the other related work on this, or just put this reference in the related work section-- especially because there much more important work beyond hearst92, so no need to give it much emphasis in the intro}
 
 \todo{TODO: we need to use template mining to get a more complete list of the templates that are good.}
 
 Given a corpus of disputed claims $S$, we can identify other patterns that suggest that a claim is disputed by searching the web for contexts in which known disputed claims appear. This is an instance of the distributional hypothesis~\cite{Harris1954,Systems2000}, which theorises that if a pattern occurs with similar phrases filling its slots (it is distributionally similar) then it has a similar meaning.
+
 
 We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{www-disputefinder} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including visualization tools that let users see what is disputed about topics they are interested in, or what has been disputed at particular times.
 
@@ -204,7 +206,9 @@ This is an instance of template inference (aka pattern matching), a method that 
 Rather than building our own search engine, we use the Yahoo BOSS search API~\cite{yahoo-boss} to search for patterns. We search Yahoo BOSS for a raw string such as ``the misconception that'' and then download every web page that Yahoo lists in its search results.
 
 We form a {\it candidate claim} by taking all text from the end of the prefix we searched for, up to the nearest sentence-ending punctuation character or HTML tag (e.g. '.','?','!',\texttt{</p>},\texttt{</h1>}, etc). 
+{\bf it would be quite important to give a sense on the accuracy --precision - of the claims extracted. you can calculated this from a subset of returned candidate claims: out of, say, 100, how many were actually claims?}
 
+{\bf is it really important the discussion on the date and search technique? i think it deviates from the main points and is kind of long}
 We want to be able to incrementally update our corpus as new pages appear on the web, without repeatedly downloading the same pages. The Yahoo BOSS API does not offer the ability to request only pages updated in a given date range. We thus simulate this behaviour by instead including a literal date string in our queries. For example, if we want to find claims that were disputed on January 4th 2010 then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
 
 The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, and some web pages either don't include the date the article was posted, or write their date in a different format. Indeed our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first).
