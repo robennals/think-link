@@ -19,32 +19,45 @@ Possible extensions:
 
 import fileinput
 import nltk
+import claimfinder as c
 
-split_words = set(["despite","although","however",",",";","but","was"])
+split_words = set(["despite","although","however",",",";","but","-","--"])
 
-def trim_statement(claim):
-	words = nltk.word_tokenize(claim)
-	taggedwords = nltk.pos_tag(words)
+def trim_statement_tagged(words,taggedwords,claim):
 	tags = [tword[1] for tword in taggedwords]
 	noun1 = False
-	gap = False
+	verb = False
+#	gap = False
 	thing2 = False
 	good = False
 	i = 0
 	for tag in tags:
-		if tag=="PRP" and not noun1:
+		if (tag=="PRP" or tag == "PRP$") and not noun1:
 			 return False
 		if tag.startswith("NN") and not noun1:
 			noun1 = True
-		if not tag.startswith("NN") and noun1 and  not gap:
-			gap = True
-		if (tag.startswith("NN") or tag.startswith("JJ")) and gap:
+		if tag.startswith("VB") and noun1:
+			verb = True
+#		if not tag.startswith("NN") and noun1 and  not gap:
+#			gap = True
+		if (tag.startswith("NN") or tag.startswith("JJ") or tag == "VBG") and verb:
 			good = True
-		if words[i] in split_words:
-			return " ".join(words[0:i])
+		if good and words[i] in split_words:
+			return taggedwords[0:i]
 		i+=1	
-	return claim
+	if good: return taggedwords
+	else: return False
 
+
+def trim_statement(claim):
+	claim = c.convert_entities(claim)
+	words = nltk.word_tokenize(claim)
+	taggedwords = nltk.pos_tag(words)
+	trimtagged = trim_statement_tagged(words,taggedwords,claim)
+	if trimtagged:
+		return " ".join([word[0] for word in trimtagged])
+	else: return False
+		
 	
 
 def is_statement(claim):
@@ -71,8 +84,9 @@ def tag_claim(claim):
 def main():
 	for line in fileinput.input():
 		claim = line.split("\t")[1]
-		if is_statement(claim):
-			print line,
+		trimmed = trim_statement(claim)
+		if trimmed:
+			print trimmed
 
 if __name__ == '__main__':
 	main()

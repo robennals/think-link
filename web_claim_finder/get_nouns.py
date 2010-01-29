@@ -58,7 +58,13 @@ def subnouns(nounphrase):
 def get_nouns(claim):
 	tree = cp.parse(cf.tag_claim(claim))
 	nouns = [subnouns(subtree) for subtree in tree.subtrees() if subtree.node == "NP"]		
-	return reduce(list.__add__,nouns)
+	return reduce(list.__add__,nouns,[])
+
+def get_nouns_tagged(tagged):
+	tree = cp.parse(tagged)
+	nouns = [subnouns(subtree) for subtree in tree.subtrees() if subtree.node == "NP"]		
+	return reduce(list.__add__,nouns,[])
+
 	
 def main():
 	for line in fileinput.input():
