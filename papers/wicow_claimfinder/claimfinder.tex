@@ -6,15 +6,15 @@
 \newcommand{\want}[1]{}
 \newcommand{\idea}[1]{}
 \newcommand{\note}[1]{}
-\newcommand{\x}[1]{}
-\newcommand{\todo}[1]{}
+%\newcommand{\x}[1]{}
+%\newcommand{\todo}[1]{}
 \newcommand{\maybe}[1]{}
 
 % Mark up a point that we want to flesh out into more text
-%\newcommand{\x}[1]{{\color{blue} #1}\\}
+\newcommand{\x}[1]{{\color{blue} #1}\\}
 
 % Mark up some work that we need to do in order for this paper to be telling the truth
-%\newcommand{\todo}[1]{{\color{red} #1}\\}
+\newcommand{\todo}[1]{{\color{red} #1}\\}
 
 %\newcommand{\maybe}[1]{}
 
@@ -97,14 +97,9 @@ The web contains a vast number of documents written by a vast number of people. 
 
 In this paper we describe a method for automatically acquiring a corpus of disputed claims from the web. We consider a claim to be {\it disputed} if some people believe both that others are making the claim, and that the claim is not true.  
 
-We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$''. For example, if a document contains the text ``the minconception that {\it the moon is made of cheese}'', this suggests that the author of the document believes both that the statement ``{\it the moon is made of cheese}'' is false, and that there are other authors who claim that ``{\it the moon is made of cheese}'' is true.
-
-We have found many other patterns that can be used in this way, some of which we list in Figure~\ref{templates}. Pattern searching methods like these have been used by other authors previously, most notably by Marti Hearst~\cite{Hearst1992} who looked for patterns such as ``{\it animals} such as {\it cats}'' to identify hyponyms.
-{\bf either put here the other related work on this, or just put this reference in the related work section-- especially because there much more important work beyond hearst92, so no need to give it much emphasis in the intro}
+We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$''. For example, if a document contains the text ``the minconception that {\it the moon is made of cheese}'', this suggests that the author of the document believes both that the statement ``{\it the moon is made of cheese}'' is false, and that there are other authors who claim that ``{\it the moon is made of cheese}'' is true. In Figure~\ref{templates} we list some of the patterns we used. We then search the web for these patterns, process the text to extract the claims, thus creating a corpus of candidate claims.  
 
 \todo{TODO: we need to use template mining to get a more complete list of the templates that are good.}
-
-Given a corpus of disputed claims $S$, we can identify other patterns that suggest that a claim is disputed by searching the web for contexts in which known disputed claims appear. This is an instance of the distributional hypothesis~\cite{Harris1954,Systems2000}, which theorises that if a pattern occurs with similar phrases filling its slots (it is distributionally similar) then it has a similar meaning.
 
 
 We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{www-disputefinder} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including visualization tools that let users see what is disputed about topics they are interested in, or what has been disputed at particular times.
@@ -171,9 +166,7 @@ text can be inferred from the other text (add references).
 
 Figure~\ref{not-yet} shows the process we use to build our corpus of disputed claims. 
 We find disputed claims by searching the web for for patterns like ``the misconception that $S$'' and ``it is not the case that $S$'' (Section~\ref{searchpattern}). 
-For every page that contains the pattern, we grab the raw text from the end of the prefix string, up until the end end of the sentence. We then pass each such block of text to a parser that discards any text that does not appear to be a statement (Section~\ref{filterclaim}).
-
-Given a set of known disputed claims, we then go back and generate new patterns by searching for those claims on the web and looking for contexts in which those claims often appear.
+For every page that contains the pattern, we grab the raw text from the end of the prefix string, up until the end end of the sentence. We then process each such block of text to filter out any text that does not appear to be a statement (Section~\ref{filterclaim}).
 
 
 \begin{figure*}[tb]
@@ -195,35 +188,65 @@ Given a set of known disputed claims, we then go back and generate new patterns 
 
 \end{figure*}
 
+\subsection{Patterns for Finding Claims}
+\label{creatingpattern}
 
-\subsection{Searching for Patterns}
-\label{searchpattern}
-
-We search the web for patterns that indicate that a claim is disputed, such as ``false claim that $X$'' or or ``it is not true that $X$''. Figure~\ref{templates} shows a subset of the patterns that we search for. For each pattern, we show the number of times that Yahoo estimates that the pattern appears on the web. 
+We hand crafted a set of {\bf XX} patterns that indicate that a claim is disputed, such as ``false claim that $X$'' or or ``it is not true that $X$.'' 
 
 This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
+\x{add more related work here}
+\todo{add more related work here}
 
-Rather than building our own search engine, we use the Yahoo BOSS search API~\cite{yahoo-boss} to search for patterns. We search Yahoo BOSS for a raw string such as ``the misconception that'' and then download every web page that Yahoo lists in its search results.
+In this work we simply start with an initial set of patterns that we wrote by hand. We then found additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected additional patterns. 
+\x{add more related work on boostraping here}
+\todo{add more related work here}
 
-We form a {\it candidate claim} by taking all text from the end of the prefix we searched for, up to the nearest sentence-ending punctuation character or HTML tag (e.g. '.','?','!',\texttt{</p>},\texttt{</h1>}, etc). 
-{\bf it would be quite important to give a sense on the accuracy --precision - of the claims extracted. you can calculated this from a subset of returned candidate claims: out of, say, 100, how many were actually claims?}
+Rather that searching for an arbitrary collection of known disputed claims, we found that we generated better templates by searching for claims that most documents disagee with (e.g. ``eskimos have many words for snow'') rather than claims that many people agree with (e.g. ``there is a God''). If many people agree with a claim is true then many of the patterns that we find will not be patterns that indicate that the claim is disputed. 
 
-{\bf is it really important the discussion on the date and search technique? i think it deviates from the main points and is kind of long}
-We want to be able to incrementally update our corpus as new pages appear on the web, without repeatedly downloading the same pages. The Yahoo BOSS API does not offer the ability to request only pages updated in a given date range. We thus simulate this behaviour by instead including a literal date string in our queries. For example, if we want to find claims that were disputed on January 4th 2010 then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
+We also find that we get higher quality results if we limit ourselves to prefixes that begin with ``that''. For example, if we search for ``that eskimos have many words for snow'' then most prefixes we find do indeed indicate dispute, however if we just search for ``eskimos have many words for snow'' then we get a much lower hit rate. 
 
-The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, and some web pages either don't include the date the article was posted, or write their date in a different format. Indeed our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first).
+\x{not sure if to add what follow, posponing the decision for now}
+This approach is an example of the Distributional Hypothesis. The distributional hypothesis, as originally framed~\cite{Harris1954,Systems2000}, theorised that words that appear in similar contexts have similar meanings. This has more recently been extended to patterns. If two patterns appear in a corpus with similar text filling their slots, then it is likely that the patterns have similar meanings. DIRT~\cite{Lin2001} discovers inference rules such as (``$X$ is author of $Y$'' $\equv$ ``$X$ wrote $Y$'') by looking for patterns that have a similar distribution of text filling their slots. Pasca and Dienes~\cite{Pasca2005} detect paraphrases on the web by searching for text fragments that appear in similar contexts on web pages. 
 
-\todo{Produce some kind of measure of how well date searching actually works}
+Figure~\ref{templates} shows a subset of the {\bf xx} patterns  that we used. For each pattern, we show the number of times that Yahoo estimates that the pattern appears on the web. 
+\todo{add statistic of patterns and patterna accuracy here}
+\x{add statistic of patterns and patterna accuracy here}
 
-Another advantage of including the date in the search query is it reduces the impact of Yahoo's limit of only 1000 results per query. Since we include the date in the query, this translates into a limit of only 1000 results per pattern per day, which gives us access to a much larger set of pages.
+We plan to work on more sophisticated algorithms for finding new patterns automatically in future work.
 
+Not all patterns have exactly the same meaning. We divide patterns into three fuzzily-grouped categories:
+
+\begin{itemize}
+ \item {\bf False:} The author believes the claim is wrong
+ \item {\bf Believed by others:} The author believes others think this, and it is likely that the author disagrees. Further inspection is required to determine whether the author disagrees with the claim. 
+ \item {\bf Could be challenged:} The author feels the need to state that someone believes something, which suggests that this is something that one might not believe. For example, if an author says ``I think America is a great place'' this doesn't suggest that the claim is false, but the mere fact that they declared that they thought that suggests that they are aware that the claim could be challenged.
+\end{itemize}
+
+We grouped patterns into categories by hand, based on a brief inspection of pages that were using each of the patterns. 
+
+Which patterns one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
+\todo{Give some stats about our patterns}
+
+\subsection{Searching for Claims}
+\label{searchpattern}
+
+In order to extract a set of claims, we then search the web for the set of patterns described in the previous session. Rather than building our own search engine, we use the Yahoo BOSS search API~\cite{yahoo-boss}. We search Yahoo BOSS for a raw string such as ``the misconception that'' and then download every web page that Yahoo lists in its search results.
 Since we are using an existing search engine, we are limited to searching for simple text strings. This leads us to generate multiple patterns that are almost the same, other than for synonyms. E.g. ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. While we could do the search anyway, and then filter out all pages in which the parts were not in the same sentence, this would be inefficient, since many pages would not contain the pattern.
 
 In the longer term we would like to have a more elegant search infrastructure, but for the time being this approach seems to work reasonably well.
 
+Since we are interested in the time information on the claims and we want to be able to incrementally update our corpus as new pages appear on the web, without repeatedly downloading the same pages, we need to be able to request only pages updated in a given date range. The Yahoo BOSS API does not offer the ability to do so; we thus simulate this behaviour by instead including a literal date string in our queries. For example, if we want to find claims that were disputed on January 4th 2010 then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
+
+The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, and some web pages either don't include the date the article was posted, or write their date in a different format. Indeed our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first).
+
+\todo{Produce some kind of measure of how well date searching actually works}
+\todo{Give some stats about search results}
 
 \subsection{Filtering Statements}
 \label{filterclaim}
+
+From the web pages returned from the search, we form a {\it candidate claim} by taking all text from the end of the prefix we searched for, up to the nearest sentence-ending punctuation character or HTML tag (e.g. '.','?','!',\texttt{</p>},\texttt{</h1>}, etc). 
+\x{it would be quite important to give a sense on the accuracy --precision - of the claims extracted. you can calculated this from a subset of returned candidate claims: out of, say, 100, how many were actually claims?}
 
 Not every chunk of text identified by one of our patterns is a well-formed disputed claim. Consider for example the text chunks in Figure~\ref{filtered}. A chunk of text might not be a statement (case 1), it might include unbound referents such is ``it'', or ``they'' (case 2), or it might only make sense within the context of a particular document (case 3).
 
@@ -238,40 +261,10 @@ We use a simple filter that looks for cases 1 and 2, but does not yet deal with 
 \end{enumerate}
 
 These rules were crafted by hand, based on trial and error and manual inspection of a relatively small number of claims. In the future we would like to use a more rigorous statistical method to produce more sophisticated rules for selecting high quality disputed claims, guided by a larger hand-annotated data set. We are also considering adopting an external framework such as TextRunner~\cite{Etzioni2008,Banko2008}.
-
+\todo{add related work here}
 
 \todo{Need a rough evaluation of what proportion of claims get thrown away by each rule, and how accurate these rules are.}
 
-
-\subsection{Generating Patterns}
-\label{newtemplate}
-
-Figure~\ref{templates} shows some of the patterns that we search for. 
-
-As the figure shows, not all patterns have exactly the same meaning. We divide patterns into three fuzzily-grouped categories:
-
-\begin{itemize}
- \item {\bf False:} The author believes the claim is wrong
- \item {\bf Believed by others:} The author believes others think this, and it is likely that the author disagrees. Further inspection is required to determine whether the author disagrees with the claim. 
- \item {\bf Could be challenged:} The author feels the need to state that someone believes something, which suggests that this is something that one might not believe. For example, if an author says ``I think America is a great place'' this doesn't suggest that the claim is false, but the mere fact that they declared that they thought that suggests that they are aware that the claim could be challenged.
-\end{itemize}
-
-We grouped patterns into categories by hand, based on a brief inspection of pages that were using each of the patterns. 
-
-Which patterns one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
-
-We started with an initial set of patterns that we wrote by hand. We then found additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected patterns that we believed would lead us, as a human, to infer that the author thought the claim was disputed, believed by others, or open to challenge.
-
-Rather that searching for an arbitrary collection of known disputed claims, we found that we generated better templates by searching for claims that most documents disagee with (e.g. ``eskimos have many words for snow'') rather than claims that many people agree with (e.g. ``there is a God''). If many people agree with a claim is true then many of the patterns that we find will not be patterns that indicate that the claim is disputed. Even when we search for claims that are highly disputed, our algorithm still finds many patterns that do not indicate dispute. We thus rely on a human to pick which prefixes to use.
-
-We also find that we get higher quality results if we limit ourselves to prefixes that end in ``that''. For example, if we search for ``that eskimos have many words for snow'' then most prefixes we find do indeed indicate dispute, however if we just search for ``eskimos have many words for snow'' then we get a much lower hit rate. 
-
-This approach is an example of the Distributional Hypothesis. The distributional hypothesis, as originally framed~\cite{Harris1954,Systems2000}, theorised that words that appear in similar contexts have similar meanings. This has more recently been extended to patterns. If two patterns appear in a corpus with similar text filling their slots, then it is likely that the patterns have similar meanings. DIRT~\cite{Lin2001} discovers inference rules such as (``$X$ is author of $Y$'' $\equv$ ``$X$ wrote $Y$'') by looking for patterns that have a similar distribution of text filling their slots. Pasca and Dienes~\cite{Pasca2005} detect paraphrases on the web by searching for text fragments that appear in similar contexts on web pages. 
-
-
-\todo{Give some stats about our patterns}
-
-\todo{Analyse how well our date targetting works}
 
 \begin{figure}[tb]
 \begin{center}
