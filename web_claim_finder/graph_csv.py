@@ -36,7 +36,8 @@ def get_topwords():
 	topwords = [tuple[0] for tuple in topwordfreqs]
 	return topwords[0:cols]
 	
-def main():
+def do_csv_graph(keysandnames):
+	keys = [keysandnames]
 	for year in years:
 		add_yearfreqs(year)
 	topwords = get_topwords()

@@ -4,6 +4,7 @@ DEDUP = python web_claim_finder/drop_duplicate_claims.py
 # GOOD = python web_claim_finder/drop_bad_claims.py
 GOODNOUNS = python web_claim_finder/good_nouns.py
 NOUNFREQS = python web_claim_finder/noun_freqs.py
+POSTAG = python web_claim_finder/pos_tag.py
 
 urls2009 = $(wildcard output/claimfinder/urlphrases_year/2009/*.urls)
 urls2008 = $(wildcard output/claimfinder/urlphrases_year/2008/*.urls)
@@ -22,6 +23,7 @@ claims2007 = $(urls2007:.urls=.claims)
 claims2006 = $(urls2006:.urls=.claims)
 claimsyears = $(urlsyears:.urls=.claims)
 claimsdays = $(urlsdays:.urls=.claims)
+posdays = $(urlsdays:.urls=.pos)
 yeardedups = $(addsuffix .dedup,$(years))
 yeargood = $(addsuffix .good,$(years))
 daydedups = $(addsuffix .dedup,$(days))
@@ -36,11 +38,18 @@ daygood = $(addsuffix .good,$(days))
 %.nouns : %.dedup
 	$(GOODNOUNS) $< > $@
 
+%.dedup : %.claims
+	$(DEDUP) $< > $@
+
+%.pos : %.dedup	
+	$(POSTAG) $< > $@
+
 %.good : %.dedup
 	$(GOODNOUNS) $< > $@
 	
 %.freqs : %.good
 	$(NOUNFREQS) $< > $@
+	
 	
 vars : 
 	echo vars
@@ -61,6 +70,8 @@ allgood : $(yeargood) $(daygood)
 yearfreqs : $(addsuffix .freqs,$(years))
 dayfreqs : $(addsuffix .freqs,$(days))
 janfreqs : $(addsuffix .freqs,$(jandays))
+daypos : $(posdays)
+patdedups : $(urlsdays:.urls=.dedup)
 
 minigood = $(wildcard web_claim_finder/minidata/*.good)
 minifreqs : $(addsuffix .freqs,$(miniyears))
