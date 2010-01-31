@@ -50,4 +50,7 @@ package/chrome
 events
 unused
 wiki_wordfreqs
-
+*.nouns
+*.nounfreqs
+*.good
+*.bigrams

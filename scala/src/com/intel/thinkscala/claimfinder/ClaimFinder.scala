@@ -44,40 +44,48 @@ object ClaimFinder {
 
 	var basepath = "/home/rob/git/thinklink/output/claimfinder"
 		
-	def urlFileForPhrase(phrase : String){
+	def urlFileForPhrase(phrase : String) : Boolean = {
 		val filename = basepath+"/urlphrases/"+phrase.replace(" ","_")+".urls"
-		if(fileExists(filename)) return
+		if(fileExists(filename)) return false
 		val writer = new PrintWriter(new FileWriter(filename))
 		val urls = getAllUrls('"'+phrase+'"')
 		urls.foreach(url => writer.println(url))
 		writer.close		
+		return true
 	}
 	
 	def getUrlsForAllPhrases(){
 		phrases_that.foreach{phrase => 
 			System.out.print("getting urls for phrase: "+phrase+"...")
-			urlFileForPhrase(phrase)
-			System.out.println("DONE")
-			Thread.sleep(2000)
+			if(urlFileForPhrase(phrase)){
+				System.out.println("DONE")
+				Thread.sleep(2000)
+			}else{
+				System.out.println("SKIPPED")
+			}
 		}
 	}	
 
-	def urlFileForPhraseYear(phrase : String, year : Int){
+	def urlFileForPhraseYear(phrase : String, year : Int) : Boolean = {
 		val filename = new File(basepath+"/urlphrases_year/"+year+"/"+phrase.replace(" ","_")+".urls")
 		filename.getParentFile.mkdirs()
-		if(filename.exists) return
+		if(filename.exists) return false
 		val writer = new PrintWriter(new FileWriter(filename))
 		val urls = getAllUrls('"'+phrase+'"'+" +"+year)
 		urls.foreach(url => writer.println(url))
 		writer.close		
+		return true
 	}
 	
 	def getUrlsForAllPhrasesYear(year : Int){
 		phrases_that.foreach{phrase => 
 			System.out.print("getting urls for phrase: "+phrase+"...")
-			urlFileForPhraseYear(phrase,year)
-			System.out.println("DONE")
-			Thread.sleep(2000)
+			if(urlFileForPhraseYear(phrase,year)){
+				System.out.println("DONE")
+				Thread.sleep(2000)
+			}else{
+				System.out.println("SKIPPED")
+			}
 		}
 	}	
 

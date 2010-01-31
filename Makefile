@@ -3,6 +3,7 @@ EXTRACTCLAIMS = $(JAVA) com.intel.thinkscala.claimfinder.ExtractClaims
 DEDUP = python web_claim_finder/drop_duplicate_claims.py
 # GOOD = python web_claim_finder/drop_bad_claims.py
 GOODNOUNS = python web_claim_finder/good_nouns.py
+NOUNFREQS = python web_claim_finder/noun_freqs.py
 
 urls2009 = $(wildcard output/claimfinder/urlphrases_year/2009/*.urls)
 urls2008 = $(wildcard output/claimfinder/urlphrases_year/2008/*.urls)
@@ -12,7 +13,8 @@ urlsyears = $(wildcard output/claimfinder/urlphrases_year/*/*.urls)
 urlsdays = $(wildcard output/claimfinder/urlphrases_date/*/*.urls)
 
 years = $(filter-out %.dedup %.good %.nouns,$(wildcard output/claimfinder/urlphrases_year/*))
-days = $(filter-out %.dedup %.good %.nouns,$(wildcard output/claimfinder/urlphrases_day/*))
+days = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
+jandays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_10_*))
 
 claims2009 = $(urls2009:.urls=.claims)
 claims2008 = $(urls2008:.urls=.claims)
@@ -35,7 +37,10 @@ daygood = $(addsuffix .good,$(days))
 	$(GOODNOUNS) $< > $@
 
 %.good : %.dedup
-	$(GOOD) $< > $@
+	$(GOODNOUNS) $< > $@
+	
+%.freqs : %.good
+	$(NOUNFREQS) $< > $@
 	
 vars : 
 	echo vars
@@ -49,7 +54,13 @@ testclaims : output/claimfinder/urlphrases_first.claims
 yearclaims : $(claimsyears)
 dayclaims : $(claimsdays)
 yeardedups : $(yeardedups)
+daydedups : $(daydedups)
 yeargood : $(yeargood)
-
+daygood : $(daygood)
 allgood : $(yeargood) $(daygood)
+yearfreqs : $(addsuffix .freqs,$(years))
+dayfreqs : $(addsuffix .freqs,$(days))
+janfreqs : $(addsuffix .freqs,$(jandays))
 
+minigood = $(wildcard web_claim_finder/minidata/*.good)
+minifreqs : $(addsuffix .freqs,$(miniyears))

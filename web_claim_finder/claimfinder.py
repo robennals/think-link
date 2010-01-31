@@ -13,3 +13,5 @@ def convert_entities(text):
 
 def tag_claim(claim):
 	return nltk.pos_tag(nltk.word_tokenize(claim))
+
+stopwords = ["s",'"',"system","someone","change","country","everyone","way","t","fact","year","more","most","day","people","best","something","person","thing","things","time","life","world","years","part","state","better","anything","power","right","man"]
