@@ -72,3 +72,20 @@ phrases = [
 			"false ad claiming that",
 			"crazies who believe that"
 		]
+
+
+
+bad_phrases = [
+			"believe that",
+			"think that",
+			"idea that",
+			"claim that",
+			"the belief that",
+			"who believe that",
+			"who think that",
+			"believing that",
+			"claiming that"
+		]
+		
+goodphrases = set(phrases) - set(bad_phrases)
+
