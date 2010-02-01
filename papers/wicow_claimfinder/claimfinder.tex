@@ -79,7 +79,7 @@ Our tool extracts disputed claims by searching the web for patterns such as ``fa
 
 We argue why such a corpus of disputed claims is useful for a wide range of applications related to information credibility on the web, and we look at what our current corpus reveals about what is being disputed on the web.
 
-\resolved{too much emphasis on {\em how}... rewrite following paragrapgh}
+\resolved{too much emphasis on {\em how}... rewrite following paragraph}
 
 %\subsection{Categories and Subject Descriptors}
 %\todo{Categories, terms, and keywords need updating}
@@ -102,11 +102,11 @@ In this paper we describe a method for automatically acquiring a corpus of dispu
 
 We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$'' (Section~\ref{findingclaims}). For example, if a page contains the text ``the misconception that {\it the moon is made of cheese}'', this suggests that the author believes that others are saying that the moon is made of cheese, and that the author themselves disputes this claim. In Figure~\ref{templates} we list some of the patterns we used. In practice, many of the strings that match such a pattern are not well-formed disputed claims. We use a statistical classifier to filter out those strings that appear to make a well-formed claim.
 
-We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{Ennals2010} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including automatically detecting disputed claims in human speech, visualization tools that let users know what is disputed about a topic that interests them, and statistical tools that allow people to look for patterns in internet debate  (Section~\ref{using}).
+We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{Ennals2010} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including automatically detecting disputed claims in human speech, visualization tools that let users know what is disputed about a topic that interests them, and statistical tools that allow people to look for patterns in Internet debate  (Section~\ref{using}).
 
-We have made our corpus publicly available for other researchers to download at \url{http://confront.intel-research.net/}. It currently contains claims extracted from pages written on the days between October 1st 2009 and January 19th 2010, and pages written on January 10th of every year from 2000 to 2010. This amounts to approxmately 1.1 million strings that we believe are making disputed claims. We plan to expand our corpus as we crawl more of the web and improve our algorithms.
+We have made our corpus publicly available for other researchers to download at \url{http://confront.intel-research.net/}. It currently contains claims extracted from pages written on the days between October 1st 2009 and January 19th 2010, and pages written on January 10th of every year from 2000 to 2010. This amounts to approximately 1.1 million strings that we believe are making disputed claims. We plan to expand our corpus as we crawl more of the web and improve our algorithms.
 
-By looking at the claims in this corpus, we see trends in dispute on the web that correspond to the debates that were particulary topical at particular times (Section~\ref{analysis}).
+By looking at the claims in this corpus, we see trends in dispute on the web that correspond to the debates that were particularly topical at particular times (Section~\ref{analysis}).
 
 We believe that ours is the first attempt to automatically acquire a corpus of disputed claims from the Web.
 
@@ -114,7 +114,7 @@ We believe that ours is the first attempt to automatically acquire a corpus of d
 \section{Background and Related Work}
 
 The problem of determining information credibility on the web is becoming increasingly important. In the past a user would typically obtain information from a relatively small set of sources such as books, TV channels, and radio stations. The user would have some idea of the reputation and biases of each of these sources, and publishing barriers and quality control would ensure that these sources only published information that met their standards. 
-The web is very different. A user has access to a vast number of different sources, but knows little about the biases or reputation of most of them. Moreover, the internet has little in the way of publishing barriers or quality control. If a user is to extract reliable information from the web, they need to either restrict themselves to a small set of trusted sources, or use some kind of mechanism to determine the credibility of the information that they access.
+The web is very different. A user has access to a vast number of different sources, but knows little about the biases or reputation of most of them. Moreover, the Internet has little in the way of publishing barriers or quality control. If a user is to extract reliable information from the web, they need to either restrict themselves to a small set of trusted sources, or use some kind of mechanism to determine the credibility of the information that they access.
 
 There are several ways that a user can determine whether to trust information that they find on a web page. The user can check the reputation of the person or organization that wrote the web page; they can observe whether the web page meets their aesthetic criteria for a reliable web page; or they can check whether the information is consistent with information available from other sources.
 
@@ -136,9 +136,9 @@ We detect disputes rather than contradictions. Rather than looking for claims th
 
 Perhaps more importantly, for our purposes disputes are more interesting than contradictions. We are interested in the social side of dispute. We want to know who disagrees with who, why they disagree, and what they think is important. 
 
-Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,Pang2004}. Opinion mining tries to determine what an author's opinion is about certain objects or certain features of certain objects. A focal application has been the automatic summarisation of product reviews, to produce an overview of the product features that are viewed favorably or negatively. Dispute mining could be thought of as opinion mining applied to beliefs and ideas, rather than features of objects.
+Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,Pang2004}. Opinion mining tries to determine what an author's opinion is about certain objects or certain features of certain objects. A focal application has been the automatic summarization of product reviews, to produce an overview of the product features that are viewed favorably or negatively. Dispute mining could be thought of as opinion mining applied to beliefs and ideas, rather than features of objects.
 
-\resolved{All merged? : The methods we use are closely related to related work on information extraction which is the task of identifing and classifing specific semantic entities within documents (i.e. names of locations, people, organizations, temporal expressions etc.) We described such related work in the next Section.}
+\resolved{All merged? : The methods we use are closely related to related work on information extraction which is the task of identifying and classifying specific semantic entities within documents (i.e. names of locations, people, organizations, temporal expressions etc.) We described such related work in the next Section.}
 
 
 \section{Finding Disputed Claims}
@@ -285,9 +285,9 @@ Since we are using an existing search engine, we are limited to searching for si
 
 In the longer term we may work round these issues by building our own search infrastructure, but Yahoo BOSS provides an excellent platform for prototyping an idea and seeing if it works.
 
-It is useful to be able to update our corpus as new pages appear on the web, without having to repeatedly download the same pages. The Yahoo BOSS API does not offer the ability to request only recent pages, or to specify a particular date range. We instead simulate this behaviour by including a literal date string in the queries we pass to Yahoo BOSS. For example, if we want to find claims that were disputed on January 10th 2010, then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
+It is useful to be able to update our corpus as new pages appear on the web, without having to repeatedly download the same pages. The Yahoo BOSS API does not offer the ability to request only recent pages, or to specify a particular date range. We instead simulate this behavior by including a literal date string in the queries we pass to Yahoo BOSS. For example, if we want to find claims that were disputed on January 10th 2010, then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
 
-The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first). Despite being very primitive, this method seems to work reasonably well. When we manually inspected 50 pages retreived by our algorithm, we found that 92\% written on the correct year, and 74\% were written in the correct month (Figure~\ref{dateaccuracy}). 
+The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first). Despite being very primitive, this method seems to work reasonably well. When we manually inspected 50 pages retrieved by our algorithm, we found that 92\% written on the correct year, and 74\% were written in the correct month (Figure~\ref{dateaccuracy}). 
 
 Knowing the rough date when someone believed or disputed something allows us te produce fuzzy time trends Section~\ref{timetrends}. Moreover, it is important to know when people believed particular things, since things that were true in the past may not be true any more (e.g. Elvis was alive in the past, but isn't not).
 
@@ -309,17 +309,17 @@ Searching the web for our patterns yields a collection of strings. From this col
 
 Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we might want to filter some of them out. a chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might by ambiguous what entities it is referring to (case 3).
 
-The {\it P} column in Figure~\ref{templates} shows the percentage of the strings that match each pattern that we estimate to be unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and unambigous.
+The {\it P} column in Figure~\ref{templates} shows the percentage of the strings that match each pattern that we estimate to be unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and unambiguous.
 
 Whether a claim is unambiguous can be highly subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
 
-We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. This is a classical text classification task; here the text is classified as either being an unambiguous falsifiable claim or an invalid one (binary classification). Naive Bayes classifiers\cite{duda} have been used extensively for language tasks (for example, to decide whether an email is spam or not~\cite{Sahami98abayesian} and to decide the topic of documents\cite{mccallum98comparison}). We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
+We built a statistical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. This is a classical text classification task; here the text is classified as either being an unambiguous falsifiable claim or an invalid one (binary classification). Naive Bayes classifiers\cite{duda} have been used extensively for language tasks (for example, to decide whether an email is spam or not~\cite{Sahami98abayesian} and to decide the topic of documents\cite{mccallum98comparison}). We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
 
 The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. To provide a baseline for what these figures mean, consider that a random classifier would have 50\% accuracy, a classifier that always said ``yes'' would have accuracy equal to the pattern precision (e.g. 62\% for ``the myth that''), and a classifier that always said ``no'' would have accuracy equal to 100 minus, the pattern precision (e.g. 52\% for ``believe that'').
 
 We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. For the best patterns our classifier has accuracy in the high seventies. 
 
-Manual inspection suggests that the classifier is fairly good at filtering out strings that are not claims (case 1) but does poorly at working out whether a claim is unambigous. This is not surprising. We anticipate that a more sophisticated technique with real world knowledge would be needed in order to determine whether a claim was unambigous.
+Manual inspection suggests that the classifier is fairly good at filtering out strings that are not claims (case 1) but does poorly at working out whether a claim is unambiguous. This is not surprising. We anticipate that a more sophisticated technique with real world knowledge would be needed in order to determine whether a claim was unambiguous.
 
 In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by either two noun phrases or a noun phrase and an adjective. 
 
@@ -341,11 +341,11 @@ Dispute analysis agents that run in the background represent another application
 A third category of applications could be broadly classified as research tools: agents which allow users to explore what is disputed about a particular topic, or to more broadly examine the zeitgeist of disputes. As an increasing proportion of human knowledge is brought to the web, these tools will be increasingly important in sociological and historical research.
 
 
-\section{Analysing the Data}
+\section{Analyzing the Data}
 \label{analysis}
 \input{analysis.tex}
 
-We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 19th 2010, and for January 10th of every year from 2000 to 2010. This gave us a total of 1.8 million text strings, of which 1.1 million were identified by our classifier as being unambigous disputable claims. Of those 1.1 million text strings, most are repeating claims made elsewhere in the data set.
+We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 19th 2010, and for January 10th of every year from 2000 to 2010. This gave us a total of 1.8 million text strings, of which 1.1 million were identified by our classifier as being unambiguous disputable claims. Of those 1.1 million text strings, most are repeating claims made elsewhere in the data set.
 
 \subsection{Trends over time}
 \label{timetrends}
@@ -361,7 +361,7 @@ We manually inspected our claims to determine what was going on that made partic
  \item {\bf Israel:} The Gaza conflict of 2007 caused a big spike.  
 \end{itemize}
 
-MemeTracker~\cite{Backstrom2009} produced vaguely similar graphs, showing when particular memes were widely discussed on the web. They tracked highly repeated phrases, rather than nouns used in disputed claims. 
+These graphs resemble those produced by MemeTracker~\cite{Backstrom2009}, which graphed when particular memes were discussed on the web. They tracked highly repeated phrases, rather than nouns used in disputed claims. 
 
 
 \begin{figure}[tbh]
@@ -424,9 +424,9 @@ MemeTracker~\cite{Backstrom2009} produced vaguely similar graphs, showing when p
 \subsection{Clusters}
 \label{clusters}
 
-For each noun, we analysed the claims about that noun, and produced clusters that represent claims about that noun that seem to be particularly hotly disputed. Rather than clustering claims directly, we instead cluster together words that frequently co-occur. We used an agglomerative clustering algorithm, repeatedly merging the two clusters of words that had the most claims in common.
+For each noun, we analyzed the claims about that noun, and produced clusters that represent claims about that noun that seem to be particularly hotly disputed. Rather than clustering claims directly, we instead cluster together words that frequently co-occur. We used an agglomerative clustering algorithm, repeatedly merging the two clusters of words that had the most claims in common.
 
-Figure~\ref{cluster-figure} shows the most frequently occurring word clusters that we found for each noun. Most of these will make sense to people who have been following news in the united states. For example, we see that disputed claims about Obama often talk about his nobel prize or his birth certificate, and that President Ahmadinejad of Iran did not actually say that Israel should be wiped off the map (which the authors had not previously realized). Some of the word clusters are not particularly interesting - for example many claims talk about the united states, even when that is not an important part of what is disputed. 
+Figure~\ref{cluster-figure} shows the most frequently occurring word clusters that we found for each noun. Most of these will make sense to people who have been following news in the united states. For example, we see that disputed claims about Obama often talk about his Nobel prize or his birth certificate, and that President Ahmadinejad of Iran did not actually say that Israel should be wiped off the map (which the authors had not previously realized). Some of the word clusters are not particularly interesting - for example many claims talk about the united states, even when that is not an important part of what is disputed. 
 
 \section{Conclusions}
 
