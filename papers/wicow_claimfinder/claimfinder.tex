@@ -300,6 +300,14 @@ Knowing the rough date when someone believed or disputed something allows us te 
 \subsection{Filtering Claims}
 \label{filterclaim}
 
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=18cm]{images/2by5.pdf}
+	\caption{Frequency of each of the top nouns individually}
+	\label{multiplot_nouns}
+	\end{center}
+\end{figure*}
+
 Searching the web for our patterns yields a collection of strings. From this collection, we want to filter out any strings that are not making a falsifiable claim, and any strings that make a claim that is ambiguous.
 
 Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we might want to filter some of them out. a chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might by ambiguous what entities it is referring to (case 3).
@@ -323,14 +331,6 @@ In some cases a disputed claim will be followed by information about where the c
 
 We save the surrounding text, page title, and URL for each of the disputed claims we see made on the web. At present we do not do anything with this data, but we anticipate that it could be useful for many purposes. For example it may be possible to resolve the meaning of ambiguous words or entities based on the words nearby (with have experimented with an algorithm similar to that used by Wikify~\cite{Mihalcea2007}). It is also useful to what person wrote the page, what organization hosted the page, who they link to, what meme-like phrases they make near to the claim, whether the page is written in an ``expert'' style, etc.
 
-
-\begin{figure*}[tb]
-	\begin{center}
-	\includegraphics[width=18cm]{images/2by5.pdf}
-	\caption{Frequency of each of the top nouns individually}
-	\label{multiplot_nouns}
-	\end{center}
-\end{figure*}
 
 \section{Using Disputed Claims}
 \label{using}
@@ -367,29 +367,67 @@ We manually inspected our claims to determine what was going on that made partic
 MemeTracker~\cite{Backstrom2009} produced vaguely similar graphs, showing when particular memes were widely discussed on the web. They tracked highly repeated phrases, rather than nouns used in disputed claims. 
 
 
-\subsection{Co-Occurring Nouns}
-\label{pairs}
+\begin{figure}[tbh]
+ \begin{center}
+  \begin{tabular}{|lll|}
+    \hline
+    {\bf Noun} & {\bf Word Cluster} & {\bf Freq} \\
+    \hline
+   {\bf children} & tiger woods abused & 218\\
+                  & instead encourage daily & 178\\
+    \hline
+   {\bf god} & daily encourage parents & 150 \\
+   \hline
+   {\bf government} & health care & 1267 \\
+                    & united states & 427 \\
+		    & relation environmental matters & 155 \\
+   \hline
+   {\bf iraq} & weapons mass destruction & 373 \\
+              & united states & 247 \\
+	      & saddam hussein & 192 \\
+	      & al qaeda & 149 \\
+   \hline
+   {\bf israel} & middle east & 251 \\
+		& allowed upon population & 128 \\
+                & united states & 107 \\
+		& off map & 106 \\
+   \hline
+   {\bf law}    & lawbreaker rather broken & 133 \\
+		& united states &\\
+   \hline
+    {\bf obama} & working best interests & 568\\
+                & health care & 481\\
+	        & united states & 327 \\
+		& nobel prize & 270 \\
+		& legitimately president & 207 \\
+		& ford hood shooter hasan nidal advised & 190 \\
+		& birth certificate & 180\\
+   \hline
+   {\bf president} & united states & 439 \\
+                   & health care & 203 \\
+		   & george w & 164 \\
+		   & aircraft system jolting bombing & 159 \\
+		   & peace prize & 125 \\
+		   & white house & 125 \\
+   \hline
+      {\bf war} & united states & 340 \\
+   \hline
 
-\begin{figure}
- \begin{tabular}{|ll|}
- \hline
- {\bf Noun} & {\bf Co-Occurring Nouns} \\
- \hline
-{\bf obama} & president, election, health, muslim, america, interests,\\
-            & care, peace, year, country, right, states, plan, palicies,\\
-	    & U.S., bill, citizen, prize, democrats, policy, kenya \\
-\hline
-{\bf god}   & jesus, man, word, life, world, son, christ, universe \\  
-\hline
-{\bf iraq}  & war, weapons, destruction, mass, states, afghanistan, \\
-            & saddam, bush, hussein, invasion, forces, uranium \\
- \hline
- \end{tabular}
-\label{fig-pairs}
-\caption{The most common co-occurring nouns}
+   {\bf women} & stay home & 183 \\
+               & save vaccine & 85 \\
+   \hline
+  \end{tabular}
+ \end{center}
+ \label{cluster-figure}
+ \caption{Largest word clusters found for nouns}
 \end{figure}
 
 
+
+\subsection{Clusters}
+\label{clusters}
+
+For each noun, we analysed the claims about that noun, and produced clusters that represent claims about that noun that seem to be particularly hotly disputed. Rather than clustering claims directly, we instead cluster together words that frequently co-occur. We used an agglomerative clustering algorithm, repeatedly merging the two clusters of words that had the most claims in common.
 
 
 \x{Named entity recognition}
