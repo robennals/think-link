@@ -308,7 +308,7 @@ The {\it P} column in Figure~\ref{templates} shows the percentage of the strings
 
 Whether a claim is unambiguous can be highly subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
 
-We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Bayesian classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
+We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
 
 The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. In each case, we trained the classifier on the data set for the other patterns in the same group and then tested its performance on the result for that pattern. 
 
