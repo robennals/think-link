@@ -6,7 +6,7 @@ Stats about accuracy of patterns - DONE
 Stats about accuracy of filter rules - DONE
 	- how often did the filter do the right thing
 
-Stats about accuracy of searching for a date - TODO
+Stats about accuracy of searching for a date - DONE
 	- how often is that the real date : mention that better solutions are known and this is a stop-gap
 
 
@@ -123,5 +123,11 @@ Is there a faster part-of-speech tagger we could use?
 Is there a better algorithm we could use.
 
 Rule #1: don't innovate. Use a standard approach if at all possible.
+
+
+-- pattern groups --
+
+Is there a useful difference between the first two groups? 
+E.g. "X think that" vs "claiming that".
 
 

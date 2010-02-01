@@ -153,10 +153,7 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
     \hline
         \multicolumn{2}{|l}{\it Plausible to not believe it} & &\\
 	    & & &\\
-
-        570,000,000 & think that & 28\%& 69\%\\
         495,000,000 & believe that & 48\%& 65\%\\
-        145,000,000 & idea that & 42\% & 61\%\\
         101,000,000 & claim that & 46\%& 72\%\\
        \hline
        \multicolumn{2}{|l}{\it It is notable that others believe it} & &\\
@@ -252,7 +249,7 @@ Not all patterns have exactly the same meaning. We grouped our patterns into thr
  
  \item {\bf Notable that others believe it:} The author believes that it is notable that others believe it. For example ``Fans are claiming that {\it Elvis is alive}''. Further inspection is required to determine whether the author disagrees with the claim. For example, do they follow it with a word like ``but'' or ``despite''?
  
- \item {\bf Plausible to not believe it:} The author feels the need to say that someone believes it, implying that it it plausible that someone else might not believe it. This is only subtly different from the previous group. For example ``Fans think that {\it Elvis is alive}'' is less strong than ``Fans are claiming that {\it Elvis is alive}''. It is useful to exclude the cases where the pattern is prefixed by ``I'', since such sentences rarely contain useful disputed claims. For example ``John thinks Elvis is dead'' implies much more skepticism than ``I think Elvis is dead''. 
+ \item {\bf Plausible to not believe it:} The author feels the need to say that someone believes it, implying that it it plausible that someone else might not believe it. This is only subtly different from the previous group. For example ``Fans believe that {\it Elvis is alive}'' is less strong than ``Fans are claiming that {\it Elvis is alive}''. It is useful to exclude the cases where the pattern is prefixed by ``I'', since such sentences rarely contain useful disputed claims. For example ``John thinks Elvis is dead'' implies much more skepticism than ``I think Elvis is dead''. 
  \end{itemize}
 
 Which pattern group one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
@@ -316,9 +313,9 @@ The {\it P} column in Figure~\ref{templates} shows the percentage of the strings
 
 Whether a claim is unambiguous can be highly subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
 
-We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
+We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. This is a classical text classification task; here the text is classified as either being an unambiguous falsifiable claim or an invalid one (binary classification). Naive Bayes classifiers\cite{duda} have been used extensively for language tasks (for example, to decide whether an email is spam or not~\cite{Sahami98abayesian} and to decide the topic of documents\cite{mccallum98comparison}). We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
 
-The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. In each case, we trained the classifier on the data set for the other patterns in the same group and then tested its performance on the result for that pattern. 
+The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. To provide a baseline for what these figures mean, consider that a random classifier would have 50\% accuracy, a classifier that always said ``yes'' would have accuracy equal to the pattern precision (e.g. 62\% for ``the myth that''), and a classifier that always said ``no'' would have accuracy equal to 100 minus, the pattern precision (e.g. 52\% for ``believe that'').
 
 We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. For the best patterns our classifier has accuracy in the high seventies. 
 
@@ -359,7 +356,7 @@ We manually inspected our claims to determine what was going on that made partic
 
 \begin{itemize}
  \item {\bf Obama:} Barack Obama is not a topic of dispute until 2004 when he spoke at the Democratic convention. His level of controversy then peaked in 2008, in the run up to the November 2008 US presidential elections.
- \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawins2006} seems to have sparked extra controversy.
+ \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawkins2006} seems to have sparked extra controversy.
  \item {\bf Iraq:} Spikes seem to correspond to the initial invasion in 2003 and the surge in 2007.
  \item {\bf Israel:} The Gaza conflict of 2007 caused a big spike.  
 \end{itemize}
