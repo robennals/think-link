@@ -326,7 +326,7 @@ We save the surrounding text, page title, and URL for each of the disputed claim
 
 \begin{figure*}[tb]
 	\begin{center}
-	\includegraphics[width=16cm]{images/2by5.pdf}
+	\includegraphics[width=18cm]{images/2by5.pdf}
 	\caption{Frequency of each of the top nouns individually}
 	\label{multiplot_nouns}
 	\end{center}
@@ -350,32 +350,21 @@ A third category of applications could be broadly classified as research tools: 
 
 We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 19th 2010, and for January 10th of every year from 2000 to 2010. This gave us a total of 1.8 million text strings, of which 1.1 million were identified by our classifier as being unambigous disputable claims. Of those 1.1 million text strings, most are repeating claims made elsewhere in the data set.
 
-\x{Cite MemeTracker~\cite{Backstrom2009}}
-
-
-\todo{Lots of pretty graphs showing what our data is like.}
-
-\subsection{Data Quality}
-
-\x{Look at a random sample of the data and say how clean it is.}
-\x{Evaluate the quality of the claims that we extracted.}
-\x{Evaluate the quality of the clusters that we created.}
-\x{Evaluate the quality of the different individual patterns - which ones have the highest quality claims.}
-\x{say something about {\em duplicate} claims?}
-
-
 \subsection{Trends over time}
 \label{timetrends}
 
-Figure~\ref{multiplot_nouns} shows the frequency with which particular nouns were discussed in particular years. We obtained these figures by using a part-of-speech tagger to identify nouns in claims found on January 10th of every year from 2000 to 2010. Although the date we searched for was in January, the claims we found are often from other points in the year, due to the fuzzy nature of our date search mechanism (Figure~\ref{dateaccuracy}). We excluded uninteresting nouns such as ``someone'', ``anybody'' and ``something'', and plotted graphs for the ten most disputed nouns. All graphs are plotted on the same scale. The y axis is the number of claims that contained the noun, and the x axis is the year in which the claim was made.
+Figure~\ref{multiplot_nouns} shows the frequency with which particular nouns were discussed in particular years. We obtained these figures by using a part-of-speech tagger to identify nouns in claims found on January 10th of every year from 2000 to 2010. Although the date we searched for was in January, the claims we found are often from other points in the year, due to the fuzzy nature of our date search mechanism (Figure~\ref{dateaccuracy}). We excluded uninteresting nouns such as ``someone'', ``anybody'' and ``something'', and plotted graphs for the ten most disputed nouns. All graphs are plotted on the same scale. The y axis is the number of claims that contained the noun, and the x axis is the year in which the claim was made. It is likely that a Named Entity Recognition algorithm~\cite{Nadeau2007} would produce better results, but even the nouns prove to be quite interesting.
 
-We manually inspected our claims to determine what was going on that made particular nouns spike at particular times.
+We manually inspected our claims to determine what was going on that made particular nouns spike at particular times:
 
 \begin{itemize}
  \item {\bf Obama:} Barack Obama is not a topic of dispute until 2004 when he spoke at the Democratic convention. His level of controversy then peaked in 2008, in the run up to the November 2008 US presidential elections.
  \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawins2006} seems to have sparked extra controversy.
  \item {\bf Iraq:} Spikes seem to correspond to the initial invasion in 2003 and the surge in 2007.
+ \item {\bf Israel:} The Gaza conflict of 2007 caused a big spike.  
 \end{itemize}
+
+MemeTracker~\cite{Backstrom2009} produced vaguely similar graphs, showing when particular memes were widely discussed on the web. They tracked highly repeated phrases, rather than nouns used in disputed claims. 
 
 
 
