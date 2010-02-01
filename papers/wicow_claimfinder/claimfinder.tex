@@ -148,22 +148,29 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
 \begin{center}
   \begin{tabular}{|llll|}
     \hline
-    {\bf Frequency$^*$} & {\bf Template} & {\bf P$^\dag$} & {\bf A$^\ddag$}\\ 
+    {\bf Frequency$^*$} & {\bf Pattern} & {\bf Pattern} & {\bf Classifier}\\ 
+    {\bf on the web} &                   & {\bf Precision} & {\bf Accuracy}\\
     \hline
-        \multicolumn{4}{|c|}{\it Plausible to not believe it}\\
+        \multicolumn{2}{|l}{\it Plausible to not believe it} & &\\
+	    & & &\\
+
         570,000,000 & think that & 28\%& 69\%\\
         495,000,000 & believe that & 48\%& 65\%\\
         145,000,000 & idea that & 42\% & 61\%\\
         101,000,000 & claim that & 46\%& 72\%\\
        \hline
-       \multicolumn{4}{|c|}{\it It is notable that others believe it}\\
+       \multicolumn{2}{|l}{\it It is notable that others believe it} & &\\
+           & & &\\
+
         40,100,000 & claiming that & 39\% &\\
         30,600,000 & the belief that & &\\
         28,600,000 & believing that & &\\
         11,700,000 & who believe that &&\\
         8,400,000 & who think that &&\\
         \hline
-        \multicolumn{4}{|c|}{\it Something false}\\
+        \multicolumn{2}{|l}{\it Something false} & &\\
+	    & & &\\
+
         5,790,000 & the myth that & 62\% & 73\% \\
         3,260,000 & into believing that & 52\% &72\% \\
         1,690,000 & the lie that & 52\% & 76\% \\
@@ -171,32 +178,30 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
         1,220,000 & the delusion that  & 54\% & 76\% \\
         1,140,000 & the misconception that & 67\% & 81\% \\
         676,000 & the mistaken belief that & 51\% & 74\%\\
-        593,000 & mistakenly believe that & &\\
-        583,000 & the fantasy that & &\\
-        501,000 & it is not the case that &&\\
-        459,000 & false claim that &&\\
-        405,000 & the fallacy that &&\\
-        351,000 & falsely claimed that &&\\
-        264,000 & urban legend that &&\\
-        250,000 & no longer believe that &&\\
-        216,000 & the false belief that &&\\
-        215,000 & falsely claiming that &&\\ 
-        178,000 & falsely believe that &&\\
-        171,000 & bogus claim that &&\\
-        163,000 & erroneous belief that & 58\% & 77\%\\
-        154,000 & the deception that &&\\
-        147,000 & the misunderstanding that &&\\
-        135,000 & urban myth that &&\\
+%         593,000 & mistakenly believe that & &\\
+%         583,000 & the fantasy that & &\\
+%         501,000 & it is not the case that &&\\
+%         459,000 & false claim that &&\\
+%         405,000 & the fallacy that &&\\
+%         351,000 & falsely claimed that &&\\
+%         264,000 & urban legend that &&\\
+%         250,000 & no longer believe that &&\\
+%         216,000 & the false belief that &&\\
+%         215,000 & falsely claiming that &&\\ 
+%         178,000 & falsely believe that &&\\
+%         171,000 & bogus claim that &&\\
+%         163,000 & erroneous belief that & 58\% & 77\%\\
+%         154,000 & the deception that &&\\
+%         147,000 & the misunderstanding that &&\\
+%         135,000 & urban myth that &&\\
     & & &\\
     \multicolumn{4}{|l|}{$^*$Yahoo's approximate estimate}\\
-    \multicolumn{4}{|l|}{$^\dag$ P = Pattern precision (Section~\ref{filterclaim})}\\
-    \multicolumn{4}{|l|}{$^\ddag$ A = Filter accuracy (Section~\ref{filterclaim})}\\
     \hline
   \end{tabular}
 \end{center}
 
   \label{templates}
-  \caption{Patterns we use to find disputed claims}
+  \caption{Some of the patterns we use to find disputed claims}
 \end{figure}
 
 We implemented a three-stage process to build our corpus of disputed claims, each described in the following Sections. We first create a set of lexical patterns such as ``the misconception that'' and ``it is not the case that'' (Section~\ref{patterns}). We then search the Web for these patterns (Section~\ref{searchpattern}). Finally, we filter the resulting strings to give only those that resemble unambiguous disputed claims (Section~\ref{filterclaim}).
@@ -240,7 +245,7 @@ Figure~\ref{templates} shows a subset of the {\bf 54} patterns that we used.
 For each pattern, the {\it frequency} is the number of pages that Yahoo estimates contain this pattern. The {\it precision} is an estimate of the proportion of text strings matched by the pattern that are unambiguous disputed claims. We discuss precision further in Section~\ref{filterclaim}.
 
 
-Not all patterns have exactly the same meaning. We grouped our patterns into three loose catagories, based on manual inspection of the pages that use them (Figure~\ref{templates}):
+Not all patterns have exactly the same meaning. We grouped our patterns into three loose group, based on manual inspection of the pages that use them (Figure~\ref{templates}):
 
 \begin{itemize}
  \item {\bf False:} The author believes the claim is wrong
@@ -250,7 +255,7 @@ Not all patterns have exactly the same meaning. We grouped our patterns into thr
  \item {\bf Plausible to not believe it:} The author feels the need to say that someone believes it, implying that it it plausible that someone else might not believe it. This is only subtly different from the previous group. For example ``Fans think that {\it Elvis is alive}'' is less strong than ``Fans are claiming that {\it Elvis is alive}''. It is useful to exclude the cases where the pattern is prefixed by ``I'', since such sentences rarely contain useful disputed claims. For example ``John thinks Elvis is dead'' implies much more skepticism than ``I think Elvis is dead''. 
  \end{itemize}
 
-Which patterns one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
+Which pattern group one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
 
 
 \subsection{Searching the Web for Claims}
@@ -284,34 +289,11 @@ Whether a claim is unambiguous can be highly subjective. For example, in the str
 
 We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Bayesian classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
 
-The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim.
+The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. In each case, we trained the classifier on the data set for the other patterns in the same group and then tested its performance on the result for that pattern. 
 
+We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. 
 
-
-(Section~\ref{filterclaim}). We estimated the precision of each pattern by randomly selectiong 100 strings that match the pattern, and then manually marked strings that we subjectively decided were a well formed and unambiguous statement.
-
-\x{Cite Ritter on using stats to clean up results. ~\cite{Ritter2009}}
-
-From the web pages returned from the search, we form a {\it candidate claim} by taking all text from the end of the prefix we searched for, up to the nearest sentence-ending punctuation character or HTML tag (e.g. '.','?','!',\texttt{</p>},\texttt{</h1>}, etc). 
-
-\x{it would be quite important to give a sense on the accuracy --precision - of the claims extracted. you can calculated this from a subset of returned candidate claims: out of, say, 100, how many were actually claims?}
-
-Not every chunk of text identified by one of our patterns is a well-formed disputed claim. Consider for example the text chunks in Figure~\ref{filtered}. A chunk of text might not be a statement (case 1), it might include unbound referents such is ``it'' or ``they'' (case 2), or it might only make sense within the context of a particular document (case 3).
-
-We use a simple filter that looks for cases 1 and 2, but does not yet deal with case 3. We use the part-of-speech tagger from NLTK~\cite{nltk}, and then use a simple regexp parser to apply a series of simple rules.
-
-\begin{enumerate}
-\item To ensure that the text represent a real statement (case 1) we accept only text that contains either two noun phrases (e.g. ``{\it George Bush} is from {\it Texas}''), or a noun phrase and an adjective (e.g. ``{\it Cocaine} is {\it addictive}''). We do not accept text that contains merely a noun and a verb (e.g. ``{\it Federal laws} do not {\it apply}'') since manual inspection of our data set suggests that in such phrases the verb typically refers to a noun that is defined outside the statement itself.
-
-\item We also discard any statement that contains a personal pronoun such as ``he'', ``she'', ``it'', or ``they'' unless it is proceeded by a noun (addressing case 2). We allow a personal pronoun after a noun, since manual inspection suggests that in most cases the personal pronoun refers to the noun, for example ``Bill Clinton said he wants to slow down the economy''. While we could in theory resolve other references, this is known to be a hard problem, and we have access to a large enough set of candidate claims that we can afford to throw away claims that are not easy for us to process.
-
-\item In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was''.
-\end{enumerate}
-
-These rules were crafted by hand, based on trial and error and manual inspection of a relatively small number of claims. In the future we would like to use a more rigorous statistical method to produce more sophisticated rules for selecting high quality disputed claims, guided by a larger hand-annotated data set. We are also considering adopting an external framework such as TextRunner~\cite{Etzioni2008,Banko2008}.
-\todo{add related work here}
-
-\todo{Need a rough evaluation of what proportion of claims get thrown away by each rule, and how accurate these rules are.}
+In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by either two noun phrases or a noun phrase and an adjective. 
 
 
 \subsection{Context}
