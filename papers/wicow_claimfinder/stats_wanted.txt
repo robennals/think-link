@@ -1,0 +1,127 @@
+-- requested by barbara --
+
+Stats about accuracy of patterns - DONE
+	- how often is the result a real, general disputed claim
+
+Stats about accuracy of filter rules - DONE
+	- how often did the filter do the right thing
+
+Stats about accuracy of searching for a date - TODO
+	- how often is that the real date : mention that better solutions are known and this is a stop-gap
+
+
+
+-- stats wanted for the paper --
+
+Stats about top words for each pattern
+	Percentage hit for each pattern over entire data set.
+	Showing how different patterns find different things.
+
+DONE: Noun frequency for each year - graphed
+	Says: we can see what people dispute when.
+
+ALMOST: Noun frequency for each date - graphed.
+	Says: same
+
+Table: most disputed bi-grams in the entire data set.
+
+Table: most disputed non-adjacent noun pairs in the data set.
+	
+
+Noun frequency for each pattern - compared.
+	- do the different patterns get different kinds of claim
+	HARDER: need to run "good" on each pattern individually. Don't have CPU time for this?
+	BUT: could do this for just a few patterns.
+	OR: could do it without the "good" filter...
+
+Noun frequency for each class of pattern 
+	- is there a difference
+
+Dispute volume for each date/year - graphed
+	- when were things most disputed. Are some times hotter than others.
+
+What are people disputing about a particular noun
+	- for each of the top nouns, what are the top words in claims about them
+
+What were people disputing about Barack Obama on different days?
+	- did different controversies peak at different times?
+
+Bi-gram frequency
+	- what were the most disputed bi-grams?
+	- are any of them interesting?
+	- are these more fun for by-day stuff?
+	- or - most frequent pairs of nouns?
+		- for every possible pair of nouns, do frequency?
+			- can we store all of that?
+
+Accept-rate for each pattern.
+Accept-rate quality.
+
+
+-- noun graphs --
+
+Plot the top words in our entire data set.
+
+Plot the frequency change over time of a couple of particularly interesting nouns.
+
+
+-- Issues --
+
+We need more data for this to work really well.
+We need data for more days, with more patterns.
+
+-- Solution with Spinn3r --
+
+For the next version, use a spinn3r feed, and filter everything through our patterns.
+I think that this would actually work pretty well, and it would ensure our data stayed realtime and that we kept up with everything.
+
+We should, however, supplement this with an initial run in Yahoo BOSS.
+
+
+-- bigrams that include tri-grams --
+
+Top scores should not include multiple things that overlap.
+
+How do we deal with this.
+Auto-merge nouns if there is a frequent tri-gram that includes both.
+
+
+
+-----
+
+
+
+Mention that older dates are before the web, and so increasing frequency of articles about a year, rather than published in that year.
+
+Graph frequency of stuff on year published in that year.
+
+BUG:
+"believe that" works really badly - lots of not-very disputed claims
+
+
+BUGS:
+Dates for older years are pages that refer to a year, rather than written on that year
+Some files are currently empty, because I stopped the thing running while it was writing to that file.
+It is *not* skipping files it has already created - this sucks.
+
+BUGS:
+Date separation clearly is not working too well. Obama features prominently for 2000, despite not having been known then.
+Better to see if we are working better for full dates?
+
+ALTERNATIVE:
+Only deal with full dates, but get claims for Jan 10th of every year...
+	Let's try this...
+	Using a year turns out to suck.
+	Maybe a full date will work.
+	Try it.
+		- then we just need rules for days
+	
+ 
+-- higher performance claim goodness marking --
+
+Is there a faster part-of-speech tagger we could use?
+Is there a better algorithm we could use.
+
+Rule #1: don't innovate. Use a standard approach if at all possible.
+
+

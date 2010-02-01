@@ -1,0 +1,41 @@
+Simple way to measure accuracy.
+
+1.) Select a random subset of the dedup claims (e.g. 200)
+2.) For each one, include whether our filter said it was good
+3.) By hand, mark which ones we think are good.
+	How? 
+	By typing "y" or "n" into a spreadsheet.
+	By manually deleting the bad ones (works in google docs)
+	We then compare by seeing which good ones are left.
+
+
+Do this for a random sample of the whole set.
+Then do it again for 10 rules.
+
+Need to make this really easy.
+
+
+Store all data in google spreadsheet.
+
+
+WEAKNESS: we don't give any stats about whether we trimmed the end off properly, just on whether it was a good claim.
+
+
+-- dedup --
+
+We need to pass through dedup before creating a file.
+	But that is easy...
+
+
+
+-- question --
+
+Is the dedup pass actually applying to *ALL* claims, or just to the first line??
+	Is this stuff actually working?
+
+Ah yes. It doesn't use "<"
+
+
+-- Do we care about doing all patterns? --
+
+We only care about patterns that have more than 1000 matching for all years.

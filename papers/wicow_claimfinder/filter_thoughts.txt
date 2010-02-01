@@ -1,0 +1,51 @@
+The role of context.
+
+What kind of claims are we trying to filter out?
+	If it says "the team" should we take into account context when filtering?
+
+What is considered bad?
+
+What does it mean when we say we have filtered something out?
+What are we actually looking for?
+
+
+What we mean is that:
+	* It is actually making a claim   - it is a statement
+	* It can be interpreted as being about the wider world
+		- e.g. not just "he didn't do it"
+	
+	E.g. if it says "the team" then we say it is bad.
+	If it says "america" then it is good.
+	A degree of personal judgement is required.
+
+	Some of these claims would be ok if we knew context. E.g. we knew what "the team" or "he" meant.
+	Most of them are well structured sentences.
+
+	Would be nice to know how much stuff is thrown out by each rule...
+
+
+Should we also edit another file to give that data?
+	Where we remove badly formatted stuff, but keep stuff that does make a statement, even if ambiguous.	
+
+
+CONTEXT:
+	Should the filter function take into account context?
+		Maybe it should...
+
+
+Features:
+	What works are present?
+	What is the first word?
+	What is the second word?
+	What tags are present?
+	How many of each tag is there?
+	How many words is it?
+		Is it below a particular number?
+		Is it less than 10? Less than 4? etc
+	How many characters is it?
+	Does it have a comma?
+
+
+Results from just using words:
+	Accuracy is pretty poor: only 63%
+	BUT: if we bring in POS tagging, then I suspect it will be better...
