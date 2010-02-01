@@ -101,17 +101,42 @@ def get_training_data(phrases):
 				human_marked.append((claim,False))
 	random.shuffle(human_marked)
 	return human_marked
-	
+
 def get_featured_data(phrases):
 	annotated = get_training_data(phrases)
 	featuresets = [(features(claim),g) for (claim,g) in annotated]
+	return featuresets
+	
+def get_featured_data_split(phrases):
+	featuresets = get_featured_data(phrases)
 	length = len(featuresets)
 	splitpoint = int(length * 0.8)
 	train_set,test_set = featuresets[:splitpoint],featuresets[splitpoint:]
 	return (train_set,test_set)
 	
+def real_phrases(phrases):
+	return [phrase for phrase in phrases if os.path.exists("../training/"+phrase.replace(" ","_")+".manual_good")]
+	
+def measure_phrases(phrases):
+	phrases	= real_phrases(phrases)
+	features = {}
+	print " --- accuracy --- "
+	for phrase in phrases:
+		print "features: "+phrase
+		features[phrase] = get_featured_data([phrase])	
+	for phrase in phrases:
+		print "--",phrase,"--"
+		test_set = features[phrase]
+		train_set = []
+		for otherphrase in phrases:
+			if otherphrase != phrase:
+				train_set = train_set + features[otherphrase] 
+		classifier = nltk.NaiveBayesClassifier.train(train_set)		
+		accuracy = nltk.classify.accuracy(classifier,test_set)
+		print phrase,"&",str(int(100*accuracy)) +"\%"	
+	
 def test_classifier(phrases):
-	(train_set,test_set) = get_featured_data()
+	(train_set,test_set) = get_featured_data_split()
 	classifier = nltk.NaiveBayesClassifier.train(train_set)	
 	print "accuracy = "+nltk.classify.accuracy(classifier,test_set)
 	
@@ -120,3 +145,7 @@ def test_classifier_all():
 
 def test_classifier_good():
 	test_classifier(cf.goodphrases)
+
+if __name__ == '__main__':
+	measure_phrases(cf.bad_phrases)
+

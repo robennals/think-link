@@ -1,7 +1,48 @@
+@article{Pantel,
+author = {Pantel, Patrick and Ravichandran, Deepak},
+file = {:home/rob/Documents/Mendeley Organiser/Pantel, Ravichandran - Unknown - Automatically Labeling Semantic Classes.pdf:pdf},
+title = {{Automatically Labeling Semantic Classes}}
+}
+@inproceedings{Girju2003,
+author = {Girju, Roxana and Badulescu, Adriana and Moldovan, Dan},
+booktitle = {Proceedings of HLT/NAACL},
+file = {:home/rob/Documents/Mendeley Organiser/Girju, Badulescu, Moldovan - 2003 - Learning semantic constraints for the automatic discovery of part-whole relations.pdf:pdf},
+title = {{Learning semantic constraints for the automatic discovery of part-whole relations}},
+url = {http://acl.ldc.upenn.edu/N/N03/N03-1011.pdf},
+volume = {3},
+year = {2003}
+}
+@article{Cederberg2003,
+address = {Morristown, NJ, USA},
+author = {Cederberg, Scott and Widdows, Dominic},
+doi = {10.3115/1119176.1119191},
+file = {:home/rob/Documents/Mendeley Organiser/Cederberg, Widdows - 2003 - Using LSA and noun coordination information to improve the precision and recall of automatic hyponymy extraction.pdf:pdf},
+journal = {Proceedings of the seventh conference on Natural language learning at HLT-NAACL 2003 -},
+pages = {111--118},
+publisher = {Association for Computational Linguistics},
+title = {{Using LSA and noun coordination information to improve the precision and recall of automatic hyponymy extraction}},
+url = {http://portal.acm.org/citation.cfm?doid=1119176.1119191},
+year = {2003}
+}
+@misc{Caraballo2001,
+annote = {Creates a hierachy of nouns and hypernyms.
+        
+Infers things of the same type by looking for "and".},
+author = {Caraballo, Sharon},
+booktitle = {Building},
+file = {:home/rob/Documents/Mendeley Organiser/Caraballo - 2001 - Automatic construction of a hypernym-labeled noun hierarchy from text Sharon A. Caraballo.pdf:pdf},
+institution = {Brown University},
+keywords = {cite-wicow},
+mendeley-tags = {cite-wicow},
+title = {{Automatic construction of a hypernym-labeled noun hierarchy from text Sharon A. Caraballo}},
+type = {PhD},
+year = {2001}
+}
 @article{Hu2004,
 address = {New York, New York, USA},
 annote = {Sentiment Analysis as a text summarisation and statistical analysis tool.
 
+        
 Sentiment may attach to particular features of a product.},
 author = {Hu, Minqing and Liu, Bing},
 doi = {10.1145/1014052.1014073},
@@ -42,12 +83,16 @@ year = {2010}
 @inproceedings{Ritter2009,
 annote = {Takes Herast method, and uses an SVM classifier to filter it.
 
+        
 TextRunner uses the HearstPatterns.
 
+        
 Snow, Jurafsky, etc create more patterns.
 They built a classifier to refine them.
 
+        
 
+        
 Use an SVM classifier to distinguish correct hypernyms from matches to the Hearst patterns.},
 author = {Ritter, Alan and Soderland, Stephen and Etzioni, Oren},
 booktitle = {Proceedings of AAAI-09 Spring Symposium on Learning by Reading and Learning to Read},
@@ -76,6 +121,9 @@ url = {http://aclweb.org/anthology/P/P08/P08-1004.pdf},
 year = {2008}
 }
 @inproceedings{Snow2005,
+annote = {Cites lots of examples of pattern matching.
+        
+1,2,6,13,17,18},
 author = {Snow, R. and Jurafsky, D. and Ng, A.Y.},
 booktitle = {Advances in Neural Information Processing Systems},
 file = {:home/rob/Documents/Mendeley Organiser/Snow, Jurafsky, Ng - 2005 - Learning syntactic patterns for automatic hypernym discovery.pdf:pdf},
@@ -163,14 +211,18 @@ title = {{P02-1047.pdf}}
 @inproceedings{Harabagiu2006,
 annote = {Contradiction detection is used for question answering or multi-document summarisation.
 
+        
 One of the methods they use is to detect CONTRAST.
 
+        
 What is it they mean by this?
 
+        
 Example of "
 "Such standards would preclude arms sales to states like Lybia..." 
 but "states like Rwandad, before its present risis, would still be able to buy arms".
 
+        
 What is going on here...},
 author = {Harabagiu, S. and Hickl, A. and Lacatusu, F.},
 booktitle = {PROCEEDINGS OF THE NATIONAL CONFERENCE ON ARTIFICIAL INTELLIGENCE},
@@ -289,11 +341,14 @@ year = {2009}
 @article{Amin2009,
 address = {New York, New York, USA},
 annote = {Should cite this for WICOW paper.
+
         
 Two dimensions. 
   Trustworthiness - they are being truthfull and honest.
   Expertise - they know what they are talking about.
+
         
+
       },
 author = {Amin, Alia and Zhang, Junte and Cramer, Henriette and Hardman, Lynda and Evers, Vanessa},
 doi = {10.1145/1526993.1527003},
@@ -342,9 +397,12 @@ year = {2009}
 address = {New York, New York, USA},
 annote = {Looks for indicators of quality by looking at the way the content is written.
 
+        
 Wikipedia work examining word counts, link structure, and revision histories.
 
+        
 
+        
 Previous work found that proportion of a page used in graphics, positioning of text, etc effects perceived credibility.},
 author = {Wetzler, Philipp G. and Bethard, Steven and Butcher, Kirsten and Martin, James H. and Sumner, Tamara},
 doi = {10.1145/1526993.1526997},
@@ -368,47 +426,64 @@ year = {2006}
 }
 @unpublished{Androutsopoulos2009,
 annote = {BLEU takes geometric average of the percentage of n-grams that match for different values of N.
+
         
 n-gram approaches can be combined with other approaches to get better results. 
+
         
+
         
 Best algorithms on MSR:
 	Das and Smith 2009
 	Malakosiotis 2009
 	Wan et al 2006
+
         
 Best algorithms on RTE-4:
 	Bensley and Hickl 2008
+
         
+
         
 But note that much better than BASE1 and BASE2.
 	- what are these?
+
         
 BASE1 = everything is a paraphrase
 BASE2 = just does surface word edit distance
+
         
 All algorithms over-keen to classify as a paraphrase.
+
         
 Edit distance:
 	Add word
 	Remove word
 	Reorder word
+
         
 Do any of the metrics actually do word reordering?
+
         
+
         
 Paraphrase extraction:
    Find n-grams that appear in similar contexts.
    Pasca and Dienes used a billion web pages in their experiments.
+
         
 DIRT extracts rules.
    Finds patterns that contain nouns in slots.
    Looks for patterns that regularly appear with the same slot fillers.
    Guesses that they mean the same thing.
    Often incorrectly infers antonym patterns.
+
         
+
         
+
         
+
       },
 arxivId = {arXiv:0912.3747v2},
 author = {Androutsopoulos, I. and Malakasiotis, P.},
@@ -1012,25 +1087,38 @@ annote = {Searches for several patterns. E.g.
 * X and other Y
 * X including Y
 * X especially Y
+
         
 Find more patterns by looking for places where known related words occur near each other.
+
         
 We could potentially do the same thing for disputed claims. Once we have a set of disputed claims, see where else these disputed claims appear, and whether there are consistent hints that they are disputed.
+
         
+
         
 Tried applying to metonymy (part-of relationship) with little success.
+
         
 Evaluated by comparing things it found against WordNet.
+
         
 One of the corpuses used was the New York Times text.
+
         
+
         
 Some hyponyms are context-dependent, such as "Nationalists such as Washington" and "targets such as aircraft".
+
         
 Difficulty when words have more than one sense.
+
         
+
         
+
         
+
       },
 author = {Hearst, Marti a.},
 booktitle = {Computational linguistics},
@@ -1337,24 +1425,12 @@ number = {April},
 title = {{Intelligence in Wikipedia}},
 year = {2008}
 }
-@inproceedings{Ritter,
-annote = {Uses TextRunner. Solves a lot of the tricky parsing issues.
-        
-Should we try using TextRunner somehow?
-        
-Look for "functions", which are mappings from one entity to a unique value. E.g. the is-made-of("moon") = "cheese".
-        
-Most contradictions in dispute finder do not have this form.},
-author = {Ritter, Alan and Downey, Doug and Soderland, Stephen and Etzioni, Oren},
-booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing},
-file = {:home/rob/Documents/Mendeley Organiser/Ritter et al. - 2008 - It's a Contradiction - No, it's Not A Case Study using Functional Relations.pdf:pdf},
-title = {{It's a Contradiction - No, it's Not: A Case Study using Functional Relations}},
-year = {2008}
-}
 @inproceedings{DeMarneffe2008,
 annote = {A typology of contradictions.
 
-},
+        
+
+      },
 author = {de Marneffe, M.C. and Rafferty, A.N. and Manning, C.D.},
 booktitle = {Proceedings of the 46th Annual Meeting of the Association for Computational Linguistics (ACL-08)},
 file = {:home/rob/Documents/Mendeley Organiser/de Marneffe, Rafferty, Manning - 2008 - Finding contradictions in text.pdf:pdf},
@@ -1362,6 +1438,23 @@ keywords = {cite-wicow},
 mendeley-tags = {cite-wicow},
 title = {{Finding contradictions in text}},
 url = {http://www.stanford.edu/\~{}mcdm/papers/QP2.pdf},
+year = {2008}
+}
+@inproceedings{Ritter,
+annote = {Uses TextRunner. Solves a lot of the tricky parsing issues.
+
+        
+Should we try using TextRunner somehow?
+
+        
+Look for "functions", which are mappings from one entity to a unique value. E.g. the is-made-of("moon") = "cheese".
+
+        
+Most contradictions in dispute finder do not have this form.},
+author = {Ritter, Alan and Downey, Doug and Soderland, Stephen and Etzioni, Oren},
+booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing},
+file = {:home/rob/Documents/Mendeley Organiser/Ritter et al. - 2008 - It's a Contradiction - No, it's Not A Case Study using Functional Relations.pdf:pdf},
+title = {{It's a Contradiction - No, it's Not: A Case Study using Functional Relations}},
 year = {2008}
 }
 @article{Wu2007b,
@@ -2474,12 +2567,15 @@ title = {p331-dechoudhury (1).pdf}
 address = {New York, New York, USA},
 annote = {A fair amount of math.
 
+        
 Got 7 volunteers to rate revisions.
 
-},
+        
+
+      },
 author = {Adler, B. Thomas and de Alfaro, Luca},
 doi = {10.1145/1242572.1242608},
-file = {:home/rob/Documents/Mendeley Organiser/Adler, de Alfaro - 2007 - A content-driven reputation system for the wikipedia.pdf:pdf;:home/rob/Documents/Mendeley Organiser/Adler, de Alfaro - 2007 - A content-driven reputation system for the wikipedia(2).pdf:pdf},
+file = {:home/rob/Documents/Mendeley Organiser/Adler, A - 2007 - content-driven reputation system for the wikipedia(2).pdf:pdf;:home/rob/Documents/Mendeley Organiser/Adler, A - 2007 - content-driven reputation system for the wikipedia.pdf:pdf},
 isbn = {9781595936547},
 journal = {Proceedings of the 16th international conference on World Wide Web - WWW '07},
 keywords = {1 the,as well as one,content,creation,is the wikipedia,of the oldest,one of the most,reputation,successful examples of collaborative,user-generated content,wikipedia},
@@ -3945,7 +4041,7 @@ year = {1997}
 @inproceedings{Adler2007,
 author = {Adler, B Thomas and Alfaro, Luca De},
 booktitle = {WWW},
-file = {:home/rob/Documents/Mendeley Organiser/Adler, de Alfaro - 2007 - A content-driven reputation system for the wikipedia(2).pdf:pdf;:home/rob/Documents/Mendeley Organiser/Adler, de Alfaro - 2007 - A content-driven reputation system for the wikipedia.pdf:pdf},
+file = {:home/rob/Documents/Mendeley Organiser/Adler, Alfaro - 2007 - A Content-Driven Reputation System for the Wikipedia.pdf:pdf;:home/rob/Documents/Mendeley Organiser/Adler, Alfaro - 2007 - A Content-Driven Reputation System for the Wikipedia(2).pdf:pdf},
 keywords = {1 the,as well as one,content,creation,is the wikipedia,of the oldest,one of the most,reputation,successful examples of collaborative,user-generated content,wikipedia},
 title = {{A Content-Driven Reputation System for the Wikipedia}},
 year = {2007}
@@ -6039,7 +6135,7 @@ year = {2006}
 annote = {Surveys different kinds of contradictions.
 Talks about ways to detect them.},
 author = {de Marneffe, Marie-Catherine and Rafferty, Anna N and Manning, Christopher D},
-file = {:home/rob/Documents/Mendeley Organiser/Marneffe, Rafferty, Manning - 2008 - Finding Contradictions in Text.pdf:pdf},
+file = {:home/rob/Documents/Mendeley Organiser/de Marneffe, Rafferty, Manning - 2008 - Finding contradictions in text.pdf:pdf},
 journal = {ACL},
 keywords = {contradictions},
 mendeley-tags = {contradictions},
@@ -8215,11 +8311,15 @@ year = {1981}
 }
 @article{Wu2008,
 annote = {Called Kylin
+
         
 They used TextRunner.
+
         
 Trick was to use infoboxes as training examples - very clever.
+
         
+
       },
 author = {Wu, Fei and Hoffmann, Raphael and Weld, Daniel S},
 file = {:home/rob/Documents/Mendeley Organiser/Wu, Hoffmann, Weld - 2008 - Information Extraction from Wikipedia Moving Down the Long Tail.pdf:pdf},
@@ -8378,11 +8478,15 @@ year = {2000}
 }
 @article{Fogg2003,
 annote = {The web sites being evaluated were fixed - thus cannot take into account social factors.
+
         
 Recruited survey participants by paying charities (e.g. the children's brain tumor foundation) \$5 for each person who completed the form.
+
         
 Given they had nearly 3k people, that is \$15k of budget for paying people to do the survey.
+
         
+
       },
 author = {Fogg, B J and Lab, Persuasive Technology and Hall, Cordura and Soohoo, Cathy and Danielson, David R and Tauber, Ellen R and Design, Sliced Bread and View, Mountain and Stanford, Julianne and Marable, Leslie and Webwatch, Consumer},
 file = {:home/rob/Documents/Mendeley Organiser/Fogg et al. - 2003 - How Do Users Evaluate the Credibility of Web Sites A Study with Over 2,500 Participants.pdf:pdf},
@@ -11263,16 +11367,9 @@ year = {2001}
 annote = {Miro: Data Detector Creo: Programming by Example   Miro: Uses ConceptNet and Stanford TAP ConceptNet is part of MIT OpenMind.   OpenMind is a database of user-entered tuples about concepts in the world. Users prompted to enter this information using fun games.  TAP is scraped information from web sites telling us things about particular instances.  E.g. "Yo-Yo Ma is a Cellist", or "Venus Williams is a Tennis Player".   Modify web pages by adding links to other things of interest. Lots of prior work on data detectors.},
 author = {Faaborg, Alexander and Lieberman, Henry},
 booktitle = {CHI '06: Proceedings of the SIGCHI conference on Human Factors in computing systems},
-file = {:home/rob/Documents/Mendeley Organiser/Faaborg, Lieberman - 2006 - A Goal-Oriented Web Browser.pdf:pdf},
+file = {:home/rob/Documents/Mendeley Organiser/Faaborg, Lieberman - 2006 - A goal-oriented web browser.pdf:pdf},
 title = {{A Goal-Oriented Web Browser}},
 year = {2006}
-}
-@article{Wang2008,
-author = {Wang, Yang},
-file = {::},
-pages = {25--28},
-title = {{“Human-Currency Interaction”: Learning from Virtual Currency Use in China}},
-year = {2008}
 }
 @inproceedings{Mihalcea2007,
 author = {Mihalcea, Rada and Csomai, Andras},
@@ -11282,6 +11379,13 @@ keywords = {keyword extraction,wikipedia,word sense disambiguation},
 pages = {233--241},
 title = {{Wikify! Linking Documents to Encyclopedic Knowledge}},
 year = {2007}
+}
+@article{Wang2008,
+author = {Wang, Yang},
+file = {::},
+pages = {25--28},
+title = {{“Human-Currency Interaction”: Learning from Virtual Currency Use in China}},
+year = {2008}
 }
 @inproceedings{Duggan2008,
 annote = {Peoples' background knowledge about a topic helps them search for it.  People were tested on ability to answer questions in a topic with and without web search. Those who knew something were able to perform better at search.  no great surprise.},

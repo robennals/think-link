@@ -6,13 +6,13 @@
 \newcommand{\want}[1]{}
 \newcommand{\idea}[1]{}
 \newcommand{\note}[1]{}
-%\newcommand{\x}[1]{}
+\newcommand{\x}[1]{}
 \newcommand{\todo}[1]{}
 \newcommand{\maybe}[1]{}
 \newcommand{\resolved}[1]{}
 
 % Mark up a point that we want to flesh out into more text
-\newcommand{\x}[1]{{\color{blue} #1}\\}
+%\newcommand{\x}[1]{{\color{blue} #1}\\}
 
 % Mark up some work that we need to do in order for this paper to be telling the truth
 %\newcommand{\todo}[1]{{\color{red} #1}\\}
@@ -146,52 +146,51 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
 
 \begin{figure}[tb]
 \begin{center}
-  \begin{tabular}{|lll|}
+  \begin{tabular}{|llll|}
     \hline
-    {\bf Frequency$^*$} & {\bf Template} & {\bf Precision$^\dag$}\\ 
+    {\bf Frequency$^*$} & {\bf Template} & {\bf P$^\dag$} & {\bf A$^\ddag$}\\ 
     \hline
-        \multicolumn{3}{|c|}{\it Something that could be challenged}\\
-        570,000,000 & think that & 28\%\\
-        495,000,000 & believe that & 48\%\\
-        145,000,000 & idea that & 42\% \\
-        101,000,000 & claim that & 46\%\\
+        \multicolumn{4}{|c|}{\it Plausible to not believe it}\\
+        570,000,000 & think that & 28\%& 69\%\\
+        495,000,000 & believe that & 48\%& 65\%\\
+        145,000,000 & idea that & 42\% & 61\%\\
+        101,000,000 & claim that & 46\%& 72\%\\
        \hline
-       \multicolumn{3}{|c|}{\it Something others believe}\\
-        40,100,000 & claiming that & 39\% \\
-        30,600,000 & the belief that & \\
-        28,600,000 & believing that & \\
-        11,700,000 & who believe that &\\
-        8,400,000 & who think that &\\
+       \multicolumn{4}{|c|}{\it It is notable that others believe it}\\
+        40,100,000 & claiming that & 39\% &\\
+        30,600,000 & the belief that & &\\
+        28,600,000 & believing that & &\\
+        11,700,000 & who believe that &&\\
+        8,400,000 & who think that &&\\
         \hline
-        \multicolumn{3}{|c|}{\it Something false}\\
-        5,790,000 & the myth that & 62\% \\
-        3,260,000 & into believing that & 52\% \\
-        1,690,000 & the lie that & 52\% \\
-        1,410,000 & it is not true that & 64\% \\
-        1,220,000 & the delusion that  & 54\%\\
-        1,140,000 & the misconception that & 67\%\\
-        995,000 & mistaken belief that &\\
-        676,000 & the mistaken belief that &\\
-        593,000 & mistakenly believe that &\\
-        583,000 & the fantasy that &\\
-        501,000 & it is not the case that &\\
-        459,000 & false claim that &\\
-        405,000 & the fallacy that &\\
-        351,000 & falsely claimed that &\\
-        264,000 & urban legend that &\\
-        250,000 & no longer believe that &\\
-        216,000 & the false belief that &\\
-        215,000 & falsely claiming that &\\ 
-        178,000 & falsely believe that &\\
-        171,000 & bogus claim that &\\
-        163,000 & erroneous belief that &\\
-        154,000 & the deception that &\\
-        147,000 & the misunderstanding that &\\
-        135,000 & urban myth that &\\
-    & & \\
-    \multicolumn{3}{|l|}{$^*$Yahoo's approximate estimate}\\
-    \multicolumn{3}{|l|}{$^\dag$Based on manual inspection of 100 text segments}\\
-    \multicolumn{3}{|l|}{\quad matched by each pattern}\\
+        \multicolumn{4}{|c|}{\it Something false}\\
+        5,790,000 & the myth that & 62\% & 73\% \\
+        3,260,000 & into believing that & 52\% &72\% \\
+        1,690,000 & the lie that & 52\% & 76\% \\
+        1,410,000 & it is not true that & 64\% & 78\% \\
+        1,220,000 & the delusion that  & 54\% & 76\% \\
+        1,140,000 & the misconception that & 67\% & 81\% \\
+        676,000 & the mistaken belief that & 51\% & 74\%\\
+        593,000 & mistakenly believe that & &\\
+        583,000 & the fantasy that & &\\
+        501,000 & it is not the case that &&\\
+        459,000 & false claim that &&\\
+        405,000 & the fallacy that &&\\
+        351,000 & falsely claimed that &&\\
+        264,000 & urban legend that &&\\
+        250,000 & no longer believe that &&\\
+        216,000 & the false belief that &&\\
+        215,000 & falsely claiming that &&\\ 
+        178,000 & falsely believe that &&\\
+        171,000 & bogus claim that &&\\
+        163,000 & erroneous belief that & 58\% & 77\%\\
+        154,000 & the deception that &&\\
+        147,000 & the misunderstanding that &&\\
+        135,000 & urban myth that &&\\
+    & & &\\
+    \multicolumn{4}{|l|}{$^*$Yahoo's approximate estimate}\\
+    \multicolumn{4}{|l|}{$^\dag$ P = Pattern precision (Section~\ref{filterclaim})}\\
+    \multicolumn{4}{|l|}{$^\ddag$ A = Filter accuracy (Section~\ref{filterclaim})}\\
     \hline
   \end{tabular}
 \end{center}
@@ -224,65 +223,73 @@ We implemented a three stage process to build our corpus of disputed claims, eac
 \subsection{Patterns for Finding Claims}
 \label{patterns}
 
-\x{Cite Snow on auto-finding new patterns. \cite{Snow2005}}
-\x{Cite Ritter on using stats to clean up results. ~\cite{Ritter2009}}
-\x{Cite MemeTracker~\cite{Backstrom2009}}
 
-We hand crafted a set of {\bf XX} patterns that we hypothesize may  indicate that a claim is disputed, such as ``false claim that'' or or ``it is not true that.'' 
+We hand-crafted a set of {\bf 54} patterns that we hypothesize may indicate that a claim $S$ is disputed, such as ``false claim that $S$'' or or ``it is not true that $S$''. Figure~\ref{templates} shows some of the patterns we use.
 
-This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
-These methods differ on how {\bf finish here}
-\x{add more related work here}
-\todo{add more related work here}
+This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for patterns like ``$X$ such as $Y$'' to infer hyponyms, Caraballo~\cite{Caraballo2001} searched for patterns like ``$X$ and $Y$'' to find nouns of the same type, Girju et al~\cite{Girju2003} searched for patterns like ``$X$'s $Y$'' and ``$X$ of the $Y$'' to infer metronyms. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web. 
 
-In this work we simply start with an initial set of patterns that we wrote by hand. We then found additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected additional patterns. 
+Like several previous authors~\cite{Girju2003,Snow2005} we identified new patterns by searching for known disputed claims. We searched for claims we knew to be disputed, recorded the text patterns that frequently surrounded them on web pages, and then manually chose those patterns that made sense to us. 
 
-\x{add more related work on boostraping here, adding differences}
-\todo{add more related work here}
+\x{Talk about people who do this in a more automatic way?}
 
-We plan to work on more sophisticated algorithms for finding new patterns automatically in future work.
+%\x{not sure if to add what follow, posponing the decision for now}
+%This approach is an example of the Distributional Hypothesis. The distributional hypothesis, as originally framed~\cite{Harris1954,Systems2000}, theorised that words that appear in similar contexts have similar meanings. This has more recently been extended to patterns. If two patterns appear in a corpus with similar text filling their slots, then it is likely that the patterns have similar meanings. DIRT~\cite{Lin2001} discovers inference rules such as (``$X$ is author of $Y$'' $\equiv$ ``$X$ wrote $Y$'') by looking for patterns that have a similar distribution of text filling their slots. Pasca and Dienes~\cite{Pasca2005} detect paraphrases on the web by searching for text fragments that appear in similar contexts on web pages. 
 
-Rather that searching for an arbitrary collection of known disputed claims, we found that we generated better templates by searching for claims that most documents disagee with (e.g. ``eskimos have many words for snow'') rather than claims that many people agree with (e.g. ``there is a God''). If many people agree with a claim is true then many of the patterns that we find will not be patterns that indicate that the claim is disputed. 
+Figure~\ref{templates} shows a subset of the {\bf 54} patterns that we used. 
+For each pattern, the {\it frequency} is the number of pages that Yahoo estimates contain this pattern. The {\it precision} is an estimate of the proportion of text strings matched by the pattern that are unambiguous disputed claims. We discuss precision further in Section~\ref{filterclaim}.
 
-We also find that we get higher quality results if we limit ourselves to prefixes that begin with ``that''. For example, if we search for ``that eskimos have many words for snow'' then most prefixes we find do indeed indicate dispute, however if we just search for ``eskimos have many words for snow'' then we get a much lower hit rate. 
 
-\x{not sure if to add what follow, posponing the decision for now}
-This approach is an example of the Distributional Hypothesis. The distributional hypothesis, as originally framed~\cite{Harris1954,Systems2000}, theorised that words that appear in similar contexts have similar meanings. This has more recently been extended to patterns. If two patterns appear in a corpus with similar text filling their slots, then it is likely that the patterns have similar meanings. DIRT~\cite{Lin2001} discovers inference rules such as (``$X$ is author of $Y$'' $\equiv$ ``$X$ wrote $Y$'') by looking for patterns that have a similar distribution of text filling their slots. Pasca and Dienes~\cite{Pasca2005} detect paraphrases on the web by searching for text fragments that appear in similar contexts on web pages. 
-
-Figure~\ref{templates} shows a subset of the {\bf xx} patterns  that we used. For each pattern, we show the number of times that Yahoo estimates that the pattern appears on the web. 
-\todo{add statistic of patterns and patterna accuracy here}
-\x{add statistic of patterns and patterna accuracy here}
-
-Not all patterns have exactly the same meaning. We divide patterns into three fuzzily-grouped categories:
+Not all patterns have exactly the same meaning. We grouped our patterns into three loose catagories, based on manual inspection of the pages that use them (Figure~\ref{templates}):
 
 \begin{itemize}
  \item {\bf False:} The author believes the claim is wrong
- \item {\bf Believed by others:} The author believes others think this, and it is likely that the author disagrees. Further inspection is required to determine whether the author disagrees with the claim. 
- \item {\bf Could be challenged:} The author feels the need to state that someone believes something, which suggests that this is something that one might not believe. For example, if an author says ``I think America is a great place'' this doesn't suggest that the claim is false, but the mere fact that they declared that they thought that suggests that they are aware that the claim could be challenged.
-\end{itemize}
-
-We grouped patterns into categories by hand, based on a brief inspection of pages that were using each of the patterns. 
+ 
+ \item {\bf Notable that others believe it:} The author believes that it is notable that others believe it. For example ``Fans are claiming that {\it Elvis is alive}''. Further inspection is required to determine whether the author disagrees with the claim. For example, do they follow it with a word like ``but'' or ``despite''?
+ 
+ \item {\bf Plausible to not believe it:} The author feels the need to say that someone believes it, implying that it it plausible that someone else might not believe it. This is only subtly different from the previous group. For example ``Fans think that {\it Elvis is alive}'' is less strong than ``Fans are claiming that {\it Elvis is alive}''. It is useful to exclude the cases where the pattern is prefixed by ``I'', since such sentences rarely contain useful disputed claims. For example ``John thinks Elvis is dead'' implies much more skepticism than ``I think Elvis is dead''. 
+ \end{itemize}
 
 Which patterns one should use depends on what one wishes to use the resulting corpus of disputed claims for. If one wants to only have claims for which we can present web pages that argue that the claim is false, then only the first set of patterns should be used. If however one just wishes to see what things people think are worthy of having opinions expressed about, then the full set is useful.
-\todo{Give some stats about our patterns}
+
 
 \subsection{Searching the Web for Claims}
 \label{searchpattern}
 
-We then search the web for the set of patterns described in the previous session. Rather than building our own search engine, we use the Yahoo BOSS search API~\cite{yahoo-boss}. We search Yahoo BOSS for a raw string such as ``the misconception that'' and then download every web page that Yahoo lists in its search results.
-Since we are using an existing search engine, we are limited to searching for simple text strings. This leads us to generate multiple patterns that are almost the same, other than for synonyms. E.g. ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. While we could do the search anyway, and then filter out all pages in which the parts were not in the same sentence, this would be inefficient, since many pages would not contain the pattern.
+We use the Yahoo BOSS API~\cite{yahoo-boss} to search for occurrences of our patterns on the web. Using Yahoo BOSS allows us to search for patterns on a vast number of web pages, without having to build our own search engine. We search Yahoo BOSS for a raw string such as ``the misconception that'', download every page that Yahoo lists in its search results, and then look for text that matches any of our known patterns.
 
-In the longer term we would like to have a more elegant search infrastructure, but for the time being this approach seems to work reasonably well.
+Since we are using an existing search engine, we are limited to searching for simple text strings. This requires us to generate multiple patterns that are almost the same, other than for synonyms, for example we have both ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. 
 
-Since we are interested in the time information of the claims and we want to be able to incrementally update our corpus as new pages appear on the web, without repeatedly downloading the same pages, we need to be able to request only pages updated in a given date range. The Yahoo BOSS API does not offer the ability to do so; we thus simulate this behaviour by instead including a literal date string in our queries. For example, if we want to find claims that were disputed on January 4th 2010 then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
+In the longer term we may work round these issues by building our own search infrastructure, but Yahoo BOSS provides an excellent platform for prototyping an idea and seeing if it works.
+
+It is useful to be able to update our corpus as new pages appear on the web, without having to repeatedly download the same pages. The Yahoo BOSS API does not offer the ability to request only recent pages, or to specify a particular date range. We instead simulate this behaviour by including a literal date string in the queries we pass to Yahoo BOSS. For example, if we want to find claims that were disputed on January 10th 2010, then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
 
 The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, and some web pages either don't include the date the article was posted, or write their date in a different format. Indeed our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first).
+
+Including the date in the search also provides us with a light-weight way to sample what people believed or disputed at particular points in time Section~\ref{timetrends}. Moreover, it is important to know when people believed particular things, since things that were true in the past may not be true any more (e.g. Elvis was alive in the past, but isn't not).
 
 \todo{Produce some kind of measure of how well date searching actually works}
 \todo{Give some stats about search results}
 
-\subsection{Filtering Statements}
+\subsection{Filtering Claims}
 \label{filterclaim}
+
+Searching the web for our patterns yields a collection of strings. From this collection, we want to filter out any strings that are not making a falsifiable claim, and any strings that make a claim that is ambiguous.
+
+Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we might want to filter some of them out. a chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might by ambiguous what entities it is referring to (case 3).
+
+The {\it P} column in Figure~\ref{templates} shows the percentage of the strings that match each pattern that we estimate to be unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and unambigous.
+
+Whether a claim is unambiguous can be highly subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
+
+We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Bayesian classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
+
+The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim.
+
+
+
+(Section~\ref{filterclaim}). We estimated the precision of each pattern by randomly selectiong 100 strings that match the pattern, and then manually marked strings that we subjectively decided were a well formed and unambiguous statement.
+
+\x{Cite Ritter on using stats to clean up results. ~\cite{Ritter2009}}
 
 From the web pages returned from the search, we form a {\it candidate claim} by taking all text from the end of the prefix we searched for, up to the nearest sentence-ending punctuation character or HTML tag (e.g. '.','?','!',\texttt{</p>},\texttt{</h1>}, etc). 
 
@@ -313,6 +320,15 @@ These rules were crafted by hand, based on trial and error and manual inspection
 \x{We do not yet do anything useful with context, but we believe it is important and intend to use it}
 \x{context can be surrounding text but also features of the web pages -- domain,  "authority," in-links, format; context is also the author: expert? social info on author...}
 
+
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=16cm]{images/2by5.pdf}
+	\caption{Frequency of each of the top nouns individually}
+	\label{multiplot_nouns}
+	\end{center}
+\end{figure*}
+
 \section{Using Disputed Claims}
 \label{using}
 
@@ -333,6 +349,9 @@ Recognizing that these are but a few of the ways in which a disputed claim corpu
 \label{analysis}
 \input{analysis.tex}
 
+\x{Cite MemeTracker~\cite{Backstrom2009}}
+
+
 \todo{Lots of pretty graphs showing what our data is like.}
 
 \subsection{Data Quality}
@@ -340,7 +359,7 @@ Recognizing that these are but a few of the ways in which a disputed claim corpu
 \x{Look at a random sample of the data and say how clean it is.}
 \x{Evaluate the quality of the claims that we extracted.}
 \x{Evaluate the quality of the clusters that we created.}
-\x{Evaluate the quality of the different individual templates - which ones have the highest quality claims.}
+\x{Evaluate the quality of the different individual patterns - which ones have the highest quality claims.}
 \x{say something about {\em duplicate} claims?}
 
 

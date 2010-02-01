@@ -1,21 +1,25 @@
 
 Confrontational Computing is a collaboration between Intel Research and the University of California at Berkeley.
 
-The following people have contributed to the Confrontational Computing project:
+The following people are involved in the Confrontational Computing project or have contributed to it in the past:
 
 === People at Intel Research ===
 
-* <a href="http://berkeley.intel-research.net/rennals/">Rob Ennals</a> - [[Think Link]] lead
-* <a href="http://web.media.mit.edu/~tad/">Tad Hirsch</a>
-* Tye Rattenbury
+* <a href="http://berkeley.intel-research.net/rennals/">Rob Ennals</a>
 * <a href="http://www.agosta.org/">John Mark Agosta</a>
+* <a href="http://web.media.mit.edu/~tad/">Tad Hirsch</a>
+* <a href="http://berkeley.intel-research.net/~brosario/">Barbara Rosario</a>
+* Tye Rattenbury
+
 
 === People at UC Berkeley ===
 
-* <a href="http://www.cs.berkeley.edu/~trush/">Beth Trushkowsky</a> - 2008 Summer Intern on Think Link
+* <a href="http://www.cs.berkeley.edu/~trush/">Beth Trushkowsky</a> 
+* <a href="http://www.ischool.berkeley.edu/people/students/danbyler">Dan Byler</a>
 * <a href="http://www.eecs.berkeley.edu/~willettw/selectpage.html">Wes Willet</a>
 * Nick Kong
 * <a href="http://vis.berkeley.edu/~maneesh/">Maneesh Agrawala</a>
+* <a href="http://www.eecs.berkeley.edu/~elghaoui/">Laurent El Ghaoui</a>
 * Nick Lanham
 * Christine Robson
 * Jesse Trutna
