@@ -261,6 +261,27 @@ Which pattern group one should use depends on what one wishes to use the resulti
 \subsection{Searching the Web for Claims}
 \label{searchpattern}
 
+\begin{figure}
+ \begin{center}
+  \begin{tabular}{|llll|}
+\hline
+accuracy      & {\bf \#}    &  {\bf \%}  & {\bf   cum} \\
+      \hline
+dead on & 16   &   32\%  &   32\% \\
++/-10 d & 9    &   18\%  &   50\% \\
++/-30 d & 12   &   24\%  &   74\% \\
++/-90 d & 3    &   6\%   &   80\% \\
++/-1 yr & 6    &   12\%  &   92\% \\ 
+>1 yr   & 4    &   8\%   &   100\% \\ 
+\hline
+  \end{tabular}
+ \end{center}
+ 
+ \label{dateaccuracy}
+ \caption{Accuracy of simple date detection}
+\end{figure}
+
+
 We use the Yahoo BOSS API~\cite{yahoo-boss} to search for occurrences of our patterns on the web. Using Yahoo BOSS allows us to search for patterns on a vast number of web pages, without having to build our own search engine. We search Yahoo BOSS for a raw string such as ``the misconception that'', download every page that Yahoo lists in its search results, and then look for text that matches any of our known patterns.
 
 Since we are using an existing search engine, we are limited to searching for simple text strings. This requires us to generate multiple patterns that are almost the same, other than for synonyms, for example we have both ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. 
@@ -269,9 +290,9 @@ In the longer term we may work round these issues by building our own search inf
 
 It is useful to be able to update our corpus as new pages appear on the web, without having to repeatedly download the same pages. The Yahoo BOSS API does not offer the ability to request only recent pages, or to specify a particular date range. We instead simulate this behaviour by including a literal date string in the queries we pass to Yahoo BOSS. For example, if we want to find claims that were disputed on January 10th 2010, then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 4 2010''}.
 
-The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first).
+The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first). Despite being very primitive, this method seems to work reasonably well. When we manually inspected 50 pages retreived by our algorithm, we found that 92\% written on the correct year, and 74\% were written in the correct month (Figure~\ref{dateaccuracy}). 
 
-Including the date in the search also provides us with a light-weight way to sample what people believed or disputed at particular points in time Section~\ref{timetrends}. Moreover, it is important to know when people believed particular things, since things that were true in the past may not be true any more (e.g. Elvis was alive in the past, but isn't not).
+Knowing the rough date when someone believed or disputed something allows us te produce fuzzy time trends Section~\ref{timetrends}. Moreover, it is important to know when people believed particular things, since things that were true in the past may not be true any more (e.g. Elvis was alive in the past, but isn't not).
 
 \todo{Produce some kind of measure of how well date searching actually works}
 \todo{Give some stats about search results}
@@ -291,17 +312,16 @@ We built a statitical classifier that attempts to automatically determine whethe
 
 The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. In each case, we trained the classifier on the data set for the other patterns in the same group and then tested its performance on the result for that pattern. 
 
-We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. 
+We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. For the best patterns our classifier has accuracy in the high seventies. 
+
+Manual inspection suggests that the classifier is fairly good at filtering out strings that are not claims (case 1) but does poorly at working out whether a claim is unambigous. This is not surprising. We anticipate that a more sophisticated technique with real world knowledge would be needed in order to determine whether a claim was unambigous.
 
 In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by either two noun phrases or a noun phrase and an adjective. 
 
 
 \subsection{Context}
 
-\x{Importance of dates}
-\x{Work meaning depending on surrounding text}
-\x{We do not yet do anything useful with context, but we believe it is important and intend to use it}
-\x{context can be surrounding text but also features of the web pages -- domain,  "authority," in-links, format; context is also the author: expert? social info on author...}
+We save the surrounding text, page title, and URL for each of the disputed claims we see made on the web. At present we do not do anything with this data, but we anticipate that it could be useful for many purposes. For example it may be possible to resolve the meaning of ambiguous words or entities based on the words nearby (with have experimented with an algorithm similar to that used by Wikify~\cite{Mihalcea2007}). It is also useful to what person wrote the page, what organization hosted the page, who they link to, what meme-like phrases they make near to the claim, whether the page is written in an ``expert'' style, etc.
 
 
 \begin{figure*}[tb]
@@ -328,6 +348,8 @@ A third category of applications could be broadly classified as research tools: 
 \label{analysis}
 \input{analysis.tex}
 
+We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 19th 2010, and for January 10th of every year from 2000 to 2010. This gave us a total of 1.8 million text strings, of which 1.1 million were identified by our classifier as being unambigous disputable claims. Of those 1.1 million text strings, most are repeating claims made elsewhere in the data set.
+
 \x{Cite MemeTracker~\cite{Backstrom2009}}
 
 
@@ -343,6 +365,19 @@ A third category of applications could be broadly classified as research tools: 
 
 
 \subsection{Trends over time}
+\label{timetrends}
+
+Figure~\ref{multiplot_nouns} shows the frequency with which particular nouns were discussed in particular years. We obtained these figures by using a part-of-speech tagger to identify nouns in claims found on January 10th of every year from 2000 to 2010. Although the date we searched for was in January, the claims we found are often from other points in the year, due to the fuzzy nature of our date search mechanism (Figure~\ref{dateaccuracy}). We excluded uninteresting nouns such as ``someone'', ``anybody'' and ``something'', and plotted graphs for the ten most disputed nouns. All graphs are plotted on the same scale. The y axis is the number of claims that contained the noun, and the x axis is the year in which the claim was made.
+
+We manually inspected our claims to determine what was going on that made particular nouns spike at particular times.
+
+\begin{itemize}
+ \item {\bf Obama:} Barack Obama is not a topic of dispute until 2004 when he spoke at the Democratic convention. His level of controversy then peaked in 2008, in the run up to the November 2008 US presidential elections.
+ \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawins2006} seems to have sparked extra controversy.
+ \item {\bf Iraq:} Spikes seem to correspond to the initial invasion in 2003 and the surge in 2007.
+\end{itemize}
+
+
 
 \x{Named entity recognition}
 
@@ -350,6 +385,7 @@ A third category of applications could be broadly classified as research tools: 
 \x{Look at what noun phrases were most disputed on particular days.}
 
 \x{We remove exact-match strings from the same domain - to avoid republishing of same article.}
+
 
 \section{Conclusions}
 
