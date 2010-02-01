@@ -337,7 +337,7 @@ We save the surrounding text, page title, and URL for each of the disputed claim
 
 A corpus of disputed claims could be useful for a variety of applications, including real-time dispute recognition, background dispute analysis agents, and other research tools. Real-time dispute recognition agents could be used, for instance, to alert users when a trusted source disagrees with others, or to provide the user with feedback on how contentious a topic is.
 
-Dispute Finder is one such agent that we are developing to provide real-time dispute recognition to users by identifying disputed claims that appear in web pages. Future iterations of Dispute Finder and other such agents will be designed to work with other media such as television or radio, as well as augmented reality applications. We envision a device that provides real-time feedback to users regarding claims made in a conversation or presentation. Such a device would augment individuals' intuitive recognition of that a disputed claim is being made.
+Dispute Finder~\cite{Ennals2010} is one such agent that we are developing to provide real-time dispute recognition to users by identifying disputed claims that appear in web pages. Future iterations of Dispute Finder and other such agents will be designed to work with other media such as television or radio, as well as augmented reality applications. We envision a device that provides real-time feedback to users regarding claims made in a conversation or presentation. Such a device would augment individuals' intuitive recognition of that a disputed claim is being made.
 
 Dispute analysis agents that run in the background represent another application we see for a corpus of disputed claims. Such agents could be trained with information regarding the books, journals, and news articles a user reads. It would then be able to track these subjects and alert the user when a previously-read source is now disputed. It could also track a set of topics and tell the user when something new is disputed about a topic. A background dispute analysis agent would thus serve as an automated research assistant.
 
@@ -429,14 +429,7 @@ MemeTracker~\cite{Backstrom2009} produced vaguely similar graphs, showing when p
 
 For each noun, we analysed the claims about that noun, and produced clusters that represent claims about that noun that seem to be particularly hotly disputed. Rather than clustering claims directly, we instead cluster together words that frequently co-occur. We used an agglomerative clustering algorithm, repeatedly merging the two clusters of words that had the most claims in common.
 
-
-\x{Named entity recognition}
-
-\x{Look at what noun phrases were most disputed at particular years.}
-\x{Look at what noun phrases were most disputed on particular days.}
-
-\x{We remove exact-match strings from the same domain - to avoid republishing of same article.}
-
+Figure~\ref{cluster-figure} shows the most frequently occurring word clusters that we found for each noun. Most of these will make sense to people who have been following news in the united states. For example, we see that disputed claims about Obama often talk about his nobel prize or his birth certificate, and that President Ahmadinejad of Iran did not actually say that Israel should be wiped off the map (which the authors had not previously realized). Some of the word clusters are not particularly interesting - for example many claims talk about the united states, even when that is not an important part of what is disputed. 
 
 \section{Conclusions}
 
