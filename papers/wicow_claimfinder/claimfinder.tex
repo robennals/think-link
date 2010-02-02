@@ -225,18 +225,19 @@ We implemented a three-stage process to build our corpus of disputed claims, eac
 
 \end{figure*}
 
-\subsection{Patterns for Finding Claims}
+\subsection{Patterns for Finding Disputes}
 \label{patterns}
 
-We hand-crafted a set of {\bf 54} patterns that we hypothesize may indicate that a claim $S$ is disputed, such as ``false claim that $S$'' or or ``it is not true that $S$''. Figure~\ref{templates} shows some of the patterns we use.
+We hand-crafted a set of 54 patterns that we hypothesize may indicate that a claim $S$ is disputed, such as ``false claim that $S$'' or or ``it is not true that $S$''. Figure~\ref{templates} shows some of the patterns we use.
 
-This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, and Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
+This is an instance of pattern matching, a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for patterns such as ``$X$ such as $Y$'' to infer hyponyms, and Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events; Caraballo~\cite{Caraballo2001} searched for patterns like ``$X$ and $Y$'' to find nouns of the same type, Girju et al~\cite{Girju2003} searched for patterns like ``$X$'s $Y$'' and ``$X$ of the $Y$'' to infer  metronyms. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
+These types of methods differ on how the patterns are generated and on how the extraction of the relevant information is performed. Most often they automatically construct the patterns and often choose them on the basis of
+statistics.
 
-In this work we start with an initial set of manually crafted search patterns. We then identified additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected additional patterns. 
+In this work we simply start with an initial set of manually crafted search patterns. We then identified additional patterns by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim and manually selected those patterns that made sense to us. This technique is inspired by bootstraping algorithms~\cite{jones99bootstrapping,Girju2003,Snow2005} that start with a small number of seed words that belong to a semantic class of interest; these seed words are used to learn the extraction patterns that then can be used to extract new members of the same semantic class. This process is iterated several times and at each times a score is given to each extraction pattern and to each new lexicon entry and only the most reliable ones are retained. In our case, the semantic entity of interest are the claims. Currently, we {\em manually} choose the patterns and claims to retain, i.e., as oppose to most relevant work, we don't {\em learn} the patterns and we don't use a measure of "reliability."
 
-This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for patterns like ``$X$ such as $Y$'' to infer hyponyms, Caraballo~\cite{Caraballo2001} searched for patterns like ``$X$ and $Y$'' to find nouns of the same type, Girju et al~\cite{Girju2003} searched for patterns like ``$X$'s $Y$'' and ``$X$ of the $Y$'' to infer metronyms. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web. 
-
-Like several previous authors~\cite{Girju2003,Snow2005} we identified new patterns by searching for known disputed claims. We searched for claims we knew to be disputed, recorded the text patterns that frequently surrounded them on web pages, and then manually chose those patterns that made sense to us. 
+Figure~\ref{templates} shows a subset of the total of 54 patterns that we used. 
+For each pattern, the {\it frequency} is the number of pages that Yahoo estimates contain this pattern. The {\it precision} is an estimate of the proportion of text strings matched by the pattern that are unambiguous disputed claims. We discuss precision further in Section~\ref{filterclaim}.
 
 \input{modals}
 
