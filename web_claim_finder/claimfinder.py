@@ -73,7 +73,13 @@ phrases = [
 			"crazies who believe that"
 		]
 
-
+weak_phrases = [
+			"claiming that",
+			"the belief that",
+			"believing that",
+			"who believe that",
+			"who think that"
+		]
 
 bad_phrases = [
 			"believe that",

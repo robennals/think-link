@@ -148,6 +148,7 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
 
 \begin{figure}[tb]
 \begin{center}
+  \vspace{0.5cm}
   \begin{tabular}{|llll|}
     \hline
     {\bf Frequency$^*$} & {\bf Pattern} & {\bf Pattern} & {\bf Classifier}\\ 
@@ -163,11 +164,9 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
        \multicolumn{2}{|l}{\it It is notable that others believe it} & &\\
            & & &\\
 
-        40,100,000 & claiming that & 39\% &\\
-        30,600,000 & the belief that & &\\
-        28,600,000 & believing that & &\\
-        11,700,000 & who believe that &&\\
-        8,400,000 & who think that &&\\
+        40,100,000 & claiming that & 39\% & 65\%\\
+        11,700,000 & who believe that & 69\% & 73\%\\
+        8,400,000 & who think that & 49\% & 66\%\\
         \hline
 	&&&\\
         \multicolumn{2}{|l}{\it Something false} & &\\
@@ -204,6 +203,7 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
 
   \caption{Some of the patterns we use to find disputed claims}
   \label{templates-fig}
+  \vspace{0.5cm}
 \end{figure}
 
 We implemented a three-stage process to build our corpus of disputed claims, each described in the following Sections. We first create a set of lexical patterns such as ``the misconception that'' and ``it is not the case that'' (Section~\ref{patterns}). We then search the Web for these patterns (Section~\ref{searchpattern}).  Finally, we filter the resulting strings to give only those that resemble unambiguous falsifiable claims (Section~\ref{filterclaim}).

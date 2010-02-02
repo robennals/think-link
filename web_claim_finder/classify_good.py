@@ -134,9 +134,21 @@ def measure_phrases(phrases):
 		classifier = nltk.NaiveBayesClassifier.train(train_set)		
 		accuracy = nltk.classify.accuracy(classifier,test_set)
 		print phrase,"&",str(int(100*accuracy)) +"\%"	
+
+def test_classifier_single(phrase):
+	featureset = get_featured_data([phrase])
+	right = 0
+	for i in range(0,len(featureset)):
+		train_set = featureset[0:i] + featureset[i+1:]
+		test_features = featureset[i][0]
+		classifier = nltk.NaiveBayesClassifier.train(train_set)
+		judgement = classifier.classify(test_features)
+		if judgement == featureset[i][1]:
+			right +=1
+	print "accuracy =",(right*100)/len(featureset)
 	
 def test_classifier(phrases):
-	(train_set,test_set) = get_featured_data_split()
+	(train_set,test_set) = get_featured_data_split(phrases)
 	classifier = nltk.NaiveBayesClassifier.train(train_set)	
 	print "accuracy = "+nltk.classify.accuracy(classifier,test_set)
 	
