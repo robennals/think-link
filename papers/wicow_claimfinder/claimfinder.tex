@@ -11,6 +11,11 @@
 \newcommand{\maybe}[1]{}
 \newcommand{\resolved}[1]{}
 
+%%% jma mods  10AM  1 Feb 2010 
+
+% remove 
+\newcommand{\jma}[1]{{\color{purple} #1}}
+
 % Mark up a point that we want to flesh out into more text
 %\newcommand{\x}[1]{{\color{blue} #1}\\}
 
@@ -60,7 +65,8 @@
        \affaddr{Intel Labs Santa Clara}\\
        \affaddr{2200 Mission College Blvd}\\
        \affaddr{Santa Clara, CA, USA}\\
-       \email{john.m.agosta@intel.com}
+       %\email{john.m.agosta@intel.com} 
+        \jma{\email{barbara.rosario@intel.com}}
 }
 
 %\sloppy
@@ -96,13 +102,21 @@ We argue why such a corpus of disputed claims is useful for a wide range of appl
 
 \section{Introduction}
 
-The web contains a vast number of pages written by a vast number of people. In many cases, these people disagree with each other, and the pages they write contain conflicting information. For users to extract reliable information from the web, it is useful for them to be able to determine when different sources disagree about a topic.
+%jma we need to motivate dispute finding with credibility here
+The web contains a vast number of pages written by a vast number of people. In many cases, these people disagree with each other, and the pages they write contain conflicting information. For users to extract reliable information from the web, it is useful for them to be able to determine when different sources disagree about a topic. \jma{Web pages commonly include disputes on topics they contain. Identifying disputes points out occasions where the credibility of a page could be called into question.}
 
-In this paper we describe a method for automatically acquiring a corpus of disputed claims from the web. We consider a claim to be {\it disputed} if a page exists on the web that suggests both that the claim is false, and that there are others that are making the claim. We are also interested in {\it who} disputes a particular claim, since a user is likely to be more interested in being told that a claim is disputed by a large number of sources that they believe are credible, rather than a small number of sources that they do not trust.
+In this paper we describe a method for automatically acquiring a corpus of disputed claims from the web. 
+\jma{ A claim is a statement of opinion or fact found in the text of a page.} We consider a claim to be {\it disputed} if a page exists on the web that suggests both that the claim is false, and that there are others that are making the claim. 
+%jma  To be precise, it could also be vice versa - to suggest the claim is true and others say its false
+We are also interested in {\it who} disputes a particular claim, since a user is likely to be more interested in being told that a claim is disputed by a large number of sources that they believe are credible, rather than a small number of sources that they do not trust.
 
-We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$'' (Section~\ref{findingclaims}). For example, if a page contains the text ``the misconception that {\it the moon is made of cheese}'', this suggests that the author believes that others are saying that the moon is made of cheese, and that the author themselves disputes this claim. In Figure~\ref{templates} we list some of the patterns we used. In practice, many of the strings that match such a pattern are not well-formed disputed claims. We use a statistical classifier to filter out those strings that appear to make a well-formed claim.
+We identify disputed claims by searching for lexical patterns such as ``the misconception that $S$'' (Section~\ref{findingclaims}). For example, if a page contains the text ``the misconception that {\it the moon is made of cheese}'', this suggests that the author believes that others are saying that the moon is made of cheese, and that the author %themselves 
+\jma{herself} disputes this claim. In Figure~\ref{templates} we list some of the patterns we used. In practice, many of the strings that match such a pattern are not well-formed disputed claims. We use a statistical classifier to \jma{select only} % filter out 
+ those strings that appear to make a well-formed claim.
 
-We believe that this corpus will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{Ennals2010} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including automatically detecting disputed claims in human speech, visualization tools that let users know what is disputed about a topic that interests them, and statistical tools that allow people to look for patterns in internet debate  (Section~\ref{using}).
+We believe that this corpus 
+\jma{of claims}
+will be useful for many purposes. We are currently using it as part of our Dispute Finder~\cite{Ennals2010} project to automatically highlight phrases on web pages that are disputed by other sources. We are also exploring other applications of this corpus, including automatically detecting disputed claims in human speech, visualization tools that let users know what is disputed about a topic that interests them, and statistical tools that allow people to look for patterns in internet debate  (Section~\ref{using}).
 
 We have made our corpus publicly available for other researchers to download at \url{http://confront.intel-research.net/}. It currently contains claims extracted from pages written on the days between October 1st 2009 and January 19th 2010, and pages written on January 10th of every year from 2000 to 2010. This amounts to approxmately 1.1 million strings that we believe are making disputed claims. We plan to expand our corpus as we crawl more of the web and improve our algorithms.
 
@@ -116,9 +130,11 @@ We believe that ours is the first attempt to automatically acquire a corpus of d
 The problem of determining information credibility on the web is becoming increasingly important. In the past a user would typically obtain information from a relatively small set of sources such as books, TV channels, and radio stations. The user would have some idea of the reputation and biases of each of these sources, and publishing barriers and quality control would ensure that these sources only published information that met their standards. 
 The web is very different. A user has access to a vast number of different sources, but knows little about the biases or reputation of most of them. Moreover, the internet has little in the way of publishing barriers or quality control. If a user is to extract reliable information from the web, they need to either restrict themselves to a small set of trusted sources, or use some kind of mechanism to determine the credibility of the information that they access.
 
-There are several ways that a user can determine whether to trust information that they find on a web page. The user can check the reputation of the person or organization that wrote the web page; they can observe whether the web page meets their aesthetic criteria for a reliable web page; or they can check whether the information is consistent with information available from other sources.
+There are several ways that a user can determine whether to trust information that they find on a web page. The user can check the reputation of the person or organization that wrote the web page; they can observe whether the web page meets their aesthetic criteria for a reliable web page; 
+% jma: you really mean look at the visual style of the page to infer reliability?
+or they can check whether the information is consistent with information available from other sources.
 
-A user can check the reputation of a source using a service such as SourceWatch.org, which publishes manually curated information about the reputation and known biases of various sources. Trustpilot.com produce a Firefox extension that warns a user when they are looking at a web page hosted by a company that they believe is not trustworthy. Alternatively, a user can simply use a search engine such as Google to look for information about the source. While these tools can be very useful, trustworthy sources sometimes publish unreliable information, and untrusted sources sometimes contain useful information. For example, a reliable source may have been misled by an unreliable source they were using themselves; or a small unrated blog may publish information that useful, insightful, and accurate. 
+A user can check the reputation of a source using a service such as SourceWatch.org, which publishes manually curated information about the reputation and known biases of various sources. Trustpilot.com produce a Firefox extension that warns a user when they are looking at a web page hosted by a company that they believe is not trustworthy. Alternatively, a user can simply use a search engine such as Google to look for information about the source\jma{'s reputation}. While these tools can be very useful, trustworthy sources sometimes publish unreliable information, and untrusted sources sometimes contain useful information. For example, a reliable source may have been misled by an unreliable source they were using themselves; or a small unrated blog may publish information that useful, insightful, and accurate. 
 
 Researchers have identified a variety of metrics that can be used to automatically estimate the quality of a document based on looking at its content. For Wikipedia, Blumenstock~\cite{Blumenstock2008} estimates the quality of an article by the word count and WikiTrust~\cite{Adler2008b} identifies potentially unreliable sections of an article by analyzing its edit history. Custard and Sumner~\cite{Custard2005} use a combination of metrics to measure web site quality, including number of links and whether it contains videos. Fogg et al~\cite{Fogg2003} have shown that users commonly evaluate the credibility of a web site based on factors such as the design look, the information structure of the site, and the tone of the writing. Some of the factors identified by Fogg et al could potentially be measured automatically and used to guide a user. These metrics do a good job at detecting pages that resemble pages that contain unreliable information, but they do not protect against authors who write untrustworthy information in the style of a trustworthy document.
 
@@ -126,13 +142,23 @@ In our research, we are following a third approach. We aim to inform users when 
 
 Our primary motivation for automatically acquiring a large corpus of disputed claims is to use this corpus to enable tools like Dispute Finder to automatically inform users when they encounter information that this corpus says is disputed. However, as we discuss in Section~\ref{using}, we believe such a corpus could be useful for many other purposes too.
 
-The problem of detecting disputed claims is closely related to the well-studied problem of detecting contradictions. A claim $H$ is {\it contradicted} if a document somewhere on the web makes a claim that implies that $H$ cannot be true. For example, the claim ``The moon is made of rock'' {\it contradicts} the claim ``The moon is made of cheese''. A contradicted claim is not necessarily a disputed claim. In this example the person who said that the moon was made of rock might not be aware that others think it is made of cheese. A {\it contradiction} is logical, while a {\it dispute} is social. In order for a claim to be disputed, the authors of the documents must be aware that there is a contradiction between their beliefs.
+The problem of detecting disputed claims is closely related to the well-studied problem of detecting contradictions. A claim $H$ is {\it contradicted} if a document somewhere on the web makes a claim that implies that $H$ cannot be true. For example, the claim ``The moon is made of rock'' {\it contradicts} the claim ``The moon is made of cheese''. 
+%A 
+\jma{But a} contradicted claim is not necessarily a disputed claim. In this example the person who said that the moon was made of rock might not be aware that others think it is made of cheese. A {\it contradiction} is logical, while a {\it dispute} is social. In order for a claim to be disputed, the authors of the documents must be aware that there is a contradiction between their beliefs.
 
 There has been significant work on detecting contradictions. Condoravdi et al~\cite{Condoravdi2003} argue that contradiction detection is one of the key tasks in language understanding. De Marneffe et al~\cite{deMarneffe2008} present a taxonomy of the different ways that claims can contradict each other and describe a system that combines many techniques to detect different kinds of contradictions. AuContraire~\cite{Ritter} uses TextRunner~\cite{Etzioni2008,Banko2008} to infer subject-verb-object relationships, looks for cases where a verb maps the same subject to multiple objects, and uses semantic knowledge to determine when this implies that there is a contradiction. Harabagiu et al~\cite{Harabagiu2006} look for contradictions where one claim is a negated paraphrase of another. The RTE-3 Recognizing Textual Entailment challenge~\cite{Giampiccolo2007} included an optional contradiction detection task, allowing different groups building contradiction detection algorithms to compare their results. 
 
-Detecting contradictions has proven to be a hard problem~\cite{Giampiccolo2007}. Much of this difficulty comes from the fact that one typically needs deep semantic and contextual knowledge to determine whether two statements that look like they might contradict each other actually do. For example ``George Bush is married to Barbara Bush'' does not contradict ``George Bush is married to Laura Bush'' because there is more than one George Bush. ``Alan Turing was born in England'' does not contradict ``Alan Turing was born in London'' because London is in England. ``It is raining is San Francisco'' does not contradict ``It is not raining in San Francisco'' if the statements were made at different times. 
+Detecting contradictions has proven to be a hard problem~\cite{Giampiccolo2007}. Much of this difficulty comes from the fact that one typically needs deep semantic and contextual knowledge to determine whether two statements that look like they might contradict each other actually do. 
+\jma{Two instances of the same phrase may have the same sense, but a different reference. Or two different phrases may refer to the same thing.}
+For example ``George Bush is married to Barbara Bush'' does not contradict ``George Bush is married to Laura Bush'' because there is more than one George Bush. ``Alan Turing was born in England'' does not contradict ``Alan Turing was born in London'' because London is in England. ``It is raining is San Francisco'' does not contradict ``It is not raining in San Francisco'' if the statements were made at different times. 
 
-We detect disputes rather than contradictions. Rather than looking for claims that contradict each other, we look for evidence that people believe that there is a contradiction and that this contradiction is important. One advantage of looking for disputes rather than contradictions is that this allows humans to do the hard work of identifying contradictions and deciding whether they are important. If a page says ``Falsely claimed that George Bush is married to Barbara Bush'' then that suggests that the contradiction with ``George Bush is married to Laura Bush'' is likely to be genuine. The corresponding disadvantage is that if one looks for disputes, one will only detect contradictions that humans have found and believe are important.
+We detect disputes rather than contradictions. Rather than looking for claims that contradict each other, we look for %evidence that people
+\jma{linguistic clues that writers} believe that there is a contradiction and that this contradiction is important. One advantage of looking for disputes rather than contradictions is that this allows humans to do the hard work of identifying contradictions and deciding whether they are important. 
+% jma better to use an example that really is false
+If a page says ``Falsely claimed that George Bush is married to Barbara Bush'' then that suggests that the contradiction with ``George Bush is married to Laura Bush'' is likely to be genuine. The corresponding disadvantage 
+\jma{would be that if one looks for disputes, one would} 
+%is that if one looks for disputes, one will 
+only detect contradictions that humans have found and believe are important.
 
 Perhaps more importantly, for our purposes disputes are more interesting than contradictions. We are interested in the social side of dispute. We want to know who disagrees with who, why they disagree, and what they think is important. 
 
@@ -204,7 +230,10 @@ Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,P
   \caption{Some of the patterns we use to find disputed claims}
 \end{figure}
 
-We implemented a three-stage process to build our corpus of disputed claims, each described in the following Sections. We first create a set of lexical patterns such as ``the misconception that'' and ``it is not the case that'' (Section~\ref{patterns}). We then search the Web for these patterns (Section~\ref{searchpattern}). Finally, we filter the resulting strings to give only those that resemble unambiguous disputed claims (Section~\ref{filterclaim}).
+We implemented a three-stage process to build our corpus of disputed claims, each described in the following Sections. We first create a set of lexical patterns such as ``the misconception that'' and ``it is not the case that'' (Section~\ref{patterns}). We then search the Web for these patterns (Section~\ref{searchpattern})
+\jma{to collect strings containing them followed by a clause that is likely to be a disputed claim}. 
+
+Finally, we filter the resulting strings to give only those that resemble unambiguous disputed claims (Section~\ref{filterclaim}).
 
 \begin{figure*}[tb]
 \begin{center}
@@ -230,10 +259,12 @@ We implemented a three-stage process to build our corpus of disputed claims, eac
 
 We hand-crafted a set of {\bf 54} patterns that we hypothesize may indicate that a claim $S$ is disputed, such as ``false claim that $S$'' or or ``it is not true that $S$''. Figure~\ref{templates} shows some of the patterns we use.
 
+% \jma{Remove this paragraph?}
 This is an instance of template inference (aka pattern matching), a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for templates such as ``$X$ such as $Y$'' to infer hyponyms, and Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events. TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
 These methods differ on how {\bf finish here}
 \x{add more related work here}
 \todo{add more related work here}
+
 
 In this work we start with an initial set of manually crafted search patterns. We then identified additional templates by searching for the text of known disputed claims, and observing what text commonly occurred as a prefix of a known disputed claim. From this set of candidate prefix patterns, we manually selected additional patterns. 
 
@@ -241,11 +272,21 @@ This is an instance of template inference (aka pattern matching), a method that 
 
 Like several previous authors~\cite{Girju2003,Snow2005} we identified new patterns by searching for known disputed claims. We searched for claims we knew to be disputed, recorded the text patterns that frequently surrounded them on web pages, and then manually chose those patterns that made sense to us. 
 
+\include{modals}
+
+%%% move this paragraph to the end of the section. 
+
 Figure~\ref{templates} shows a subset of the {\bf 54} patterns that we used. 
 For each pattern, the {\it frequency} is the number of pages that Yahoo estimates contain this pattern. The {\it precision} is an estimate of the proportion of text strings matched by the pattern that are unambiguous disputed claims. We discuss precision further in Section~\ref{filterclaim}.
 
 
-Not all patterns have exactly the same meaning. We grouped our patterns into three loose group, based on manual inspection of the pages that use them (Figure~\ref{templates}):
+Not all patterns have exactly the same meaning. We grouped our patterns into three loose 
+\jma{groups}, based on manual inspection of the pages that use them (Figure~\ref{templates}):
+
+% jma thinks this could be simply described as three epistemic cases: 
+% 1) I don't believe it
+% 2) Someone else believes it (and I don't)
+% 3) Some else doesn't believe it (and I do)
 
 \begin{itemize}
  \item {\bf False:} The author believes the claim is wrong
@@ -281,17 +322,27 @@ Including the date in the search also provides us with a light-weight way to sam
 
 Searching the web for our patterns yields a collection of strings. From this collection, we want to filter out any strings that are not making a falsifiable claim, and any strings that make a claim that is ambiguous.
 
-Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we might want to filter some of them out. a chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might by ambiguous what entities it is referring to (case 3).
+% jma make this an un-numbered list? 
+Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we might want to filter some of them out. 
+%a 
+\jma{A} chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might 
+\jma{otherwise be ambiguous about}
+%by ambiguous 
+what entities it is referring to (case 3).
 
-The {\it P} column in Figure~\ref{templates} shows the percentage of the strings that match each pattern that we estimate to be unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and unambigous.
+The {\it P} column in Figure~\ref{templates} shows the
+\jma{precision for different patterns as the}
+ percentage of the strings that match each pattern that we estimate to be unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and \jma{unambiguous}.
 
 Whether a claim is unambiguous can be highly subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
 
-We built a statitical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Bayesian classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
+We built a \jma{statistical} classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. We used a simple Bayesian classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and pos-tag of the first and second words.
 
 The {\it A} column in Figure~\ref{templates} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. In each case, we trained the classifier on the data set for the other patterns in the same group and then tested its performance on the result for that pattern. 
 
-We can observe that the patterns in the ``something false'' group perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. 
+We can observe that the patterns in the ``something false'' group 
+\jma{ have higher coverage and}
+perform much better than the patterns in ``plausible to not believe it'' group, but the ``plausible to not believe it'' group has a lot more hits. 
 
 In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by either two noun phrases or a noun phrase and an adjective. 
 
@@ -321,7 +372,9 @@ Dispute Finder is one such agent that we are developing to provide real-time dis
 
 Dispute analysis agents that run in the background represent another application we see for a corpus of disputed claims. Such agents could be trained with information regarding the books, journals, and news articles a user reads. It would then be able to track these subjects and alert the user when a previously-read source is now disputed. It could also track a set of topics and tell the user when something new is disputed about a topic. A background dispute analysis agent would thus serve as an automated research assistant.
 
-A third category of applications could be broadly classified as research tools: agents which allow users to explore what is disputed about a particular topic, or to more broadly examine the zeitgeist of disputes. As an increasing proportion of human knowledge is brought to the web, these tools will be increasingly important in sociological and historical research.
+A third category of applications could be broadly classified as research tools: agents which allow users to explore what is disputed about a particular topic, or to more broadly examine the %zeitgeist 
+\jma{social dynamics of of disputes on the web.}
+As an increasing proportion of human knowledge is brought to the web, these tools will be increasingly important in sociological and historical research.
 
 
 \section{Analysing the Data}
