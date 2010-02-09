@@ -28,6 +28,23 @@ function filter_snippets(snippets){
 	return filtered;
 }
 
+function thinklink_test_performance(){
+	var start = (new Date).getTime();
+	var count = 0;
+	var end = (new Date).getTime();
+	while(end - start < 2000){
+		//var marked = global_marked;
+		//for(var i = 0; i < marked.length; i++){
+			//unmark_snippet(marked[i]);
+		//}
+		find_phrases(content.document);
+		count += 1.0;
+		end = (new Date).getTime();
+	}
+	var one_time = (end-start)/count;
+	alert("Time to mark page = "+one_time);
+}
+
 function update_highlights(){
 	var marked = content.document.thinklink_marked;
 	content.document.disputefinder_done = true;

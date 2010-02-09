@@ -104,7 +104,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8.5cm]{pictures/highlight_abortion.png}
+	\includegraphics[width=6cm]{pictures/highlight_vaccine_shadow.png}
 	\caption{Dispute Finder highlights text snippets that make disputed claims.}
 	\label{highlight}
 	\end{center}
@@ -112,7 +112,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7cm]{pictures/popup_abortion_shadow.png}
+	\includegraphics[width=7cm]{pictures/popup_vaccine_shadow.png}
 	\caption{Click on a highlighted snippet to see a popup interface with articles arguing for and against the claim.}
 	\label{claimview}
 	\end{center}
@@ -184,7 +184,7 @@ Several Sensemaking, Decision Support, and Argumentation tools allow a user to a
 
 These tools allow a user to mark up the facts made by a single document, but do not provide facilities for a user to mark up large numbers of documents as being the same claim, or to automatically inform a user when other sources disagree with what they are reading.
 
-There are also several tools that find pages write about the same topic with different slants, rather than looking at the specific claims a page makes. News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader perspective of the issue. 
+There are also several tools that find pages written about the same topic with different slants, rather than looking at the specific claims a page makes. News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader perspective of the issue. 
 Services such as Skewz.com and Newstrust.net allow users to rate news articles for bias. Skewz rates stories as being either liberal or conservative and encourages readers to read what the other side is thinking. Newstrust allows users to rate news articles for quality and objectivity. 
 
 On Wikipedia, WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that are statistically likely to be reverted, based on how recently they were written and the track-record of the author, Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is, and Wiki Scanner\footnote{http://wikiscanner.virgil.gr} finds cases where a Wikipedia edit has been made by someone with a conflict of interest. These tools have a similar aim to Dispute Finder, but are limited to Wikipedia.
@@ -216,7 +216,7 @@ Creating a tool to manage disputed information requires designers to address a n
 \item[Determining Trustworthy Sources:] What sources should we consider ``trustworthy'' in the sense that their opinions are worth presenting to the user, and things that they disagree with should be highlighted as disputed. There is a trade-off between showing a user sources that they will trust, and showing them sources that will expose them to a new point of view.
 \end{description}
 
-These challenges are not unique to dispute finder; indeed they apply to any tool that informs a user about disputed information and helps users interpret this disputed information.
+These challenges are not unique to Dispute Finder; indeed they apply to any tool that informs a user about disputed information and helps users interpret this disputed information.
 
 In the rest of this section, we discuss the various alternative solutions that we explored for each of these problems, and our experiences with the approaches that we implemented and tested.
 
@@ -321,7 +321,11 @@ A further advantage of the client-side approach is that it avoids the need for t
 
 \subsubsection{Textual Entailment}
 
-Detecting entailment between texts is a semantic analysis problem. Our client side entailment method uses the standard Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006} that is a common baseline to which other algorithms are often compared~\cite{Braz}. Our implementation divides the page into sentences, strips out stop-words, does stemming, and then looks for sentences that contain the keywords contained in a paraphrase of a known claim. If the claim contains a negation word (e.g. not, never, can't) then so must the matching sentence. To improve performance, rather than always running the LLM algorithm on every sentence on every page the user browses, the client starts by quickly scanning the page for ``hot terms'' such as ``Global Warming'' that are known to appear in disputed claims. The hot terms are selected such that every claim contains at least one hot term. If a hot term is found, then the sentence that contained the hot term compared against all claims about that hot term.
+Detecting entailment between texts is a semantic analysis problem. Our client side entailment method uses a simple Local Lexical Matching (LLM) algorithm~\cite{Jijkoun2006}, similar to those that are often used as a baseline to which other algorithms are often compared~\cite{Braz}. Our implementation divides the page into sentences, strips out stop-words, applies a regular expression stemmer, and then looks for sentences that contain all the non stop-words contained in one of the paraphrases of a known claim. If the claim contains a negation word (e.g. not, never, can't) then so must the matching sentence. 
+
+To improve performance, rather than running the LLM algorithm for every pair of sentences and paraphrases, we compare each sentence with every paraphrase simultaneously by searching for words in order of their rareness. For each paraphrase, we sort the words in order of their rareness in Wikipedia, and then assemble a set that contains the rarerst word in every known paraphrase. If a sentence contains one of these rare words, we create a (memoized) set that contains the second-rarest word that appears in each of the paraphrases that contained the first word and then check whether the sentence contains any of these words. We repeat this process until we find a claim paraphrase such that all the non stop-words in the paraphrase are contained in the sentence.
+
+The combination of a simple algorithm and a optimized implementation allows us to check for textual entailment between every sentence on every page a user browses and every claim paraphrase in our database with only moderate slowdown. On a 2.33Ghz Core2 processor, Dispute Finder is able to check for disputed claims on the New York Times front page in 50 milliseconds, and is able to check the Wikipedia page on Global Warming in 127 milliseconds. Moreover, to further hide this latency from users, Dispute Finder checks for disputed claims asynchronously in the background rather than forcing the user to wait. Note however that these figures are for a database with only 2,609 disputed claims. It remains to be seen how our algorithm will scale to a database with millions of disputed claims.
 
 LLM is far from being state of the art and many more sophisticated textual entailment algorithms exist. Modern approaches include treating the sentence as a logical formula and attempting a logical proof~\cite{Bayer2001,Bos2005}, parsing each phrase into a syntax tree and using syntax heuristics~\cite{Snow2006}, inferring inference rules that can transform one sentence into another while preserving meaning~\cite{Lin2001,Dinu2009,Bhagat2009}, and using Bayesian inference to infer whether one phrase looks like the kind of phrase that would have included each word in the other phrase~\cite{Glickman2005}. Tools such as AuContraire~\cite{Ritter} focus specifically on detecting contradictions. Several tools rely on an underlying information extraction tool such as TextRunner~\cite{Etzioni2008}.
 
@@ -391,7 +395,7 @@ Dispute Finder also provides an API that allows other sites to determine whether
 
 \subsection{Helping Users Interpret Claims}
 
-When a user clicks on a highlighted snippet, Dispute Finder displays a popup pane with information intended to help the user determine whether there are alternative points of view that they should take seriously, and whether there are articles on this topic that they should read. In our current implementation, the popup interface shows lists of articles that support or oppose the claim (Figure~\ref{article_list}). We also implemented and tested an interface that contained a user-editable argumentation graph; however we found that users had difficulty creating such graphs and were more interested in {\it who} disagreed with a claim than {\it why} people disagreed with it.
+When a user clicks on a highlighted snippet, Dispute Finder displays a popup pane with information intended to help the user determine whether there are alternative points of view that they should take seriously, and whether there are articles on this topic that they should read. In our current implementation, the popup interface shows lists of articles that support or oppose the claim (Figure~\ref{claimview}). We also implemented and tested an interface that contained a user-editable argumentation graph; however we found that users had difficulty creating such graphs and were more interested in {\it who} disagreed with a claim than {\it why} people disagreed with it.
 
 We could have omitted this claim-information feature and still had a useful system. Once a user sees that something is disputed, they could use an alternative service, such as a search engine, Wikipedia, Politifact or Snopes, to find further information about the claim. There are however several reasons why it makes sense for Dispute Finder to maintain information about a disputed claim:
 
@@ -404,20 +408,10 @@ We could have omitted this claim-information feature and still had a useful syst
 
 We prototyped and tested two different ways of showing a user alternative points of view to the disputed claim they are looking at:
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=6cm]{pictures/popup_abortion_shadow.png}
-	\caption{Article List interface for a disputed claim}
-	\label{article_list}
-	\end{center}
-\end{figure}
-
-
-
 \begin{description}
 \item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them a simple user-editable argumentation graph. This graph is inspired by IBIS~\footnote{Issue Based Information System} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of articles that argue in favor of that claim (Figure\ref{popup_graph})
 
-\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{article_list}). For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting ``use as evidence'' from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
+\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{claimview}). For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting ``use as evidence'' from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
 \end{description}
 
 The argumentation graph makes it easier to see {\it why} a claim is disputed, while the article lists make it easier to see {\it who} supports or opposes the claim. 
@@ -465,7 +459,7 @@ Other researchers have looked at ways to determine what sources a user will trus
 BJ Fogg et al~\cite{Fogg2003} found that the most important factor was whether a web site had a professional-looking design. Gill and Arts~\cite{Gil2006} identified on a different set of factors, including topic (a medical site may not be trusted for advice on car repair), popularity (does everyone else use this) and authority.
 
 
-\section{Evaluation}
+\section{User Studies}
 \label{sec:interviews}
 \label{user-studies}
 
@@ -491,7 +485,7 @@ Each batch of users was shown a different iteration of the Dispute Finder design
 
 Study sessions took approximately forty five minutes. Participants were seated at a workstation with the Firefox browser augmented with the Dispute Finder extension. They were asked to view pages that had highlighted claims on them, and to attempt to add new disputed claims to our database.
 
-We also conducted interviews with most of our user study participants, and five additional people, asking them how they use the web to form and promote their opinions.
+We also conducted interviews with most of our user study participants, and six additional people, asking them how they use the web to form and promote their opinions.
 
 \todo{Need to finish the third wave of user studies}
 
@@ -532,7 +526,7 @@ Several users created claims that had ambiguous meanings. One user entered a dis
 
 When adding sources that support or oppose a claim, a user would frequently mark the first paragraph of the article rather than seeking out the sentence that best summarized the argument that the article was using against the claim. In some cases the first paragraph is indeed the right text to select, since the first paragraph is typically a summary of the core argument made by the articles; however there was often a better choice available. Several users wanted to mark up a table or image as the summary of an article, which is not currently supported.
 
-When using the article list interface (Figure~\ref{article_list}), several users got confused about whether an article supported or opposed a claim that was phrased negatively. For example a user would mark an article that opposed global warming as opposing the claim ``global warming is bad'' because the article opposed global warming.
+When using the article list interface (Figure~\ref{claimview}), several users got confused about whether an article supported or opposed a claim that was phrased negatively. For example a user would mark an article that opposed global warming as opposing the claim ``global warming is bad'' because the article opposed global warming.
 
 Several users expressed an interest in being able to add a disputed claim without having to find opposing evidence. One user said that opposing a claim required ``too many clicks'' and they wanted to be able to just vote against a claim without having to say why or find evidence. Users did however recognize that they would want to see opposing evidence as a reader.
 

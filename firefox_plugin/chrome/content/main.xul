@@ -29,6 +29,8 @@
     <menupopup id="menu_HelpPopup">
 		<menuseparator/>
         <menuitem label="Dispute Finder Help" oncommand="window.open('http://disputefinder.cs.berkeley.edu')"/>
+        <menuitem label="Measure Dispute Finder Performance" oncommand="thinklink_test_performance()"/>
+
     </menupopup>
 
 
