@@ -309,15 +309,17 @@ There is a trade-off between precision and recall. We want to maximize the likel
 \item[Client-side entailment:] The browser extension runs a simple textual entailment algorithm over all sentences on every web page the user browses, checking to see if any sentence on the page entails any claim in the database (Figure~\ref{nlp_client_server}). A user can enter additional paraphrases of a claim to help the entailment algorithm (Figure~\ref{paraphrases}). This is the implementation used by the released version of Dispute Finder.
 \end{description}
 
-Explicit page marking has the highest precision, but the poorest coverage. Since a user is looking at the page in its entirety, they can read the snippet in context and make a good judgment about whether the snippet is indeed making the claim. However the manual effort required per page makes it difficult for this approach to scale. We also found that it can also be hard to motivate a user to mark snippets if they think that it is unlikely that another user with the Dispute Finder extension will read exactly this page. This same problem has hindered the adoption of numerous web page annotation tools.
+Explicit page marking has the highest precision, but the poorest coverage. Since a user is looking at the page in its entirety, they can read the snippet in context and make a good judgment about whether the snippet is indeed making the claim. However the manual effort required per page makes it difficult for this approach to scale. We also found that it can also be hard to motivate a user to mark snippets if they think that it is unlikely that another user with the Dispute Finder extension will read exactly this page. This problem has hindered the adoption of many web annotation tools.
 
-Bulk page marking trades off some precision for better coverage. When a user searches for a phrase, they can quickly find hundreds of snippets and mark them by clicking on them. Since they are reading the snippet out of context, they are more likely to mark a phrase incorrectly. 
+Bulk page marking trades off some precision for better coverage. When a user searches for a phrase, they can quickly find hundreds of snippets and mark them by clicking on them, but since they are reading the snippet out of context they are more likely to mark a phrase incorrectly. 
 
 Server side classification trades off more precision for more coverage. The classifier can mark more pages than a user could ever mark manually, and can keep marking new pages as they appear, but it is inevitably less accurate than a human.
 
-Client side entailment gets the most coverage. Since the classification algorithm is run inside the client, the client can highlight snippets on pages that the server has not examined. This is particularly important for news pages, which are frequently read only a few minutes after they are posted. Moreover, the client-side approach can highlight snippets on web pages that would not be accessible to the server, such as web-based email, and intranet sites. 
+Client side entailment gets the most coverage, but the worst precision. Since the classification algorithm is run inside the client, the client can highlight snippets on pages that the server has not examined. This is particularly important for news pages, which are frequently read only a few minutes after they are posted. Moreover, the client-side approach can highlight snippets on web pages that would not be accessible to the server, such as web-based email, and intranet sites. The flip side is that the classification algorithm needs to be simple enough to run on the client without noticably slowing down the web browser, and the algorithm is limited to only being able to use whatever data can be downloaded to the client.
 
-A further advantage of the client-side approach is that it avoids the need for the client to give the server any information about what pages the user is browsing. The list of all URLs and snippets that make disputed claims is too large and updates too frequently for it to be practical for the client to store it locally, so the client instead asks the server for information about each URL the user browses, reducing user privacy. By contrast, the list of paraphrases is small enough and changes slowly enough that the client can maintain its own local copy of the database, removing the need for the client to tell the server what pages the user is browsing. As our database grows bigger, it will of course become more challenging to maintain a local copy in the browser extension.
+A further advantage of the client-side approach is that it avoids the need for the client to give the server any information about what pages the user is browsing. The list of all URLs and snippets that make disputed claims is too large and updates too frequently for it to be practical for the client to store it locally, so any URL-based approach requires that the client asks the server for information about each URL the user browses, reducing user privacy. By contrast, the list of paraphrases is small enough and changes slowly enough that the client can maintain its own local copy of the database, removing the need for the client to tell the server what pages the user is browsing. 
+
+Our currently deployed database of 2,609 disputed claims takes up around 500 kilobytes and an experimental automatically-generated database of 1.1 million disputed claims takes up 50 megabytes compressed. In our current implementation, the client synchronizes with the server by periodically downloading a complete database, but in future versions we intend that the client should only download those claims that have changed since the last update. As our database grows bigger, it will of course become more challenging to maintain a local copy in the browser extension.
 
 \subsubsection{Textual Entailment}
 
@@ -409,16 +411,16 @@ We could have omitted this claim-information feature and still had a useful syst
 We prototyped and tested two different ways of showing a user alternative points of view to the disputed claim they are looking at:
 
 \begin{description}
-\item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them a simple user-editable argumentation graph. This graph is inspired by IBIS~\footnote{Issue Based Information System} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, and Cohere~\cite{Shum2008}. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of articles that argue in favor of that claim (Figure\ref{popup_graph})
+\item[Argumentation graph:] When the user clicks on a snippet that makes a disputed claim, Dispute Finder shows them a simple user-editable argumentation graph. This graph is inspired by IBIS~\footnote{Issue Based Information System} tools such as gIBIS~\cite{Conklin1987a}, Compendium~\cite{Selvin2001}, Zeno~\cite{Gordon1997}, Cohere~\cite{Shum2008}, and Debategraph.org. Each claim is linked to claims that represent alternative points of view, and claims that support that point of view. Each claim also has a list of articles that argue in favor of that claim (Figure\ref{popup_graph})
 
-\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{claimview}). For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting ``use as evidence'' from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
+\item[Article lists:] Dispute Finder shows the user two lists of articles, one of which contains articles arguing in favor of the claim, and the other of which contains articles arguing against the claim (Figure~\ref{claimview}). This is similar to the lists of articles collected by DiscourseDB.org. For each article, the interface shows a summary sentence that captures the core argument used by the article. A user can add any web page as a supporting article by browsing to the page, selecting ``use as evidence'' from a context menu (Figure~\ref{add_article}) and then saying what claim it supports or opposes (Figure~\ref{article_choose}).
 \end{description}
 
 The argumentation graph makes it easier to see {\it why} a claim is disputed, while the article lists make it easier to see {\it who} supports or opposes the claim. 
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/mark_evidence.png}
+	\includegraphics[width=5cm]{pictures/mark_evidence.png}
 	\caption{To add an article, select some summary text, and click ``use as evidence'' from the context menu.}
 	\label{add_article}
 	\end{center}
@@ -426,7 +428,7 @@ The argumentation graph makes it easier to see {\it why} a claim is disputed, wh
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/article_choose_claim.png}
+	\includegraphics[width=5cm]{pictures/article_choose_claim.png}
 	\caption{Choose how to connect an article with a claim.}
 	\label{article_choose}
 	\end{center}
