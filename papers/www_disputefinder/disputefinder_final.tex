@@ -112,7 +112,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7cm]{pictures/popup_vaccine_shadow.png}
+	\includegraphics[width=7.5cm]{pictures/popup_vaccine_shadow.png}
 	\caption{Click on a highlighted snippet to see a popup interface with articles arguing for and against the claim.}
 	\label{claimview}
 	\end{center}
@@ -238,9 +238,12 @@ This database should not contain contain everything that has ever been disputed 
 
 Currently most of our claims are automatically mined from Snopes and Politifact. Both of these sites maintain well curated databases of disputed claims, together with information about them. Snopes has good coverage of urban myths, and Politifact has good coverage of claims made by American politicians. In the future we plan to crawl other sites that cover other kinds of disputed claims (e.g. medical claims) and to provide an API to allow any site to provide a well-structured feed that we can use. At the time of writing, Dispute Finder has imported 1,457 claims from Snopes and 595 claims from Politifact.
 
-One weakness of the automatic import approach is that the claims found on these sites are often phrased differently to the way they commonly appear on the web. For example many of the claims on Politifact are exact quotes such as ``One-third of the health care dollar goes to no such thing as health care; it goes to the insurance companies''. In practice, it is often necessary for users to enter several simple paraphrases for a claim before it can be reliably detected.
+One weakness of the automatic import approach is that the claims on these sites are often phrased differently to the way they commonly appear on the web. For example many of the claims on Politifact are exact quotes such as ``One-third of the health care dollar goes to no such thing as health care; it goes to the insurance companies''. In practice, it is often necessary for users to enter several simple paraphrases for a claim before it can be reliably detected.
 
-Dispute Finder also provides users means to add their own disputed claims using the Dispute Finder web interface (Figure~\ref{add_claim}). The web interface is modeled after common issue-reporting software such as Uservoice.com and Bugzilla.org. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing article. At the time of writing, users have added 557 claims, and 140 users have added at least one claim.
+Dispute Finder also provides users means to add their own disputed claims using the Dispute Finder web interface (Figure~\ref{add_claim}). The web interface is modeled after common issue-reporting software such as Uservoice.com and Bugzilla.org. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing article. 
+At the time of writing, users have added 557 claims, and 140 users have added at least one claim.
+
+To reduce abuse, we allow a user to flag junk claims, false paraphrases, or linked articles that are not actually arguing against the disputed claim. A user should not flag a claim because they believe it is not disputed, since the level of dispute is a function of the articles that disagree. Flagging is currently moderated manually.
 
 %The automatic import bootstraps Dispute Finder with a useful database of disputed claims without needing a large active user community, and the crowd-sourcing aspect allows users to clean up claims that were not phrased well when imported, and add claims that are not part of any of our input feeds.
 
@@ -261,7 +264,7 @@ There is a trade-off between precision and recall. We want to maximize the likel
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/mark_disputed.png}
+	\includegraphics[width=5cm]{pictures/mark_disputed.png}
 	\caption{Explicit page marking: select the snippet and click ``this is disputed'' on the context menu.}
 	\label{mark_disputed}
 	\end{center}
@@ -269,7 +272,7 @@ There is a trade-off between precision and recall. We want to maximize the likel
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7cm]{pictures/training2.png}
+	\includegraphics[width=6cm]{pictures/training2.png}
 	\caption{Bulk page marking and server-side classification: classifier guesses are shown below the choice buttons.}
 	\label{training}
 	\end{center}
@@ -438,7 +441,7 @@ The argumentation graph makes it easier to see {\it why} a claim is disputed, wh
 
 When using the article list approach, several different articles may be making essentially the same argument and it may not be obvious that one of the articles is making a point that the user had not come across before. The argumentation graph allows the user to easily see what the range of different opinions is, and quickly see if there is an argument that they have not encountered before. 
 
-A significant weakness of the argumentation graph approach is that a good argumentation graph takes significantly more effort to build than a simple list of articles. In our prototype the argumentation graph was built entirely by users and we found that our users had difficulty creating graphs that were useful for other users. There were two problems here: first, breaking down all the different arguments for and against a claim takes much more time than just adding articles to a list, particularly given that a single article will often make several different opposing points; second, we found that users had difficulty creating well structured argumentation graphs, as we outline in Section~\ref{user-studies}. This result is consistent with previous studies~\cite{Isenmann1997}.
+A significant weakness of the argumentation graph approach is that a good argumentation graph takes significantly more effort to build than a simple list of articles. In our prototype the argumentation graph was built entirely by users and we found that our users had difficulty creating graphs that were useful for other users. There were two problems here: first, breaking down all the different arguments for and against a claim takes much more time than just adding articles to a list, particularly given that a single article will often make several different points; second, we found that users had difficulty creating well structured argumentation graphs, as we outline in Section~\ref{user-studies}. This result is consistent with previous studies~\cite{Isenmann1997}.
 
 Another point in favor of using a simple list of sources is that most of the users we talked to seemed to be more interested in {\it who} disputed a claim, rather than what their argument was. For example, if a user is a reader of the New York Times, and they hear that the New York Times argues against the claim they are reading, then they will take the dispute much more seriously than if the key article arguing against the claim is from a source they are not familiar with. Moreover, we found that when a user wanted to understand {\it why} a claim is disputed, they preferred to read whichever article seemed to be most credible, rather than browsing an argumentation graph.
 
@@ -478,7 +481,7 @@ Each batch of users was shown a different iteration of the Dispute Finder design
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{pictures/popup_graph_crop.png}
+	\includegraphics[width=7.5cm]{pictures/popup_graph_crop.png}
 	\caption{Argumentation graph interface for a disputed claim}
 	\label{popup_graph}
 	\end{center}
