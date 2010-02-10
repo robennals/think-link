@@ -128,9 +128,9 @@ In recent years, we have seen the emergence of a new class of tools that help us
 A user can install Dispute Finder as an extension to the Firefox\footnote{http://www.mozilla.org/firefox} web browser. When installed Dispute Finder will highlight snippets of text that make disputed claims (Figure~\ref{highlight}). 
 If a user clicks on a highlighted snippet, Dispute Finder will show articles that put forward alternative points of view,  each of which is from a source we believe the user might trust (Figure~\ref{claimview}). 
 
-Dispute Finder consists of a server-side database and a Firefox browser extension. The database contains a set of known disputed claims that frequently appear on the web. A disputed claim is a statement about the world that some people disagree with. For example ``global warming is a hoax'', ``gun control will reduce crime'', ``Eskimos have many words for snow'', or ``margarine is healthier than butter''. A claim can be stated in many ways. For example ``margarine is healthier than butter'' and ``butter is worse for you than margarine'' are {\it paraphrases} of the same claim. For each claim, the database contains links to articles on the web that support or oppose it, and hints about how to recognize that disputed claim on the web (Figure~\ref{snippet_claim_article}).
+Dispute Finder consists of a server-side database and a Firefox browser extension. The database contains a set of known disputed claims that frequently appear on the web. A disputed claim is a statement about the world that some people disagree with. For example ``global warming is a hoax'', ``gun control will reduce crime'', ``Eskimos have many words for snow'', or ``margarine is healthier than butter''. A claim can be stated in many ways. For example ``margarine is healthier than butter'' and ``butter is worse for you than margarine'' are paraphrases of the same claim. For each claim, the database contains links to articles on the web that support or oppose it, and hints about how to recognize that disputed claim on the web (Figure~\ref{snippet_claim_article}).
 
-The browser extension maintains its own local copy of the database, and scans the text on the current page for text snippets that appear to {\it entail} a claim. A snippet is a continuous region of text on a web page. A snippet is considered to {\it entail} a claim if a typical user reading that snippet would reasonably conclude that the author of the page believed the claim was true. For example ``the English have as many words for rain as the Eskimos have for snow'' {\it entails} ``Eskimos have many words for snow'', even though this claim is never stated explicitly.
+The browser extension maintains its own local copy of the database, and scans the text on the current page for text snippets that appear to entail a claim. A snippet is a continuous region of text on a web page. A snippet is considered to entail a claim if a typical user reading that snippet would reasonably conclude that the author of the page believed the claim was true. For example ``the English have as many words for rain as the Eskimos have for snow'' entails ``Eskimos have many words for snow'', even though this claim is never stated explicitly.
 
 \todo{Should we mention the API? Cut from this version as tangential}
 
@@ -238,7 +238,7 @@ This database should not contain contain everything that has ever been disputed 
 
 Currently most of our claims are automatically mined from Snopes and Politifact. Both of these sites maintain well curated databases of disputed claims, together with information about them. Snopes has good coverage of urban myths, and Politifact has good coverage of claims made by American politicians. In the future we plan to crawl other sites that cover other kinds of disputed claims (e.g. medical claims) and to provide an API to allow any site to provide a well-structured feed that we can use. At the time of writing, Dispute Finder has imported 1,457 claims from Snopes and 595 claims from Politifact.
 
-One weakness of the automatic import approach is that the claims on these sites are often phrased differently to the way they commonly appear on the web. For example many of the claims on Politifact are exact quotes such as ``One-third of the health care dollar goes to no such thing as health care; it goes to the insurance companies''. In practice, it is often necessary for users to enter several simple paraphrases for a claim before it can be reliably detected.
+One weakness of the automatic import approach is that the claims on these sites are often phrased differently to the way they commonly appear on the web. For example many of the claims on Politifact are exact quotes such as ``One-third of the health care dollar goes to no such thing as health care; it goes to the insurance companies''. 
 
 Dispute Finder also provides users means to add their own disputed claims using the Dispute Finder web interface (Figure~\ref{add_claim}). The web interface is modeled after common issue-reporting software such as Uservoice.com and Bugzilla.org. It first encourages the user to search the existing database to see if their claim already exists, and then allows them to create a new claim. When the claim is first added it is marked with a warning, informing the user that the claim will not be highlighted for other users until they have added at least one opposing article. 
 At the time of writing, users have added 557 claims, and 140 users have added at least one claim.
@@ -264,7 +264,7 @@ There is a trade-off between precision and recall. We want to maximize the likel
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=5cm]{pictures/mark_disputed.png}
+	\includegraphics[width=6cm]{pictures/mark_disputed.png}
 	\caption{Explicit page marking: select the snippet and click ``this is disputed'' on the context menu.}
 	\label{mark_disputed}
 	\end{center}
@@ -272,7 +272,7 @@ There is a trade-off between precision and recall. We want to maximize the likel
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/training2.png}
+	\includegraphics[width=7cm]{pictures/training2.png}
 	\caption{Bulk page marking and server-side classification: classifier guesses are shown below the choice buttons.}
 	\label{training}
 	\end{center}
@@ -281,14 +281,14 @@ There is a trade-off between precision and recall. We want to maximize the likel
 \begin{figure}[t]
 	\begin{center}
 	\includegraphics[width=8cm]{pictures/nlp_client_server2.png}
-	\caption{Client-side entailment: the entailment algorithm runs on the client, using a claim database downloaded from the server.}
+	\caption{Client-side entailment: matching happens on the client, using a database downloaded from the server.}
 	\label{nlp_client_server}
 	\end{center}
 \end{figure}
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{pictures/paraphrases.png}
+	\includegraphics[width=8cm]{pictures/paraphrases2.png}
 	\caption{Users can enter paraphrases of a claim to help the entailment algorithm.}
 	\label{paraphrases}
 	\end{center}
@@ -431,7 +431,7 @@ The argumentation graph makes it easier to see {\it why} a claim is disputed, wh
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=5cm]{pictures/article_choose_claim.png}
+	\includegraphics[width=5.5cm]{pictures/article_choose_claim.png}
 	\caption{Choose how to connect an article with a claim.}
 	\label{article_choose}
 	\end{center}
@@ -452,7 +452,7 @@ It is possible that the best solution would be a visualization that made it easy
 
 When showing articles to a user, it is important that these be from sources that the user would be likely to trust. In the current version of Dispute Finder, a user can add any web page as a source, but users are requested to restrict themselves to pages that meet the Wikipedia criteria\footnote{http://en.wikipedia.org/wiki/Wikipedia:SOURCES} for being reliable. Good sources of articles include newspapers, universities, respected organizations, and Wikipedia itself. A user can vote on whether they think a particular article is useful, and this voting determines the order in which articles are listed. A user can also request that an article be deleted they believe the source does not meet credibility requirements, or if it is not relevant to the claim. These requests are forwarded to moderator users who have the power to delete links to articles.
 
-Unfortunately, as Pew Research discovered~\cite{PewResearch2008} when looking at TV news, while most people say they want to receive information ``without a point of view'', the sites people actually trust are often those that share the person's own point of view. It seems that ``without a point of view'' is a similar concept to ``without an accent''. Similarly, Manjou~\cite{Manjou2008} reports that people tend to measure the credibility of a source based on how well it fits with what they already believe to be true.  As a consequence, there may be little point showing liberal sources to a conservative, or vice-versa. Similarly, a global voting system can be gamed by people who vote up weak arguments against claims they support in order to hide stronger arguments. Moreover, by using moderators to decide which sources and claims are high enough quality to be presented to other users, we open ourselves up to charges of bias.
+Unfortunately, as Pew Research discovered~\cite{PewResearch2008} when looking at TV news, while most people say they want to receive information ``without a point of view'', the sites people actually trust are often those that share the person's own point of view. Similarly, Manjou~\cite{Manjou2008} reports that people tend to measure the credibility of a source based on how well it fits with what they already believe to be true.  As a consequence, there may be little point showing liberal sources to a conservative, or vice-versa. Similarly, a global voting system can be gamed by people who vote up weak arguments against claims they support in order to hide stronger arguments. Moreover, by using moderators to decide which sources and claims are high enough quality to be presented to other users, we open ourselves up to charges of bias.
 
 It may thus be better to learn what sources a particular user is likely to believe are reliable, and then adjust both what sources Dispute Finder shows to the user, and what claims are highlighted, based on this.
 
@@ -481,7 +481,7 @@ Each batch of users was shown a different iteration of the Dispute Finder design
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7.5cm]{pictures/popup_graph_crop.png}
+	\includegraphics[width=8cm]{pictures/popup_graph_crop.png}
 	\caption{Argumentation graph interface for a disputed claim}
 	\label{popup_graph}
 	\end{center}
@@ -522,7 +522,7 @@ Conversely, when adding a claim to the Dispute Finder web site, users would ofte
 
 Several users expressed confusion about how specific a claim they created should be. For example, if a snippet says ``Global temperatures will rise by X degrees by 2050'' then is that making the claim ``Global temperatures will rise'', or should the claim include the extra information? In order to make a good judgment, one needs to know the range of similar claims that are being made by other web sites, and what claims there is good evidence against. If one makes the claim too specific then one will be able to find less web pages that make it, but if one makes the claim too general then it might be harder to find solid evidence against it.
 
-Several users got confused by claims that referred to similar events at different points in time. For example, one participant in the first study marked one claim as opposing another claim when they were referring to similar incidents that occurred at different times. 
+Several users got confused by claims that referred to similar events at different points in time. For example, one participant in the first study marked one claim as opposing another  when they were referring to similar incidents that occurred at different times. 
 
 Several users created claims that had ambiguous meanings. One user entered a disputed claim about ``Wood'', meaning the guitarist ``Ronnie Wood'' of the Rolling Stones. Similar problems occurred with claims that were specific to a particular country, or a particular point in time. 
 
