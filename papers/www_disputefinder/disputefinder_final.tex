@@ -1,10 +1,12 @@
 %\documentclass{article}
-\documentclass{www2010-submission}
+\documentclass{www2010-accepted}
 \usepackage{times}
 %\usepackage{uist}
 \usepackage{url}
 \usepackage{graphics}
 \usepackage{color}
+%\usepackage{letterpaper}
+
 %
 %\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
 %\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
@@ -16,10 +18,16 @@
 \newcommand{\idea}[1]{}
 \newcommand{\node}[1]{}
 
+\widowpenalty=1000
+\clubpenalty=1000
 
 \begin{document}
 
-\toappear
+%\special{papersize=8.5in,11in}
+%\setlength{\pdfpageheight}{\paperheight}
+%\setlength{\pdfpagewidth}{\paperwidth}
+
+%\toappear
 
 \bibliographystyle{plain}
 
@@ -61,7 +69,7 @@
 
 %\sloppy
 
-\additionalauthors{Tye Rattenbury and Tad Hirsch, Intel Research Principles and Practices,\texttt{[tye.rattenbury,tad.hirsch]@intel.com}}
+\additionalauthors{Tye Rattenbury and Tad Hirsch, Intel Research Principles and Practices,\texttt{[tye.l.rattenbury,tad.hirsch]@intel.com}}
 
 
 \maketitle
@@ -104,7 +112,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=6cm]{pictures/highlight_vaccine_shadow.png}
+	\includegraphics[width=7.5cm]{pictures/highlight_vaccine_shadow.png}
 	\caption{Dispute Finder highlights text snippets that make disputed claims.}
 	\label{highlight}
 	\end{center}
@@ -112,7 +120,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=7.5cm]{pictures/popup_vaccine_shadow.png}
+	\includegraphics[width=8.5cm]{pictures/popup_vaccine_shadow_big.png}
 	\caption{Click on a highlighted snippet to see a popup interface with articles arguing for and against the claim.}
 	\label{claimview}
 	\end{center}
@@ -136,15 +144,6 @@ The browser extension maintains its own local copy of the database, and scans th
 
 In this paper, we describe the design of Dispute Finder, the constituent problems that must be solved to make a tool like Dispute Finder work well, the trade-offs we encountered between different design choices, and our experiences testing Dispute Finder with users.
 
-\begin{figure}[tb]
-	\begin{center}
-	\includegraphics[width=8.5cm]{pictures/snippet_claim_article_fancy3.png}
-	\caption{Snippets entail claims. Claims are entailed or contradicted by articles.}
-	\label{snippet_claim_article}
-	\end{center}
-\end{figure}
-
-
 \subsection{Personas}
 
 If users are going to adopt Dispute Finder, it is important that it solves a real need. We used interviews to construct two personas which model the two ways that we expect a user to use Dispute Finder.
@@ -159,6 +158,15 @@ Many users fall into neither of these two personas. If a user does not regularly
 \section{Background and Related Work}
 
 There is ample evidence that at least some people are skeptical about the information they read and would like to know about alternative points of view that are supported by sources that they trust. This has lead to a growing set of tools that aim to help users deal with disputed and biased information.
+
+
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=8.5cm]{pictures/snippet_claim_article_fancy3.png}
+	\caption{Snippets entail claims. Claims are entailed or contradicted by articles.}
+	\label{snippet_claim_article}
+	\end{center}
+\end{figure}
 
 According to Pew Research~\cite{PewResearch2008}, a substantial proportion of people regularly get information from sources that they do not fully trust. Their 2008 survey found that 33\% of Democrats regularly watch Fox News, and yet only 19\% believe all or most of what Fox News says. Similarly, 51\% of Democrats regularly watch CNN, and yet only 35\% believe all or most of what CNN says. While these figures are for TV News, rather than the web, Pew report that 48\% of web users people regularly follow search links to unfamiliar sources, and that users view online sources such as blogs with more skepticism that their print, broadcast, and cable counterparts. 
 
@@ -187,18 +195,11 @@ These tools allow a user to mark up the facts made by a single document, but do 
 There are also several tools that find pages written about the same topic with different slants, rather than looking at the specific claims a page makes. News Cube~\cite{Park2009} automatically finds articles that present different {\it aspects} of the same news story. The intention is that by reading several such aspects, the user will encounter several different ways of looking at the issue at hand, and will gained a broader perspective of the issue. 
 Services such as Skewz.com and Newstrust.net allow users to rate news articles for bias. Skewz rates stories as being either liberal or conservative and encourages readers to read what the other side is thinking. Newstrust allows users to rate news articles for quality and objectivity. 
 
-On Wikipedia, WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that are statistically likely to be reverted, based on how recently they were written and the track-record of the author, Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is, and Wiki Scanner\footnote{http://wikiscanner.virgil.gr} finds cases where a Wikipedia edit has been made by someone with a conflict of interest. These tools have a similar aim to Dispute Finder, but are limited to Wikipedia.
+On Wikipedia, WikiTrust~\cite{Adler2008a} highlights passages on Wikipedia that are statistically likely to be reverted, based on how recently they were written and the track-record of the author, Wiki Dashboard~\cite{Kittur2008} creates a visualization of the edit history of a Wikipedia article that lets a user see how contentious it is, and WikiScanner.virgil.gr finds cases where a Wikipedia edit has been made by someone with a conflict of interest. These tools have a similar aim to Dispute Finder, but are limited to Wikipedia.
 
 More generally, Dispute Finder is an example of an Open Hypermedia system~\cite{Bouvin2000,Wiil1996}. Like other Open Hypermedia systems, Dispute Finder lays an additional link structure over an existing hypertext document. In the case of Dispute Finder, the links are from disputed claims to information about those claims.
 
 Dispute Finder also has some similarity to tagging tools~\cite{Marlow2006,Golder2006}. Tagging tools allow users to collectively categorize information by associating it with a user-created set of tags. In the case of Dispute Finder, the tags are disputed claims, and the tagged entities are sentences that make those claims. 
-
-
-\todo{Improve the paraphraser UI so it shows users what pages are making the claim}
-\todo{Improve the ``see examples on the web'' UI to it shows the pages that were found with the activists training work}
-\todo{Provide a customized RSS reader and search engine that does dispute tracking. - future work?}
-\todo{Should we explicitly list what we think are our key contributions?}
-
 
 \section{Design}
 
@@ -231,7 +232,7 @@ This database should not contain contain everything that has ever been disputed 
 \begin{figure}[tb]
 	\begin{center}
 	\includegraphics[width=8cm]{pictures/add_claim_list.png}
-	\caption{A user can use this interface to add a new disputed claim manually.}
+	\caption{Interface to add a new disputed claim manually.}
 	\label{add_claim}
 	\end{center}
 \end{figure}

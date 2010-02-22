@@ -104,7 +104,7 @@ object ClaimFinder {
 			getUrlsForAllPhrasesDate(month + " " + day + " " + year)
 		}
 	}
-	
+		
 	def getUrlsForAllPhrasesDate(date : String){
 		phrases_that.foreach{phrase => 
 			System.out.print("getting urls for phrase: "+phrase+"...")
