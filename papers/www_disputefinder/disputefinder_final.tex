@@ -120,7 +120,7 @@ In recent years, we have seen the emergence of a new class of tools that help us
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8.5cm]{pictures/popup_vaccine_shadow_big.png}
+	\includegraphics[width=8.5cm]{pictures/popup_vaccine_shadow_big2.png}
 	\caption{Click on a highlighted snippet to see a popup interface with articles arguing for and against the claim.}
 	\label{claimview}
 	\end{center}
@@ -335,7 +335,8 @@ The combination of a simple algorithm and a optimized implementation allows us t
 
 LLM is far from being state of the art and many more sophisticated textual entailment algorithms exist. Modern approaches include treating the sentence as a logical formula and attempting a logical proof~\cite{Bayer2001,Bos2005}, parsing each phrase into a syntax tree and using syntax heuristics~\cite{Snow2006}, inferring inference rules that can transform one sentence into another while preserving meaning~\cite{Lin2001,Dinu2009,Bhagat2009}, and using Bayesian inference to infer whether one phrase looks like the kind of phrase that would have included each word in the other phrase~\cite{Glickman2005}. Tools such as AuContraire~\cite{Ritter} focus specifically on detecting contradictions. Several tools rely on an underlying information extraction tool such as TextRunner~\cite{Etzioni2008}.
 
-While Dispute Finder would almost certainly improve its precision and recall if it used a more sophisticated algorithm, LLM has the advantage of being simple enough to run efficiently inside a user's web browser for every page they look at without causing a noticeable slowdown. We do however believe that there is scope to use more sophisticated algorithms, particularly as processor speeds improve.
+\looseness -1
+While Dispute Finder would likely improve its precision and recall if it used a more sophisticated algorithm, LLM has the advantage of being simple enough to run efficiently inside a user's web browser for every page they look at without causing a noticeable slowdown. We do however believe that there is scope to use more sophisticated algorithms, particularly as processor speeds improve.
 
 
 \todo{Mention that we could add the +ve and -ve n-grams to the client code? Actually do this?}
@@ -482,7 +483,7 @@ Each batch of users was shown a different iteration of the Dispute Finder design
 
 \begin{figure}[tb]
 	\begin{center}
-	\includegraphics[width=8cm]{pictures/popup_graph_crop.png}
+	\includegraphics[width=7.5cm]{pictures/popup_graph_crop.png}
 	\caption{Argumentation graph interface for a disputed claim}
 	\label{popup_graph}
 	\end{center}
@@ -509,6 +510,7 @@ When browsing a page that had disputed claims highlighted, most users correctly 
 
 Most users were frustrated by the relatively poor precision and recall that Dispute Finder has at present. Several users browsed to a page that they knew contained disputed claims, and were disappointed when Dispute Finder did not highlight anything. Several users were also frustrated when Dispute Finder highlighted phrases that did not make the claim Dispute Finder indicated. If Dispute Finder is to be adopted widely then we will need to significantly improve precision and recall, by building a bigger database of disputed claims, and improving the accuracy of our textual entailment algorithm.
 
+\looseness -1
 Most people we interviewed were interested in applying Dispute Finder to particular areas that affected them (e.g. health) or that they were expected to be knowledgeable about (e.g. something relating to their work), but were less interested in applying it to pages about topics that they were less interested in. For topics that did not affect them users felt that misinformation was ``not important enough to bother with'', or that they could ``afford to be misinformed''. Users said they read about some topics (e.g. celebrity gossip) ``for entertainment'' or ``to relax'' and so they were less interested in making sure they properly understood those topics.
 
 %In the first study, a user could mark a snippet by 
