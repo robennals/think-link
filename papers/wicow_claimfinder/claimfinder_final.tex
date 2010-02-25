@@ -1,4 +1,4 @@
-\documentclass{acm_proc_article-sp}
+\documentclass{sig-alternate}
 \usepackage{times}
 \usepackage{url}
 \usepackage{graphics}
@@ -19,9 +19,15 @@
 
 %\newcommand{\maybe}[1]{}
 
-\begin{document}
+\def\shortpage{\enlargethispage{-\baselineskip}}
 
-\toappear
+\begin{document}
+\conferenceinfo{WICOW'10,} {April 27, 2010,  Raleigh, North Carolina, USA.} 
+\CopyrightYear{2010}
+\crdata{978-1-60558-940-4/10/04}
+\clubpenalty=10000
+\widowpenalty = 10000
+
 
 \bibliographystyle{plain}
 
@@ -73,7 +79,7 @@
 
 \abstract
 
-We present a method for the automatic acquisition of a corpus of disputed claims from the web. We consider a factual claim to be a {\it disputed claim} if a page on the web suggests both that the claim is false and also that other people say it is true.
+We present a method for automatically acquiring of a corpus of disputed claims from the web. We consider a factual claim to be {\it disputed} if a page on the web suggests both that the claim is false and also that other people say it is true.
 
 Our tool extracts disputed claims by searching the web for patterns such as ``falsely claimed that $X$'' and then using a statistical classifier to select text that appears to be making a disputed claim. 
 
@@ -93,6 +99,8 @@ We argue that such a corpus of disputed claims is useful for a wide range of app
   % tends to prevent words from sticking out in the margin
 
 \section{Introduction}
+
+\shortpage
 
 The web contains a vast number of pages written by a vast number of people. In many cases, these people disagree with each other, and the pages they write contain conflicting information. For users to extract reliable information from the web, it is important that they be able to determine the credibility of the information that they read. One way to determine whether information is credible is to check whether it is disputed by other sources.
 
@@ -122,7 +130,7 @@ Researchers have identified a variety of metrics that can be used to automatical
 A third approach is to inform a user when a document contains information that other sources disagree with. Annotation tools such as ReframeIt.com, ShiftSpace.org, and SpinSpotter.com allow a user to manually annotate a web page that they disagree with, overlaying their own opinions on top of existing content. 
 Cohere~\cite{Shum2008} allows a user to manually annotate a web page as making a claim that is part of an argumentation graph. These tools work well when a user has marked up the page the user is reading, but are limited by the requirement that a human needs to manually mark up each page.
 
-In previous work, we have build an extension to the Firefox web browser called Dispute Finder~\cite{Ennals2010} that informs a user when a web page that they are reading makes a claim that it knows to be disputed by another source. For example, if a user is reading a page that says ``Elvis is alive'' and Dispute Finder recognizes this as being an instance of a known disputed claim, then Dispute Finder will highlight the text as being disputed and direct the user to other sources that put forward alternative points of view. In its currently released version, Dispute Finder builds a corpus of disputed claims by allowing users to add disputed claims to its corpus manually, and by scraping a small set of web sites that manually curate such claims (currently Politifact.org and Snopes.com). This approach scales better than having users manually mark individual pages, but it is still difficult to make this approach scale to the huge number of claims on the web that are disputed.
+In previous work, we built an extension to the Firefox web browser called Dispute Finder~\cite{Ennals2010} that informs a user when a web page makes a claim that is in its database of known disputed claims. For example, if a user is reading a page that says ``Elvis is alive'' and Dispute Finder recognizes this as being an instance of a known disputed claim, then Dispute Finder will highlight the text as being disputed and direct the user to web pages that put forward alternative points of view. In its currently released version, Dispute Finder builds a corpus of disputed claims by allowing users to add disputed claims to its corpus manually, and by scraping a small set of web sites that manually curate such claims (currently Politifact.org and Snopes.com). This approach scales better than having users manually mark individual pages, but it is still difficult to make this approach scale to the huge number of claims on the web that are disputed.
 
 A more scalable approach is to automatically detect when web pages disagree with each other. Tools like Statement Map~\cite{Murakami2009} and WISDOM~\cite{Kawahara2008} use {\it contradiction detection} to inform a user when one document contains a statement that contradicts a statement on another web page. 
 
@@ -132,14 +140,14 @@ Detecting contradictions has proven to be a hard problem~\cite{Giampiccolo2007}.
 Two instances of the same phrase may have the same sense, but a different reference, or two different phrases may refer to the same thing. 
 For example ``George Bush is married to Barbara Bush'' does not contradict ``George Bush is married to Laura Bush'' because there is more than one George Bush; ``Alan Turing was born in England'' does not contradict ``Alan Turing was born in London'' because London is in England; and ``It is raining is San Francisco'' does not contradict ``It is not raining in San Francisco'' if the statements were made at different times. 
 
-In our work, we attempt to bypass the difficulty of contradiction detection by looking for {\it disputes} rather than {\it contradictions}. Rather than looking for claims that contradict each other, we look for linguistic clues that writers believe that there is a contradiction between what they believe and what others believe; and that this contradiction is important. 
-Looking for disputes rather than contradictions allows humans to do the hard work of identifying contradictions and deciding whether they are important. If a page says ``Falsely claimed that Obama is a Muslim'' then that tells us that the author believes that other web pages are claiming that ``Obama is a Muslim'' and that the author believes this claim is false. For our purposes, disputes are also more interesting than contradictions. We are interested in the social side of dispute. We want to know who disagrees with who, why they disagree, and what they think is important. 
+In our work, we attempt to bypass the difficulty of contradiction detection by looking for {\it disputes} rather than contradictions. Rather than looking for claims that contradict each other, we look for linguistic clues that writers believe that there is a contradiction between what they believe and what others believe; and that this contradiction is important. 
+Looking for disputes rather than contradictions allows humans to do the hard work of identifying contradictions and deciding whether they are important. If a page says ``Falsely claimed that Obama is a Muslim'' then that tells us that the author believes that other web pages are claiming that ``Obama is a Muslim'' and that the author believes this claim is false. For our purposes, disputes are also more interesting than contradictions; we are interested in the social side of dispute; we want to know who disagrees with who, why they disagree, and what they think is important. 
 
 One disadvantage of looking for disputed claims rather than contradictions is that it limits us to only finding those claims that some human has explicitly said they disagree with. For a small corpus this would be a limiting factor; however our hypothesis is that the web is sufficiently large that, at least for areas of general interest, any sufficiently important claim that is false will be explicitly disputed by somebody.
 
 Our primary motivation for automatically acquiring a large corpus of disputed claims is to use this corpus to enable tools like Dispute Finder to automatically inform users when they encounter information that this corpus says is disputed. However, as we discuss in Section~\ref{using}, we believe such a corpus could be useful for many other purposes too.
 
-Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,Pang2004}. Opinion mining tries to determine what an author's opinion is about certain objects or certain features of certain objects. A focal application has been the automatic summarization of product reviews, to produce an overview of the product features that are viewed favorably or negatively. Dispute mining could be thought of as opinion mining applied to beliefs and ideas, rather than features of objects. To put it another way, Dispute Finder can be thought of as a second order of opinion mining in which we are looking for opinions about opinions.
+Another closely related area is sentiment analysis/opinion mining~\cite{Hu2004,Pang2004}. Opinion mining tries to determine what an author's opinion is about certain objects or certain features of certain objects. A focal application has been automatically summarizing of product reviews to produce an overview of the product features that are viewed favorably or negatively. Dispute mining could be thought of as opinion mining applied to beliefs and ideas, rather than features of objects. To put it another way, dispute mining can be thought of as a second order of opinion mining in which we are looking for opinions about opinions.
 
 \resolved{All merged? : The methods we use are closely related to related work on information extraction which is the task of identifying and classifying specific semantic entities within documents (i.e. names of locations, people, organizations, temporal expressions etc.) We described such related work in the next Section.}
 
@@ -233,11 +241,11 @@ We implemented a three-stage process to build our corpus of disputed claims, eac
 
 We hand-crafted a set of 54 patterns that we hypothesize may indicate that a claim $S$ is disputed, such as ``false claim that $S$'' or or ``it is not true that $S$''. Figure~\ref{templates-fig} shows some of the patterns we use.
 
-This is an instance of pattern matching, a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for patterns such as ``$X$ such as $Y$'' to infer hyponyms; Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events; Caraballo~\cite{Caraballo2001} searched for patterns like ``$X$ and $Y$'' to find nouns of the same type; Girju et al~\cite{Girju2003} searched for patterns like ``$X$'s $Y$'' and ``$X$ of the $Y$'' to infer  metronyms; and TextRunner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
+This is an instance of pattern matching, a method that has been used extensively for many NLP tasks. Hearst~\cite{Hearst1992} searched for patterns such as ``$X$ such as $Y$'' to infer hyponyms; Riloff~\cite{Riloff1993} searched for words such as ``kidnapped'' to find information about terrorist events; Caraballo~\cite{Caraballo2001} searched for patterns like ``$X$ and $Y$'' to find nouns of the same type; Girju et al~\cite{Girju2003} searched for patterns like ``$X$'s $Y$'' and ``$X$ of the $Y$'' to infer  metronyms; and Text-Runner~\cite{Etzioni2008} searches for more general patterns to extract logical relationships from the web.
 These types of methods differ on how the patterns are generated and on how the extraction of the relevant information is performed. Most often they construct the patterns automatically and often choose them on the basis of
 statistics.
 
-In this work we simply start with an initial set of manually crafted search patterns. We then identified additional patterns by searching for the text of known disputed claims, observing what text commonly occurred as a prefix of a known disputed claim, and manually selected those patterns that made sense to us. This technique is inspired by bootstrapping algorithms~\cite{jones99bootstrapping,Girju2003,Snow2005} that start with a small number of seed words that belong to a semantic class of interest; these seed words are used to learn the extraction patterns that then can be used to extract new members of the same semantic class. In our case, the semantic entities of interest are the disputed claims. Currently, we {\em manually} choose the patterns and claims to retain, i.e., as oppose to most relevant work, we don't {\em learn} the patterns and we don't use a measure of "reliability."
+In this work we started with an initial set of manually crafted search patterns. We then identified additional patterns by searching for the text of known disputed claims, observing what text commonly occurred as a prefix of a known disputed claim, and manually choosing those patterns that made sense to us. This technique is inspired by bootstrapping algorithms~\cite{jones99bootstrapping,Girju2003,Snow2005} that start with a small number of seed items that belong to a semantic class of interest and use these seed items to learn extraction patterns that can be used to find new members of the same semantic class. In our case, the semantic entities of interest are the disputed claims. Currently, we {\em manually} choose the patterns to retain, rather than having the algorithm pick the patterns automatically.
 
 Figure~\ref{templates-fig} shows a subset of the total of 54 patterns that we used. 
 For each pattern, the {\it frequency} is the number of pages that Yahoo estimates contain this pattern. The {\it precision} is an estimate of the proportion of text strings matched by the pattern that are unambiguous disputed claims. We discuss precision further in Section~\ref{filterclaim}.
@@ -282,32 +290,47 @@ off by more than 1 year   & 4    &   8\%   &   100\% \\
 
 We use the Yahoo BOSS API~\cite{yahoo-boss} to search for occurrences of our patterns on the web. Using Yahoo BOSS allows us to search for patterns on a vast number of web pages without having to build our own search engine. We search Yahoo BOSS for a raw string such as ``the misconception that'', download every page that Yahoo lists in its search results, and then look for text that matches any of our known patterns.
 
-Since we are using a general purpose search engine, we are limited to searching for simple text strings. This requires us to generate multiple patterns that are almost the same, other than for synonyms, for example we have both ``the lie that'' vs ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. 
+Since we are using a general purpose search engine, we are limited to searching for simple text strings. This requires us to generate multiple patterns that use different synonyms of the same word; for example we have both ``the lie that'' and ``the deceit that''. We are also restricted to searching for patterns that consist entirely of either a prefix or a suffix. For example we could not search for ``say that $S$ despite'', because there is no way to require that ``despite'' and ``say that'' be in the same sentence. 
 
-In the longer term we may work round these issues by building our own search infrastructure, but Yahoo BOSS provides an excellent platform for prototyping an idea and seeing if it works.
+In the longer term we may work round these issues by building our own search infrastructure, but Yahoo BOSS provides an excellent platform for prototyping the idea to see if it works.
 
 It is useful to be able to update our corpus as new pages appear on the web without having to repeatedly download the same pages. The Yahoo BOSS API does not offer the ability to request only recent pages, or to specify a particular date range. We instead simulate this behavior by including a literal date string in the queries we pass to Yahoo BOSS. For example, if we want to find claims that were disputed on January 10th 2010, then rather than searching for \texttt{``it is not true that''}, we instead search for \texttt{``it is not true that'' ``January 10 2010''}.
 
-The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. Despite being very primitive, this method seems to work reasonably well. When we manually inspected 50 pages retrieved by our algorithm, we found that 92\% written on the correct year, and 74\% were written in the correct month (Figure~\ref{dateaccuracy}). We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first). 
+The reasoning behind this technique is that many articles on the web include the date the article was posted in the text of the web page, particularly news articles and blog posts. This approach has false positives and false negatives. Some web pages include dates that are not the date the article was posted, some web pages do not include the date the article was posted, and many web pages include dates in a different format. Despite being very primitive, this method seems to work reasonably well. When we manually inspected 50 pages retrieved by our algorithm, we found that 92\% were written on the correct year, and 74\% were written in the correct month (Figure~\ref{dateaccuracy}). We recognize that our current implementation suffers from a systematic bias towards sites that write their dates in US format (month first) rather than UK format (day first). 
 
 Knowing the rough date when someone believed or disputed something allows us to produce fuzzy time trends (Section~\ref{timetrends}). Moreover, it is important to know when people believed particular things, since things that were true in the past may not be true any more (e.g. Elvis was alive in the past, but isn't now).
 
 \todo{Produce some kind of measure of how well date searching actually works}
 \todo{Give some stats about search results}
 
+
+
+
+\begin{figure*}[tb]
+	\begin{center}
+	\includegraphics[width=18.1cm]{images/2by5_bigger3_small.pdf}
+	\caption{Number of claims containing a particular noun made during January of any particular year}
+	\label{multiplot_nouns}
+	\end{center}
+	\vspace{0.6cm}
+\end{figure*}
+
+
 \subsection{Filtering Claims}
 \label{filterclaim}
 
-Searching the web for patterns yields a collection of strings. From this collection, we want to filter out any strings that are not making a falsifiable claim, and any strings that make a claim that is ambiguous.
+Searching the web for patterns yields a collection of strings. From this collection we want to filter out any strings that are not making a falsifiable claim and any strings that make a claim that is ambiguous.
 
-Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we want to filter some of them out. A chunk of text might not be a factual statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might otherwise be ambiguous what entities it is referring to (case 3).
+Figure~\ref{filtered} shows some examples of the kind of strings that can match our patterns and the reasons why we want to filter some of them out. A chunk of text might not be a statement (case 1), it might include unbound referents such as ``it'' or ``they'' (case 2), or it might otherwise be ambiguous what entities it is referring to (case 3).
 
 The {\it pattern precision} column in Figure~\ref{templates-fig} shows the estimated precision for different patterns. 
 This is the estimated percentage of the strings that match the pattern that are unambiguous falsifiable claims. We estimated the precision of each pattern by randomly selecting 100 strings that match the pattern and then manually marking strings that we subjectively decided were well formed and unambiguous.
 
 Whether a claim is unambiguous is often subjective. For example, in the string ``Obama is the president'' it is possible that ``Obama'' is referring to someone other than ``Barack Obama'' and ``the president'' is referring to a position other than ``President of the United States''. When manually judging claims, we considered a claim to be unambiguous if an average person would be pretty sure what the claim meant without knowing its context.
 
-We built a statistical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. This is a classical text classification task; here the text is classified as either being an unambiguous falsifiable claim or an invalid one (binary classification). Naive Bayes classifiers\cite{duda} have been used extensively for language tasks (for example, to decide whether an email is spam or not~\cite{Sahami98abayesian} and to decide the topic of documents\cite{mccallum98comparison}). We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and part-of-speech tag of the first and second words.
+We built a statistical classifier that attempts to automatically determine whether any given string matched by a pattern is an unambiguous disputed claim. This is a classical text classification task where the text is classified as either being an unambiguous falsifiable claim or an invalid one (binary classification). Naive Bayes classifiers~\cite{duda} have been used extensively for language tasks (for example, to decide whether an email is spam or not~\cite{Sahami98abayesian} and to decide the topic of a document~\cite{mccallum98comparison}). We used a simple Naive Bayes classifier whose features were the words that were present in the string, the parts of speech that were present in the string, and the identity and part-of-speech tag of the first and second words.
+
+\shortpage
 
 The {\it classifier accuracy} column in Figure~\ref{templates-fig} shows how accurately our classifier was able to determine whether any given string matched by a particular pattern is an unambiguous disputable claim. To provide a baseline for what these figures mean, consider that a random classifier would have 50\% accuracy, a classifier that always said ``yes'' would have accuracy equal to the pattern precision (e.g. 62\% for ``the myth that''), and a classifier that always said ``no'' would have accuracy equal to 100 minus the pattern precision (e.g. 52\% for ``believe that'').
 
@@ -315,15 +338,9 @@ We can observe that the patterns in the ``something false'' group have much high
 
 Manual inspection suggests that the classifier is fairly good at filtering out strings that are not claims (case 1) but does poorly at working out whether a claim is unambiguous. This is not surprising. We anticipate that a more sophisticated technique with real world knowledge would be needed in order to accurately determine whether a claim was unambiguous.
 
-In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by either two noun phrases or a noun phrase and an adjective. 
+In some cases a disputed claim will be followed by information about where the claim was made, or why the claim is wrong. For example ``he claimed that the moon was made of cheese {\it on his show}'' or ``he claimed that the moon is made of cheese {\it despite contrary evidence}''. We chop off such suffixes by discarding any text that follows a word such as ``despite'', ``however'', ``but'', or ``was'', provided that word was proceeded by something that looks like a statement.
 
-\begin{figure*}[tb]
-	\begin{center}
-	\includegraphics[width=18cm]{images/2by5_bigger3_small.pdf}
-	\caption{Number of claims containing a particular noun made during January of any particular year}
-	\label{multiplot_nouns}
-	\end{center}
-\end{figure*}
+
 
 \subsection{Context}
 
@@ -332,36 +349,27 @@ We save the surrounding text, page title, and URL for each of the disputed claim
 \section{Using Disputed Claims}
 \label{using}
 
-A corpus of disputed claims could be useful for many purposes, including real-time dispute recognition, background dispute analysis agents, and other research tools. Real-time dispute recognition agents could be used, for instance, to alert users when a trusted source disagrees with others, or to provide the user with feedback on how contentious a topic is.
+There are many potential uses for a corpus of disputed claims. 
 
-Dispute Finder~\cite{Ennals2010} is one such agent that we are developing to provide real-time dispute recognition to users by identifying disputed claims that users encounter in their lives. The current implementation of Dispute Finder is a web browser extension that highlights text on web pages that appears to make a known disputed claim. In future research, we plan to extend Dispute Finder to be able to detect disputed information in television, and in speech that a user hears during conversations. We envision a device that provides real-time feedback to users regarding claims made in a conversation or presentation. Such a device would augment individuals' intuitive recognition of that a disputed claim is being made.
+In previous work, we have built Dispute Finder~\cite{Ennals2010}, a web browser extension that informs a user if the page they are browsing appears to make claims that are disputed by other sources. In the future, we intend that Dispute Finder will consult our corpus of disputed claims to determine whether claims made on a web page are disputed. 
 
-Dispute analysis agents that run in the background represent another application we see for a corpus of disputed claims. Such agents could be trained with information regarding the books, journals, and news articles a user reads. It would then be able to track these subjects and alert the user when a previously-read source is now disputed. It could also track a set of topics and tell the user when something new is disputed about a topic. A background dispute analysis agent would thus serve as an automated research assistant.
+In future work, we intend to apply a similar dispute-finding approach to many other sources of information. We are working on a tool that listens to conversations and informs a user if they hear or say anything that is disputed by a reliable source. We are also interested in enhancing standard tools such as search engines, news aggregators, news readers, and email clients to inform a user if the information they are consuming may be disputed. 
 
-A third category of applications could be broadly classified as research tools: agents which allow users to explore what is disputed about a particular topic, or to more broadly examine the social dynamics of disputes on the web. As an increasing proportion of human knowledge is brought to the web, these tools will be increasingly important in sociological and historical research.
+Since information may only become disputed after you read it, we are also interested in building tools that track all the information a user consumes and alert the user if something they read in the past ceases to be true, is corrected, or becomes disputed. Such a tool could also track the topics a user is interested in and inform the user when something new is disputed about the topic.
+
+A third category of applications could be broadly classified as research tools: tools that allow a user to explore what is disputed about a particular topic, or to more broadly examine the social dynamics of disputes on the web. As an increasing proportion of human knowledge is brought to the web, these tools will be increasingly useful for sociological and historical research.
+
 
 \section{Analyzing the Data}
 \label{analysis}
 \input{analysis.tex}
 
-We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 19th 2010, and for January 10th of every year from 2000 to 2010. This gave us a total of 7 million text strings, of which 4.2 million were identified by our classifier as being unambiguous disputable claims. This does not mean that there are 4.2 million distinct beliefs that are disputed; many of the claims in our corpus are repeating claims made elsewhere in the corpus.
+We downloaded all text strings that matched each of our 54 patterns for all dates from October 1st 2009 to January 31st 2010, and for all dates from January 1st to January 31st for every year from 2000 to 2010. This gave us a total of 7 million text strings, of which 4.2 million were identified by our classifier as being unambiguous disputable claims. This does not mean that there are 4.2 million distinct beliefs that are disputed, since many of the claims in our corpus are repeating claims made elsewhere in the corpus.
 
 \subsection{Trends over time}
 \label{timetrends}
 
-Figure~\ref{multiplot_nouns} shows the frequency with which particular nouns were discussed in particular years. For example the claim ``Obama is a muslim'' contains the nouns ``Obama'' and ``Muslim''. We used the NLTK~\cite{Bird2009} part-of-speech tagger to identify the nouns found in each of our claims. We then analyzed the distribution of noun frequencies in claims made between January 1st and January 31st of every year from 2000 to 2010. Although the date we searched for was in January, the claims we found are often from other points in the year, due to the noisy nature of our date search mechanism (Figure~\ref{dateaccuracy}). We excluded uninteresting nouns such as ``someone'', ``anybody'' and ``something'', and plotted graphs for the ten most disputed nouns (Figure~\ref{multiplot_nouns}). All graphs are plotted on the same scale. The y axis is the number of claims that contained the noun, and the x axis is the year in which the claim was made. It is likely that a Named Entity Recognition algorithm~\cite{Nadeau2007} would produce better results, but even these nouns prove to be quite interesting.
-
-We manually inspected our claims to determine what was going on that made particular nouns spike at particular times:
-
-\begin{itemize}
- \item {\bf Obama:} Barack Obama is not a topic of dispute until 2004 when he spoke at the Democratic convention. His level of controversy then peaked in 2008, in the run up to the November 2008 US presidential elections. We believe that most of the mentions of Obama before 2004 are due to date classification errors.
- \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawkins2006}.
- \item {\bf Iraq:} Spikes seem to correspond to the initial invasion in 2003 and the surge in 2007.
- \item {\bf Israel:} Spikes seem to correspond to the 2009 Gaza conflict and the 2006 Lebanon conflict.
-\end{itemize}
-
-These graphs are similar to those produced by MemeTracker~\cite{Backstrom2009}, which graphed when particular memes were discussed on the web. MemeTracker tracked highly repeated phrases, rather than nouns used in disputed claims. Kittur et al~\cite{Kittur2009} graphed the categories on Wikipedia that contained the most conflict.
-
+Figure~\ref{multiplot_nouns} shows the frequency with which the ten most common nouns were mentioned in particular years. For example the claim ``Obama is a muslim'' contains the nouns ``Obama'' and ``Muslim''. We used the NLTK~\cite{Bird2009} part-of-speech tagger to identify the nouns found in each of our claims. We then analyzed the distribution of noun frequencies in claims made between January 1st and January 31st of each year from 2000 to 2010. Although the dates we searched for were in January, the claims we found are often from other points in the year, due to the noisy nature of our date search mechanism (Figure~\ref{dateaccuracy}). We excluded uninteresting nouns such as ``someone'', ``anybody'' and ``something'', and plotted graphs for the ten most disputed nouns (Figure~\ref{multiplot_nouns}). All graphs are plotted on the same scale. The y axis is the number of claims that contained the noun, and the x axis is the year in which the claim was made. It is likely that a Named Entity Recognition algorithm~\cite{Nadeau2007} would produce better results, but even nouns prove to be quite interesting.
 
 \begin{figure}[tbh]
  \begin{center}
@@ -369,48 +377,51 @@ These graphs are similar to those produced by MemeTracker~\cite{Backstrom2009}, 
     \hline
     {\bf Noun} & {\bf Word Cluster} & {\bf Freq} \\
     \hline
-   {\bf children} & tiger woods abused & 218\\
-                  & instead encourage daily & 178\\
-    \hline
-   {\bf god} & daily encourage parents & 150 \\
+   {\bf god} & {\it no significant clusters} & \\
    \hline
-   {\bf government} & health care & 1267 \\
-                    & united states & 427 \\
-		    & relation environmental matters & 155 \\
+   {\bf government} & health care & 2605 \\
+                    & united states & 1710 \\
    \hline
-   {\bf iraq} & weapons mass destruction & 373 \\
-              & united states & 247 \\
-	      & saddam hussein & 192 \\
-	      & al qaeda & 149 \\
+   {\bf iraq} & weapons mass destruction & 3874 \\
+              & united states & 2972 \\
+	      & posed imminent threat & 2547 \\
+	      & saddam hussean & 2088 \\
+	      & damaging manner justify armed forces & 1814 \\
+	      & national security interests & 1673 \\
+	      & use nation & 1503 \\
+	      & al qaeda & 1200 \\
    \hline
-   {\bf israel} & middle east & 251 \\
-		& allowed upon population & 128 \\
-                & united states & 107 \\
-		& off map & 106 \\
+   {\bf israel} & united states & 1211 \\
+		& middle east & 556 \\
+		& off map & 543 \\
+                & west bank & 426 \\
+		& second coming & 296 \\
    \hline
-   {\bf law}    & lawbreaker rather broken & 133 \\
-		& united states & 116\\
+   {\bf jesus}  & {\it no significant clusters} & \\
    \hline
-    {\bf obama} & working best interests & 568\\
-                & health care & 481\\
-	        & united states & 327 \\
-		& nobel prize & 270 \\
-		& legitimately president & 207 \\
-		& fort hood shooter hasan nidal advised & 190 \\
-		& birth certificate & 180\\
+   {\bf money}  & root evil & 503 \\
    \hline
-   {\bf president} & united states & 439 \\
-                   & health care & 203 \\
-		   & george w & 164 \\
-		   & aircraft system jolting bombing & 159 \\
-		   & peace prize & 125 \\
-		   & white house & 125 \\
+    {\bf obama} & working best interests & 1077\\
+                & health care & 1074\\
+	        & united states & 741 \\
+		& birth certificate & 434 \\
+		& nobel prize & 311 \\
    \hline
-      {\bf war} & united states & 340 \\
+   {\bf president} & united states & 1695 \\
+		   & white house & 716 \\
+		   & george w & 618 \\
+		   & health care & 491 \\
+		   & saddam hussein & 369 \\
+		   & off map & 363 \\
+		   & mahmoud ahmadinejad & 320 \\
+		   & sarah palin & 277 \\
+   \hline
+      {\bf war} & united states & 1323 \\
+		& mass destruction & 484 \\
+		& middle east & 421 \\
    \hline
 
-   {\bf women} & stay home & 183 \\
-               & save vaccine & 85 \\
+   {\bf women} & {\it no significant clusters} & \\
    \hline
   \end{tabular}
  \end{center}
@@ -419,6 +430,20 @@ These graphs are similar to those produced by MemeTracker~\cite{Backstrom2009}, 
 
 \end{figure}
 
+We manually inspected our claims to determine what was going on in the world that made particular nouns spike at particular times:
+
+\begin{itemize}
+ \item {\bf Obama:} Barack Obama is not a topic of dispute until 2004 when he spoke at the Democratic convention. His level of controversy then rose in 2008, in the run up to the November 2008 US presidential elections and then again after he became president. We believe that most of the mentions of Obama before 2004 are due to date classification errors.
+ \item {\bf God:} God is always a controversial topic. We theorize that the spike in 2006 may relate to the 2006 publication of the Richard Dawkins book ``the God Delusion''\cite{Dawkins2006}.
+ \item {\bf Iraq:} The biggest spike seems to correspond to the initial invasion in 2003.
+ \item {\bf Israel:} Spikes seem to correspond to the 2009 Gaza conflict and the 2006 Lebanon conflict.
+\end{itemize}
+
+These graphs are similar to those produced by MemeTracker~\cite{Backstrom2009}, which graphed the times when particular memes were discussed on the web. MemeTracker tracked frequently occurring phrases, rather than nouns used in disputed claims. Kittur et al~\cite{Kittur2009} graphed the categories on Wikipedia that contained the most conflict.
+
+
+
+
 
 
 \subsection{What is Disputed about a Noun?}
@@ -426,7 +451,9 @@ These graphs are similar to those produced by MemeTracker~\cite{Backstrom2009}, 
 
 Once we know what nouns are disputed, it is interesting to know what it is about a noun that is disputed. For example, what is it that people are disputing about ``Obama'' or ``Iraq''? To address this question, we took the set of claims that contained each popular noun (e.g. ``Obama'') and looked for sets of words that occurred together much more frequently than would be expected if claims were formed randomly. For example in our claims about ``Obama'', we found the word cluster ``health care'' because most claims about Obama that contain the word ``health'' also contain the word ``care'' and vice-versa. We used an agglomerative clustering algorithm to group together words that co-occur in the same claims.
 
-Figure~\ref{cluster-figure} shows the most frequently occurring word clusters that we found for each noun. For each cluster, the count is the number of claims about that noun that contain all of the words in the cluster. Most of these will make sense to people who have been following news in the United States. For example, we see that disputed claims about Obama often talk about his Nobel Prize or his birth certificate, and we see discussion about President Ahmadinejad's alleged statement that Israel should be wiped off the map (which the authors had not previously realized was a disputed). Some of the word clusters are not particularly interesting; for example many claims talk about the United States, even when that is not an important part of what is disputed. 
+Figure~\ref{cluster-figure} shows the most frequently occurring word clusters that we found for each noun. For each cluster, the count is the number of claims about that noun that contain all of the words in the cluster. Most of these will make sense to people who have been following news in the United States. For example, we see that disputed claims about Obama often talk about his Nobel Prize or his birth certificate, and we see discussion about President Ahmadinejad's alleged statement that Israel should be wiped off the map (which the authors had not previously realized was disputed). Some of the word clusters are not particularly interesting; for example many claims talk about the United States, even when that is not an important part of what is disputed. 
+
+It would be interesting to see how these word clusters compare to word clusters for all sentences on the web about these nouns, including those that are not disputed. Unfortunately we do not currently have access to such data.
 
 In the future, we plan to use ideas from textual entailment~\cite{Giampiccolo2007} to cluster claims together directly, and then automatically train a classifier that we can use to identify text that is making a disputed claim. This will allow us to better attack some of the problems we outlined in Section~\ref{using}.
 
