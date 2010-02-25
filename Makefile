@@ -17,8 +17,8 @@ urlsjan312007days = $(wildcard output/claimfinder/urlphrases_date/January_31_200
 years = $(filter-out %.dedup %.good %.nouns,$(wildcard output/claimfinder/urlphrases_year/*))
 days = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
 claimdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
-jandays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_10_*))
-
+jandays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_*))
+subdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_30_*))
 
 claims2009 = $(urls2009:.urls=.claims)
 claims2008 = $(urls2008:.urls=.claims)
@@ -74,6 +74,7 @@ daygood : $(daygood)
 allgood : $(yeargood) $(daygood)
 yearfreqs : $(addsuffix .freqs,$(years))
 dayfreqs : $(addsuffix .freqs,$(days))
+subdayfreqs : $(addsuffix .freqs,$(subdays))
 janfreqs : $(addsuffix .freqs,$(jandays))
 daypos : $(posdays)
 patdedups : $(urlsdays:.urls=.dedup)
