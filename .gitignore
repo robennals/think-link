@@ -54,3 +54,6 @@ wiki_wordfreqs
 *.nounfreqs
 *.good
 *.bigrams
+*.ps
+*_complete*.tex
+*.db
