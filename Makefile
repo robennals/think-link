@@ -5,6 +5,7 @@ DEDUP = python web_claim_finder/drop_duplicate_claims.py
 GOODNOUNS = python web_claim_finder/good_nouns.py
 NOUNFREQS = python web_claim_finder/noun_freqs.py
 POSTAG = python web_claim_finder/pos_tag.py
+FILTER = python web_claim_finder/filter_claims.py
 
 urls2009 = $(wildcard output/claimfinder/urlphrases_year/2009/*.urls)
 urls2008 = $(wildcard output/claimfinder/urlphrases_year/2008/*.urls)
@@ -15,7 +16,7 @@ urlsdays = $(wildcard output/claimfinder/urlphrases_date/*/*.urls)
 urlsjan312007days = $(wildcard output/claimfinder/urlphrases_date/January_31_2007/*.urls)
 
 years = $(filter-out %.dedup %.good %.nouns,$(wildcard output/claimfinder/urlphrases_year/*))
-days = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
+days = $(filter-out %.filtered %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
 claimdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
 jandays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_*))
 subdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_30_*))
@@ -50,6 +51,9 @@ daygood = $(addsuffix .good,$(claimdays))
 
 %.good : %.dedup
 	$(GOODNOUNS) $< > $@
+
+%.filtered : %
+	$(FILTER) $</*.claims > $@
 	
 %.freqs : %.good
 	$(NOUNFREQS) $< > $@
@@ -60,6 +64,7 @@ vars :
 	echo $(claims2009)
 	
 testclaims : output/claimfinder/urlphrases_first.claims
+filtered : $(addsuffix .filtered,$(days))
 2009claims : $(claims2009)
 2008claims : $(claims2008)
 2007claims : $(claims2007)

@@ -47,17 +47,22 @@ def has_bad_string(claim):
 		if badstring in claim: return True
 	return False
 
-endstrings = ["<",">","?"," /","!","|","--","(",";",":","title=","src=","comments feed","width=","cid=","href","trackback","when,",", a"," - ","is not only wrong","is utterly"]
+endstrings = ["<",">","?"," /","!","|","--","(",";",":","title=","src=",
+		"comments feed","width=","cid=","href","trackback","when,",", a",
+		" - ","is not only wrong","is utterly","was disproved","was debunked",
+		"is clearly", "is false","when in fact"]
 	
 breakwords = ["and that"] # ["and","or","despite","but","however","stating"]
-commawords = ["another","just","becoming","when","and","or","despite","but","however","even","have","that","it","often","which","thereby","stating","unaware"]	
+commawords = ["another","just","becoming","when","and","or","despite",
+		"but","however","even","have","that","it","often","which",
+		"thereby","stating","unaware","thus"]	
 	
 badfirstwords = set(["'s","our","it","its","they","their","her","his","this","i","she","he","you","these","my","i'm",
 		"ate","begat","blew","won't",
 		"started","can","caused","changed","concealed","destroyed","gets","goes","grew","fooled",
 		"has","helps","have","hurts","is","keeps","knows","launched","lays","leads","made","makes",
 		"proves","puts","put","reveals","s","says","tells","told","was","will","wo","would","are","have",
-		"annually","allowed","actually","accompanied","became","had"])
+		"annually","allowed","actually","accompanied","became","had","helped"])
 badprefix = ["just won't"]
 badstrings = ["are right"]
 bad_a_word = ["product","phone","mail"]
