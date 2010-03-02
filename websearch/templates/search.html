@@ -1,0 +1,16 @@
+<div id="intellogo"> 
+	<img src="/static/images/intel_black_transparent_100w.png"/> 
+	<div id="labs">Labs</div> 
+</div> 
+<h1 id="frontlogo">Dispute Finder - Search<span class="beta">alpha</span></h1> 
+<div class="tagline">Because the first result isn't always the full truth</div> 
+
+<form method="GET" action="/search">
+<input type="text" id="search-input" name="q" value="$query" title="Search"/>
+<input type="submit" id="search-submit" value="Search" />
+</form>
+ 
+<div id="search-results">
+	$results
+</div>
+ 

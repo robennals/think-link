@@ -1,0 +1,86 @@
+* {
+	font-family: arial,sans-serif;
+}
+
+body {
+	font-size: 12px;
+}
+
+img {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	vertical-align: middle;
+}
+
+
+#labs {
+	font-size: 16px;
+	font-weight: bold;
+	left: 75px;
+	position: absolute;
+	top: 44px;
+}
+
+.beta {
+	vertical-align: top;
+	font-size: 14px;
+}
+
+
+#frontlogo {
+	font-size: 40px;
+	margin-bottom: 0px;
+	margin-left: 122px;
+	margin-top: 32px;
+}
+
+#intellogo{
+	position: absolute;
+	left: 0px;
+	top: 10px;
+}
+
+.tagline {
+	margin-bottom: 15px;
+}
+
+
+.tagline {
+	font-size: 20px;
+	margin-top: -7px;
+	margin-left: 217px;
+	margin-bottom: 30px;
+}
+
+#search-input {
+	width: 400px;
+	padding: 4px;
+	margin-left: 40px;
+}
+
+#search-submit {
+	padding: 4px;
+	font-weight: bold;
+}
+
+#search-results {
+	margin: 0px 16px;
+}
+
+.search-result {
+	list-style: none;
+}
+
+.search-result h3 {
+	font-weight: normal;
+	margin-bottom: 0px;
+}
+
+.search-result .abstract {
+	max-width: 500px;
+}
+
+.search-result cite {
+	color: green;
+}

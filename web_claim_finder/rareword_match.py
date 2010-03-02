@@ -14,7 +14,9 @@ import compute_rarewords as cr
 import math
 import operator as op
 
-okwords = set(["just","merely","purely","only","simple"])
+okwords = set(["just","merely","purely","only","simple","were",
+		"massive","utter","clearly","the","is","a","the","in",
+		"was","wants","giant","","around","all","really"])
 
 def tokenize(claim): return re.split("\W+",claim)
 
