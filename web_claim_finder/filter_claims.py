@@ -17,11 +17,16 @@ def getclaim(line):
 def cleanup(claim):
 	claim = cf.convert_entities(claim)
 	claim = cf.convert_unicode(claim)
+	claim = trim_claim_start(claim)
 	claim = trim_claim_end(claim)
 	claim = claim.replace(" '"," ").replace("' "," ").replace('"',"").replace("[","").replace("]","").replace("(","").replace(")","")
 	claim = claim.replace("-"," ").replace("/"," ")
-	
 	return claim
+
+def trim_claim_start(claim):
+	if len(claim) > 0 and claim[0] in ["'"," ",",","."] :
+		return trim_claim_start(claim[1:])
+	else: return claim
 
 def trim_claim_end(claim):
 	for endstring in endstrings:
@@ -34,37 +39,62 @@ def trim_claim_end(claim):
 		if ("' "+commaword) in claim: claim = claim[:claim.find("' "+commaword)]
 	return claim
 
+bad_claims = set([line.strip() for line in file("bad_claims.txt")])
+bad_claims_auto = set([line.strip() for line in file("bad_claims_auto.txt")])
+
 def is_good(claim):
 	words = nltk.word_tokenize(claim)
 	if len(words) < 3: return False
 	if words[0] in badfirstwords: return False
+	if words[-1] in badlastwords: return False
 	if not badwords.isdisjoint(words): return False
 	if has_bad_string(claim): return False
+	if has_bad_prefix(claim): return False
+	if has_bad_end(claim): return False
+	if claim in bad_claims: return False
+	if claim in bad_claims_auto: return False
+	if not claim[0].isalpha(): return False
 	return True
+
+def has_bad_prefix(claim):
+	for badprefix in badprefixes:
+		if claim.startswith(badprefix): return True
+	return False
 
 def has_bad_string(claim):
 	for badstring in badstrings:
 		if badstring in claim: return True
 	return False
+	
+def has_bad_end(claim):
+	for badend in badends:
+		if claim.endswith(badend): return True
+	return False
 
-endstrings = ["<",">","?"," /","!","|","--","(",";",":","title=","src=",
-		"comments feed","width=","cid=","href","trackback","when,",", a",
+endstrings = ["?","!",";",":",
+		,", a",
 		" - ","is not only wrong","is utterly","was disproved","was debunked",
-		"is clearly", "is false","when in fact"]
+		"is clearly", "is false","when in fact","has been repeated","did you ever think",
+		"is bunk","is not correct","is not true","and that",",\""]
 	
 breakwords = ["and that"] # ["and","or","despite","but","however","stating"]
 commawords = ["another","just","becoming","when","and","or","despite",
 		"but","however","even","have","that","it","often","which",
 		"thereby","stating","unaware","thus"]	
 	
-badfirstwords = set(["'s","our","it","its","they","their","her","his","this","i","she","he","you","these","my","i'm",
-		"ate","begat","blew","won't",
+badfirstwords = set(["'s","our","it","its","they","their","her","his","this","i","she","he","you","your","these","my","i'm",
+		"ate","begat","blew","won't","is","just","really",
+		".",",","s","but",
 		"started","can","caused","changed","concealed","destroyed","gets","goes","grew","fooled",
 		"has","helps","have","hurts","is","keeps","knows","launched","lays","leads","made","makes",
 		"proves","puts","put","reveals","s","says","tells","told","was","will","wo","would","are","have",
 		"annually","allowed","actually","accompanied","became","had","helped"])
-badprefix = ["just won't"]
-badstrings = ["are right"]
+		
+badlastwords = set(["is","it","was","will","has","might","are","is","1","a","no","his","hers","a","u","that","the","were"])	
+badends = ["'s"]
+		
+badprefixes = ["just won't","the bill","all this","all of it","all of these"]
+badstrings = ["are right","<",">","title=","src=","title=","src=","|","width=","cid=","href","trackback","comments feed","--","("," /"]
 bad_a_word = ["product","phone","mail"]
 
 badwords = set(["their","theirs","them"])	

@@ -15,16 +15,45 @@ from os import curdir, sep
 from secret import bossKey
 from urllib import quote_plus, urlopen
 from xml.dom import minidom
+import html_to_text as h
 import parallel_io as p
+import rareword_match as r
 
 # TODO: cache url contents to avoid repeatedly downloading the same files
+
+def get_page_disputes(url,pages):
+	try:
+		htmlcontent = pages[url]
+		text = h.html_to_text(htmlcontent)
+		matches = r.get_sorted_claims(text)
+		disputes = [dispute for dispute in matches if (dispute[0] > 0)][:4]
+		unique = []
+		used = set({})
+		for dispute in disputes:
+			if (not dispute[3] in used) and (not dispute[4] in used):
+				used.add(dispute[3])
+				used.add(dispute[4])
+				unique.append(dispute)
+		disputes = [template("disputed_box",dispute = d[1]) for d in unique]
+		#if len(matches) > 0 and matches[0][0] > 0:
+			#disputes = template("disputed_box",dispute = matches[0][1])
+		#elif len(matches) > 0 and matches[0][0] > -0.5:
+			#disputes = template("maybe_disputed_box",dispute = matches[0][1])
+		#else:
+			#disputes = ""	
+		#return disputes
+		return " ".join(disputes)
+	except:
+		return ""
+	
 
 def do_search_result(result,pages):
 	return template("search_result",title=child_text(result,"title"),
 			abstract=child_text(result,"abstract"),
 			url=child_text(result,"url"),
 			dispurl=child_text(result,"dispurl"),
-			date=child_text(result,"date"))
+			date=child_text(result,"date"),
+			disputes=get_page_disputes(child_text(result,"url"),pages))
 
 def child_text(parent,tag):
 	return node_text(parent.getElementsByTagName(tag)[0]).encode("utf8","xmlcharrefreplace")
@@ -50,7 +79,11 @@ def template(name,**args):
 
 handlers = {"/search": do_search}
 
-def node_text(node): return node.firstChild.data
+def node_text(node): 
+	try:
+		return node.firstChild.data
+	except:
+		return ""
 
 def get_boss(query):
 	bossSvr = "http://boss.yahooapis.com/ysearch/web/v1"
@@ -92,9 +125,13 @@ class SearchHandler(BaseHTTPRequestHandler):
 			self.wfile.write("Not found: "+self.path)
 		
 def main():
-	server = HTTPServer(('',8080), SearchHandler)
-	print "started web server"
-	server.serve_forever()
+	try:
+		server = HTTPServer(('',8080), SearchHandler)
+		print "started web server"
+		server.serve_forever()
+	except KeyboardInterrupt:
+		print "shutting down server"
+		server.socket.close()
 	
 if __name__ == '__main__':
 	main()

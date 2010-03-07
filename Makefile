@@ -13,13 +13,15 @@ urls2007 = $(wildcard output/claimfinder/urlphrases_year/2007/*.urls)
 urls2006 = $(wildcard output/claimfinder/urlphrases_year/2006/*.urls)
 urlsyears = $(wildcard output/claimfinder/urlphrases_year/*/*.urls)
 urlsdays = $(wildcard output/claimfinder/urlphrases_date/*/*.urls)
+claimsdays = $(wildcard output/claimfinder/urlphrases_date/*/*.claims)
 urlsjan312007days = $(wildcard output/claimfinder/urlphrases_date/January_31_2007/*.urls)
 
 years = $(filter-out %.dedup %.good %.nouns,$(wildcard output/claimfinder/urlphrases_year/*))
-days = $(filter-out %.filtered %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
-claimdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/*))
-jandays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_*))
-subdays = $(filter-out %.dedup %.good %.nouns %.freqs,$(wildcard output/claimfinder/urlphrases_date/January_30_*))
+days = $(filter-out %.filtered %.dedup %.good %.nouns %.freqs %.filtered,$(wildcard output/claimfinder/urlphrases_date/*))
+claimdays = $(filter-out %.dedup %.good %.nouns %.freqs %.filtered,$(wildcard output/claimfinder/urlphrases_date/*))
+jandays = $(filter-out %.dedup %.good %.nouns %.freqs %.filtered,$(wildcard output/claimfinder/urlphrases_date/January_*))
+subdays = $(filter-out %.dedup %.good %.nouns %.freqs %.filtered,$(wildcard output/claimfinder/urlphrases_date/January_30_*))
+phraseunique = $(wildcard output/claimfinder/phrases_joined/*.unique)
 
 claims2009 = $(urls2009:.urls=.claims)
 claims2008 = $(urls2008:.urls=.claims)
@@ -27,6 +29,7 @@ claims2007 = $(urls2007:.urls=.claims)
 claims2006 = $(urls2006:.urls=.claims)
 claimsyears = $(urlsyears:.urls=.claims)
 claimsdays = $(urlsdays:.urls=.claims)
+filtereddays = $(claimdays:.claims=.filtered)
 claimsjan07 = $(urlsjan312007days:.urls=.claims)
 posdays = $(urlsdays:.urls=.pos)
 yeardedups = $(addsuffix .dedup,$(years))
@@ -34,8 +37,8 @@ yeargood = $(addsuffix .good,$(years))
 daydedups = $(addsuffix .dedup,$(days))
 daygood = $(addsuffix .good,$(claimdays))
 
-%.claims : %.urls
-	$(EXTRACTCLAIMS) $< $@
+#%.claims : %.urls
+#	$(EXTRACTCLAIMS) $< $@
 
 %.dedup : %
 	$(DEDUP) $</*.claims > $@
@@ -51,6 +54,9 @@ daygood = $(addsuffix .good,$(claimdays))
 
 %.good : %.dedup
 	$(GOODNOUNS) $< > $@
+
+%.filtered : %.claims
+	$(FILTER) $< >$@
 
 %.filtered : %
 	$(FILTER) $</*.claims > $@
@@ -71,7 +77,9 @@ filtered : $(addsuffix .filtered,$(days))
 2006claims : $(claims2006)
 yearclaims : $(claimsyears)
 dayclaims : $(claimsdays)
+dayfiltered : $(addsuffix .filtered,$(days))
 dayclaimsjan07 : $(claimsjan07)
+# dayfiltered : $(filtereddays)
 yeardedups : $(yeardedups)
 daydedups : $(daydedups)
 yeargood : $(yeargood)
@@ -86,3 +94,5 @@ patdedups : $(urlsdays:.urls=.dedup)
 
 minigood = $(wildcard web_claim_finder/minidata/*.good)
 minifreqs : $(addsuffix .freqs,$(miniyears))
+
+
