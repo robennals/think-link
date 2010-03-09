@@ -7,6 +7,7 @@ This file contains generic functions that are used by the other files
 
 import fileinput
 import nltk
+import operator as op
 
 def convert_entities(text):
 	return text.replace("&#8217;","'").replace("&#8220;",'"').replace("&#8221;",'"').replace("&#8230;"," - ").replace("&nbsp;"," ").replace("&amp;","&").replace("&ldquq;",'"').replace("&rdquo;",'"').replace("&acute;","'").replace("&mdash;","-").replace("&quot;","'").replace("&#039;","'").replace("&#39;","'").replace("&#8212;","-").replace("&#8216;","'").replace("&lsquo;","'").replace("&rsquo;","'").replace("&ldquo;",'"').replace("&rdquo;",'"').replace("&#8211","").replace("&#038;","").replace("&#038;","").replace("&#147;",'"').replace("&#8220;",'"').replace("&#34;",'"').replace("&#130;",",").replace("&#133;","...").replace("&#145;","'").replace("&#034;",'"')
@@ -16,6 +17,10 @@ def convert_unicode(text):
 
 def tag_claim(claim):
 	return nltk.pos_tag(nltk.word_tokenize(claim))
+
+def sorted_freqs(freqs):
+	return sorted(freqs.iteritems(),key=op.itemgetter(1),reverse=True)
+
 
 stopwords = ["s",'"',"system","someone","change","country","everyone","way","t","fact","year","more","most","day","people","best","something","person","thing","things","time","life","world","years","part","state","better","anything","power","right","man"]
 

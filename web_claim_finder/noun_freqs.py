@@ -9,6 +9,7 @@ Processes the output from good_nouns.
 import fileinput
 import operator as op
 import nltk
+from claimfinder import sorted_freqs
 
 freqs = {}
 
@@ -20,8 +21,6 @@ def count_nouns(nouns):
 		if not (noun in stopwords) and noun.isalpha():
 			freqs[noun] = freqs.get(noun,0) + 1
 
-def sorted_freqs():
-	return sorted(freqs.iteritems(),key=op.itemgetter(1),reverse=True)
 
 def drop_html(nouns):
 	if "<" in nouns:
@@ -35,7 +34,7 @@ def main():
 		if not ("<" in line): 
 			nouns = line.split("\t")[1:]
 			count_nouns(nouns)
-	freqs = sorted_freqs()
+	freqs = sorted_freqs(freqs)
 	for k,v in freqs:
 		if(v > 4):
 			print k+"\t"+str(v)
