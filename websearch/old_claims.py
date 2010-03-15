@@ -12,7 +12,8 @@ def mysql_reader(f):
 def get_old_claims():
 	basic_claims = [(row[0],row[0]) for row in mysql_reader(file("old_claims.csv"))]
 	paraphrases = [(row[0],row[1]) for row in mysql_reader(file("old_paraphrases.csv"))]
-	return basic_claims + paraphrases
+	goodclaims = [(row.strip(),row.strip()) for row in file("good_claims.txt")]
+	return basic_claims + paraphrases + goodclaims
 	
 	
 	

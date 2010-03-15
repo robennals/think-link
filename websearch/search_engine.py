@@ -69,9 +69,10 @@ def do_search(path,args):
 	)
 	
 static_file_patterns = [
-	("/static/javascript/\w*\.js","text/javascript"),
+	("/static/javascript/[\w\-\.]*\.js","text/javascript"),
 	("/static/stylesheets/\w*.css","text/css"),
-	("/static/images/\w*.png","image/png")
+	("/static/images/\w*.png","image/png"),
+	("/static/pages/\w*.html","text/html")
 	]
 	
 def template(name,**args):

@@ -49,7 +49,12 @@ public class WikiMatcher {
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
 			int arrowidx = line.indexOf("->");
-			String name = line.substring(0,arrowidx);
+			// DEBUG: temporary!
+			String name = line.substring(0,arrowidx).toLowerCase();
+			if(name == "can"){
+				continue;
+			}
+//			String name = line.substring(0,arrowidx);
 			String target = line.substring(arrowidx+2,colonidx);
 			float score = new Float(line.substring(colonidx+1));
 			
@@ -90,7 +95,7 @@ public class WikiMatcher {
 		return keywordmap;
 	}
 
-	static Pattern wordpat = Pattern.compile("[^\\w]+");
+	static Pattern wordpat = Pattern.compile("[^\\w\']+");
 	
 	public static String[] getWords(String s){
 		return wordpat.split(s);
@@ -167,10 +172,11 @@ public class WikiMatcher {
 	// as before, we need to ensure that we store all prefixes, even if we
 	// map them to null
 	
+	
 	public static void main(String[] args){
 		try{
 			System.out.println("loading");
-			HashMap<String,WikiMatch[]> keywordmap = loadMatchers();
+	//		HashMap<String,WikiMatch[]> keywordmap = loadMatchers();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String line;
 			

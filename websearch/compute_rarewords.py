@@ -123,7 +123,9 @@ def foo():
 	print "oy!"
 
 def compute_rarewords():
-	add_all_claims("/home/rob/git/thinklink/output/only_good_claims7.claims")
+	add_all_claims("/home/rob/git/thinklink/output/wiki_filtered_claims.claims")
+
+#	add_all_claims("/home/rob/git/thinklink/output/only_good_claims7.claims")
 	
 def create_rarewords_pickle():
 	add_all_claims("/home/rob/git/thinklink/output/only_good_claims7.claims")

@@ -16,6 +16,7 @@ inline = re.compile("</?(b|em|strong|a|i|img|mark|span).*?>",re.I)
 tag = re.compile("</?.*?>")
 seps = re.compile("[\.\s]*\.[\.\s]*")
 space = re.compile("\s+")
+specials = re.compile("\&#?[\w\d]+\;")
 
 def html_to_text(html):
 	html = html.replace("\n"," ")
@@ -27,4 +28,5 @@ def html_to_text(html):
 	html = tag.sub(". ",html)
 	html = seps.sub(". ",html)
 	html = space.sub(" ",html)
+	html = specials.sub(" ",html)
 	return html
