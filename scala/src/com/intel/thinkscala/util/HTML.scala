@@ -14,8 +14,11 @@ object HTML {
 	    str = str.replaceAll("<!--.*-->","")
 		str = str.replaceAll("(?s:<script.*?>.*?</script>)","")
 		str = str.replaceAll("(?s:<style.*?>.*?</style>)","")
-		str	
+		str
 	}
+	
+	def boing(hey : String) : String = hey
+	
 	
 	def parse(html : String) : ArrayBuffer[Node] = {
 	    val str = stripBadStuff(html)
@@ -77,7 +80,7 @@ object HTML {
 		buf.toString
 	}
 	
-	def getBody2(nodes : ArrayBuffer[Node]) : String = {
+	def getBody2(nodes : ArrayBuffer[Node], foo : String) : String = {
 		var started = false
 		var body = false
 		val buf = new StringBuffer

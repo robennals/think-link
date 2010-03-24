@@ -35,13 +35,6 @@ def get_page_disputes(url,pages):
 				used.add(dispute[4])
 				unique.append(dispute)
 		disputes = [template("disputed_box",dispute = d[1]) for d in unique]
-		#if len(matches) > 0 and matches[0][0] > 0:
-			#disputes = template("disputed_box",dispute = matches[0][1])
-		#elif len(matches) > 0 and matches[0][0] > -0.5:
-			#disputes = template("maybe_disputed_box",dispute = matches[0][1])
-		#else:
-			#disputes = ""	
-		#return disputes
 		return " ".join(disputes)
 	except:
 		return ""
