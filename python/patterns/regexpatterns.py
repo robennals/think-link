@@ -4,6 +4,11 @@ that we look for.
 """
 
 import re
+from nlptools import normalize_text
+import nlptools.boss as boss
+import nlptools.urlcache as uc
+from nlptools.xmltools import XML
+import time
 
 class Choice:
 	items = []
@@ -15,15 +20,55 @@ class Opt:
 	def __init__(self,item):
 		self.item = item
 
-claim = ["claim", "idea", "belief", "notion","rumor","assertion","suggestion"]
+def regex_choice(words): return "(" + "|".join(words) + ")"
 
-falseclaim = [
+def regex(obj):
+	if obj.__class__ == list:
+		return "\s*".join([regex(x) for x in obj])
+	elif obj.__class__ == str:	
+		return obj
+	elif obj.__class__ == Opt:
+		return "("+regex(obj.item)+")?"
+	elif obj.__class__ == Choice:
+		return "("+"|".join([regex(x) for x in obj.items])+")"
+	else:
+		raise "can't make regex"
+
+def allstrings(obj):
+	"""list of all strings a regex can expand to. Ignore Opt for the moment."""
+	if obj.__class__ == list:
+		return combos([allstrings(x) for x in obj if x.__class__ != Opt])
+	elif obj.__class__ == str:
+		return [obj]
+	elif obj.__class__ == Opt:
+		return [""]
+	elif obj.__class__ == Choice:
+		return sum([allstrings(x) for x in obj.items],[])
+	else:
+		raise "not a valid regex"
+	
+		
+		
+def combos(multilist):
+	""" given a list of lists, return all flattened lists"""
+	if len(multilist) == 0:
+		return [""]
+	else:
+		return [normalize_text(head + " " + tail) for head in multilist[0] for tail in combos(multilist[1:])]
+	
+
+def regex_option(words): return "(" + "|".join(words) + ")"
+
+
+claim = Choice(["claim", "idea", "belief", "notion","rumor","assertion","suggestion"])
+
+falseclaim = Choice([
 	"delusion","misconception","lie","hoax","scam",
 	"misunderstanding","myth","urban legend","urban myth",
 	"fabrication","deceit","fallacy",
-	"deception","fraud","swindle","fiction","fantasy"]
+	"deception","fraud","swindle","fiction","fantasy"])
 	
-refute = [
+refute = Choice([
 	"refute", "refuting", "refuted", "refutation of",
 	"rebut", "rebutting", "rebutted",
 	"debunk", "debunking", "debunked",
@@ -31,47 +76,76 @@ refute = [
 	"disprove", "disproving", "disproved",
 	"invalidate", "invalidating", "invalidated",
 	"counter", "countering", "countered",
-	"give the lie to","disagree with","absurdity of"
-	]
+	"give the lie to","disagree with","absurdity of",
+	"contrary to","against"
+	])
 
-claiming = ["claiming","asserting","thinking"]
-badly = ["falsely","wrongly","stupidly","erroneously","incorrectly"]
+claiming = Choice(["claiming","asserting","thinking"])
+badly = Choice(["falsely","wrongly","stupidly","erroneously","incorrectly"])
 
-think = ["think","believe","claim","assert"]
-thought = ["thought","believed","claimed","asserted"]
+think = Choice(["think","believe","claim","assert","argue"])
+thought = Choice(["thought","believed","claimed","asserted"])
 
-crazies = ["crazies","idiots","fanatics","lunatics","morons",
+crazies = Choice(["crazies","idiots","fanatics","lunatics","morons",
 		"crackpots","cranks","loons","nuts","wingnuts","wackos",
-		"bigots"]
+		"bigots"])
+who = Choice(["who","that"])
 
-believing = ["believing","thinking"]
+believing = Choice(["believing","thinking"])
 
-good = ["acceptible","credible","serious","scientific"]
-claim_modifier = ["popular", "widespread", "oft repeated"]
-false_modifier = ["false","bogus","disputed","misleading","fake","mistaken"]
-false = ["not true","false","a lie"]
+good = Choice(["acceptible","credible","serious","scientific"])
+claim_modifier = Choice(["popular", "widespread", "oft repeated"])
+false_modifier = Choice(["false","bogus","disputed","misleading","fake","mistaken"])
+false = Choice(["not true","false","a lie","a myth"])
+ofcourse = Choice(["of course","obviously"])
 
-def regex_option(words): return "(" + "|".join(words) + ")"
+recog_false = ["the",falseclaim,Opt("is")]
+recog_mod = [false_modifier,claim,Opt("is")]
+recog_refute = [refute,"the",Opt(claim_modifier),claim]
+recog_nogood = ["no",good,"evidence"]
+recog_not = ["it is",false,Opt(ofcourse)]
+recog_ing = [badly,claiming]
+recog_think = [badly,think]
+recog_ed = [badly,thought]
+recog_crazies = [crazies,who,think]
+recog_crazing = [crazies,claiming]
+recog_into = ["into",believing]
 
-
-recog_false = "the "+regex_option(falseclaim)+"( is)? that"
-recog_mod = "the "+regex_option(false_modifier)+" "+regex_option(claim)+"( is)? that"
-recog_refute = regex_option(refute)+" the "+regex_option(claim)+" that"
-recog_nogood = "no "+regex_option(good)+" evidence that"
-recog_not = "it is "+regex_option(false)+" that"
-recog_ing = regex_option(badly)+" "+regex_option(claiming)+" that"
-recog_think = regex_option(badly)+" "+regex_option(think)+" that"
-recog_ed = regex_option(badly)+" "+regex_option(thought)+" that"
-recog_crazies = regex_option(crazies)+" who "+regex_option(think)+" that"
-recog_crazing = regex_option(crazies)+" "+regex_option(claiming)+" that"
-recog_into = "into "+regex_option(believing)+" that"
-
-recog_all = regex_option([
+recog_all = [Choice([
 		recog_false,recog_mod,recog_refute,recog_nogood,
 		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,
-		recog_crazing,recog_into])
-regex_all = re.compile(recog_all)
+		recog_crazing,recog_into]),"that"]
+
+regex_all = re.compile(regex(recog_all))
+			
+strings_all = allstrings(recog_all)			
 				
+
+def boss_counts_for_pattern(pattern):
+	"""get the total number of hits for a pattern, and also download the first 50"""
+	url = boss.get_boss_url('"'+pattern+'"',0,50)
+	dom = XML(uc.get_cached_url("boss",url))
+	hitcount = dom.find("resultset_web").attr("totalhits")
+	return int(hitcount)
+
+def boss_results_for_pattern(pattern):
+	return boss.get_boss_all('"'+query+'"')
+
+def counts_for_all():
+	"""download BOSS results for all of our search strings"""
+	for pattern in strings_all:
+		uc.downloaded = False
+		count = boss_counts_for_pattern(pattern)
+		print pattern,":",count
+		if uc.downloaded:
+			time.sleep(2)
+
+def boss_for_all():
+	"""download BOSS results for all of our search strings"""
+	for pattern in strings_all:
+		uc.downloaded = False
+		print "--- "+pattern+" ---"	
+			
 	
 # refuteterms = allforms(refutewords) + refuteother
 

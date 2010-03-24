@@ -1,6 +1,7 @@
 from urllib import quote_plus, urlopen
 from nlptools.xmltools import XML
 import nlptools as t
+import nlptools.urlcache as uc
 import os
 import pickle
 
@@ -15,7 +16,7 @@ def get_boss_url(query,start=0,count=10):
 
 def get_boss(query,start=0,count=10):
 	url = get_boss_url(query,start,count)
-	dom = XML(urlopen(url))
+	dom = XML(uc.get_cached_url("boss",url))
 	realstart = dom.find("resultset_web").attr("start")
 	if int(realstart) == start:
 		return dom.findAll("result")
@@ -31,17 +32,4 @@ def get_boss_all(query):
 		else:
 			break
 	return allresults	
-		
-def query_to_filename(query):
-	return "../output/boss/"+t.string_to_filename(query)+".pkl"
-			
-def get_boss_cached(query):
-	filename = query_to_filename(query)
-	if os.path.exists(filename):
-		print "loading from cache"
-		return pickle.load(file(filename))
-	else:
-		obj = get_boss_all(query)
-		pickle.dump(obj,file(filename,"w"))
-		return obj
 			

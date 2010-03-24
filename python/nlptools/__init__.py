@@ -40,3 +40,7 @@ def words(text):
 
 def string_to_filename(text):
 	return nonword.sub("",text.replace(" ","_"))	
+
+def string_to_filename_dir(text):
+	return nonword.sub("",text.replace(" ","/"))
+	

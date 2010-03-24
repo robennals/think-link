@@ -4,6 +4,7 @@
 *.csv
 *.csv*
 *.pkl
+secret.py
 *tmp*
 think/*
 *.kilepr
