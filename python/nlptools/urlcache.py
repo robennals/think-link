@@ -4,6 +4,7 @@ import re
 import nlptools as t
 import os
 import urllib
+import urllib2
 
 """
 Create a cache for URLS that we download from elsewhere.
@@ -18,14 +19,17 @@ def cache_filename(url):
 	
 basedir = "../output/cache/"
 	
-def get_cached_url(bucket,url):
+def get_cached_url(bucket,url,max=None,timeout=None):
 	global downloaded
 	bucketdir = basedir+bucket
 	filename = bucketdir+"/"+cache_filename(url)
 	if os.path.exists(filename):
 		return file(filename)
 	else:
-		content = urllib.urlopen(url).read()
+		if max:
+			content = urllib2.urlopen(url,None,timeout).read(max)
+		else:
+			content = urllib.urlopen(url).read()
 		dir = os.path.dirname(filename)
 		if not os.path.exists(dir): os.makedirs(dir)
 		cachefile = file(filename,"w")
@@ -33,6 +37,6 @@ def get_cached_url(bucket,url):
 		cachefile.close()
 		namefile = file(bucketdir+"/names","a")
 		namefile.write(url+"\t"+h.md5(url).hexdigest()+"\n")
+		namefile.close()
 		downloaded = True
 		return file(filename)
-	

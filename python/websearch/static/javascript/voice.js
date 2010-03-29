@@ -22,6 +22,7 @@ var disputes = [
 	"the moon landings were faked",
 	"the moon landings didn't happen",
 	"barack obama is a muslim",
+	"barack obama is a socialist",
 	"barack obama was born in kenya",
 	"death panels",
 	"the great wall of china is visible from space",

@@ -37,11 +37,11 @@ def regex(obj):
 def allstrings(obj):
 	"""list of all strings a regex can expand to. Ignore Opt for the moment."""
 	if obj.__class__ == list:
-		return combos([allstrings(x) for x in obj if x.__class__ != Opt])
+		return combos([allstrings(x) for x in obj])
 	elif obj.__class__ == str:
 		return [obj]
 	elif obj.__class__ == Opt:
-		return [""]
+		return allstrings(obj.item) + [""]
 	elif obj.__class__ == Choice:
 		return sum([allstrings(x) for x in obj.items],[])
 	else:
@@ -60,13 +60,13 @@ def combos(multilist):
 def regex_option(words): return "(" + "|".join(words) + ")"
 
 
-claim = Choice(["claim", "idea", "belief", "notion","rumor","assertion","suggestion"])
+claim = Choice(["claim", "idea", "belief", "notion","rumor","assertion","suggestion","contention","argument"])
 
 falseclaim = Choice([
 	"delusion","misconception","lie","hoax","scam",
 	"misunderstanding","myth","urban legend","urban myth",
 	"fabrication","deceit","fallacy",
-	"deception","fraud","swindle","fiction","fantasy"])
+	"deception","fraud","swindle","fantasy"])
 	
 refute = Choice([
 	"refute", "refuting", "refuted", "refutation of",
@@ -77,14 +77,16 @@ refute = Choice([
 	"invalidate", "invalidating", "invalidated",
 	"counter", "countering", "countered",
 	"give the lie to","disagree with","absurdity of",
-	"contrary to","against"
+	"contrary to","against",
+	"reject","rejecting","rejected","rejection of"
 	])
 
-claiming = Choice(["claiming","asserting","thinking"])
-badly = Choice(["falsely","wrongly","stupidly","erroneously","incorrectly"])
+claiming = Choice(["claiming","asserting","thinking","suggesting","stating"])
+claims = Choice(["claims","asserts","thinks","suggests","asserts","state"])
+badly = Choice(["falsely","wrongly","stupidly","erroneously","incorrectly","mistakenly"])
 
-think = Choice(["think","believe","claim","assert","argue"])
-thought = Choice(["thought","believed","claimed","asserted"])
+think = Choice(["think","believe","claim","assert","argue","state"])
+thought = Choice(["thought","believed","claimed","asserted","stated"])
 
 crazies = Choice(["crazies","idiots","fanatics","lunatics","morons",
 		"crackpots","cranks","loons","nuts","wingnuts","wackos",
@@ -95,8 +97,8 @@ believing = Choice(["believing","thinking"])
 
 good = Choice(["acceptible","credible","serious","scientific"])
 claim_modifier = Choice(["popular", "widespread", "oft repeated"])
-false_modifier = Choice(["false","bogus","disputed","misleading","fake","mistaken"])
-false = Choice(["not true","false","a lie","a myth"])
+false_modifier = Choice(["false","bogus","disputed","misleading","fake","mistaken","absurd","erroneous"])
+false = Choice(["not true","false","a lie","a myth","not the case"])
 ofcourse = Choice(["of course","obviously"])
 
 recog_false = ["the",falseclaim,Opt("is")]
@@ -105,6 +107,7 @@ recog_refute = [refute,"the",Opt(claim_modifier),claim]
 recog_nogood = ["no",good,"evidence"]
 recog_not = ["it is",false,Opt(ofcourse)]
 recog_ing = [badly,claiming]
+recog_s = [badly,claims]
 recog_think = [badly,think]
 recog_ed = [badly,thought]
 recog_crazies = [crazies,who,think]
@@ -114,7 +117,7 @@ recog_into = ["into",believing]
 recog_all = [Choice([
 		recog_false,recog_mod,recog_refute,recog_nogood,
 		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,
-		recog_crazing,recog_into]),"that"]
+		recog_crazing,recog_into,recog_s]),"that"]
 
 regex_all = re.compile(regex(recog_all))
 			
@@ -138,14 +141,34 @@ def counts_for_all():
 		count = boss_counts_for_pattern(pattern)
 		print pattern,":",count
 		if uc.downloaded:
+			print "downloaded"
 			time.sleep(2)
 
+def total_counts():
+	total = 0
+	for pattern in strings_all:
+		uc.downloaded = False
+		count = boss_counts_for_pattern(pattern)
+		total += count
+		print pattern,":",count
+	print "total:",total
+
 def boss_for_all():
+	counts = {}
+	predicted = {}
 	"""download BOSS results for all of our search strings"""
 	for pattern in strings_all:
 		uc.downloaded = False
 		print "--- "+pattern+" ---"	
-			
+		results = boss.get_boss_all('"'+pattern+'"')
+		if uc.downloaded:
+			print "downloaded all"
+			time.sleep(2)
+		print "downloaded =",len(results)
+		counts[pattern] = len(results)
+		predicted[pattern] = boss_counts_for_pattern(pattern)
+		print "predicted =",predicted[pattern]
+	return (counts,predicted)
 	
 # refuteterms = allforms(refutewords) + refuteother
 

@@ -14,6 +14,7 @@ import socket
 import urllib
 import os
 import re
+import nlptools.urlcache as uc
 
 
 here = os.path.dirname(__file__)
@@ -21,6 +22,8 @@ here = os.path.dirname(__file__)
 socket.setdefaulttimeout(2)
 
 num_threads = 100
+
+
 
 def download_urls(urls,outfilename):
 	urls = remove_exact_duplicates(urls)
@@ -45,6 +48,9 @@ class DownloadThread(threading.Thread):
 			url = self.urls.pop()
 			process_url(url,self.writer)
 
+def get_content(url):
+	content = urllib2.urlopen(url,None,2).read(400000)
+	return content
 
 def process_url(url,writer):
 	content = urllib2.urlopen(url,None,2).read(400000)

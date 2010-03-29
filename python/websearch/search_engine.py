@@ -69,7 +69,7 @@ static_file_patterns = [
 	]
 	
 def template(name,**args):
-	return Template(file("templates/"+name+".html").read()).substitute(args)
+	return Template(file("websearch/templates/"+name+".html").read()).substitute(args)
 
 handlers = {"/search": do_search}
 
@@ -102,7 +102,7 @@ class SearchHandler(BaseHTTPRequestHandler):
 				self.send_response(200)
 				self.send_header("Content-type",mime)
 				self.end_headers()
-				self.wfile.write(file(curdir + sep + req.path).read())
+				self.wfile.write(file("websearch" + sep + req.path).read())
 				return 		
 		
 		if action in handlers:
