@@ -10,14 +10,16 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import re
 import sys
 from string import Template
-from urlparse import urlparse, parse_qs
+from urlparse import urlparse
+from cgi import parse_qs
 from os import curdir, sep
 from secret import bossKey
 from urllib import quote_plus, urlopen
 from xml.dom import minidom
-import html_to_text as h
+import nlptools.html_to_text as h
 import parallel_io as p
 import rareword_match as r
+import compute_rarewords as cr
 
 # TODO: cache url contents to avoid repeatedly downloading the same files
 
@@ -120,7 +122,7 @@ class SearchHandler(BaseHTTPRequestHandler):
 		
 def main():
 	try:
-		server = HTTPServer(('',8080), SearchHandler)
+		server = HTTPServer(('',8280), SearchHandler)
 		print "started web server"
 		server.serve_forever()
 	except KeyboardInterrupt:
@@ -128,4 +130,6 @@ def main():
 		server.socket.close()
 	
 if __name__ == '__main__':
+	cr.compute_rarewords()
+	cr.add_old_claims()
 	main()

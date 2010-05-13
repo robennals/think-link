@@ -8,7 +8,6 @@ Use this to index into claims efficiently.
 Then apply a more complex algorithm to determine whether one of the found phrases actually matches.
 """
 
-import nltk
 import re
 import cPickle 
 import old_claims as o
@@ -123,7 +122,7 @@ def foo():
 	print "oy!"
 
 def compute_rarewords():
-	add_all_claims("/home/rob/git/thinklink/output/wiki_filtered_claims.claims")
+	add_all_claims("/home/rob/git/thinklink/output/wiki_filtered_claims6.claims")
 
 #	add_all_claims("/home/rob/git/thinklink/output/only_good_claims7.claims")
 	
@@ -138,6 +137,18 @@ def load_rarewords_pickle():
 	global pair_weights
 	print "loading rarewords from pickle..."
 	(wordfreqs,firstwords,pairs,pair_weights) = cPickle.load(file("indexedclaims.pkl"))
+	
+def hashset_to_hashlist(hashset):
+	return dict([(key,list(hashset[key])) for key in hashset])	
+				
 			
-			
-			
+def json_dump():
+	obj = {"firstwords":hashset_to_hashlist(firstwords),
+			"pairs":hashset_to_hashlist(pairs),
+			"pair_claims":cr.pair_claims,
+			"pair_weights":cr.pair_weights,
+			"triple_claims":cr.triple_claims,
+			"triple_weights":cr.triple_weights}
+	return json.dumps(obj)
+	
+	

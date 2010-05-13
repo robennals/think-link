@@ -8,7 +8,6 @@ Use this to index into claims efficiently.
 Then apply a more complex algorithm to determine whether one of the found phrases actually matches.
 """
 
-import nltk
 import re
 import compute_rarewords as cr
 import math
@@ -66,8 +65,16 @@ def text_claim_words(words,claim):
 def word_score(word,freqs):
 	return (freqs[word]/(cr.wordfreqs.get(word,2)))
 
+def my_fsum(nums):
+	out = 0.0
+	for num in nums:
+		out += num
+	return out
+
 def wordset_score(wordset,freqs):
-	return math.fsum([word_score(word,freqs) for word in wordset])
+	return my_fsum([word_score(word,freqs) for word in wordset])
+
+#	return math.fsum([word_score(word,freqs) for word in wordset])
 
 def match_claim(claim,words,first,second,freqs):
 	claimwords = set(tokenize(claim))

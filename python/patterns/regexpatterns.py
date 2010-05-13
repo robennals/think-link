@@ -83,7 +83,7 @@ refute = Choice([
 
 claiming = Choice(["claiming","asserting","thinking","suggesting","stating"])
 claims = Choice(["claims","asserts","thinks","suggests","asserts","state"])
-badly = Choice(["falsely","wrongly","stupidly","erroneously","incorrectly","mistakenly"])
+badly = Choice(["falsely","wrongly","stupidly","erroneously","incorrectly","mistakenly","misleadingly","deceptively","fraudulently"])
 
 think = Choice(["think","believe","claim","assert","argue","state"])
 thought = Choice(["thought","believed","claimed","asserted","stated"])
@@ -97,13 +97,13 @@ believing = Choice(["believing","thinking"])
 
 good = Choice(["acceptible","credible","serious","scientific"])
 claim_modifier = Choice(["popular", "widespread", "oft repeated"])
-false_modifier = Choice(["false","bogus","disputed","misleading","fake","mistaken","absurd","erroneous"])
+false_modifier = Choice(["false","fraudulent","bogus","disputed","misleading","deceptive","fake","mistaken","absurd","erroneous"])
 false = Choice(["not true","false","a lie","a myth","not the case"])
 ofcourse = Choice(["of course","obviously"])
 
 recog_false = ["the",falseclaim,Opt("is")]
 recog_mod = [false_modifier,claim,Opt("is")]
-recog_refute = [refute,"the",Opt(claim_modifier),claim]
+recog_refute = [refute,"the",claim]
 recog_nogood = ["no",good,"evidence"]
 recog_not = ["it is",false,Opt(ofcourse)]
 recog_ing = [badly,claiming]
@@ -128,7 +128,7 @@ def boss_counts_for_pattern(pattern):
 	"""get the total number of hits for a pattern, and also download the first 50"""
 	url = boss.get_boss_url('"'+pattern+'"',0,50)
 	dom = XML(uc.get_cached_url("boss",url))
-	hitcount = dom.find("resultset_web").attr("totalhits")
+	hitcount = dom.find("resultset_web").attr("deephits")
 	return int(hitcount)
 
 def boss_results_for_pattern(pattern):
@@ -169,6 +169,9 @@ def boss_for_all():
 		predicted[pattern] = boss_counts_for_pattern(pattern)
 		print "predicted =",predicted[pattern]
 	return (counts,predicted)
+
+#def boss_salted(pattern):
+	
 	
 # refuteterms = allforms(refutewords) + refuteother
 

@@ -17,8 +17,8 @@ public class WikiKeywordiness {
 	static String prefix = "/home/rob/Reference/Wikipedia/";
 //	static String gatherfile = prefix+"namegathered_all";
 	static String gatherfile = prefix+"java_redirectlinks";
-	static String freqfile = prefix+"java_wordfreqs_once";
-	static String outfile = prefix+"java_keywordiness_once";
+	static String freqfile = prefix+"java_wordfreqs_once_lower";
+	static String outfile = prefix+"java_keywordiness_once_lower_split3";
 	
 	public static HashMap<String,Integer> loadUseFreqs() throws Exception{
 		HashMap<String,Integer> h = new HashMap<String,Integer>();
@@ -26,7 +26,8 @@ public class WikiKeywordiness {
 		String line;
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
-			String name = line.substring(0,colonidx);
+			// HACK: TODO: remove the toLowerCase code
+			String name = line.substring(0,colonidx).toLowerCase();
 			String count = line.substring(colonidx+1);
 			h.put(name, new Integer(count));
 		}
@@ -40,13 +41,34 @@ public class WikiKeywordiness {
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
 			int arrowidx = line.indexOf("->");
-			String name = line.substring(0,arrowidx);
+			// HACK: TODO: remove the toLowerCase code
+			String name = line.substring(0,arrowidx).toLowerCase();
 			String target = line.substring(arrowidx+2,colonidx);
 			float linkcount = new Integer(line.substring(colonidx+1));
 			Integer freq = usefreqs.get(name);
 			if(freq == null) continue;
 			float keywordiness = linkcount/(freq+1);
+			
+			if(keywordmap.containsKey(name+"->"+target)){
+				float now = keywordmap.get(name+"->"+target);
+				if(now > keywordiness) continue;
+			}	
 			keywordmap.put(name+"->"+target, keywordiness);
+			
+			String[] words = name.split(" ");
+			for(String word : words){ // HACK: TODO: do this properly
+				name = word;
+				freq = usefreqs.get(name);
+				if(freq == null) continue;
+				keywordiness = linkcount/(freq+1);
+				if(keywordiness > 0.001){
+					if(keywordmap.containsKey(name+"->"+target)){
+						float now = keywordmap.get(name+"->"+target);
+						if(now > keywordiness) continue;
+					}
+					keywordmap.put(name+"->"+target, keywordiness);				
+				}
+			}
 		}
 		return keywordmap;
 	}

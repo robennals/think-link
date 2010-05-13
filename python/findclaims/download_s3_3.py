@@ -103,7 +103,7 @@ def download_loop():
 					print "'"+str(e.reason)+"'"
 #					pdb.set_trace()					
 					print "error:",e.reason,"-",url	
-					errors += 1							
+			errors += 1					
 			backoff += 1
 		except Exception as e:
 			print "unknown error:",url

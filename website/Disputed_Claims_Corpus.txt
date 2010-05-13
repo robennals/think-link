@@ -4,12 +4,16 @@ We plan to continually update and improve this data set, and provide tool for qu
 
 For the moment, we are making our data available as a collection of simple text files, each of which represents a single day, and each line of which contains a claim that we believe is disputed. 
 
-<a href="allgood.tar.gz">Download a list of good claims</a>
+<a href="allgood.tar.gz">Download a list of good claims (55Mb)</a>
+
+<a href="wiki_filtered_claims.tar.gz">Download a smaller, more selective, list of disputed claims (9.3Mb)</a>
+
+<a href="disputed_claims_meta.tar.gz">Download good claims with metadata (315Mb)</a>
 
 This data is available free of charge under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution License</a>. You are free to use the data however you like, as long as you say that you got the data from us.
 
 This is a small subset of the information we have available about disputed claims. For example, we also have urls, titles, text context, etc for each of the claims listed here. 
 
-Please <a href="mailto:rob@ennals.org">mail Rob Ennals</a> if you want a different slice of our data set, or want help in using our data. 
+Please <a href="mailto:rob@ennals.org">mail Rob Ennals</a> if you want a different slice of our data set, or want help in using our data. More generally, we'd also be interested in hearing how you would like to use our data.
 
 

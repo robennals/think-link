@@ -1,12 +1,13 @@
 
 import csv
 import re
+import os
 
 def remove_exact_duplicates(strings):
 	strings.sort()
 	unique = []
 	for i in range(0,len(strings)-1):
-		if not claims[i+1] == strings[i]:
+		if not strings[i+1] == strings[i]:
 			unique.append(strings[i])
 	return unique
 
@@ -43,4 +44,22 @@ def string_to_filename(text):
 
 def string_to_filename_dir(text):
 	return nonword.sub("",text.replace(" ","/"))
+	
+def local_filename(thisfile,thatfile):
+	return os.path.join(os.path.dirname(thisfile),thatfile)
+
+def sorted_freqs(freqs):
+	return sorted(freqs.iteritems(),key=op.itemgetter(1),reverse=True)
+
+#def tag_sentence(sentence):
+	#return nltk.pos_tag(nltk.word_tokenize(sentence))
+
+def convert_entities(text):
+	return text.replace("&#8217;","'").replace("&#8220;",'"').replace("&#8221;",'"').replace("&#8230;"," - ").replace("&nbsp;"," ").replace("&amp;","&").replace("&ldquq;",'"').replace("&rdquo;",'"').replace("&acute;","'").replace("&mdash;","-").replace("&quot;","'").replace("&#039;","'").replace("&#39;","'").replace("&#8212;","-").replace("&#8216;","'").replace("&lsquo;","'").replace("&rsquo;","'").replace("&ldquo;",'"').replace("&rdquo;",'"').replace("&#8211","").replace("&#038;","").replace("&#038;","").replace("&#147;",'"').replace("&#8220;",'"').replace("&#34;",'"').replace("&#130;",",").replace("&#133;","...").replace("&#145;","'").replace("&#034;",'"')
+
+def is_verb(name):
+    return len([synset for synset in wn.synsets(name) if ".v." in synset.name]) > 0
+
+def is_past_verb(name):
+	return name == "s" or (is_verb(name) and (name.endswith("s") or name.endswith("ed")))
 	

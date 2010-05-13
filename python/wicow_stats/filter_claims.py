@@ -39,8 +39,8 @@ def trim_claim_end(claim):
 		if ("' "+commaword) in claim: claim = claim[:claim.find("' "+commaword)]
 	return claim
 
-bad_claims = set([line.strip() for line in file("bad_claims.txt")])
-bad_claims_auto = set([line.strip() for line in file("bad_claims_auto.txt")])
+bad_claims = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims.txt")])
+bad_claims_auto = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims_auto.txt")])
 
 def is_good(claim):
 	words = nltk.word_tokenize(claim)
@@ -72,7 +72,7 @@ def has_bad_end(claim):
 	return False
 
 endstrings = ["?","!",";",":",
-		,", a",
+		", a",
 		" - ","is not only wrong","is utterly","was disproved","was debunked",
 		"is clearly", "is false","when in fact","has been repeated","did you ever think",
 		"is bunk","is not correct","is not true","and that",",\""]

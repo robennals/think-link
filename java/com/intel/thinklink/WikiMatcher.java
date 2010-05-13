@@ -26,7 +26,7 @@ class WikiMatch {
 
 public class WikiMatcher {
 	static String prefix = "/home/rob/Reference/Wikipedia/";
-	static String infile = prefix+"java_keywordiness_once";
+	static String infile = prefix+"java_keywordiness_once_lower_split3";
 	static String linkfile = prefix+"keyword_dblinks";
 	
 	public static HashMap<String,WikiMatch[]> loadNoEx() {
@@ -49,11 +49,8 @@ public class WikiMatcher {
 		while((line = reader.readLine()) != null){
 			int colonidx = line.indexOf(":");
 			int arrowidx = line.indexOf("->");
-			// DEBUG: temporary!
+			// DEBUG: temporary! Restore case later!!!
 			String name = line.substring(0,arrowidx).toLowerCase();
-			if(name == "can"){
-				continue;
-			}
 //			String name = line.substring(0,arrowidx);
 			String target = line.substring(arrowidx+2,colonidx);
 			float score = new Float(line.substring(colonidx+1));
@@ -89,7 +86,7 @@ public class WikiMatcher {
 							System.out.println("sucky");
 						}
 					}
-				}
+				}				
 			}
 		}
 		return keywordmap;
@@ -157,6 +154,17 @@ public class WikiMatcher {
 				}else{
 					break;
 				}
+			}
+			if(words[start].endsWith("s")){
+				String word = words[start];
+				String singular = word.substring(0,word.length() - 1);
+				if(keywordmap.containsKey(singular)){
+					WikiMatch[] arr = keywordmap.get(singular);
+					for(int i = 0; i < arr.length; i++){
+						matches.add(arr[i]);
+					}
+				}
+								
 			}
 		}
 		

@@ -19,7 +19,7 @@ public class Wikiprocess {
 	
 	static String wikifile = "/home/rob/Reference/Wikipedia/enwiki-20081008-pages-articles.xml";
 	static String pruneprefix = "/home/rob/Reference/Wikipedia/namepruned/";
-	static String outfile = "/home/rob/Reference/Wikipedia/java_wordfreqs_once";
+	static String outfile = "/home/rob/Reference/Wikipedia/java_wordfreqs_once_lower";
 	
 	public static HashMap<String,Integer> loadWords() throws Exception{
 		HashMap<String,Integer> h = new HashMap<String,Integer>();
@@ -35,7 +35,8 @@ public class Wikiprocess {
 			String line;
 			while((line = reader.readLine()) != null){
 				int colonidx = line.indexOf(':');
-				String name = line.substring(0,colonidx);
+				// HACK: TODO: stop this being lowercase
+				String name = line.substring(0,colonidx).toLowerCase();
 				String[] words = wordpat.split(name);
 				for(int length = 1; length <= words.length; length++){
 					StringBuffer prefix = new StringBuffer();
@@ -80,6 +81,8 @@ public class Wikiprocess {
 			Set<String> done = new HashSet<String>();
 			boolean inbody = false;
 			while((line = reader.readLine()) != null){
+				// HACK: TODO: stop this being lowercase
+				line = line.toLowerCase();
 				if(line.contains("<text")){
 					inbody = true;
 				}

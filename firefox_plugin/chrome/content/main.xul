@@ -11,7 +11,10 @@
 	      src="chrome://thinklink/content/data.js" />
   <script type="application/x-javascript" 
 	      src="chrome://thinklink/content/robjson.js" />
-
+<!--
+  <script type="application/x-javascript"
+  		  src="chrome://thinklink/content/claimdata3.js" />	      
+-->
 
 	<toolbarpalette id="BrowserToolbarPalette">
 			<toolbarbutton class="toolbarbutton-1" label="This is disputed" id="thinklink-disputed" position="2" 
@@ -24,6 +27,7 @@
 	<menupopup id="menu_viewPopup">
 		<menuseparator/>
 		<menuitem label="View Dispute Finder" oncommand="window.open('http://disputefinder.cs.berkeley.edu')" />
+		<menuitem label="Reload Dispute Finder Claims" oncommand="thinklink_readClaimFile()"/>
 	</menupopup>
 
     <menupopup id="menu_HelpPopup">
