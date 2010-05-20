@@ -10,9 +10,9 @@ def mysql_reader(f):
 	return csv.reader(f,doublequote=False,escapechar='\\',quoting=csv.QUOTE_ALL)
 
 def get_old_claims():
-	basic_claims = [(row[0],row[0]) for row in mysql_reader(file("websearch/old_claims.csv"))]
-	paraphrases = [(row[0],row[1]) for row in mysql_reader(file("websearch/old_paraphrases.csv"))]
-	goodclaims = [(row.strip(),row.strip()) for row in file("websearch/good_claims.txt")]
+	basic_claims = [(row[0],row[0]) for row in mysql_reader(file("/home/rob/git/thinklink/python/websearch/old_claims.csv"))]
+	paraphrases = [(row[0],row[1]) for row in mysql_reader(file("/home/rob/git/thinklink/python/websearch/old_paraphrases.csv"))]
+	goodclaims = [(row.strip(),row.strip()) for row in file("/home/rob/git/thinklink/python/websearch/good_claims.txt")]
 	return basic_claims + paraphrases + goodclaims
 	
 	

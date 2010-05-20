@@ -1,0 +1,538 @@
+* {
+	font-family: arial,sans-serif;
+}
+
+body {
+	font-size: 12px;
+}
+
+
+#frontlogo {
+	font-size: 40px;
+	margin-bottom: 0px;
+	margin-left: 122px;
+	margin-top: 32px;
+}
+
+#intellogo{
+	position: absolute;
+	left: 0px;
+	top: 10px;
+}
+
+.tagline {
+	margin-bottom: 15px;
+}
+
+.box {
+	background-color: white;
+	max-width: 600px;
+	margin-top: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border: 3px solid #DFDFDF;
+}
+
+.box img {
+	margin-left: 30px;
+	max-width: 270px;
+}
+
+.box h2, .box h1 {
+	background-color: #DFDFDF;
+	font-size: 20px;
+	padding: 2px;
+	padding-left: 4px;
+	margin-top: 0px;
+}
+
+.frontlist ol li, .frontlist ul li {
+	font-size: 15px;
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+.frontlist {
+	float: left;
+	width: 350px;
+	min-height: 640px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+
+.docbox {
+	width: 450px;
+	font-size: 14px;
+	position: absolute;
+	left: 230px;
+}
+
+.docbox h3 {
+	margin-top: 30px;
+}
+
+.docbody {
+	padding: 10px;
+}
+
+#reader {
+	position: absolute;
+	left: 0px;
+}
+
+#activist {
+	position: absolute;
+	left: 380px;
+}
+
+#whatnext {
+	clear: both;
+	margin: 20px;
+	margin-top: 20px;
+}
+
+#stats {
+	width: 180px;	
+	position: absolute;
+	left: 650px;
+	padding: 10px;
+	font-size: 14px;
+	top: 170px;
+}
+
+#stats .instances {
+	display: block;
+	font-size: 14px;
+	margin-top: 4px;
+}
+
+#nav {
+	margin: 20px;
+	white-space: nowrap;
+}
+
+#nav ul {
+	display: inline;
+	background-color: #DFDFDF;
+	color: #666666;
+	padding: 4px;	
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+#nav li {
+	display: inline;
+	font-size: 14px;
+	cursor: pointer;
+	padding: 2px 8px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+#nav li:hover {
+	color: black;
+	background-color: #D1D1D1;
+}
+
+#docnav {
+	width: 180px;
+	font-size: 14px;
+	position: absolute;
+	left: 20px;
+}
+
+#docnav ul{
+	padding-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#docnav h3 {
+	margin: 10px;
+	font-weight: bold;
+	margin-bottom: 0px;
+	margin-top: 10px;
+}
+
+#docnav h2 {
+	margin: 10px;
+	margin-bottom: 20px;
+}
+
+#docnav .toplink {
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+#mainsearch, #addclaim {
+	padding: 6px;
+	background-color: #FFFFAA;
+}
+
+#addclaim {
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+.yellowbox {
+	border-color: #FFFFAA;
+}
+
+.mainbox {
+	margin-left: 20px;
+/*
+	position: absolute;
+*/
+}
+
+.search {
+	font-size: 16px;
+	padding: 4px;
+	width: 370px;	
+}
+
+.newphrase {
+	font-size: 16px;
+	padding: 4px;
+	width: 370px;
+}
+
+.indent {
+	margin-left: 40px;
+}
+.prompt {
+	font-weight: bold;
+	font-size: 14px;
+	display: block;
+}
+
+.submit {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 4px;
+}
+
+.tempinput {
+	color: gray;
+}
+
+.claimsummary {
+	padding: 20px;
+	font-size: 15px;
+}
+
+.claimsummary q {
+	font-weight: bold;
+}
+
+.claimresults .title {
+	font-size: 15px;
+	color: #105CB6;
+}
+
+.claimresults {
+	padding: 10px;
+	font-size: 13px;
+}
+
+#newthing {
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.claimresults h2 {
+	background: none;
+	font-size: 15px;
+	margin-left: -10px;
+}
+
+.hidden {
+	display: none;
+}
+
+.topbutton {
+	font-size: 20px;
+	padding: 5px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #5867A2;
+	color: white;
+	font-weight: bold;
+}
+
+.button-install {
+	margin-left: 43px;
+}
+
+.button-addclaim {
+	margin-left: 120px;
+}
+
+#topbuttonbox {
+	padding-top: 10px;
+	margin: 20px;
+}
+
+#install-button {
+	padding: 8px 20px;
+	font-size: 20px;
+	border: 1px solid grey;
+	margin: 10px;
+	background-color: #eeeeee;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#install-button:hover{
+ 	background-color: #D1D1D1;
+
+}
+
+.button-box {
+	margin: 10px;
+	margin-bottom: 40px;
+}
+
+.thingbox h1{
+	margin-bottom: 0px;
+}
+
+.thingbox .tabs .header {
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	background-color: #F6F6F6;
+}
+
+.thingbox .tabs .header a {
+	background: none;
+	border: none;
+/*
+	background-color: #F6F6F6;
+	border-color: #F6F6F6;
+	*/
+}
+
+
+.thingbox .tabs .tabbody {
+	border: none;
+	
+}
+
+.desc {
+	margin-bottom: 15px;
+	font-size: 13px;
+}
+
+.subphrases h4{
+	margin: 0px;
+}
+
+.paraphrases h3{
+	margin-top: 20px;
+}
+
+.paraphrase {
+	margin: 10px;
+}
+
+.paraphrase .title {
+	font-size: 15px;
+}
+
+.paraphrases q {
+}
+
+.subphrase .yes, .subphrase .no {
+	padding: 0px 6px;
+}
+
+.subphrase {
+	margin-bottom: 4px;
+	margin-left: 20px;
+}
+
+.paraphrase .details {
+	display: block;
+	margin-left: 20px;
+}
+
+.parapopup {
+/*
+	position: absolute;
+*/
+	background: white;
+	border: 4px solid grey;
+	padding-bottom: 10px;
+	width: 550px;
+/*
+	-moz-border-radius-bottomleft: 10px;
+	-moz-border-radius-bottomright: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+*/
+}
+
+.parapopup .desc {
+	padding: 10px;
+	border-bottom: 1px solid grey;
+	margin-bottom: 0px;
+}
+
+.subphrases {
+	overflow-y: auto;
+	max-height: 300px;
+	border-bottom: 1px solid grey;
+	padding-left: 20px;
+	background-color: white;
+}
+
+.paranewclaim .subphrases{
+	border: 1px solid black;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.paranewclaim h4 {
+	font-size: 15px;
+}
+
+.parapopup h4 {
+	margin: 0px;
+	padding: 4px;
+	background-color: #eeeeee;
+	color: black;
+	font-size: 14px;
+}
+
+.popupborder {
+	border: 10px solid grey;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	position: absolute;
+	z-index: 1000;
+}
+
+.togglephrase, .selectclaim {
+	cursor: pointer;
+	padding: 4px;
+	padding-left: 20px;
+	margin-right: 20px;
+}
+
+.togglephrase:hover, .selectclaim:hover {
+	background-color: #eeeeee;
+	color: black;
+}
+
+.togglephrase-selected {
+	background-image: url(/images/tick.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-color: #8497C0;
+	color: white;
+}
+
+.reuse {
+	font-size: 18px;
+}
+
+.waiting {
+	font-size: 18px;
+	padding: 40px;
+	background: white;
+}
+
+.claim-warning {
+	border-color: orange;
+	border-width: 10px;
+	padding: 10px;
+	max-width: 550px;
+	font-size: 15px;
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+#hotclaims .desc {
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.feedback .desc {
+	width: 535px;
+}
+
+.minibody .box {
+	margin-top: 0px;
+}
+
+.box .goicon {
+	margin-left: 5px;
+}
+
+.minibody .box h1, .minibody .box h1 a {
+	font-size: 16px;
+}
+
+.frontlist .desc {
+	background-color: #F6F6F6;
+	padding: 6px;
+}
+
+.frontlist h2 {
+	margin-bottom: 0px;
+}
+
+.similar-claims {
+	margin-left: 20px;
+}
+
+.claimlink {
+	display: block;
+}
+
+.similar-claims h2 {
+	font-size: 14px;
+	margin: 4px;
+	background-color: white;
+}
+
+.similar-claims .claimresults {
+	padding-top: 0px;
+}
+
+.similar-claims .claimlink {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.minibody .tabbody {
+	overflow-y: auto;
+	max-height: 300px;
+}
+
+.minibody .match-explain {
+	padding: 8px;
+	margin-top: 4px;
+	max-width: 584px;
+}
+
+.match-text {
+	background-color: #FFDFDF;
+}
+
+.match-para {
+	font-style: italic;
+}
+
+.quotedetails {
+	color: #666666;
+	margin-left: 4px;
+}
+
+.webquote .text {
+	display: block;
+	color: black;
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+   <ShortName>Dispute Finder Search</ShortName>
+   <Description>Know when search results contain disputed information</Description>
+   <Tags>web search disputed credibility</Tags>
+   <Contact>rob@ennals.org</Contact>
+   <Url type="text/html" 
+        template="http://disputefinder.cs.berkeley.edu/?q={searchTerms}&amp;pw={startPage?}"/>
+ </OpenSearchDescription>

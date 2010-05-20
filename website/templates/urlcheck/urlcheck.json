@@ -1,0 +1,6 @@
+{% if callback %}{{callback}}('{% endif %}
+[{% for dispute in disputes %}
+	{"claimtext":"{{dispute.0}}",
+	    "matchtext":"{{dispute.1}}"} {% if not forloop.last %},{% endif %}
+{% endfor %}]
+{% if callback %}'){% endif %}

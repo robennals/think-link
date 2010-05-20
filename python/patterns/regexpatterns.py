@@ -60,7 +60,11 @@ def combos(multilist):
 def regex_option(words): return "(" + "|".join(words) + ")"
 
 
-claim = Choice(["claim", "idea", "belief", "notion","rumor","assertion","suggestion","contention","argument"])
+claim = Choice(
+	["claim", "claims","idea","ideas", "belief", "beliefs", 
+	 "notion", "notions","rumor","rumors","assertion","assertions",
+	 "suggestion","suggestions","contention","contentions",
+	 "argument","arguments","accusation","accusations"])
 
 falseclaim = Choice([
 	"delusion","misconception","lie","hoax","scam",
@@ -105,6 +109,8 @@ recog_false = ["the",falseclaim,Opt("is")]
 recog_mod = [false_modifier,claim,Opt("is")]
 recog_refute = [refute,"the",claim]
 recog_nogood = ["no",good,"evidence"]
+recog_noev = ["no","evidence"]
+recog_noev_ex = ["no evidence supports the",claim]
 recog_not = ["it is",false,Opt(ofcourse)]
 recog_ing = [badly,claiming]
 recog_s = [badly,claims]
@@ -115,7 +121,7 @@ recog_crazing = [crazies,claiming]
 recog_into = ["into",believing]
 
 recog_all = [Choice([
-		recog_false,recog_mod,recog_refute,recog_nogood,
+		recog_false,recog_mod,recog_refute,recog_nogood,recog_noev,recog_noev_ex,
 		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,
 		recog_crazing,recog_into,recog_s]),"that"]
 
@@ -126,19 +132,19 @@ strings_all = allstrings(recog_all)
 
 def boss_counts_for_pattern(pattern):
 	"""get the total number of hits for a pattern, and also download the first 50"""
-	url = boss.get_boss_url('"'+pattern+'"',0,50)
+	url = boss.get_boss_url(pattern,0,50)
 	dom = XML(uc.get_cached_url("boss",url))
 	hitcount = dom.find("resultset_web").attr("deephits")
 	return int(hitcount)
 
 def boss_results_for_pattern(pattern):
-	return boss.get_boss_all('"'+query+'"')
+	return boss.get_boss_all('"'+pattern+'"')
 
 def counts_for_all():
 	"""download BOSS results for all of our search strings"""
 	for pattern in strings_all:
 		uc.downloaded = False
-		count = boss_counts_for_pattern(pattern)
+		count = boss_counts_for_pattern('"'+pattern+'"')
 		print pattern,":",count
 		if uc.downloaded:
 			print "downloaded"
@@ -148,7 +154,7 @@ def total_counts():
 	total = 0
 	for pattern in strings_all:
 		uc.downloaded = False
-		count = boss_counts_for_pattern(pattern)
+		count = boss_counts_for_pattern('"'+pattern+'"')
 		total += count
 		print pattern,":",count
 	print "total:",total
@@ -166,11 +172,35 @@ def boss_for_all():
 			time.sleep(2)
 		print "downloaded =",len(results)
 		counts[pattern] = len(results)
-		predicted[pattern] = boss_counts_for_pattern(pattern)
+		predicted[pattern] = boss_counts_for_pattern('"'+pattern+'"')
 		print "predicted =",predicted[pattern]
 	return (counts,predicted)
 
-#def boss_salted(pattern):
+salts = range(1996,2011)
+salts.reverse()
+
+def boss_salted(pattern,salts):
+	count = boss_counts_for_pattern(pattern)
+	print "pattern:",pattern
+	if count > 1000 and len(salts) > 0:
+		salt = salts[0]
+		yes = boss_salted(pattern+" +"+str(salt),salts[1:])
+		no = boss_salted(pattern+" -"+str(salt),salts[1:])
+		return yes + no
+	else:
+		return len(boss.get_boss_all(pattern))
+	
+def boss_salted_out(pattern,salts,outfile):
+	count = boss_counts_for_pattern(pattern)
+	print "pattern:",pattern
+	if count > 1000 and len(salts) > 0:
+		salt = salts[0]
+		yes = boss_salted_out(pattern+" +"+str(salt),salts[1:],outfile)
+		no = boss_salted_out(pattern+" -"+str(salt),salts[1:],outfile)
+	else:	
+		results = boss.get_boss_all(pattern)
+		for result in results:
+			outfile.write(result['date']+"\t"+result['url']+"\t"+pattern+"\n")
 	
 	
 # refuteterms = allforms(refutewords) + refuteother

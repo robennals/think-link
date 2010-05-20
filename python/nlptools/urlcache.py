@@ -5,6 +5,7 @@ import nlptools as t
 import os
 import urllib
 import urllib2
+import time
 
 """
 Create a cache for URLS that we download from elsewhere.
@@ -19,13 +20,16 @@ def cache_filename(url):
 	
 basedir = "../output/cache/"
 	
-def get_cached_url(bucket,url,max=None,timeout=None):
+def get_cached_url(bucket,url,max=None,timeout=None,pause=False):
 	global downloaded
 	bucketdir = basedir+bucket
 	filename = bucketdir+"/"+cache_filename(url)
 	if os.path.exists(filename):
 		return file(filename)
 	else:
+		if pause:
+			time.sleep(0.25)
+			print "fetching url"
 		if max:
 			content = urllib2.urlopen(url,None,timeout).read(max)
 		else:

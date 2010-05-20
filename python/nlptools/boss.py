@@ -16,7 +16,7 @@ def get_boss_url(query,start=0,count=10):
 
 def get_boss(query,start=0,count=10):
 	url = get_boss_url(query,start,count)
-	dom = XML(uc.get_cached_url("boss",url))
+	dom = XML(uc.get_cached_url("boss",url,pause=True))
 	realstart = dom.find("resultset_web").attr("start")
 	if int(realstart) == start:
 		return dom.findAll("result")

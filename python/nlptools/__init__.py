@@ -2,6 +2,7 @@
 import csv
 import re
 import os
+import operator as op
 
 def remove_exact_duplicates(strings):
 	strings.sort()
@@ -63,3 +64,18 @@ def is_verb(name):
 def is_past_verb(name):
 	return name == "s" or (is_verb(name) and (name.endswith("s") or name.endswith("ed")))
 	
+def get_domain(url):
+	m = re.search("https?://([\w\.]+)",url)
+	return m.group(1)
+
+def hash_freqs(list):
+	counts = {}
+	for item in list:
+		counts[item] = counts.get(item,0) + 1
+	return counts
+
+def count_freqs(list):
+	counts = {}
+	for item in list:
+		counts[item] = counts.get(item,0) + 1
+	return sorted(counts.iteritems(),key=op.itemgetter(1),reverse=True)

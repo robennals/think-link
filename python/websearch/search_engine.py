@@ -15,6 +15,7 @@ from cgi import parse_qs
 from os import curdir, sep
 from secret import bossKey
 from urllib import quote_plus, urlopen
+import urllib2
 from xml.dom import minidom
 import nlptools.html_to_text as h
 import parallel_io as p
@@ -23,9 +24,30 @@ import compute_rarewords as cr
 
 # TODO: cache url contents to avoid repeatedly downloading the same files
 
-def get_page_disputes(url,pages):
+def get_raw_disputes(url):
 	try:
-		htmlcontent = pages[url]
+		htmlcontent = urllib2.urlopen(url,None,2).read(200000)	
+		text = h.html_to_text(htmlcontent)
+		matches = r.get_sorted_claims(text)
+		disputes = [dispute for dispute in matches if (dispute[0] > 0)][:4]
+		unique = []
+		used = set({})
+		for dispute in disputes:
+			if (not dispute[3] in used) and (not dispute[4] in used):
+				used.add(dispute[3])
+				used.add(dispute[4])
+				unique.append(dispute)
+		return unique		
+	except:
+		return []
+
+
+def get_page_disputes(url,pages=None):
+	try:
+		if pages:
+			htmlcontent = pages[url]
+		else:
+			htmlcontent = urllib2.urlopen(url,None,2).read(200000)	
 		text = h.html_to_text(htmlcontent)
 		matches = r.get_sorted_claims(text)
 		disputes = [dispute for dispute in matches if (dispute[0] > 0)][:4]
@@ -40,6 +62,7 @@ def get_page_disputes(url,pages):
 		return " ".join(disputes)
 	except:
 		return ""
+		
 	
 
 def do_search_result(result,pages):

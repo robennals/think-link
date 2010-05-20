@@ -63,5 +63,4 @@ def retrieve_urls(urls):
 
 def retrieve_urls_dict(urls):
 	return dict([item for item in retrieve_urls(urls) if item])		
-	
-		
+			

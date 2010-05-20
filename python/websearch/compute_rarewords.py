@@ -51,7 +51,7 @@ def claim_words(claim):
 	topwords.sort(key=op.itemgetter(2))
 	return [word for (word,freq,index) in topwords]	
 
-bad_claims = set([line.strip() for line in file("wicow_stats/bad_claims.txt")])
+bad_claims = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims.txt")])
 
 def add_claim(claim):
 	keywords = claim_words(claim)
