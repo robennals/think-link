@@ -11,7 +11,7 @@ def get_boss_url(query,start=0,count=10):
 	bossSvr = "http://boss.yahooapis.com/ysearch/web/v1"
 	url = (bossSvr + "/" + quote_plus(query) + "?appid="+bossKey+
 			"&format=xml"+"&start="+str(start)+"&count="+str(count)+
-			"&abstract=long")
+			"&abstract=long&type=html")
 	return url
 
 def get_boss(query,start=0,count=10):

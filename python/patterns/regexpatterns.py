@@ -125,7 +125,7 @@ recog_all = [Choice([
 		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,
 		recog_crazing,recog_into,recog_s]),"that"]
 
-regex_all = re.compile(regex(recog_all))
+regex_all = re.compile(regex(recog_all),re.IGNORECASE)
 			
 strings_all = allstrings(recog_all)			
 				
@@ -175,6 +175,26 @@ def boss_for_all():
 		predicted[pattern] = boss_counts_for_pattern('"'+pattern+'"')
 		print "predicted =",predicted[pattern]
 	return (counts,predicted)
+	
+def boss_for_all_out(outfile):
+	counts = {}
+	predicted = {}
+	"""download BOSS results for all of our search strings"""
+	for pattern in strings_all:
+		uc.downloaded = False
+		print "--- "+pattern+" ---"	
+		results = boss.get_boss_all('"'+pattern+'"')
+		for result in results:
+			outfile.write(result['date']+"\t"+result['url']+"\t\""+pattern+"\"\n")
+		if uc.downloaded:
+			print "downloaded all"
+			time.sleep(2)
+		print "downloaded =",len(results)
+		counts[pattern] = len(results)
+		predicted[pattern] = boss_counts_for_pattern('"'+pattern+'"')
+		print "predicted =",predicted[pattern]
+	return (counts,predicted)
+	
 
 salts = range(1996,2011)
 salts.reverse()

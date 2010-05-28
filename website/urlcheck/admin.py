@@ -15,8 +15,13 @@ from django.contrib import admin
 	#list_filter = ['pub_date']
 	#search_fields = ['question']
 	#date_hierachy = ['pub_date']
-	
+
+class SourcePageAdmin(admin.ModelAdmin):
+	list_display = ['short_url','date','crawled']
+	list_filter = ['date']
+	search_fields = ['url']
+		
 admin.site.register(Dispute)
-admin.site.register(SourcePage)
+admin.site.register(SourcePage,SourcePageAdmin)
 admin.site.register(MatchPage)
 admin.site.register(DisputeMatch)
