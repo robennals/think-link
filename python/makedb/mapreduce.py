@@ -28,14 +28,12 @@ class InStore:
 		os.system("sort <"+self.filename+" >"+outfilename)
 		return ShuffledStore(outfilename)
 		
-	def map(mapper,outfilename):
-		outstore = OutStore(outfilename)
+	def map(mapper,outstore):
 		for (key,key2,value) in self:
 			mapper(outstore,key,value)
 		return outstore.toInStore()
 
-	def map2(mapper,outfilename):
-		outstore = OutStore(outfilename)
+	def map2(mapper,outstore):
 		for (key,key2,value) in self:
 			mapper(outstore,key,key2,value)
 		return outstore.toInStore()
@@ -46,24 +44,30 @@ class ShuffledStore(InStore):
 	def __init__(self,filename):
 		InStore.__init__(filename)
 	
-	def reduce(self,reducer,outfilename):
-		outstore = OutStore(outfilename)
+	def reduce(self,reducer,outstore):
 		for (key,key2,value) in self:
 			reducer(outstore,key,value)
 		return outstore.toInStore()
 	
-	def reduce2(self,reducer,outfilename):
-		outstore = OutStore(outfilename)
+	def reduce2(self,reducer,outstore):
 		for (key,key2,value) in self:
 			reducer(outstore,key,key2,value)
 		return outstore.toInStore()
-							
+												
+
+nexttemp = 0
+def get_tempname():
+	while os.path.exists("/tmp/tempstore-"+nexttexp+".store"):
+		nexttemp += 1
+	return "/tmp/tempstore-"+nexttemp+".store"
+	
 
 class OutStore:
 	"""a key-value store than one can write to"""
 	count = 0
 	
-	def __init__(self,filename):
+	def __init__(self,filename=None):
+		if not filename: filename = get_tempname()
 		self.filename = filename
 		self.outfile = file(filename,"w")
 		
@@ -78,6 +82,13 @@ class OutStore:
 class PrintOutStore:
 	def emit(self,key,value,key2 = ""):
 		print key,key2,value
+		
+def mapreduce(instores,outstore,mapper,reducer):
+	tmpout = OutStore()
+	for instore in instores:
+		instore.map(mapper,tmpout)
+	sorted = tmpout.toInStore().shuffle()
+	sorted.reduce(reducer,outstore)	
 		
 			
 
@@ -105,7 +116,7 @@ def mapinput(filename):
 	for line in file(filename):
 		(key,value) = line.strip().split('\t')
 	
-def mapreduce(job,tmpfilename="tempfile",sortedfilename="tempfile_sorted",outfilename="outfile"):
+def mapreduce_old(job,tmpfilename="tempfile",sortedfilename="tempfile_sorted",outfilename="outfile"):
 	tmpfile = file(tmpfilename,"w")
 	mapcontext = Context(tmpfile)
 	print "mapping"

@@ -43,5 +43,28 @@ class MergeIndex(mapreduce.MapReduceJob):
 			for line in data:
 				yield line
 	
-	def map(self,context,item)	
 			
+def urls_to_store(urlfile,outstore):
+	for line = file(urlfile):
+		(date,url,query) = line.split("\t")
+		outstore.emit2(url,"noid",{'date':date,'query':query})
+	
+		
+		
+		
+def index_url_stores(instores,outstore,nextid):
+	tmpstore = mapreduce.OutStore()
+	for instore in instores:
+		
+		
+	sorted = instores.shuffle()
+	
+	lasturl = None
+	def reducer2(store,url,id,fields):
+		if url != lasturl:
+			if id == "noid": 
+				id = nextid
+				nextid += 1			
+			store.emit2(url,id,fields)
+
+	sorted.reduce2(reducer2,outstore)

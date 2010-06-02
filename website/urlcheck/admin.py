@@ -1,4 +1,4 @@
-from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch
+from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch, SimpleMatch
 from django.contrib import admin
 
 #class ChoiceInline(admin.TabularInline):
@@ -20,8 +20,16 @@ class SourcePageAdmin(admin.ModelAdmin):
 	list_display = ['short_url','date','crawled']
 	list_filter = ['date']
 	search_fields = ['url']
+
+class SimpleMatchInline(admin.TabularInline):
+	model = SimpleMatch
+
+class MatchPageAdmin(admin.ModelAdmin):
+	list_display = ['short_url']
+	search_fields = ['url']
+	inlines = [SimpleMatchInline]
 		
 admin.site.register(Dispute)
 admin.site.register(SourcePage,SourcePageAdmin)
-admin.site.register(MatchPage)
+admin.site.register(MatchPage,MatchPageAdmin)
 admin.site.register(DisputeMatch)
