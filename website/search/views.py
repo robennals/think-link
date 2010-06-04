@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 import websearch.parallel_io as p
-from urlcheck.api import urlcheck_fork
+from urlcheck.simplematch import urlcheck_fork
 
 from boss import get_boss
 

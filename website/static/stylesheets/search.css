@@ -102,3 +102,46 @@ h1 a {
 .maybe-dispute {
 	color: gray;
 }
+
+.disputed h4 {
+	margin: 0px;
+	margin-left: 4px;
+	margin-top: 2px;
+}
+
+.disputed .matchcontext {
+	margin-left: 8px;
+	margin-bottom: 0px;
+	max-width: 400px;
+	background-color: #eee;
+	padding: 2px 4px;
+	border: 1px solid #ccc;
+}
+
+.votebox {
+	margin-bottom: 2px;
+}
+
+.df-nodisputes{
+	margin-left: 4px;
+	color: gray;
+}
+
+.ui-icon{
+	vertical-align: bottom;
+	display: inline-block;
+}
+
+.linkbutton {
+	text-decoration: none;
+	color: gray;
+	margin-left: 8px;
+}
+
+.ui-state-highlight{
+	color: black;
+}
+
+.linkbutton:hover{
+	color: black;
+}

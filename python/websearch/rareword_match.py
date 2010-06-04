@@ -112,7 +112,7 @@ def match_with_claims(text):
 							third = words[k]
 							if third in thirdmatch: 
 								for claim in cr.triple_claims[first+"-"+second+"-"+third]:
-									yield match_claim(claim,words[max(0,i-5):k+5],first,second,freqs)	
+									yield match_claim(claim,words[max(0,i-10):k+10],first,second,freqs)	
 								
 
 def match_with_claims_old(text):

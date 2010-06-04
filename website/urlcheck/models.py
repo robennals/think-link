@@ -45,20 +45,41 @@ def url_hash(url): return zlib.crc32(url)
 class SimpleMatch(models.Model):
 	page = models.ForeignKey(MatchPage)
 	claimtext = models.CharField(max_length=500)
+	matchcontext = models.CharField(max_length=1000)
+	vote = models.CharField(max_length=10)
 	def __unicode__(self): return self.claimtext
-	
+
+class SimpleContext(models.Model):
+	url = models.CharField(max_length=1000)
+	pagetitle = models.CharField(max_length=250)
+	context = models.CharField(max_length=1000)
+	claimtext = models.CharField(max_length=200, db_index=True)
+
 class DisputeMatch(models.Model):
 	matchpage = models.ForeignKey(MatchPage)
 	dispute = models.ForeignKey(Dispute)	
+
+def parse_list(text):
+	if len(text) == 0: return []
+	else: return text.split("|")
+
+"""Tables used to efficiently find claims by their rare words"""
+class FirstWords(models.Model):
+	firstword = models.CharField(max_length=20,db_index=True)
+	secondwords = models.TextField()
+	def secondwords_set(self): return set(parse_list(self.secondwords))
 	
 class WordPair(models.Model):
-	firstword = models.CharField(max_length=20,db_index=True)
-	pair = models.CharField(max_length=40)	
-
+	pair = models.CharField(max_length=40,db_index=True)
+	triples = models.TextField()
+	claims = models.TextField()	
+	def triples_set(self): return set(parse_list(self.triples))
+	def claims_list(self): return parse_list(self.claims)
+	
 class WordTriple(models.Model):
-	firstpair = models.ForeignKey(WordPair)
-	triple = models.CharField(max_length=60)
-
+	triple = models.CharField(max_length=60,db_index=True)
+	claims = models.TextField()
+	def claims_list(self): return parse_list(self.claims)
 
 def load_sourcepages(infile):
 	for line in infile:

@@ -37,6 +37,7 @@ pair_claims = {}
 pair_weights = {}
 triple_claims = {}
 triple_weights = {}
+pair_count = {}
 
 goodword = re.compile("[a-zA-Z]+")
 
@@ -62,6 +63,7 @@ def add_claim(claim):
 	firstwords[first].add(second)		
 	pairkey = first+"-"+second
 	if first == second: return
+	pair_count[pairkey] = pair_count.get(pairkey,0) + 1
 	if len(keywords) == 2:
 		if not pairkey in pair_claims: pair_claims[pairkey] = []
 		pair_claims[pairkey].append(claim)
@@ -75,6 +77,9 @@ def add_claim(claim):
 		if not triplekey in triple_claims: triple_claims[triplekey] = []
 		triple_claims[triplekey].append(claim)
 		triple_weights[triplekey] = (1.0/wordfreqs.get(first,2)) * (1.0/wordfreqs.get(second,2)) * (1.0/wordfreqs.get(third,2))
+
+def get_top_pairs():
+	return sorted(pair_count.iteritems(),key=op.itemgetter(1),reverse=True)
 
 def add_claim_old(claim):
 	words = good_tokens(claim)
@@ -151,4 +156,24 @@ def json_dump():
 			"triple_weights":cr.triple_weights}
 	return json.dumps(obj)
 	
+	
+	
+def dump_to_db_files(basename):
+	"""dump to files that can be read into a database"""
+	outfile = file(basename+"firstwords_keys.list","w")
+	outfile.write("|".join(firstwords.keys()))
+	outfile.close()
+	outfile = file(basename+"firstwords.csv","w")
+	for firstword in firstwords.keys():
+		outfile.write(firstword+"\t"+"|".join(firstwords[firstword])+"\n")
+	outfile.close()
+	outfile = file(basename+"pairs.csv","w")
+	for pair in set(pairs.keys() + pair_claims.keys()):
+		outfile.write(pair+"\t"+"|".join(pairs.get(pair,[]))+"\t"+
+			"|".join(pair_claims.get(pair,[]))+"\n")
+	outfile.close()
+	outfile = file(basename+"triples.csv","w")
+	for triple in triple_claims.keys():
+		outfile.write(triple+"\t"+"|".join(triple_claims[triple])+"\n")
+	outfile.close()
 	

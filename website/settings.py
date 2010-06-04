@@ -93,3 +93,6 @@ INSTALLED_APPS = (
     'website.search',
     'website.urlcheck'
 )
+
+def localfile(filename,mode='r'):
+	return file(os.path.join(os.path.dirname(__file__),filename),mode)

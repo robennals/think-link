@@ -1,4 +1,4 @@
-from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch, SimpleMatch
+from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch, SimpleMatch, FirstWords, WordPair, WordTriple
 from django.contrib import admin
 
 #class ChoiceInline(admin.TabularInline):
@@ -28,8 +28,19 @@ class MatchPageAdmin(admin.ModelAdmin):
 	list_display = ['short_url']
 	search_fields = ['url']
 	inlines = [SimpleMatchInline]
+	
+class FirstWordsAdmin(admin.ModelAdmin):
+	list_display = ['firstword','secondwords']	
+	search_fields = ['firstword']
+	
+class WordPairsAdmin(admin.ModelAdmin):
+	list_display = ['pair','triples','claims']
+	search_fields = ['pair']
 		
 admin.site.register(Dispute)
 admin.site.register(SourcePage,SourcePageAdmin)
 admin.site.register(MatchPage,MatchPageAdmin)
 admin.site.register(DisputeMatch)
+admin.site.register(FirstWords,FirstWordsAdmin)
+admin.site.register(WordPair,WordPairsAdmin)
+admin.site.register(WordTriple)
