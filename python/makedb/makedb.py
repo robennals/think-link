@@ -17,6 +17,9 @@ fields is assumed to be the fields to go into the database table.
 def escape(txt):
 	return txt.replace("\\","\\\\").replace("\t","\\t").replace("\n","\\n")
 
+def unescape(txt):
+	return txt.replace("\\t","\t").replace("\\n","\n").replace("\\\\","\\")
+
 def create_mysql_dump(store,outfile,colorder):
 	for (id,key2,fields) in store:
 		cols = [escape(fields[fieldname]) for col in colorder]
@@ -38,7 +41,7 @@ def urls_to_hack_dump(urlfile,outfile):
 		outfile.write(str(nextid)+"\t"+url+"\t"+date+"\t"+"0"+"\n")
 		nextid += 1
 			
-def oldclaims_to_hack_dump(claimfile,outfile):
-	nextid = 1
-	for line in claimfile:
+#def oldclaims_to_hack_dump(claimfile,outfile):
+	#nextid = 1
+	#for line in claimfile:
 				

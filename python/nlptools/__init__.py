@@ -66,7 +66,10 @@ def is_past_verb(name):
 	
 def get_domain(url):
 	m = re.search("https?://([\w\.]+)",url)
-	return m.group(1)
+	if m:
+		return m.group(1)
+	else:
+		return url
 
 def hash_freqs(list):
 	counts = {}

@@ -23,14 +23,14 @@ okwords = set(["just","merely","purely","only","simple","were",
 def tokenize(claim): return re.split("\W+",claim)
 def sentences(text): return text.split(".")
 
-def trim_text(words,keyword,claim):
+def trim_text(words,keyword,claim,maxgap = 3):
 	claimwords = set(tokenize(claim))
 	center = words.index(keyword)
 	left = center
 	right = center
 	gap = 0
 	pos = center
-	while pos >= 0 and gap < 3:
+	while pos >= 0 and gap < maxgap:
 		if words[pos] in claimwords:
 			gap = 0
 			left = pos
@@ -39,7 +39,7 @@ def trim_text(words,keyword,claim):
 		pos -= 1
 	gap = 0
 	pos = center
-	while pos < len(words) and gap < 3:
+	while pos < len(words) and gap < maxgap:
 		if words[pos] in claimwords:
 			gap = 0
 			right = pos

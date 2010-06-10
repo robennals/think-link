@@ -91,12 +91,16 @@ h1 a {
 	max-width: 500px;
 }
 
-.search-result cite {
+.search-result cite, .sourcedomain {
 	color: green;
 }
 
 .dispute {
 	color: red;
+}
+
+.disputed {
+	position: relative;
 }
 
 .maybe-dispute {
@@ -107,19 +111,22 @@ h1 a {
 	margin: 0px;
 	margin-left: 4px;
 	margin-top: 2px;
+	font-size: 12px;
 }
 
-.disputed .matchcontext {
+.disputed .matchcontext, .disputed .sourcecontext {
 	margin-left: 8px;
 	margin-bottom: 0px;
 	max-width: 400px;
 	background-color: #eee;
 	padding: 2px 4px;
 	border: 1px solid #ccc;
+	font-size: 12px;
 }
 
 .votebox {
 	margin-bottom: 2px;
+	font-size: 12px;
 }
 
 .df-nodisputes{
@@ -144,4 +151,18 @@ h1 a {
 
 .linkbutton:hover{
 	color: black;
+}
+
+.sourcebox{
+	max-width: 400px;	
+	font-size: 12px;
+}
+
+.sourceurl{
+	max-width: 400px;
+	overflow: hidden;
+}
+
+.sourcedomain{
+	margin-left: 8px;
 }

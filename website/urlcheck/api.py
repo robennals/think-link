@@ -16,15 +16,33 @@ import urlcheck.matcher.allwords_filter as f
 import re
 from urlcheck.simplematch import urlcheck_get
 from nlptools.html_to_text import html_to_text
+from nlptools import trim_to_words
+from wicow_stats import filter_claims
+from nlptools import get_domain
 
 from urlcheck.models import MatchPage,SimpleMatch,url_hash,SimpleContext
+
+# TODO: cleanup is a hang-over from the old methods
+def trim_string(context,claimtext):
+	context = messy_cleanup(context)
+	pos = context.find(claimtext)	
+	shrunken = context[max(0,pos-100):min(pos+100,len(context))]
+	return trim_to_words(shrunken)
+
+def messy_cleanup(text):
+	text = text.replace(" '"," ").replace("' "," ").replace('"',"").replace("[","").replace("]","").replace("(","").replace(")","")
+	text = text.replace("-"," ").replace("/"," ")
+	return text
+	
 
 def get_dispute_context(claimtext):
 	try:
 		contextobj = SimpleContext.objects.get(claimtext=claimtext)
 		text = html_to_text(contextobj.context)
-		return {'title':contextobj.pagetitle, 'url':contextobj.url, 'text':text}
-	except:
+		text = trim_string(text,claimtext)
+		title = trim_to_words(contextobj.pagetitle[:60])
+		return {'title':title, 'url':contextobj.url, 'text':text}
+	except SimpleContext.DoesNotExist:
 		return {'title':"",'url':'',"text":''}
 
 def data_for_dispute(dispute):
@@ -36,7 +54,8 @@ def data_for_dispute(dispute):
 		'vote':dispute.vote,
 		'sourceurl':sourcecontext['url'],
 		'sourcetitle':sourcecontext['title'],
-		'sourcecontext':make_bold_text(dispute.claimtext,sourcecontext['text']),
+		'sourcedomain':get_domain(sourcecontext['url']),
+		'sourcecontext':sourcecontext['text'].replace(dispute.claimtext,"<b>"+dispute.claimtext+"</b>"),
 		'displaycontext':make_bold_text(dispute.claimtext,dispute.matchcontext)} 
 				
 

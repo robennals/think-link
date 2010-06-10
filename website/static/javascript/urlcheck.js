@@ -12,12 +12,26 @@ function mk_button(icon,text,vote){
 	return button;
 }
 
+function trimurl(url){
+	
+}
+
 function make_disputebox(dispute){
 	var disputebox = $("<div class='disputed'/>");
-	var title = $("<h4/>").text("disputed: "+dispute.claimtext).appendTo(disputebox);
-	$("<div class='matchcontext'>"+dispute.displaycontext+"</div>").appendTo(disputebox);
 
-	var votebox = $("<div class='votebox'/>").appendTo(disputebox);
+	var maintable = $("<table/>").appendTo(disputebox);
+	
+	var tr = $("<tr/>").appendTo(maintable);
+	
+	var left = $("<td valign='top'/>").appendTo(tr);
+	var right = $("<td valign='top'/>").appendTo(tr);
+
+
+	var title = $("<h4/>").text("disputed: "+dispute.claimtext).appendTo(left);
+	
+	$("<div class='matchcontext'>"+dispute.displaycontext+"</div>").appendTo(left);
+	
+	var votebox = $("<div class='votebox'/>").appendTo(left);
 	mk_button("trash","bad claim","bad").appendTo(votebox);
 	mk_button("closethick","not relevant","mismatch").appendTo(votebox);
 	mk_button("transferthick-e-w","no disagreement","agree").appendTo(votebox);
@@ -39,6 +53,14 @@ function make_disputebox(dispute){
 				$(this).addClass("ui-state-disabled");
 			}
 		})
+	}
+	
+	if(dispute.sourcecontext){
+		var sourcetitle = $("<h4/>").text("disputed by: ").appendTo(right);
+		$("<a/>").attr("href",dispute.sourceurl).text(dispute.sourcetitle).appendTo(sourcetitle);
+		sourcebox = $("<div class='sourcebox'/>").appendTo(right);
+		$("<div class='sourcecontext'>"+dispute.sourcecontext+"</div>").appendTo(sourcebox);
+		$("<div class='sourcedomain'/>").text(dispute.sourcedomain).appendTo(sourcebox);
 	}
 	
 	return disputebox;	
