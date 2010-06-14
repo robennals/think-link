@@ -59,3 +59,7 @@ wiki_wordfreqs
 *.ps
 *_complete*.tex
 *.db
+reference
+stores
+mockups
+website/data

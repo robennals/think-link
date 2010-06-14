@@ -1,0 +1,143 @@
+
+* Produce a new, up-to-date corpus with fresh claims
+
+* Use Turk to gather much more training data in there separate stages.
+	- good/bad claim. Relevant/irrelevant claim. Agree/disagree.
+
+
+* Request more urls with Yahoo
+* Generate updated claims table (url, pattern, claim sentence, date)
+* Load the data into the database
+* Get the matching algorithm working well
+* Produce Search Engine front-end using API - so we can start marking up data
+* Add snippets to API and interface - so we can see the context and if it is right
+* Add voting feature that tells us if the voting is correct
+* Record stats for voting about snippets
+* Use these votes to evaluate whether results are correct
+* Build simple API that auto-searches for a set of searches on AOL search
+	- open in multiple tabs ready to do bulk voting
+* Tune matching algorithm until it seems to work well
+
+* Add interface replacement for existing Dispute Finder front end
+* Support all APIs called by the firefox extension
+* Produce Search Async API.
+* Support vaguer prefixes starting with just "claim that" etc, and then looking for negative sentiment
+* Try to obtain an existing entailment algorithm and apply it
+	- and then extend based on extra info I have from context
+
+
+-- extra prefixes -- 
+
+"so called"
+
+
+
+-- features --
+
+Obtain DIRT knowledge base and use that?
+Use verbOcean to match similar verbs and Wordnet for similar nouns.
+BLUE - geometric average of n-gram overlap for different length n-grams.
+Commonly occurring extra words.
+Similarity to other pages that were exact matches for the claim
+Document cosine vector similarity.
+Paragraph cosine similarity.
+Edit distance. Fractional edit distance. Word edit distance. Fractional word edit distance.
+	Number of edit operations of particular types.
+		(Add word, Add synonym, Add pos-X, Add particular common word, etc)
+Wikipedia linkiness of words in the claim.
+Wikipedia graph similarity of documents.
+Are all match words in the same sentence?
+Are all match words in the same order?
+Number of "ok words" that are not present?
+Number of extra words inserted between words in the matched text.
+Number of bigram matches.
+Number of claim words that matched a synonym rather than a correct word.
+Kinds of extra words in the match text. E.g. are they verbs etc. Gather data and see what the trends are.
+	Theory: verbs are bad. Adjectives are ok.
+Date when page was written (we have dates for claims and for current page listings)
+What prefix was used.
+
+Proportion of missing claim words that are synonyms of match words.
+Proportion of missing match words that are synonyms of claim words.
+	- need to find exact proper textual entailment algorithms.
+
+
+Upper vs lower case. Currently everything is lower case. Definitely want mixed case in future.
+
+-- goals for CIKM paper --
+
+Focus is on algorithms that tell us if we have a correct match.
+Having a big data set is not quite as important, though obviously we want that too.
+
+
+-- goals for R@I launch --
+
+Want it to be actually usable as a real tool by real people.
+Want it to be running on the existing server, rather than somewhere separate.
+
+
+-- APIs used by the firefox extension --
+
+/apianon/hotwords.json
+	- get a list of all "hot words" used by claims
+	- for each claim, what is the rarest word
+	- disregard any claim that doesnt have a rare enough word
+
+	Does the hotwords list get too long?
+
+	How long is "hotwords" for our current set?
+		34k words.
+		What is the total length?
+			278k
+				That is totally reasonable, given we only grab it on startup.
+	I think the current approach may actually work.
+
+/apianon/hotwords/[word].json
+	- easy to implement on top of current stuff
+	- returns a list of second words.
+
+/apianon/
+
+
+-- too many requests for common words? --
+
+Better to have it make a request for multiple words at once.
+
+BUT:
+	Actually should be fine to make multiple requests. HTTP1.1 should batch stuff.
+	Worry about performance later.
+
+
+-- split by top level domain also --
+
+When we get down to a leaf level by years, we might want to also split by top level domain (e.g. "com", "net" etc)
+
+Only worth splitting by domain if a domain appears several times in the one million url set. Otherwise probably just a rogue.
+
+
+-- training data set --
+
+Aim - get up to 1000. Then we have enough to start training...
+Ignore anything where I can't make a clear call.
+
+In most cases, we don't seem to need source page context as it is fairly obvious what was meant.
+Of course, properties may change if we start using a different claim filter...
+
+
+-- dates --
+
+We aren't saving the Yahoo page date in our training data.
+	We probably should.
+	That information is probably important.
+
+Can we get it back?
+	We don't want to re-generate everything.
+
+Solution: add it in going forward, but train with what we have.
+
+
+
+
+
+
+

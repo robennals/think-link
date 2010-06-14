@@ -10,8 +10,11 @@ from vector import text_similarity, tfidf, idf
 import nltk
 import re
 import patterns.regexpatterns as rp
+import operator as op
 
 def tokenize(claim): return re.split("[\W=]+",claim)
+
+filename = "/home/rob/git/thinklink/output/training/rawinput.csv"
 
 
 stopwords = set(nltk.corpus.stopwords.words('english'))
@@ -72,6 +75,35 @@ def is_broken(item):
 	except:
 		return True
 
+def selected_features(item):
+	add_shared_props(item)
+	features = {}
+	features['claimrareness'] = claim_rareness(item)
+	features['claimlength'] = claim_length(item)
+	features['contextsim'] = context_similarity(item)
+	features['claimcontextsim'] = claim_context_similarity(item)
+	features['claimtrimsim'] = claim_trim_similarity(item)
+	features['extramatchwords'] = extra_match_words(item)
+	features['extraclaimwords'] = extra_claim_words(item)
+	features['extramatchchars'] = extra_match_chars(item)
+	features['extraclaimchars'] = extra_claim_chars(item)
+	features['wordoverlap'] = claim_word_overlap(item)
+	features['wordoverlapns'] = claim_word_overlap_nostop(item)
+	features['normoverlap'] = norm_word_overlap(item)
+	features['bigramoverlap'] = bigram_overlap(item)
+	features['trigramoverlap'] = trigram_overlap(item)
+	features['orderdiff'] = order_diff(item)
+	features['polaritydiff'] = from_bool(not polarity_same(item))
+	features['haspattern'] = from_bool(match_has_pattern(item))
+	features['isnegated'] = from_bool(is_negated(item['claimtext']))
+	features['contextnegated'] = from_bool(is_negated(item['matchcontext']))
+	features['contextpoldiff'] = from_bool(is_negated(item['matchcontext']) != is_negated(item['claimtext']))
+	features.update(with_prefix("missing",words_missing(item)))
+	features.update(with_prefix("missingtags",tags_missing(item)))
+	features.update(with_prefix("extratags",tags_extra(item)))
+	return (item['vote'],features,item)
+
+
 def features_for_item(item):
 	add_shared_props(item)
 	features = {}
@@ -113,8 +145,9 @@ def make_svm_training_data(items,yeslabels,nolabels,outfile):
 			continue
 		outfile.write(str(ans)+" ")
 		featurelist = remap_keys(scale_data(features,range))
-		featuretext = [str(id)+":"+str(val) for (id,val) in featurelist]
-		outfile.write(" ".join(featuretext))
+		sortedfeatures = sorted(featurelist,key=op.itemgetter(0))
+		featuretext = [str(id)+":"+str(val) for (id,val) in sortedfeatures]
+		outfile.write(" ".join(featuretext)+"\n")
 		
 def find_ranges(featurelist):
 	"""all initial features are positive integers. Scale them to max 1"""
@@ -139,7 +172,7 @@ def get_key_id(text):
 	return keyids[text]
 
 def remap_keys(features):
-	return dict([(get_key_id(key),features[key]) for key in features])
+	return [(get_key_id(key),features[key]) for key in features]
 				
 def claim_rareness(item):
 	return sum([idf(word) for word in item['claimwords']])		

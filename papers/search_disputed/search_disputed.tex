@@ -1,0 +1,108 @@
+\documentclass{acm_proc_article-sp}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{color}
+
+\begin{document}
+
+\title{Identifying Disputes between Web Pages}
+
+%%
+%% Note on formatting authors at different institutions, as shown below:
+%% Change width arg (currently 7cm) to parbox commands as needed to
+%% accommodate widest lines, taking care not to overflow the 17.8cm line width.
+%% Add or delete parboxes for additional authors at different institutions. 
+%% If additional authors won't fit in one row, you can add a "\\"  at the
+%% end of a parbox's closing "}" to have the next parbox start a new row.
+%% Be sure NOT to put any blank lines between parbox commands!
+%%
+
+%\newcommand{\want}[1]{{[\color{blue} WANT: #1]}}
+%\newcommand{\todo}[1]{{[\color{blue} TODO: #1]}}
+%\newcommand{\idea}[1]{{[\color{blue} IDEA: #1]}}
+%\newcommand{\node}[1]{{[\color{blue} NOTE: #1]}}
+
+\newcommand{\needed}[1]{{\color{red}#1}}
+%\newcommand{\needed}[1]{}
+\newcommand{\want}[1]{}
+\newcommand{\todo}[1]{}
+\newcommand{\idea}[1]{}
+\newcommand{\node}[1]{}
+
+\numberofauthors{5}
+
+\author{
+    Authors ommitted for blind reviewing.
+}
+
+\maketitle
+
+
+\begin{abstract}
+We present a method for automatically detecting when a claim appearing on a web page is disputed by another web page. Our method works by searching the web for lingustic patterns such as ``falsely claimed that X'' that suggest that a web page disagrees with some statement, and then examining the text on an input page to see if any of the text on that page is similar to one of the known disputed statements and appears in a similar context.
+
+To determine how our method applies to web pages that users typically browse, we applied our method to \needed{100,000} pages that appear as search results for common web queries, and to \needed{10,000} pages that appear in search results for particular disputed terms. By examining a sample of these results, we found that our algorithm has precision \needed{70\%} and that \needed{10\%} of web searches should be expected to contain a dispute, as judged by our algorithm. 
+\end{abstract}
+
+\section{Introduction}
+
+\section{Background and Related Work}
+
+\section{Corpus of Disputed Claims}
+
+\section{Matching Disputed Claims}
+
+Identify wikipedia links on a page that disputes something.
+
+Determine if another page seems to have wikipedia links to the same concepts.
+
+Find a text string that looks similar to something we have on that page because it has the same top keywords.
+
+Then use a classifier that takes into account a number of features. Then refine until we work out what features are important.
+
+Variants: 
+\begin{itemize}
+ \item Simple bag-of-words with no context
+ \item Restrict claims to ones with high linkiness
+ \item Restrict claims to ones with high contextual linkiness
+ \item Restrict claims to ones with same context
+ \item Restrict claims to ones with same context and high contextual linkiness
+ \item Only require N keywords to match
+ \item Reduce weight of words after comma or ``and''
+ \item Bias towards words or wikipedia links near to the suspect sentence.
+ \item Bias towards words in the same paragraph, or nearby paragraphs
+ \item Take negations into account.
+ \item Don't require suspect words to all be in the same sentence.
+\end{itemize}
+
+How does accuracy scale with amount of training data. Since we are creating training data manually, it's important to be able to tell when we reach a knee in the curve and don't need to mark any more.
+
+Build a simple web interface to allow people to do training. Interface presents a sequence of examples and invites the user to say whether it is a match or not. If we get it working well, then expose it to users?
+
+Use libsvm for machine learning, following beginers guide, using radial basis function.
+
+Do initial algorithm evaluation on a small claim set where we have the full text of the pages, to give us the opportunity to experiment with different method to see what works.
+
+\section{Evaluating on Search Data}
+
+Evaluate a variety of variants with different features disabled. This reveals how much each feature actually helps in practice.
+
+\section{Discussion}
+
+\section{Conclusions}
+
+\section{To Cite}
+
+Warren Sack on ``Searching the Net for Differences of Opinion'' and ``On the Computation of Point of View''.
+
+Tell Me More project, which provides extra information that was otherwise missing.
+
+Joke Retreival paper.
+
+Learning to Link with Wikipedia.
+
+
+
+
+
+\end{document}
