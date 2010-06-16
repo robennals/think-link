@@ -15,10 +15,10 @@ fields is assumed to be the fields to go into the database table.
 """
 
 def escape(txt):
-	return txt.replace("\\","\\\\").replace("\t","\\t").replace("\n","\\n")
+	return txt.replace("\\","\\\\").replace("\t","\\t").replace("\n","\\n").replace("\r","\\r")
 
 def unescape(txt):
-	return txt.replace("\\t","\t").replace("\\n","\n").replace("\\\\","\\")
+	return txt.replace("\\t","\t").replace("\\n","\n").replace("\\\\","\\").replace("\\r","\r")
 
 def create_mysql_dump(store,outfile,colorder):
 	for (id,key2,fields) in store:

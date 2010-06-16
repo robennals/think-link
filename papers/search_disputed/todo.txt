@@ -1,4 +1,5 @@
 
+* Get new classifier working on the web site, and verify it works
 * Produce a new, up-to-date corpus with fresh claims
 
 * Use Turk to gather much more training data in there separate stages.
@@ -34,6 +35,7 @@
 
 -- features --
 
+Trimmed text contains full stop, question mark, etc.
 Obtain DIRT knowledge base and use that?
 Use verbOcean to match similar verbs and Wordnet for similar nouns.
 BLUE - geometric average of n-gram overlap for different length n-grams.

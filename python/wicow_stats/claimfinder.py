@@ -15,6 +15,12 @@ def convert_entities(text):
 def convert_unicode(text):
 	return text.replace("\xef\xbf\xbd",'"').replace("\xe2\x80\x93","'").replace("\xe2\x80\x9c",'"').replace("\xe2\x80\x98","'").replace("\xe2\x80\x99","'").replace("\xc3\xa1","a").replace("\xc2\xa0"," ").replace("\xe2\x80\x9d","").replace("\xc2\xa0","").replace("\xe2\x80\x9d","")
 
+#def convert_unicode_u(text):
+	#return text.replace(u"\xef\xbf\xbd",u'"').replace(u"\xe2\x80\x93",u"'").replace(u"\xe2\x80\x9c",u'"').replace(u"\xe2\x80\x98",u"'").replace(u"\xe2\x80\x99",u"'").replace(u"\xc3\xa1",u"a").replace(u"\xc2\xa0",u" ").replace(u"\xe2\x80\x9d",u"").replace(u"\xc2\xa0",u"").replace(u"\xe2\x80\x9d",u"")
+def convert_unicode_u(text):
+	return text.replace(u"\u2019","'")
+
+
 def tag_claim(claim):
 	return nltk.pos_tag(nltk.word_tokenize(claim))
 

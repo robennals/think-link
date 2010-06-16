@@ -12,14 +12,18 @@ be done over hadoop etc instead.
 Right now we don't do any splits or anything else clever
 """
 
+def fixline(str):
+	return str.decode("cp1252","ignore")
+#	return str.replace("\x97","-").replace("\x95","*")
+
 class InStore:
 	"""a store that one can read from or map over"""
 	def __init__(self,filename):
-		self.infile = file(filename,"w")
+		self.infile = file(filename)
 		
-	def __iter__():
+	def __iter__(self):
 		for line in self.infile:
-			(key,key2,value) = line.strip().split("\t")
+			(key,key2,value) = fixline(line).strip().split("\t")
 			yield (unquote(key),unquote(key2),json.loads(value))
 			
 	def shuffle(outfilename=None):

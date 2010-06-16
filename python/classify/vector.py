@@ -6,7 +6,7 @@ import math
 doccount = 4124
 
 def load_bnc_word_freqs():
-	filename = "/home/rob/git/thinklink/bnc_corpus_all.num.o5.txt"
+	filename = "/home/rob/git/thinklink/reference/bnc_corpus_all.num.o5.txt"
 	docfreqs = {}
 	for line in file(filename):
 		termfreq,term,type,docfreq = line.strip().split(" ")

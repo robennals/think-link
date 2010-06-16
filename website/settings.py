@@ -91,7 +91,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.admin',
     'website.search',
-    'website.urlcheck'
+    'website.urlcheck',
+    'website.claimfilter'
 )
 
 def localfile(filename,mode='r'):

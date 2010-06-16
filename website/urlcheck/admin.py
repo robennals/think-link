@@ -36,6 +36,11 @@ class FirstWordsAdmin(admin.ModelAdmin):
 class WordPairsAdmin(admin.ModelAdmin):
 	list_display = ['pair','triples','claims']
 	search_fields = ['pair']
+	
+class WordTriplesAdmin(admin.ModelAdmin):
+	list_display = ['triple','claims']
+	search_fields = ['triple']
+
 		
 admin.site.register(Dispute)
 admin.site.register(SourcePage,SourcePageAdmin)
@@ -43,4 +48,4 @@ admin.site.register(MatchPage,MatchPageAdmin)
 admin.site.register(DisputeMatch)
 admin.site.register(FirstWords,FirstWordsAdmin)
 admin.site.register(WordPair,WordPairsAdmin)
-admin.site.register(WordTriple)
+admin.site.register(WordTriple,WordTriplesAdmin)

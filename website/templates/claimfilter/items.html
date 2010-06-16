@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Label Correct Claim Substrings{% endblock %}
+
+{% block scripts %}
+<script src="/static/javascript/claimfilter.js" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block content %}
+page {{page.number}}
+
+<div id="search-results">
+{% for item in page.object_list %}
+	{% if item.is_crap %}
+		<div>Crap item skipped</div>
+	{% else %}
+		<li class='search-result'>
+			<strong>{{item.prefix}}</strong>
+			<span>{{item.cleansentence}}</span>
+			{% for opt in item.trim_options %}
+				<p><input class='trimradio' type='radio' name='{{item.id}}' value='{{opt}}' 
+				{% if opt == item.correcttrim %} checked='yes' {% endif %}/>{{opt}}</p>
+			{% endfor %}
+			<p><input class='trimradio' type='radio' name='{{item.id}}' value='X'
+			{% if item.correcttrim == 'X' %} checked='yes' {% endif %}/>BAD - not a claim</p>
+			<p><input class='trimradio' type='radio' name='{{item.id}}' value='?'
+			{% if item.correcttrim == '?' %} checked='yes' {% endif %}/>AMBIGUOUS - not useful to show in a claim list</p>
+		</li>
+	{% endif %}
+{% endfor %}
+</div>
+
+<table id='pagenav'>
+	<tr>	
+	{% if page.has_next %}
+		<td>
+			<a href='/claimfilter?page={{page.previous_page_number}}'>prev</a>
+		</td>
+	{% endif %}
+		<td>
+			<a href='/claimfilter?page={{page.next_page_number}}'>next</a>
+		</td>
+	</tr>
+</table>
+
+{% endblock %}

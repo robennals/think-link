@@ -28,6 +28,12 @@ class Dispute(models.Model):
 	def __unicode__(self):
 		return self.claimtext
 
+class RawDispute(models.Model):
+	url = models.CharField(max_length=1000)
+	date = models.DateTimeField()
+	prefix = models.CharField(max_length=200)
+	sentence = models.CharField(max_length=1000)
+	correcttrim = models.CharField(max_length=200)
 
 
 class MatchPage(models.Model):
@@ -75,11 +81,14 @@ class WordPair(models.Model):
 	claims = models.TextField()	
 	def triples_set(self): return set(parse_list(self.triples))
 	def claims_list(self): return parse_list(self.claims)
+	def __unicode__(self): return self.pair
 	
 class WordTriple(models.Model):
 	triple = models.CharField(max_length=60,db_index=True)
 	claims = models.TextField()
 	def claims_list(self): return parse_list(self.claims)
+	def __unicode__(self): return self.triple
+	
 
 def load_sourcepages(infile):
 	for line in infile:
