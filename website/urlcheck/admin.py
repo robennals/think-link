@@ -1,4 +1,4 @@
-from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch, SimpleMatch, FirstWords, WordPair, WordTriple
+from website.urlcheck.models import Dispute, SourcePage, MatchPage, DisputeMatch, SimpleMatch, FirstWords, WordPair, WordTriple, ClaimContext
 from django.contrib import admin
 
 #class ChoiceInline(admin.TabularInline):
@@ -41,6 +41,9 @@ class WordTriplesAdmin(admin.ModelAdmin):
 	list_display = ['triple','claims']
 	search_fields = ['triple']
 
+class ClaimContextAdmin(admin.ModelAdmin):
+	list_display = ['claimtext','prefix','sentence']
+	search_fields = ['claimtext']
 		
 admin.site.register(Dispute)
 admin.site.register(SourcePage,SourcePageAdmin)
@@ -49,3 +52,4 @@ admin.site.register(DisputeMatch)
 admin.site.register(FirstWords,FirstWordsAdmin)
 admin.site.register(WordPair,WordPairsAdmin)
 admin.site.register(WordTriple,WordTriplesAdmin)
+admin.site.register(ClaimContext,ClaimContextAdmin)

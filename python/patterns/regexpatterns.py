@@ -70,7 +70,7 @@ falseclaim = Choice([
 	"delusion","misconception","lie","hoax","scam",
 	"misunderstanding","myth","urban legend","urban myth",
 	"fabrication","deceit","fallacy",
-	"deception","fraud","swindle","fantasy"])
+	"deception","fraud","swindle","fantasy","misperception"])
 	
 refute = Choice([
 	"refute", "refuting", "refuted", "refutation of",
@@ -134,7 +134,7 @@ def boss_counts_for_pattern(pattern):
 	"""get the total number of hits for a pattern, and also download the first 50"""
 	url = boss.get_boss_url(pattern,0,50)
 	dom = XML(uc.get_cached_url("boss",url))
-	hitcount = dom.find("resultset_web").attr("deephits")
+	hitcount = dom.find("resultset_web").attr("totalhits")
 	return int(hitcount)
 
 def boss_results_for_pattern(pattern):

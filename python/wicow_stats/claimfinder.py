@@ -20,7 +20,6 @@ def convert_unicode(text):
 def convert_unicode_u(text):
 	return text.replace(u"\u2019","'")
 
-
 def tag_claim(claim):
 	return nltk.pos_tag(nltk.word_tokenize(claim))
 

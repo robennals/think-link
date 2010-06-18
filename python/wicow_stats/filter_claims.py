@@ -39,8 +39,8 @@ def trim_claim_end(claim):
 		if ("' "+commaword) in claim: claim = claim[:claim.find("' "+commaword)]
 	return claim
 
-bad_claims = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims.txt")])
-bad_claims_auto = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims_auto.txt")])
+#bad_claims = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims.txt")])
+#bad_claims_auto = set([line.strip() for line in file("/home/rob/git/thinklink/python/wicow_stats/bad_claims_auto.txt")])
 
 def is_good(claim):
 	words = nltk.word_tokenize(claim)

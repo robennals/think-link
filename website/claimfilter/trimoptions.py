@@ -41,7 +41,7 @@ def trimoptions(str):
 	return sorted(trims,key=len)[:10]
 			
 def is_crap(str):
-	return starts_in_tag(str)
+	return starts_in_tag(str) or "..." in str
 
 def test_trimmer(labelled,trimmer):
 	"""how accurate is a trimmer, and where does it go wrong"""
@@ -75,25 +75,31 @@ def bad_start_rate(labelled,str):
 
 		
 """ things that would otherwise look like claim ends, but aren't"""
-notends = ["Mrs.","Mr.","Ms.","U.S.","U.S.A.","U.N.","U. S.","U. S. A.",
+notends = ["Mrs.","Mr.","Ms.","Dr.","Prof.","U.S.","Sir.",
+		"U.S.A.","U.N.","U. S.","U. S. A.",
 		"Jan.","Feb.","Mar.","Apr.","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."]
-ends = [";","?","!",'."','".',".'","and that","or that"," - "," -- ","- ","\t",", this"]
-re_ends = ["\.\W[^a-z][^\.]"]
+ends = [";","?","!",'."','".',".' ","and that","or that","\t",", this is","-."]
+re_ends = ["\w\w(\.) [^a-z][^\.]"]
 
 def simple_trim(str):
 	end_offs = set([str.find(end) for end in ends if end in str]) | set([len(str)])
-	re_offs = set([re.search(r,str).start() for r in re_ends if re.search(r,str)])
+	re_offs = set([re.search(r,str).start(1) for r in re_ends if re.search(r,str)])
 	bad_offs = set([str.find(notend)+len(notend)-1 for notend in notends if notend in str])
 	goodends = sorted((end_offs | re_offs) - bad_offs)
-	return str[:goodends[0]]
+	return str[:goodends[0]].strip()
 	
 	
 maybe_extras = [", I",", that we",", we",'"',", and secondly","or that","and that",
-			"is perceived",", could not stand",
+			"is perceived",", could not stand","although",
 			"should be debunked","did not make me","is just a fabrication","see more",", she"]
 
 badstarts = ["keeps","told","tells","surrounds","were","limit","have","are",
-				"underlie","stem","cannot","often","are","might","may","get","was","has"]
+				"underlie","stem","cannot","often","are","might","may",
+				"get","was","has","started","is", "wasn","don","led",".",
+				"caused","won","shouldn","launched","http","supports"]
+				
+badends = ["is"]				
+				
 ambigstarts = ["I","he","they","it is"]	
 
 # simple sentence tokenizer.
@@ -102,5 +108,7 @@ ambigstarts = ["I","he","they","it is"]
 def is_bad(str):
 	tokens = tokenize(fixstring(str))
 	firstword = tokens[0].lower()
-	return firstword in badstarts or firstword in ambigstarts
-
+	lastword = tokens[-1].lower()
+	return (firstword in badstarts or firstword in ambigstarts 
+			or lastword in badends
+			or str.startswith("'s "))

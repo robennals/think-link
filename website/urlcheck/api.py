@@ -19,8 +19,9 @@ from nlptools.html_to_text import html_to_text
 from nlptools import trim_to_words
 from wicow_stats import filter_claims
 from nlptools import get_domain
+from claimfilter import trimoptions as t
 
-from urlcheck.models import MatchPage,SimpleMatch,url_hash,SimpleContext
+from urlcheck.models import MatchPage,SimpleMatch,url_hash,ClaimContext
 
 # TODO: cleanup is a hang-over from the old methods
 def trim_string(context,claimtext):
@@ -37,13 +38,11 @@ def messy_cleanup(text):
 
 def get_dispute_context(claimtext):
 	try:
-		contextobj = SimpleContext.objects.get(claimtext=claimtext)
-		text = html_to_text(contextobj.context)
-		text = trim_string(text,claimtext)
-		title = trim_to_words(contextobj.pagetitle[:60])
-		return {'title':title, 'url':contextobj.url, 'text':text}
-	except SimpleContext.DoesNotExist:
-		return {'title':"",'url':'',"text":''}
+		contextobj = ClaimContext.objects.filter(claimtext=claimtext)[0]
+		text = html_to_text(contextobj.sentence).strip()
+		return {'url':contextobj.url, 'text':text, 'prefix': contextobj.prefix}
+	except:
+		return {'url':'',"text":'','prefix':''}
 
 def data_for_dispute(dispute):
 	sourcecontext = get_dispute_context(dispute.claimtext)
@@ -51,11 +50,12 @@ def data_for_dispute(dispute):
 	 	'claimtext':dispute.claimtext,
 	 	'matchcontext':dispute.matchcontext,
 		'id':dispute.id,
+		'bad':t.simple_trim(sourcecontext['text']) != dispute.claimtext or t.is_bad(dispute.claimtext),
 		'vote':dispute.vote,
 		'sourceurl':sourcecontext['url'],
-		'sourcetitle':sourcecontext['title'],
 		'sourcedomain':get_domain(sourcecontext['url']),
 		'sourcecontext':sourcecontext['text'].replace(dispute.claimtext,"<b>"+dispute.claimtext+"</b>"),
+		'sourceprefix':sourcecontext['prefix'],
 		'displaycontext':make_bold_text(dispute.claimtext,dispute.matchcontext)} 
 				
 

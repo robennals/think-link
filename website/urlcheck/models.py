@@ -48,6 +48,14 @@ def url_hash(url): return zlib.crc32(url)
 
 	
 
+class MatchVote(models.Model):
+	claimtext = models.CharField(max_length=200)
+	claimurl = models.CharField(max_length=1000)
+	claimcontext = models.CharField(max_length=1000)
+	pageurl = models.CharField(max_length=1000)
+	pagecontext = models.CharField(max_length=1000)
+	vote = models.CharField(max_length=10)
+	
 class SimpleMatch(models.Model):
 	page = models.ForeignKey(MatchPage)
 	claimtext = models.CharField(max_length=500)
@@ -60,6 +68,13 @@ class SimpleContext(models.Model):
 	pagetitle = models.CharField(max_length=250)
 	context = models.CharField(max_length=1000)
 	claimtext = models.CharField(max_length=200, db_index=True)
+
+class ClaimContext(models.Model):
+	url = models.CharField(max_length=1000)
+	date = models.DateTimeField()
+	prefix = models.CharField(max_length=100)
+	claimtext = models.CharField(max_length=200)
+	sentence = models.CharField(max_length=1000)
 
 class DisputeMatch(models.Model):
 	matchpage = models.ForeignKey(MatchPage)

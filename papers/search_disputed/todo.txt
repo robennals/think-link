@@ -1,10 +1,18 @@
 
+
+* Move Dispute Finder to EC2 or Berkeley machine
+* Load "no evidence that" claims
+* Do bigger crawl and load more claims
+
+
+
+
 * Get new classifier working on the web site, and verify it works
-* Produce a new, up-to-date corpus with fresh claims
+* Add "no evidence that" claims. + Process their data.
+* Increase corpus size with larger crawl
 
 * Use Turk to gather much more training data in there separate stages.
 	- good/bad claim. Relevant/irrelevant claim. Agree/disagree.
-
 
 * Request more urls with Yahoo
 * Generate updated claims table (url, pattern, claim sentence, date)

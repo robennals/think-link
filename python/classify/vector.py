@@ -1,14 +1,15 @@
 
 from makedb.makedb import unescape
 from websearch.rareword_match import tokenize
+from settings import localfile
 import math
 
 doccount = 4124
 
 def load_bnc_word_freqs():
-	filename = "/home/rob/git/thinklink/reference/bnc_corpus_all.num.o5.txt"
+#	filename = "/home/rob/git/thinklink/reference/bnc_corpus_all.num.o5.txt"
 	docfreqs = {}
-	for line in file(filename):
+	for line in localfile("data/bnc_corpus_all.num.o5.txt"):
 		termfreq,term,type,docfreq = line.strip().split(" ")
 		if term not in docfreqs:	# TODO: not sure if this is correct
 			docfreqs[term] = int(docfreq)

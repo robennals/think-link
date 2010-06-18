@@ -4,6 +4,8 @@ import re
 import os
 import operator as op
 
+def foo(): return 3
+
 def remove_exact_duplicates(strings):
 	strings.sort()
 	unique = []
@@ -82,3 +84,4 @@ def count_freqs(list):
 	for item in list:
 		counts[item] = counts.get(item,0) + 1
 	return sorted(counts.iteritems(),key=op.itemgetter(1),reverse=True)
+

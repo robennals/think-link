@@ -16,3 +16,6 @@ def search(request):
 				'otherpages':range(1,10)})
 	else:
 		return render_to_response('search/frontpage.html')
+
+def frontpage(request):
+	return render_to_response('search/frontpage.html')

@@ -20,9 +20,9 @@
 <input type="submit" id="search-submit" value="Search" /> 
 </form> 
 
-{% if page != 1 %}
+{% ifnotequal page 1 %}
 	page {{page}}
-{% endif %}
+{% endifnotequal %}
 
 <div id="search-results">
 {% for result in results %}
@@ -37,18 +37,18 @@
 
 <table id='pagenav'>
 	<tr>	
-	{% if page != 1 %}
+	{% ifnotequal page 1 %}
 		<td>
 			<a href='/search?q={{query}}&page={{page|add:-1}}'>prev</a>
 		</td>
-	{% endif %}
+	{% endifnotequal %}
 	{% for otherpage in otherpages %}
 		<td>
-			{% if page == otherpage %}
+			{% ifequal page otherpage %}
 			<b>{{otherpage}}</b>
 			{% else %}
 			<a href="/search?q={{query}}&page={{otherpage}}">{{otherpage}}</a>
-			{% endif %}
+			{% endifequal %}
 		</td>	
 	{% endfor %}
 		<td>

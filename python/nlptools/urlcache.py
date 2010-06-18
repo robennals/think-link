@@ -29,7 +29,7 @@ def get_cached_url(bucket,url,max=None,timeout=None,pause=False):
 	else:
 		if pause:
 			time.sleep(0.25)
-			print "fetching url"
+			print "fetching url:",url
 		if max:
 			content = urllib2.urlopen(url,None,timeout).read(max)
 		else:

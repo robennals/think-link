@@ -14,7 +14,15 @@ import urlcheck.matcher.allwords_filter as f
 import re
 import threading
 from urlcheck.models import MatchPage,SimpleMatch,url_hash
+import claimfilter.trimoptions as t
 
+def to_unicode(bytes):
+	"""decode bytes to unicode. Simple try utf-8 and then windows if that fails"""
+	if type(bytes).__name__ == "unicode": return bytes
+	try:
+		return bytes.decode("utf-8")
+	except:
+		return bytes.decode("cp1255")
 
 def urlcheck_real(url):
 	"""Compute matches for a URL and store them in the database."""
@@ -23,8 +31,11 @@ def urlcheck_real(url):
 #	disputes = s.get_raw_disputes(url)
 	print "get_raw_disputes:",url
 	disputes = [d for d in basematcher.get_raw_disputes(url) if f.is_good(d)]
+	disputes = [d for d in disputes if not t.is_bad(to_unicode(d[1]))]
 	for dispute in remove_duplicates(disputes):
-		disputeobj = SimpleMatch(page=urlobj,claimtext=dispute[1],matchcontext="".join(dispute[2]))
+		disputeobj = SimpleMatch(page=urlobj,
+			claimtext=to_unicode(dispute[1]),
+			matchcontext=to_unicode("".join(dispute[2])))
 		disputeobj.save()
 	urlobj.loading = False
 	urlobj.save()
