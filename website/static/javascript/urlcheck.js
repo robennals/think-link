@@ -1,5 +1,5 @@
 
-var apiurl = "http://localhost:8000"
+var apiurl = ""
 
 function highlight_context(claimtext,matchtext){
 	var wordset = {};
@@ -47,6 +47,7 @@ function make_disputebox(dispute){
 		$(this).removeClass("ui-state-disabled");
 		$(this).addClass("ui-state-highlight");		
 		dispute.vote = $(this).attr("data-vote");
+		dispute.date = $(this).parents(".df-finddisputes").attr("data-date");
 		$.post(apiurl+"/urlcheck/vote",dispute);
 		return false;
 	})

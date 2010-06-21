@@ -30,7 +30,7 @@
 		<h3><a href='{{result.clickurl}}'>{{result.title|safe}}</a></h3>
 		<div class='abstract'>{{result.abstract|safe}}</div>
 		<cite>{{result.dispurl|safe}} - <span>{{result.date}}</span></cite>
-		<div class='df-finddisputes' data-url='{{result.url}}'>checking for disputes...</div>
+		<div class='df-finddisputes' data-url='{{result.url}}' data-date='{{result.date}}'>checking for disputes...</div>
 	</li>
 {% endfor %}
 </div>

@@ -1,5 +1,7 @@
 <html xmlns:fb="http://www.facebook.com/2008/fbml">  
+	{% load facebook_tags %}
 	<head> 
+		{% facebook_js %}
 		<title>{% block title %}Dispute Finder{% endblock %}</title>
 		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"> 
 		<meta content="en-us" http-equiv="Content-Language"> 
@@ -12,13 +14,23 @@
    		<link type="text/css" href="/css/smoothness/jquery-ui-1.8.1.custom.css" rel="stylesheet">
 		<link media="screen" rel="stylesheet" href="/static/stylesheets/search.css"> 
 		<link media="screen" rel="stylesheet" href="/static/stylesheets/urlcheck.css"> 
+
         {% block scripts %}{% endblock %}
     </head> 
 	<body>	
+		{% if user %}
+			Welcome {% show_facebook_first_name user %} {% show_logout %} <br/>
+			{% show_facebook_photo user %}
+		{% else %}
+			{% show_connect_button %}
+		{% endif %}
+	
 		{% block header %}{% endblock %}
 		
 		{% block content %}{% endblock %}
 		
 		{% block footer %}{% endblock %}
+		
+		{% initialize_facebook_connect %}
 	</body>
 </html>

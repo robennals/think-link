@@ -1,0 +1,361 @@
+../python/classify/features2.py:		cols = [unescape(col) for col in line.strip('\n').split("\t")] 
+../python/classify/features2.py:		item = {'claimtext':claimtext,'vote':vote,'matchurl':matchurl,
+../python/classify/features2.py:			'srcurl':srcurl,'srccontext':srccontext,
+../python/classify/features2.py:			'matchcontext':matchcontext,'srctitle':srctitle}
+../python/classify/features2.py:	item['matchwords'] = get_trimmed_match(item)	
+../python/classify/features2.py:	item['trimmedmatch'] = " ".join(item['matchwords'])			
+../python/classify/features2.py:	item['claimwords'] = tokenize(item['claimtext'])
+../python/classify/features2.py:	features['contextsim'] = context_similarity(item)
+../python/classify/features2.py:	features['claimcontextsim'] = claim_context_similarity(item)
+../python/classify/features2.py:	features['claimtrimsim'] = claim_trim_similarity(item)
+../python/classify/features2.py:	features['extramatchwords'] = extra_match_words(item)
+../python/classify/features2.py:	features['extraclaimwords'] = extra_claim_words(item)
+../python/classify/features2.py:	features['extramatchchars'] = extra_match_chars(item)
+../python/classify/features2.py:	features['extraclaimchars'] = extra_claim_chars(item)
+../python/classify/features2.py:	features['bigramsim'] = bigram_claim_similarity(item)
+../python/classify/features2.py:	features['orderdiff'] = order_diff(item)
+../python/classify/features2.py:	return text_similarity(item['srccontext'],item['matchcontext'])
+../python/classify/features2.py:	return text_similarity(item['claimtext'],item['matchcontext'])
+../python/classify/features2.py:	return text_similarity(item['claimtext'],item['trimmedmatch'])
+../python/classify/features2.py:	return max(0,len(item['matchwords']) - len(item['claimwords']))
+../python/classify/features2.py:	return max(0,len(item['claimwords']) - len(item['matchwords']))
+../python/classify/features2.py:	return max(0,len(item['trimmedmatch']) - len(item['claimtext']))
+../python/classify/features2.py:	return max(0,len(item['claimtext']) - len(item['trimmedmatch']))
+../python/classify/features2.py:	claim_bigrams = set(nltk.bigrams(item['claimwords']))
+../python/classify/features2.py:	match_bigrams = set(nltk.bigrams(item['matchwords']))
+../python/classify/features2.py:	claimwords = set(item['claimwords'])
+../python/classify/features2.py:	matchwords = set(item['matchwords'])
+../python/classify/features2.py:	claimtagged = set(nltk.pos_tag(item['claimwords']))
+../python/classify/features2.py:	matchtagged = set(nltk.pos_tag(item['matchwords']))
+../python/classify/features2.py:	claimtagged = set(nltk.pos_tag(item['claimwords']))
+../python/classify/features2.py:	matchtagged = set(nltk.pos_tag(item['matchwords']))
+../python/classify/features2.py:	claimorder = dict(zip(item['claimwords'],range(0,100)))
+../python/classify/features2.py:	matchorder = dict(zip(item['matchwords'],range(0,100)))
+../python/classify/features.py:stopwords = set(nltk.corpus.stopwords.words('english'))
+../python/classify/features.py:		cols = [unescape(col) for col in line.strip('\n').split("\t")] 
+../python/classify/features.py:		item = {'claimtext':claimtext,'vote':vote,'matchurl':matchurl,
+../python/classify/features.py:			'srcurl':srcurl,'srccontext':srccontext.lower(),
+../python/classify/features.py:			'matchcontext':matchcontext.lower(),'srctitle':srctitle.lower()}
+../python/classify/features.py:	item['claimwords'] = tokenize(item['claimtext'])
+../python/classify/features.py:	item['matchwords'] = get_trimmed_match(item)	
+../python/classify/features.py:	item['trimmedmatch'] = " ".join(item['matchwords'])			
+../python/classify/features.py:	keyword = cr.claim_words(item['claimtext'])[0]
+../python/classify/features.py:	matchwords = rm.trim_text(tokenize(item['matchcontext']),keyword,item['claimtext'],maxgap)
+../python/classify/features.py:	if len(set(tokenize(item['claimtext'])) - set(matchwords) - rm.okwords) > 0 and maxgap < 6:
+../python/classify/features.py:	>>> with_prefix("x",set(['x','y','z']))
+../python/classify/features.py:	{'x-x': 1, 'x-y': 1, 'x-z': 1}
+../python/classify/features.py:		item['claimwords'] = tokenize(item['claimtext'])
+../python/classify/features.py:	features['claimrareness'] = claim_rareness(item)
+../python/classify/features.py:	features['claimlength'] = claim_length(item)
+../python/classify/features.py:	features['contextsim'] = context_similarity(item)
+../python/classify/features.py:	features['claimcontextsim'] = claim_context_similarity(item)
+../python/classify/features.py:	features['claimtrimsim'] = claim_trim_similarity(item)
+../python/classify/features.py:	features['extramatchwords'] = extra_match_words(item)
+../python/classify/features.py:	features['extraclaimwords'] = extra_claim_words(item)
+../python/classify/features.py:	features['extramatchchars'] = extra_match_chars(item)
+../python/classify/features.py:	features['extraclaimchars'] = extra_claim_chars(item)
+../python/classify/features.py:	features['wordoverlap'] = claim_word_overlap(item)
+../python/classify/features.py:	features['wordoverlapns'] = claim_word_overlap_nostop(item)
+../python/classify/features.py:	features['normoverlap'] = norm_word_overlap(item)
+../python/classify/features.py:	features['bigramoverlap'] = bigram_overlap(item)
+../python/classify/features.py:	features['trigramoverlap'] = trigram_overlap(item)
+../python/classify/features.py:	features['orderdiff'] = order_diff(item)
+../python/classify/features.py:	features['polaritydiff'] = from_bool(not polarity_same(item))
+../python/classify/features.py:	features['haspattern'] = from_bool(match_has_pattern(item))
+../python/classify/features.py:	features['isnegated'] = from_bool(is_negated(item['claimtext']))
+../python/classify/features.py:	features['contextnegated'] = from_bool(is_negated(item['matchcontext']))
+../python/classify/features.py:	features['contextpoldiff'] = from_bool(is_negated(item['matchcontext']) != is_negated(item['claimtext']))
+../python/classify/features.py:	return (item['vote'],features,item)
+../python/classify/features.py:	features['claimrareness'] = claim_rareness(item)
+../python/classify/features.py:	features['claimlength'] = claim_length(item)
+../python/classify/features.py:	features['contextsim'] = context_similarity(item)
+../python/classify/features.py:	features['claimcontextsim'] = claim_context_similarity(item)
+../python/classify/features.py:	features['claimtrimsim'] = claim_trim_similarity(item)
+../python/classify/features.py:	features['extramatchwords'] = extra_match_words(item)
+../python/classify/features.py:	features['extraclaimwords'] = extra_claim_words(item)
+../python/classify/features.py:	features['extramatchchars'] = extra_match_chars(item)
+../python/classify/features.py:	features['extraclaimchars'] = extra_claim_chars(item)
+../python/classify/features.py:	features['wordoverlap'] = claim_word_overlap(item)
+../python/classify/features.py:	features['wordoverlapns'] = claim_word_overlap_nostop(item)
+../python/classify/features.py:	features['normoverlap'] = norm_word_overlap(item)
+../python/classify/features.py:	features['bigramoverlap'] = bigram_overlap(item)
+../python/classify/features.py:	features['trigramoverlap'] = trigram_overlap(item)
+../python/classify/features.py:	features['orderdiff'] = order_diff(item)
+../python/classify/features.py:	features['polaritydiff'] = from_bool(not polarity_same(item))
+../python/classify/features.py:	features['haspattern'] = from_bool(match_has_pattern(item))
+../python/classify/features.py:	features['isnegated'] = from_bool(is_negated(item['claimtext']))
+../python/classify/features.py:	features['contextnegated'] = from_bool(is_negated(item['matchcontext']))
+../python/classify/features.py:	features['contextpoldiff'] = from_bool(is_negated(item['matchcontext']) != is_negated(item['claimtext']))
+../python/classify/features.py:	return (item['vote'],features,item)
+../python/classify/features.py:	return sum([idf(word) for word in item['claimwords']])		
+../python/classify/features.py:	return len(item['claimwords'])
+../python/classify/features.py:	return text_similarity(item['srccontext'],item['matchcontext'])
+../python/classify/features.py:	return text_similarity(item['claimtext'],item['matchcontext'])
+../python/classify/features.py:	return text_similarity(item['claimtext'],item['trimmedmatch'])
+../python/classify/features.py:	return max(0,len(item['matchwords']) - len(item['claimwords']))
+../python/classify/features.py:	return max(0,len(item['claimwords']) - len(item['matchwords']))
+../python/classify/features.py:	return max(0,len(item['trimmedmatch']) - len(item['claimtext']))
+../python/classify/features.py:	return max(0,len(item['claimtext']) - len(item['trimmedmatch']))
+../python/classify/features.py:	return rp.regex_all.search(item['matchcontext'])
+../python/classify/features.py:	claimwords = set(item['claimwords'])
+../python/classify/features.py:	matchwords = set(item['matchwords'])
+../python/classify/features.py:	claimwords = set(item['claimwords']) - stopwords
+../python/classify/features.py:	matchwords = set(item['matchwords']) - stopwords
+../python/classify/features.py:	claimwords = set(item['claimwords'])
+../python/classify/features.py:	matchwords = set(item['matchwords'])
+../python/classify/features.py:	claim_bigrams = set(nltk.bigrams(item['claimwords']))
+../python/classify/features.py:	match_bigrams = set(nltk.bigrams(item['matchwords']))
+../python/classify/features.py:	claim_trigrams = set(nltk.trigrams(item['claimwords']))
+../python/classify/features.py:	match_trigrams = set(nltk.trigrams(item['matchwords']))
+../python/classify/features.py:	claimwords = set(item['claimwords'])
+../python/classify/features.py:	matchwords = set(item['matchwords'])
+../python/classify/features.py:	claimtagged = set(nltk.pos_tag(item['claimwords']))
+../python/classify/features.py:	matchtagged = set(nltk.pos_tag(item['matchwords']))
+../python/classify/features.py:	claimtagged = set(nltk.pos_tag(item['claimwords']))
+../python/classify/features.py:	matchtagged = set(nltk.pos_tag(item['matchwords']))
+../python/classify/features.py:	claimorder = dict(zip(item['claimwords'],range(0,100)))
+../python/classify/features.py:	matchorder = dict(zip(item['matchwords'],range(0,100)))
+../python/classify/features.py:	#claimorder = dict(zip(item['claimwords'],range(0,100)))
+../python/classify/features.py:	#matchorder = dict(zip(item['matchwords'],range(0,100)))
+../python/classify/features.py:	if "n't" in text: return True
+../python/classify/features.py:	return is_negated('claimcontext')
+../python/classify/features.py:	return is_negated(item['claimtext']) == is_negated(item['trimmedmatch'])
+../python/djangotest/manage.py:    sys.stderr.write("Error: Can't find the file 'settings.py' in the directory containing %r. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n" % __file__)
+../python/djangotest/settings.py:    # ('Your Name', 'your_email@domain.com'),
+../python/djangotest/settings.py:DATABASE_ENGINE = 'django.db.backends.sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+../python/djangotest/settings.py:DATABASE_NAME = '/home/rob/databases/djangotest'             # Or path to database file if using sqlite3.
+../python/djangotest/settings.py:DATABASE_USER = ''             # Not used with sqlite3.
+../python/djangotest/settings.py:DATABASE_PASSWORD = ''         # Not used with sqlite3.
+../python/djangotest/settings.py:DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+../python/djangotest/settings.py:DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+../python/djangotest/settings.py:TIME_ZONE = 'America/Chicago'
+../python/djangotest/settings.py:LANGUAGE_CODE = 'en-us'
+../python/djangotest/settings.py:MEDIA_ROOT = ''
+../python/djangotest/settings.py:MEDIA_URL = ''
+../python/djangotest/settings.py:ADMIN_MEDIA_PREFIX = '/media/'
+../python/djangotest/settings.py:# Make this unique, and don't share it with anybody.
+../python/djangotest/settings.py:SECRET_KEY = 'bzbp+u6ktq!lwthyubasc5^3*%pvcbj6y-&ulf=-3xzuc=ay4-'
+../python/djangotest/settings.py:    'django.template.loaders.filesystem.load_template_source',
+../python/djangotest/settings.py:    'django.template.loaders.app_directories.load_template_source',
+../python/djangotest/settings.py:#     'django.template.loaders.eggs.load_template_source',
+../python/djangotest/settings.py:    'django.middleware.common.CommonMiddleware',
+../python/djangotest/settings.py:    'django.contrib.sessions.middleware.SessionMiddleware',
+../python/djangotest/settings.py:    'django.contrib.auth.middleware.AuthenticationMiddleware',
+../python/djangotest/settings.py:ROOT_URLCONF = 'djangotest.urls'
+../python/djangotest/settings.py:    # Don't forget to use absolute paths, not relative paths.
+../python/djangotest/settings.py:	'django.contrib.admin',
+../python/djangotest/settings.py:	'django.contrib.admindocs',
+../python/djangotest/settings.py:    'django.contrib.auth',
+../python/djangotest/settings.py:    'django.contrib.contenttypes',
+../python/djangotest/settings.py:    'django.contrib.sessions',
+../python/djangotest/settings.py:    'django.contrib.sites',
+../python/djangotest/settings.py:    'djangotest.polls'
+../python/djangotest/urls.py:urlpatterns = patterns('',
+../python/djangotest/urls.py:	(r'^polls/', include('djangotest.polls.urls')),
+../python/djangotest/urls.py:	(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+../python/djangotest/urls.py:    (r'^admin/', include(admin.site.urls)),
+../python/findclaims/download_s3_3.py:					print "'"+str(e.reason)+"'"
+../python/findclaims/getclaims.py:quotedprefix = re.compile('\"([\w\s]*)\"')
+../python/findclaims/getclaims.py:		outstore.emit(url,{'date':date,'prefix':prefix,'sentence':sentence})
+../python/findclaims/getclaims_s3_2.py:			outstore.emit(url,{'error':dsc})
+../python/findclaims/getclaims_s3.py:					print "'"+str(e.reason)+"'"
+../python/makedb/makedb.py:LOAD DATA INFILE 'filename.csv' INTO TABLE tbl_name
+../python/makedb/makedb.py:LOAD DATA INFILE 'filename.csv' INTO TABLE tbl_name
+../python/makedb/makedb.py:   FIELDS TERMINATED BY '\t' ENCLOSED BY '' ESCAPED BY '\\'
+../python/makedb/makedb.py:   LINES TERMINATED BY '\n' STARTING BY ''
+../python/makedb/mapreduce.py:Right now we don't do any splits or anything else clever
+../python/makedb/mapreduce.py:		self.outfile.write(quote(key)+'\t'+quote(key2)+'\t'+json.dumps(value)+'\n')
+../python/makedb/mapreduce.py:		(key,value) = line.strip().split('\t')
+../python/makedb/mapreduce.py:		(key,key2,value) = line.strip().split('\t')
+../python/makedb/oldclaims_getcontext.py:	return txt.decode('utf-8')
+../python/makedb/oldclaims_getcontext.py:		claim = claim.replace(" '"," ").replace("' "," ").replace('"',"").replace("[","").replace("]","").replace("(","").replace(")","")
+../python/makedb/urlindex.py:	every entry that doesn't have an id.
+../python/makedb/urlindex.py:		outstore.emit2(url,"noid",{'date':date,'query':query})
+../python/nlptools/ambiguous.py:labelled = [row for row in csv.reader(file(labelfilename),delimiter="\t",quotechar='"',quoting=csv.QUOTE_ALL)]
+../python/nlptools/ambiguous.py:badwords = set(["these","he","she","it","we","i","them","he's","you're"])
+../python/nlptools/__init__.py:	return csv.writer(outfile,delimiter="\t",quotechar='"',quoting=csv.QUOTE_ALL,escapechar='\\')
+../python/nlptools/__init__.py:	return csv.reader(infile,delimiter="\t",quotechar='"',quoting=csv.QUOTE_ALL,escapechar='\\')
+../python/nlptools/__init__.py:	return text.replace("&#8217;","'").replace("&#8220;",'"').replace("&#8221;",'"').replace("&#8230;"," - ").replace("&nbsp;"," ").replace("&amp;","&").replace("&ldquq;",'"').replace("&rdquo;",'"').replace("&acute;","'").replace("&mdash;","-").replace("&quot;","'").replace("&#039;","'").replace("&#39;","'").replace("&#8212;","-").replace("&#8216;","'").replace("&lsquo;","'").replace("&rsquo;","'").replace("&ldquo;",'"').replace("&rdquo;",'"').replace("&#8211","").replace("&#038;","").replace("&#038;","").replace("&#147;",'"').replace("&#8220;",'"').replace("&#34;",'"').replace("&#130;",",").replace("&#133;","...").replace("&#145;","'").replace("&#034;",'"')
+../python/patterns/claimpatterns.py:	results = boss.get_boss_cached('"'+claim+'"')
+../python/patterns/regexpatterns.py:		raise "can't make regex"
+../python/patterns/regexpatterns.py:	return boss.get_boss_all('"'+pattern+'"')
+../python/patterns/regexpatterns.py:		count = boss_counts_for_pattern('"'+pattern+'"')
+../python/patterns/regexpatterns.py:		count = boss_counts_for_pattern('"'+pattern+'"')
+../python/patterns/regexpatterns.py:		results = boss.get_boss_all('"'+pattern+'"')
+../python/patterns/regexpatterns.py:		predicted[pattern] = boss_counts_for_pattern('"'+pattern+'"')
+../python/patterns/regexpatterns.py:		results = boss.get_boss_all('"'+pattern+'"')
+../python/patterns/regexpatterns.py:			outfile.write(result['date']+"\t"+result['url']+"\t\""+pattern+"\"\n")
+../python/patterns/regexpatterns.py:		predicted[pattern] = boss_counts_for_pattern('"'+pattern+'"')
+../python/patterns/regexpatterns.py:			outfile.write(result['date']+"\t"+result['url']+"\t"+pattern+"\n")
+../python/patterns/regexpatterns.py:# excludes rubish like "the hoax that won't go away"
+../python/patterns/regexpatterns.py:# and "the false claim that he didn't do it"
+../python/turk/turk_data.py:goodclaim = re.compile("[a-zA-Z\s,'\"\$\d]+$")
+../python/turk/turk_data.py:	writer = csv.writer(sys.stdout,delimiter=",",quotechar='"',quoting=csv.QUOTE_ALL,escapechar='\\')
+../python/turk/turk_data.py:if __name__ == '__main__':
+../python/turk/turk_process.py:	return [row for row in csv.DictReader(file(filename),delimiter=",",quotechar='"',quoting=csv.QUOTE_ALL,escapechar='\\')]
+../python/turk/turk_process.py:	writer = csv.DictWriter(file(filename,"w"),fieldnames,delimiter="\t",quotechar='"',quoting=csv.QUOTE_ALL,escapechar='\\')
+../python/websearch/old_claims.py:	return csv.reader(f,doublequote=False,escapechar='\\',quoting=csv.QUOTE_ALL)
+../python/websearch/order_claims_by_rareness.py:if __name__ == '__main__':
+../python/websearch/rareword_match.py:		if gap >= 3 or word in ['.','?',';','!']: 
+../python/websearch/search_engine.py:	query = args['q']
+../python/websearch/search_engine.py:			self.send_header('Content-type','text/html')
+../python/websearch/search_engine.py:#			self.send_header('Content-type','text/html')
+../python/websearch/search_engine.py:		server = HTTPServer(('',8280), SearchHandler)
+../python/websearch/search_engine.py:if __name__ == '__main__':
+../python/wicow_stats/accuracy_stats.py:if __name__ == '__main__':
+../python/wicow_stats/accuracy_stats_simple.py:if __name__ == '__main__':
+../python/wicow_stats/agg_cluster_claims.py:	similarity = float(args[1])  # don't merge clusters less similar than this 
+../python/wicow_stats/agg_cluster_claims.py:if __name__ == '__main__':
+../python/wicow_stats/bigram_freqs.py:stopwords = ["s",'"',"way","t","fact","more","day","people","best","something","person"]
+../python/wicow_stats/bigram_freqs.py:if __name__ == '__main__':
+../python/wicow_stats/boss-collector.py:sys.setdefaultencoding('utf-8')
+../python/wicow_stats/boss-collector.py:	f = open(output_file, 'a')
+../python/wicow_stats/boss-collector.py:	bosskey = 'Iotq.ZzV34GGwR2lUpZAS0emHJIoCbb9OWYiFKcraOrNUmv.dGjfc3qRDCkMnyJQGj0-'
+../python/wicow_stats/boss-collector.py:	search_string = 'falsely claimed that'
+../python/wicow_stats/boss-collector.py:	output_filename = 'abstracts.txt'
+../python/wicow_stats/boss-collector.py:			a = boss.do_web_search(search_string, count=def_count, start=my_start, style='raw', view='keyterms', type='-msoffice')
+../python/wicow_stats/boss-collector.py:			for i in a[u'ysearchresponse'][u'resultset_web']:
+../python/wicow_stats/boss-collector.py:				print '%i %s [%s]' % (item_id, i[u'title'], i[u'url'])
+../python/wicow_stats/boss-collector.py:					urlText = getcontext.getcontext(i[u'url'], search_string[:10])
+../python/wicow_stats/boss-collector.py:					if len(i[u'abstract']) > 0:
+../python/wicow_stats/boss-collector.py:						urlText = i[u'abstract']
+../python/wicow_stats/boss-collector.py:						urlText = i[u'title']
+../python/wicow_stats/boss-collector.py:				outputWrite(output_filename, urlText+'\n')
+../python/wicow_stats/boss-collector.py:if __name__ == '__main__':
+../python/wicow_stats/claimfinder.py:	return text.replace("&#8217;","'").replace("&#8220;",'"').replace("&#8221;",'"').replace("&#8230;"," - ").replace("&nbsp;"," ").replace("&amp;","&").replace("&ldquq;",'"').replace("&rdquo;",'"').replace("&acute;","'").replace("&mdash;","-").replace("&quot;","'").replace("&#039;","'").replace("&#39;","'").replace("&#8212;","-").replace("&#8216;","'").replace("&lsquo;","'").replace("&rsquo;","'").replace("&ldquo;",'"').replace("&rdquo;",'"').replace("&#8211","").replace("&#038;","").replace("&#038;","").replace("&#147;",'"').replace("&#8220;",'"').replace("&#34;",'"').replace("&#130;",",").replace("&#133;","...").replace("&#145;","'").replace("&#034;",'"')
+../python/wicow_stats/claimfinder.py:	return text.replace("\xef\xbf\xbd",'"').replace("\xe2\x80\x93","'").replace("\xe2\x80\x9c",'"').replace("\xe2\x80\x98","'").replace("\xe2\x80\x99","'").replace("\xc3\xa1","a").replace("\xc2\xa0"," ").replace("\xe2\x80\x9d","").replace("\xc2\xa0","").replace("\xe2\x80\x9d","")
+../python/wicow_stats/claimfinder.py:	#return text.replace(u"\xef\xbf\xbd",u'"').replace(u"\xe2\x80\x93",u"'").replace(u"\xe2\x80\x9c",u'"').replace(u"\xe2\x80\x98",u"'").replace(u"\xe2\x80\x99",u"'").replace(u"\xc3\xa1",u"a").replace(u"\xc2\xa0",u" ").replace(u"\xe2\x80\x9d",u"").replace(u"\xc2\xa0",u"").replace(u"\xe2\x80\x9d",u"")
+../python/wicow_stats/claimfinder.py:	return text.replace(u"\u2019","'")
+../python/wicow_stats/claimfinder.py:stopwords = ["s",'"',"system","someone","change","country","everyone","way","t","fact","year","more","most","day","people","best","something","person","thing","things","time","life","world","years","part","state","better","anything","power","right","man"]
+../python/wicow_stats/classify_good.py:Use a classifier to drop sentences that aren't actually making a disputed claim.
+../python/wicow_stats/classify_good.py:if __name__ == '__main__':
+../python/wicow_stats/cluster.py:- Method A still doesn't work properly
+../python/wicow_stats/cluster.py:sys.setdefaultencoding('utf-8')
+../python/wicow_stats/cluster.py:allstopwords = nltk.corpus.stopwords.words('english') + ['','ET','\'', 'woman', 'man', 'politics', 'environment', 'world','think', 'progress','foxnews.com', 'newsvine','realclearpolitics','factcheck.org','article','cnn', 'css', 'news', 'header']
+../python/wicow_stats/cluster.py:	f = open(sourcedoc, 'r')
+../python/wicow_stats/cluster.py:	transtable = string.maketrans('','')
+../python/wicow_stats/cluster.py:		item['tokens'] = []
+../python/wicow_stats/cluster.py:		for word in item['text'].split():
+../python/wicow_stats/cluster.py:				item['tokens'].append(token)
+../python/wicow_stats/cluster.py:			for term in documents[i]['tokens']:
+../python/wicow_stats/cluster.py:				features[i][int(tokendict[str(term)])] = documents[i]['tfidf'][term]
+../python/wicow_stats/cluster.py:			for term in documents[i]['tokens']:
+../python/wicow_stats/cluster.py:def printchildrenids(cluster, id, fulltext=False, thedoc=''):
+../python/wicow_stats/cluster.py:		print 'this cluster: ' + str(cluster.id) + '; distance: ' + str(cluster.distance)
+../python/wicow_stats/cluster.py:		if fulltext: print thedoc[cluster.left.id]['tokens']
+../python/wicow_stats/cluster.py:		if fulltext: print thedoc[cluster.right.id]['tokens']
+../python/wicow_stats/cluster.py:	for i in range(n): print ' ',
+../python/wicow_stats/cluster.py:			print '-', str(clust.id), '; dist: '+ str(clust.distance)
+../python/wicow_stats/cluster.py:			if labels==None: print clust.id, documents[clust.id]['text']
+../python/wicow_stats/cluster.py:	for i in range(n): print ' ',
+../python/wicow_stats/cluster.py:			print '-' + str(clust.id) + ' ' + str(clust.distance)
+../python/wicow_stats/cluster.py:	txt=re.compile(r'<[^>]+>').sub('',html) 
+../python/wicow_stats/cluster.py:	words=re.compile(r'[^A-Z^a-z]+').split(txt) 
+../python/wicow_stats/cluster.py:	return [word.lower() for word in words if word!='']
+../python/wicow_stats/cluster.py:	transtable = string.maketrans('','')
+../python/wicow_stats/cluster.py:	if len(title) == 0: title = 'NO_TITLE'
+../python/wicow_stats/cluster.py:	if len(wc) == 0: wc.setdefault('NO_WORDS', 0)
+../python/wicow_stats/cluster.py:	out=file(deduped,'w') 
+../python/wicow_stats/cluster.py:	sourcedoc = 'abstracts750.txt'
+../python/wicow_stats/cluster.py:	deduped = 'abstracts-deduped.txt'
+../python/wicow_stats/cluster.py:			docnames.append(i['text'])
+../python/wicow_stats/cluster.py:		hclustercode.drawdendrogram(tree,docnames,'dendrogram.jpg')
+../python/wicow_stats/cluster.py:			name = 'dendr%03d.jpg' % i
+../python/wicow_stats/cluster.py:			print documents[promoted[i].id]['text']
+../python/wicow_stats/cluster.py:		out=file('wordcountmatrix.txt','w') 
+../python/wicow_stats/cluster.py:		out.write('Doc')
+../python/wicow_stats/cluster.py:		out.write('\n')
+../python/wicow_stats/cluster.py:			out.write(doc.replace('\n',''))
+../python/wicow_stats/cluster.py:		filenames,words,data=hclustercode.readfile('wordcountmatrix.txt')
+../python/wicow_stats/cluster.py:			docnames.append(i['text'])
+../python/wicow_stats/cluster.py:				name = 'dendr%03d.jpg' % i
+../python/wicow_stats/cluster.py:				print documents[promoted[i].id]['text']
+../python/wicow_stats/cluster.py:		#				print 'yeah! ******'
+../python/wicow_stats/cluster.py:		#	print documents[x2[i].id]['text'] # documents[int(x2[i])]
+../python/wicow_stats/cluster.py:		#		print documents[index]['text']
+../python/wicow_stats/cluster.py:if __name__ == '__main__':
+../python/wicow_stats/day_csv.py:writer = csv.writer(sys.stdout,delimiter=",",quotechar='"')
+../python/wicow_stats/day_csv.py:	freqfile = file(base+date.replace(" ",'_')+".freqs")
+../python/wicow_stats/day_csv.py:	writer.writerow(['word']+topwords)
+../python/wicow_stats/day_csv.py:if __name__ == '__main__':
+../python/wicow_stats/drop_bad_claims.py:We don't want to include "bad claims" that aren't a proper statement about the world.
+../python/wicow_stats/drop_bad_claims.py:	"without success"  - isn't a statement
+../python/wicow_stats/drop_bad_claims.py:if __name__ == '__main__':
+../python/wicow_stats/drop_duplicate_claims.py:We don't want to record the exact same claim multiple times from the same URL.
+../python/wicow_stats/drop_duplicate_claims.py:if __name__ == '__main__':
+../python/wicow_stats/filter_claims_post.py:if __name__ == '__main__':
+../python/wicow_stats/filter_claims.py:	claim = claim.replace(" '"," ").replace("' "," ").replace('"',"").replace("[","").replace("]","").replace("(","").replace(")","")
+../python/wicow_stats/filter_claims.py:	if len(claim) > 0 and claim[0] in ["'"," ",",","."] :
+../python/wicow_stats/filter_claims.py:		if ("' "+commaword) in claim: claim = claim[:claim.find("' "+commaword)]
+../python/wicow_stats/filter_claims.py:badfirstwords = set(["'s","our","it","its","they","their","her","his","this","i","she","he","you","your","these","my","i'm",
+../python/wicow_stats/filter_claims.py:		"ate","begat","blew","won't","is","just","really",
+../python/wicow_stats/filter_claims.py:badends = ["'s"]
+../python/wicow_stats/filter_claims.py:badprefixes = ["just won't","the bill","all this","all of it","all of these"]
+../python/wicow_stats/filter_claims.py:if __name__ == '__main__':
+../python/wicow_stats/getcontext.py:rex = re.compile(r'\W+')
+../python/wicow_stats/getcontext.py:		if hasattr(e, 'reason'):
+../python/wicow_stats/getcontext.py:			print 'We failed to reach a server.'
+../python/wicow_stats/getcontext.py:			print 'Reason: ', e.reason
+../python/wicow_stats/getcontext.py:		elif hasattr(e, 'code'):
+../python/wicow_stats/getcontext.py:			print 'The server couldn\'t fulfill the request.'
+../python/wicow_stats/getcontext.py:			print 'Error code: ', e.code
+../python/wicow_stats/getcontext.py:		thetext = html2text(unicode(source)).replace('\n','')
+../python/wicow_stats/getcontext.py:		if hasattr(e, 'reason'):
+../python/wicow_stats/getcontext.py:			print 'We failed to reach a server.'
+../python/wicow_stats/getcontext.py:			print 'Reason: ', e.reason
+../python/wicow_stats/getcontext.py:		elif hasattr(e, 'code'):
+../python/wicow_stats/getcontext.py:			print 'The server couldn\'t fulfill the request.'
+../python/wicow_stats/getcontext.py:			print 'Error code: ', e.code
+../python/wicow_stats/getcontext.py:		# re.sub('<[^>]*>','', soup)
+../python/wicow_stats/getcontext.py:		return ''.join(soup.findAll(text=True)).replace('\n','').replace('\t','').replace('\r','')
+../python/wicow_stats/getcontext.py:	return ''.join(secondPass).replace('\t',' ').replace('\p', ' ').replace('\n',' ')
+../python/wicow_stats/getcontext.py:	# urltext = rex.sub(' ', urltext).upper()
+../python/wicow_stats/getcontext.py:	urltext = re.sub(r'[_\W]+', ' ', urltext).strip()
+../python/wicow_stats/getcontext.py:	searchstring = u'falsely cl'
+../python/wicow_stats/getcontext.py:if __name__ == '__main__':
+../python/wicow_stats/get_full_data.py:if __name__ == '__main__':
+../python/wicow_stats/get_nouns.py:if __name__ == '__main__':
+../python/wicow_stats/good_nouns.py:if __name__ == '__main__':
+../python/wicow_stats/graph_csv.py:writer = csv.writer(sys.stdout,delimiter=",",quotechar='"')
+../python/wicow_stats/graph_csv.py:	writer.writerow(['word']+topwords)
+../python/wicow_stats/graph_csv.py:if __name__ == '__main__':
+../python/wicow_stats/hclustercode.py:		# cluster ids that weren't in the original set are negative
+../python/wicow_stats/hclustercode.py:	colnames=lines[0].strip().split('\t')[1:] 
+../python/wicow_stats/hclustercode.py:		p=line.strip().split('\t') 
+../python/wicow_stats/hclustercode.py:				# print 'i',i
+../python/wicow_stats/hclustercode.py:				# print 'j',j
+../python/wicow_stats/hclustercode.py:		# cluster ids that weren't in the original set are negative 
+../python/wicow_stats/hclustercode.py:	for i in range(n): print ' ',
+../python/wicow_stats/hclustercode.py:		print '-'
+../python/wicow_stats/hclustercode.py:def drawdendrogram(clust,labels,jpeg='dendrogram.jpg'):
+../python/wicow_stats/hclustercode.py:	# print 'height: ' + str(getheight(clust))
+../python/wicow_stats/hclustercode.py:	# print 'depth: ' + str(depth)
+../python/wicow_stats/hclustercode.py:	print 'scaling: ' + str(scaling)
+../python/wicow_stats/hclustercode.py:	img=Image.new('RGB',(w,h),(255,255,255))
+../python/wicow_stats/hclustercode.py:		# nodeim = Image.open('green.jpg')
+../python/wicow_stats/hclustercode.py:def draw2d(data,labels,jpeg='mds2d.jpg'): 
+../python/wicow_stats/hclustercode.py:	img=Image.new('RGB',(2000,2000),(255,255,255)) 
+../python/wicow_stats/hclustercode.py:	img.save(jpeg,'JPEG')
+../python/wicow_stats/import_urls.py:if __name__ == '__main__':
+../python/wicow_stats/join_claims_for_pattern.py:if __name__ == '__main__':
+../python/wicow_stats/noun_freqs.py:stopwords = ["s",'"',"way","t","fact","more","day","people","best","something","person"]
+../python/wicow_stats/noun_freqs.py:if __name__ == '__main__':
+../python/wicow_stats/noun_pair_freqs.py:stopwords = ["s",'"',"way","t","fact","more","day","people","best","something","person"]
+../python/wicow_stats/noun_pair_freqs.py:if __name__ == '__main__':
+../python/wicow_stats/pick_random.py:if __name__ == '__main__':
+../python/wicow_stats/pick_training_data.py:if __name__ == '__main__':
+../python/wicow_stats/pos_tag.py:if __name__ == '__main__':
+../python/wicow_stats/remove_duplicates.py:if __name__ == '__main__':
+../python/wicow_stats/tree_match.py:	keywords = [word for word in nltk.word_tokenize(claim.replace("'","")) if not word in stopwords]
+../python/wicow_stats/wiki_freq_correct.py:Most words is a disputed claim are fairly mundane and aren't so interesting
+../python/wicow_stats/wiki_freq_correct.py:if __name__ == '__main__':
+../python/wicow_stats/word_freqs.py:if __name__ == '__main__':
+../python/wicow_stats/years_csv_bigger_prop.py:writer = csv.writer(sys.stdout,delimiter=",",quotechar='"')
+../python/wicow_stats/years_csv_bigger_prop.py:	writer.writerow(['word']+topwords)
+../python/wicow_stats/years_csv_bigger_prop.py:if __name__ == '__main__':
+../python/wicow_stats/years_csv_bigger.py:writer = csv.writer(sys.stdout,delimiter=",",quotechar='"')
+../python/wicow_stats/years_csv_bigger.py:	writer.writerow(['word']+topwords)
+../python/wicow_stats/years_csv_bigger.py:if __name__ == '__main__':
+../python/wicow_stats/years_csv.py:writer = csv.writer(sys.stdout,delimiter=",",quotechar='"')
+../python/wicow_stats/years_csv.py:	writer.writerow(['word']+topwords)
+../python/wicow_stats/years_csv.py:if __name__ == '__main__':

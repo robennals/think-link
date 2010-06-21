@@ -1,9 +1,11 @@
 
 
-* Move Dispute Finder to EC2 or Berkeley machine
 * Load "no evidence that" claims
-* Do bigger crawl and load more claims
+* Do bigger crawl and load many many more claims
+* Trim out the "BAD" stuff (should all auto-go-away)
+* Get some form of classifier working
 
+* Load more URLs from Yahoo, to get a much bigger corpus
 
 
 

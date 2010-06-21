@@ -20,8 +20,10 @@ from nlptools import trim_to_words
 from wicow_stats import filter_claims
 from nlptools import get_domain
 from claimfilter import trimoptions as t
+from datetime import datetime
+import pdb
 
-from urlcheck.models import MatchPage,SimpleMatch,url_hash,ClaimContext
+from urlcheck.models import MatchPage,SimpleMatch,url_hash,ClaimContext,MatchVote
 
 # TODO: cleanup is a hang-over from the old methods
 def trim_string(context,claimtext):
@@ -40,11 +42,11 @@ def get_dispute_context(claimtext):
 	try:
 		contextobj = ClaimContext.objects.filter(claimtext=claimtext)[0]
 		text = html_to_text(contextobj.sentence).strip()
-		return {'url':contextobj.url, 'text':text, 'prefix': contextobj.prefix}
+		return {'url':contextobj.url, 'text':text, 'prefix': contextobj.prefix, 'date':contextobj.date}
 	except:
-		return {'url':'',"text":'','prefix':''}
+		return {'url':'',"text":'','prefix':'','date':''}
 
-def data_for_dispute(dispute):
+def data_for_dispute(dispute,url):
 	sourcecontext = get_dispute_context(dispute.claimtext)
 	return {
 	 	'claimtext':dispute.claimtext,
@@ -52,6 +54,7 @@ def data_for_dispute(dispute):
 		'id':dispute.id,
 		'bad':t.simple_trim(sourcecontext['text']) != dispute.claimtext or t.is_bad(dispute.claimtext),
 		'vote':dispute.vote,
+		'pageurl':url,
 		'sourceurl':sourcecontext['url'],
 		'sourcedomain':get_domain(sourcecontext['url']),
 		'sourcecontext':sourcecontext['text'].replace(dispute.claimtext,"<b>"+dispute.claimtext+"</b>"),
@@ -62,7 +65,7 @@ def data_for_dispute(dispute):
 def urlcheck(request):
 	print "urlcheck:",request.GET['url']
 	disputes = urlcheck_get(request.GET["url"])
-	rawdata = [data_for_dispute(dispute) for dispute in disputes]
+	rawdata = [data_for_dispute(dispute,request.GET['url']) for dispute in disputes]
 	#rawdata = [{'claimtext':dispute.claimtext,
 				#'matchcontext':dispute.matchcontext,
 				#'id':dispute.id,
@@ -72,12 +75,38 @@ def urlcheck(request):
 					#for dispute in disputes]
 	return apiresponse(rawdata,request)
 
+def get_ip(request):
+	if "HTTP_X_FORWARDED_FOR" in request.META:
+		return request.META["HTTP_X_FORWARDED_FOR"]
+	else:
+		return request.META['REMOTE_ADDR']
+
+
+#TODO: prevent multiple voting? Display previous votes? Store most recent vote in SimpleMatch too?
+#TODO: get facebook connect login working for voting?
 def vote(request):
-	print "setvote:",request.POST['id'],request.POST['vote'],request.POST['claimtext']
+	contextobj = ClaimContext.objects.filter(claimtext=request.POST['claimtext'])[0]
+
+	#print "setvote:",request.POST['id'],request.POST['vote'],request.POST['claimtext']
+	vote = MatchVote(claimtext=request.POST['claimtext'],claimurl=request.POST['sourceurl'],
+			claimcontext=request.POST['sourcecontext'],pageurl=request.POST['pageurl'],
+			pagecontext=request.POST['matchcontext'],vote=request.POST['vote'],
+			voteraddr=get_ip(request),
+			pagedate=datetime.strptime(request.POST['date']," %Y/%m/%d"),
+			claimdate=contextobj.date,
+			votedate=datetime.now())
+	vote.save()
 	match = SimpleMatch.objects.get(id=request.POST['id'])
 	match.vote = request.POST['vote']
 	match.save()
 	return apiresponse("okay",request)
+
+#def vote(request):
+	#print "setvote:",request.POST['id'],request.POST['vote'],request.POST['claimtext']
+	#match = SimpleMatch.objects.get(id=request.POST['id'])
+	#match.vote = request.POST['vote']
+	#match.save()
+	#return apiresponse("okay",request)
 
 
 def make_bold_text(claimtext,matchtext):

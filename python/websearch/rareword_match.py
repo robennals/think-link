@@ -16,8 +16,8 @@ import operator as op
 # from compute_rarewords import stopwords
 
 okwords = set(["just","merely","purely","only","simple","were",
-		"massive","utter","clearly","the","is","a","the","in",
-		"was","wants","giant","","around","all","really","still"])
+		"massive","utter","clearly","the","is","a","the","in","do",
+		"was","wants","giant","","around","all","really","still","not","doesn't","isn't"])
 
 
 def tokenize(claim): return re.split("\W+",claim)

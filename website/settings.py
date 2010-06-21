@@ -19,6 +19,11 @@ DATABASE_PASSWORD = secret.password
 DATABASE_HOST = "localhost"
 DATABASE_PORT = ""
 
+FACEBOOK_CACHE_TIMEOUT = 1800
+FACEBOOK_API_KEY = secret.facebook_api_key
+FACEBOOK_SECRET_KEY = secret.facebook_secret_key
+FACEBOOK_INTERNAL = True
+
 #DATABASE_ENGINE = 'django.db.backends.sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 #DATABASE_NAME = '/home/rob/databases/disputefinder'             # Or path to database file if using sqlite3.
 #DATABASE_USER = ''             # Not used with sqlite3.
@@ -68,16 +73,24 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'facebook.djangofb.FacebookMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'facebookconnect.middleware.FacebookConnectMiddleware'
+)
+
+AUTHENTICATION_BACKENDS = (
+	'facebookconnect.models.FacebookBackend',
+	'django.contrib.auth.backends.ModelBackend'
 )
 
 ROOT_URLCONF = 'website.urls'
 
 ROOT_PATH = os.path.dirname(__file__)
 TEMPLATE_DIRS = (
-	ROOT_PATH + "/templates"
+	ROOT_PATH + "/templates",
+	os.path.join(os.path.dirname(__file__),'templates').replace("\\","/")
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -92,8 +105,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'website.search',
     'website.urlcheck',
-    'website.claimfilter'
+    'website.claimfilter',
+    'website.facebookconnect'
 )
+
+DEBUG_PROPAGATE_EXCEPTIONS = True
+
 
 def localfile(filename,mode='r'):
 	return file(os.path.join(os.path.dirname(__file__),filename),mode)
