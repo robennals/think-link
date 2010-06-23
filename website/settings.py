@@ -114,3 +114,6 @@ DEBUG_PROPAGATE_EXCEPTIONS = True
 
 def localfile(filename,mode='r'):
 	return file(os.path.join(os.path.dirname(__file__),filename),mode)
+
+def localfilename(filename):
+	return os.path.join(os.path.dirname(__file__),filename)

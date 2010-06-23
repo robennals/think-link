@@ -166,3 +166,14 @@ h1 a {
 .sourcedomain{
 	margin-left: 8px;
 }
+.disclaimer {
+	background-color: orange;
+	max-width: 400px;
+	margin: 40px;
+	margin-top: 80px;
+	font-size: 14px;
+	padding: 0px 10px;
+	border: 4px solid black;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}

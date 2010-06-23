@@ -218,7 +218,7 @@ def boss_salted_out(pattern,salts,outfile):
 		yes = boss_salted_out(pattern+" +"+str(salt),salts[1:],outfile)
 		no = boss_salted_out(pattern+" -"+str(salt),salts[1:],outfile)
 	else:	
-		results = boss.get_boss_all(pattern)
+		results = boss.get_boss_all_fallback(pattern)
 		for result in results:
 			outfile.write(result['date']+"\t"+result['url']+"\t"+pattern+"\n")
 	

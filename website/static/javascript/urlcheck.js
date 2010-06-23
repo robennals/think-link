@@ -71,7 +71,7 @@ function make_disputebox(dispute){
 		$("<a class='sourcedomain'/>").attr("href",dispute.sourceurl).text(dispute.sourcedomain).appendTo(sourcebox);
 	}
 	
-	if(!dispute.sourcecontext || dispute.bad){
+	if(!dispute.sourcecontext || dispute.bad || dispute.badvotes > dispute.goodvotes){
 		$("<div class='bad' style='color:red'>BAD</div>").appendTo(right);
 	}
 	

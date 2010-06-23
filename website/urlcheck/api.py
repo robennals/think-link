@@ -42,17 +42,21 @@ def get_dispute_context(claimtext):
 	try:
 		contextobj = ClaimContext.objects.filter(claimtext=claimtext)[0]
 		text = html_to_text(contextobj.sentence).strip()
-		return {'url':contextobj.url, 'text':text, 'prefix': contextobj.prefix, 'date':contextobj.date}
+		return {'url':contextobj.url, 'text':text, 'prefix': contextobj.prefix, 'date':contextobj.date,
+		'badvotes':contextobj.badvotes, 'goodvotes':contextobj.goodvotes}
 	except:
-		return {'url':'',"text":'','prefix':'','date':''}
+		return {'url':'',"text":'','prefix':'','date':'','badvotes':0,'goodvotes':0}
 
 def data_for_dispute(dispute,url):
 	sourcecontext = get_dispute_context(dispute.claimtext)
 	return {
+	    'badvotes':sourcecontext['badvotes'],
+	    'goodvotes':sourcecontext['goodvotes'],	    
 	 	'claimtext':dispute.claimtext,
 	 	'matchcontext':dispute.matchcontext,
 		'id':dispute.id,
-		'bad':t.simple_trim(sourcecontext['text']) != dispute.claimtext or t.is_bad(dispute.claimtext),
+		#'bad':t.simple_trim(sourcecontext['text']) != dispute.claimtext or t.is_bad(dispute.claimtext),
+		'bad':t.is_bad(dispute.claimtext),
 		'vote':dispute.vote,
 		'pageurl':url,
 		'sourceurl':sourcecontext['url'],
@@ -86,6 +90,12 @@ def get_ip(request):
 #TODO: get facebook connect login working for voting?
 def vote(request):
 	contextobj = ClaimContext.objects.filter(claimtext=request.POST['claimtext'])[0]
+	if(request.POST['vote'] == "bad"):
+		contextobj.badvotes += 1
+		contextobj.save()
+	elif(request.POST['vote'] == "good"):
+		contextobj.goodvotes += 1 
+		contextobj.save()
 
 	#print "setvote:",request.POST['id'],request.POST['vote'],request.POST['claimtext']
 	vote = MatchVote(claimtext=request.POST['claimtext'],claimurl=request.POST['sourceurl'],
@@ -99,6 +109,7 @@ def vote(request):
 	match = SimpleMatch.objects.get(id=request.POST['id'])
 	match.vote = request.POST['vote']
 	match.save()
+	
 	return apiresponse("okay",request)
 
 #def vote(request):

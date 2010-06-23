@@ -1,12 +1,11 @@
 
-
-* Load "no evidence that" claims
 * Do bigger crawl and load many many more claims
 * Trim out the "BAD" stuff (should all auto-go-away)
 * Get some form of classifier working
 
 * Load more URLs from Yahoo, to get a much bigger corpus
-
+	- have this running slowly in the background while doing other stuff
+	
 
 
 * Get new classifier working on the web site, and verify it works
@@ -35,6 +34,115 @@
 * Support vaguer prefixes starting with just "claim that" etc, and then looking for negative sentiment
 * Try to obtain an existing entailment algorithm and apply it
 	- and then extend based on extra info I have from context
+
+
+-- crawl other high frequency claims --
+
+Year splitting works very well. For "no evidence that" we got 705k out of a predicted 807k.
+For "the myth that" we get 290k out of predicted 306k.
+	- pretty damn close to everything
+
+[('no evidence that', 807698),
+ ('the myth that', 306576),
+ ('into thinking that', 293811),
+ ('into believing that', 229559),
+ ('the misconception that', 150754),
+ ('mistaken belief that', 110762),
+ ('the lie that', 91041),
+ ('mistakenly believe that', 78699),
+ ('it is not true that', 66171),
+ ('the delusion that', 61163),
+ ('against the idea that', 44716),
+ ('rejected the idea that', 43741),
+ ('reject the notion that', 43695),
+ ('rejected the notion that', 42506),
+ ('it is not the case that', 42266),
+ ('mistakenly think that', 41763),
+ ('falsely claimed that', 38980),
+ ('no scientific evidence that', 37703),
+ ('incorrectly stated that', 36454),
+ ('the fantasy that', 30693),
+ ('rejected the argument that', 29038),
+ ('falsely claiming that', 28718),
+ ('it is a myth that', 27905),
+ ('no credible evidence that', 25873),
+ ('mistaken notion that', 25810),
+ ('false belief that', 25800),
+ ('the misperception that', 25318),
+ ('the fraud that', 24482),
+ ('reject the idea that', 24385),
+ ('mistakenly thought that', 23518),
+ ('false claim that', 22860),
+ ('mistaken idea that', 22282),
+ ('disagree with the idea that', 21857),
+ ('mistakenly believed that', 21404),
+ ('the deception that', 20342),
+ ('false idea that', 20241),
+ ('the fallacy that', 20163),
+ ('against the notion that', 20007),
+ ('erroneous belief that', 19856),
+ ('falsely believe that', 19715),
+ ('disagree with the notion that', 18452),
+ ('the myth is that', 18259),
+ ('the scam that', 17980),
+ ('the misunderstanding that', 17519),
+ ('falsely claim that', 17407),
+ ('false notion that', 16214),
+ ('false claims that', 15965),
+ ('wrongly believe that', 15819),
+ ('erroneously believe that', 14234),
+ ('absurd notion that', 13900),
+ ('falsely claims that', 13644),
+ ('rejected the suggestion that', 13269),
+ ('disagree with the assertion that', 12205),
+ ('the hoax that', 11964),
+ ('false rumors that', 11223),
+ ('incorrectly believe that', 11132),
+ ('absurd claim that', 10990),
+ ('rejected the claim that', 9534),
+ ('erroneously stated that', 9446),
+ ('false accusations that', 9188),
+ ('falsely stated that', 9068),
+ ('it is false that', 8982),
+ ('false beliefs that', 8945),
+ ('rejecting the idea that', 8625),
+ ('false rumor that', 8514),
+ ('disputed claims that', 8469),
+ ('the urban legend that', 8448),
+ ('rejecting the notion that', 8346),
+ ('it is a lie that', 7989),
+ ('wrongly believed that', 7364),
+ ('absurd idea that', 7347),
+ ('false assertion that', 6865),
+ ('bogus claim that', 6701),
+ ('erroneous idea that', 6602),
+ ('mistakenly thinking that', 6576),
+ ('contrary to the belief that', 6353),
+ ('falsely stating that', 6322),
+ ('refute the idea that', 6259),
+ ('against the claim that', 6247),
+ ('false accusation that', 6240),
+ ('the misconception is that', 6121),
+ ('rejected the contention that', 6062),
+ ('reject the argument that', 5987),
+ ('rejecting the argument that', 5591),
+ ('debunk the idea that', 5537),
+ ('wrongly think that', 5502),
+ ('erroneously believed that', 5464),
+ ('erroneous notion that', 5361),
+ ('idiots who think that', 5146),
+ ('refute the claim that', 5076),
+ ('debunk the notion that', 5024),
+ ('reject the claim that', 5023),
+ ('the lie is that', 4960),
+ ('refute the notion that', 4844),
+ ('misleading claims that', 4799),
+ ('erroneously think that', 4699),
+ ('the deceit that', 4592),
+ ('mistakenly thinks that', 4468),
+ ('incorrectly believed that', 4368),
+ ('against the belief that', 3959)]
+
 
 
 -- extra prefixes -- 

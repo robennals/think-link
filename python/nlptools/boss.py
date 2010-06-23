@@ -4,6 +4,7 @@ import nlptools as t
 import nlptools.urlcache as uc
 import os
 import pickle
+import time
 
 from secret import bossKey
 
@@ -33,3 +34,16 @@ def get_boss_all(query):
 			break
 	return allresults	
 			
+def get_boss_all_fallback(query):
+	allresults = []
+	for i in range(0,20):
+		try: 
+			results = get_boss(query,start=i*50,count=50)
+			if results:
+				allresults = allresults + results
+			else:
+				break
+		except:	# some kind of exception. Sleep in case we went too fast
+			time.sleep(4)
+			
+	return allresults	

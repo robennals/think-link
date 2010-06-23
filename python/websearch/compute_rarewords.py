@@ -62,9 +62,10 @@ freqlimit = 3100
 def add_claim(claim):
 	keywords = claim_words(claim)
 	if len(keywords) < 2: return
-	if claim in bad_claims: return
+	#if claim in bad_claims: return
 	(first,second) = keywords[:2]
-	if wordfreq(first) > freqlimit or wordfreq(second) > freqlimit: return
+	if len(keywords) == 2 and wordfreq(first) > freqlimit and wordfreq(second) > freqlimit: return
+	if len(keywords) == 3 and wordfreq(first) > freqlimit and wordfreq(second) > freqlimit and wordfreq(keywords[2]) > freqlimit: return	
 	if not first in firstwords: firstwords[first] = set([])
 	firstwords[first].add(second)		
 	pairkey = first+"-"+second
@@ -148,3 +149,13 @@ def dump_to_db_files(basename):
 		outfile.write(triple+"\t"+"|".join(triple_claims[triple])+"\n")
 	outfile.close()
 	
+def load_db_data(basename):
+	from django.db import connection, transaction
+	cursor = connection.cursor()
+	cursor.execute("TRUNCATE TABLE urlcheck_firstwords")
+	cursor.execute("LOAD DATA LOCAL INFILE %s INTO TABLE urlcheck_firstwords (firstword,secondwords)",[basename+"firstwords.csv"])
+	cursor.execute("TRUNCATE TABLE urlcheck_wordpair")
+	cursor.execute("LOAD DATA LOCAL INFILE %s INTO TABLE urlcheck_wordpair (pair,triples,claims)",[basename+"pairs.csv"])
+	cursor.execute("TRUNCATE TABLE urlcheck_wordtriple")
+	cursor.execute("LOAD DATA LOCAL INFILE %s INTO TABLE urlcheck_wordtriple (triple,claims)",[basename+"triples.csv"])
+	transaction.commit_unless_managed()

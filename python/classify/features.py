@@ -11,6 +11,9 @@ import nltk
 import re
 import patterns.regexpatterns as rp
 import operator as op
+import settings
+import pickle
+from urlcheck.models import MatchVote
 
 def tokenize(claim): return re.split("[\W=]+",claim)
 
@@ -27,6 +30,38 @@ def load_data_features(filename):
 			'srcurl':srcurl,'srccontext':srccontext.lower(),
 			'matchcontext':matchcontext.lower(),'srctitle':srctitle.lower()}
 		yield item
+
+def item_from_votedata(votedata):
+	return {'claimtext':votedata.claimtext,'vote':votedata.vote,
+			'matchurl':votedata.pageurl,'srcurl':votedata.claimurl,
+			'srccontext':votedata.claimcontext,
+			'matchcontext':votedata.pagecontext}
+			
+def collect_claim_votes(votedata):
+	votes = {}
+	for item in votedata:
+		if not item.claimtext in votes:
+			votes[item.vote] = {}
+		votes[item.vote][item.claimtext] = votes[item.vote].get(item.claimtext,0) + 1
+	return votes				
+
+
+def training_data_from_matchvotes():
+	allvotes = MatchVote.objects.all()
+	#claimvotes = collect_claim_votes(allvotes)
+	items = [item_from_votedata(vd) for vd in allvotes]
+	features = [features_for_item(item) for item in items]	
+	labels = [from_bool(vd['vote'] == 'good') for vd in allvotes]
+	range = find_ranges(features)
+	mapping = find_mapping(features)
+	scaled = [scale_data(fitem,range) for fitem in features]
+	mapped = [remap_keys(scaled,mapping)
+	return (scaled,labels,range,mapping)
+
+def classify_item(item,range,mapping):
+	features = features_for_item(item)
+	scaled = scale_data(fitem,range)
+	
 
 def add_shared_props(item):
 	item['claimwords'] = tokenize(item['claimtext'])
@@ -75,34 +110,6 @@ def is_broken(item):
 	except:
 		return True
 
-def selected_features(item):
-	add_shared_props(item)
-	features = {}
-	features['claimrareness'] = claim_rareness(item)
-	features['claimlength'] = claim_length(item)
-	features['contextsim'] = context_similarity(item)
-	features['claimcontextsim'] = claim_context_similarity(item)
-	features['claimtrimsim'] = claim_trim_similarity(item)
-	features['extramatchwords'] = extra_match_words(item)
-	features['extraclaimwords'] = extra_claim_words(item)
-	features['extramatchchars'] = extra_match_chars(item)
-	features['extraclaimchars'] = extra_claim_chars(item)
-	features['wordoverlap'] = claim_word_overlap(item)
-	features['wordoverlapns'] = claim_word_overlap_nostop(item)
-	features['normoverlap'] = norm_word_overlap(item)
-	features['bigramoverlap'] = bigram_overlap(item)
-	features['trigramoverlap'] = trigram_overlap(item)
-	features['orderdiff'] = order_diff(item)
-	features['polaritydiff'] = from_bool(not polarity_same(item))
-	features['haspattern'] = from_bool(match_has_pattern(item))
-	features['isnegated'] = from_bool(is_negated(item['claimtext']))
-	features['contextnegated'] = from_bool(is_negated(item['matchcontext']))
-	features['contextpoldiff'] = from_bool(is_negated(item['matchcontext']) != is_negated(item['claimtext']))
-	features.update(with_prefix("missing",words_missing(item)))
-	features.update(with_prefix("missingtags",tags_missing(item)))
-	features.update(with_prefix("extratags",tags_extra(item)))
-	return (item['vote'],features,item)
-
 
 def features_for_item(item):
 	add_shared_props(item)
@@ -130,7 +137,8 @@ def features_for_item(item):
 	features.update(with_prefix("missing",words_missing(item)))
 	features.update(with_prefix("missingtags",tags_missing(item)))
 	features.update(with_prefix("extratags",tags_extra(item)))
-	return (item['vote'],features,item)
+	return features
+	#return (item['vote'],features,item)
 
 def make_svm_training_data(items,yeslabels,nolabels,outfile):
 	featureitems = [features_for_item(item) for item in items if not is_broken(item)]
@@ -162,6 +170,15 @@ def find_ranges(featurelist):
 def scale_data(features,ranges):
 	return dict([(key,float(features[key])/ranges[key]) for key in features])
 
+def save_ranges(ranges):
+	outfile = settings.localfile("data/svm_range.range","w")
+	pickle.dump(ranges,outfile)
+	outfile.close()
+	
+def load_ranges(ranges):
+	return pickle.load(settings.localfile("data/svm_range.range","w"))		
+
+
 keyids = {}
 next_keyid = 1
 def get_key_id(text):
@@ -171,8 +188,18 @@ def get_key_id(text):
 		next_keyid += 1
 	return keyids[text]
 
-def remap_keys(features):
-	return [(get_key_id(key),features[key]) for key in features]
+def remap_keys(features,mapping):
+	return [(mapping[key],features[key]) for key in features if key in mapping]
+
+def find_mapping(fitems):
+	mapping = {}
+	next_keyid = 1
+	for fitem in fitems:
+		for key in fitem.keys()
+			if key not in mapping:
+				mapping[key] = next_keyid
+				next_keyid += 1
+	return mapping			
 				
 def claim_rareness(item):
 	return sum([idf(word) for word in item['claimwords']])		
