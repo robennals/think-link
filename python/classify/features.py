@@ -14,6 +14,7 @@ import operator as op
 import settings
 import pickle
 from urlcheck.models import MatchVote
+import svmutil
 
 def tokenize(claim): return re.split("[\W=]+",claim)
 
@@ -48,29 +49,51 @@ def collect_claim_votes(votedata):
 
 def training_data_from_matchvotes():
 	allvotes = MatchVote.objects.all()
-	#claimvotes = collect_claim_votes(allvotes)
 	items = [item_from_votedata(vd) for vd in allvotes]
 	features = [features_for_item(item) for item in items]	
-	labels = [from_bool(vd['vote'] == 'good') for vd in allvotes]
+	labels = [from_bool(vd.vote == 'good') for vd in allvotes]
 	range = find_ranges(features)
 	mapping = find_mapping(features)
 	scaled = [scale_data(fitem,range) for fitem in features]
-	mapped = [remap_keys(scaled,mapping)
-	return (scaled,labels,range,mapping)
+	mapped = [remap_keys(sitem,mapping) for sitem in scaled] 
+	return (mapped,labels,range,mapping)
 
-def classify_item(item,range,mapping):
-	features = features_for_item(item)
-	scaled = scale_data(fitem,range)
+# c=32768.0, g=0.0001220703125 CV rate=73.0
+
+def train_classifier(mapped,labels):
+	return svmutil.svm_train(labels,[dict(x) for x in mapped],
+		"-b 1 -c 32768 -g 0.0001220703125")
+
+def save_new_model(filename):
+	mapped,labels,range,mapping = training_data_from_matchvotes()
+	model = train_classifier(mapped,labels)
+	svmutil.svm_save_model(filename+".model",model)
+	pickle.dump(range,file(filename+".range","w"))
+	pickle.dump(mapping,file(filename+".mapping","w"))
+
+def load_model(filename):
+	model = svmutil.svm_load_model(filename+".model")
+	range = pickle.load(file(filename+".range"))
+	mapping = pickle.load(file(filename+".mapping"))
+	return model,range,mapping
 	
+def classify_item(item,model,range,mapping):
+	features = features_for_item(item)
+	scaled = scale_data(features,range)
+	mapped = remap_keys(scaled,mapping)
+	p_label, p_acc, p_val = svmutil.svm_predict([0],[dict(mapped)],model,"-b 1")
+	return p_val[0][1]
 
 def add_shared_props(item):
-	item['claimwords'] = tokenize(item['claimtext'])
+	item['claimwords'] = tokenize(item['claimtext'].lower())
 	item['matchwords'] = get_trimmed_match(item)	
-	item['trimmedmatch'] = " ".join(item['matchwords'])			
+	item['trimmedmatch'] = " ".join(item['matchwords'])	
+	item['claimtags'] = nltk.pos_tag(item['claimwords'])
+	item['matchtags'] = nltk.pos_tag(item['matchwords'])	
 
 def get_trimmed_match(item,maxgap=3):
 	keyword = cr.claim_words(item['claimtext'])[0]
-	matchwords = rm.trim_text(tokenize(item['matchcontext']),keyword,item['claimtext'],maxgap)
+	matchwords = rm.trim_text(tokenize(item['matchcontext'].lower()),keyword,item['claimtext'].lower(),maxgap)
 	if len(set(tokenize(item['claimtext'])) - set(matchwords) - rm.okwords) > 0 and maxgap < 6:
 		return get_trimmed_match(item,maxgap+1)
 	return matchwords
@@ -104,11 +127,23 @@ def add_set_features(features,prefix,set):
 
 def is_broken(item):
 	try:
-		item['claimwords'] = tokenize(item['claimtext'])
+		item['claimwords'] = tokenize(item['claimtext'].lower())
 		get_trimmed_match(item)
 		return False
 	except:
 		return True
+
+
+#features = [
+	#claim_rareness,claim_length,context_similarity,
+	#claim_trim_similarity,extra_match_words,
+	#extra_match_chars,extra_claim_chars,
+	#extra_match_words,extra_claim_words,
+	#claim_word_overlap,claim_word_overlap_nostop,
+	#norm_word_overlap,bigram_overlap,
+	#trigram_overlap,order_diff,
+	#polarity_same,match_has_pattern]
+	
 
 
 def features_for_item(item):
@@ -129,8 +164,8 @@ def features_for_item(item):
 	features['bigramoverlap'] = bigram_overlap(item)
 	features['trigramoverlap'] = trigram_overlap(item)
 	features['orderdiff'] = order_diff(item)
-	features['polaritydiff'] = from_bool(not polarity_same(item))
-	features['haspattern'] = from_bool(match_has_pattern(item))
+	features['polaritysame'] = polarity_same(item)
+	features['haspattern'] = match_has_pattern(item)
 	features['isnegated'] = from_bool(is_negated(item['claimtext']))
 	features['contextnegated'] = from_bool(is_negated(item['matchcontext']))
 	features['contextpoldiff'] = from_bool(is_negated(item['matchcontext']) != is_negated(item['claimtext']))
@@ -168,7 +203,7 @@ def find_ranges(featurelist):
 	return maxvalues
 	
 def scale_data(features,ranges):
-	return dict([(key,float(features[key])/ranges[key]) for key in features])
+	return dict([(key,float(features[key])/ranges[key]) for key in features if key in ranges])
 
 def save_ranges(ranges):
 	outfile = settings.localfile("data/svm_range.range","w")
@@ -189,13 +224,14 @@ def get_key_id(text):
 	return keyids[text]
 
 def remap_keys(features,mapping):
-	return [(mapping[key],features[key]) for key in features if key in mapping]
+	remapped = [(mapping[key],features[key]) for key in features if key in mapping]
+	return sorted(remapped,key=op.itemgetter(0))
 
 def find_mapping(fitems):
 	mapping = {}
 	next_keyid = 1
 	for fitem in fitems:
-		for key in fitem.keys()
+		for key in fitem.keys():
 			if key not in mapping:
 				mapping[key] = next_keyid
 				next_keyid += 1
@@ -230,7 +266,7 @@ def extra_claim_chars(item):
 	return max(0,len(item['claimtext']) - len(item['trimmedmatch']))
 
 def match_has_pattern(item):
-	return rp.regex_all.search(item['matchcontext'])
+	return from_bool(rp.regex_all.search(item['matchcontext']))
 
 def claim_word_overlap(item):
 	claimwords = set(item['claimwords'])
@@ -273,15 +309,15 @@ def words_missing(item):
 	return claimwords - matchwords
 
 def tags_missing(item):
-	claimtagged = set(nltk.pos_tag(item['claimwords']))
-	matchtagged = set(nltk.pos_tag(item['matchwords']))
+	claimtagged = set(item['claimtags'])
+	matchtagged = set(item['matchtags'])
 	missingtagged = claimtagged - matchtagged
 	missingtags = set([tag for (word,tag) in missingtagged])
 	return missingtags
 	
 def tags_extra(item):
-	claimtagged = set(nltk.pos_tag(item['claimwords']))
-	matchtagged = set(nltk.pos_tag(item['matchwords']))
+	claimtagged = set(item['claimtags'])
+	matchtagged = set(item['matchtags'])
 	extratagged = matchtagged - claimtagged
 	extratags = set([tag for (word,tag) in extratagged])
 	return extratags
@@ -314,10 +350,13 @@ def is_negated(text):
 	return len(negwords & words) > 0
 
 def context_negated(item):
-	return is_negated('claimcontext')
+	return from_bool(is_negated(item['claimcontext']))
+
+def claim_negated(item):
+	return from_bool(is_negated(item['claimtext']))
 
 def polarity_same(item):
-	return is_negated(item['claimtext']) == is_negated(item['trimmedmatch'])
+	return from_bool(is_negated(item['claimtext']) == is_negated(item['trimmedmatch']))
 	
 			
 

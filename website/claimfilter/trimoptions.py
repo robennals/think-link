@@ -41,7 +41,7 @@ def trimoptions(str):
 	return sorted(trims,key=len)[:10]
 			
 def is_crap(str):
-	return starts_in_tag(str) or "..." in str
+	return starts_in_tag(str) or "..." in str or u"…" in str or "</script" in str.lower()
 
 def test_trimmer(labelled,trimmer):
 	"""how accurate is a trimmer, and where does it go wrong"""
@@ -78,7 +78,7 @@ def bad_start_rate(labelled,str):
 notends = ["Mrs.","Mr.","Ms.","Dr.","Prof.","U.S.","Sir.",
 		"U.S.A.","U.N.","U. S.","U. S. A.",
 		"Jan.","Feb.","Mar.","Apr.","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."]
-ends = [";","?","!",'."','".',".' ","and that","or that","\t",", this is","-."]
+ends = [";","?","!",'."','".',".' ","and that","or that",", this is","-."]
 re_ends = ["\w\w(\.) [^a-z][^\.]"]
 
 def simple_trim(str):
@@ -87,6 +87,9 @@ def simple_trim(str):
 	bad_offs = set([str.find(notend)+len(notend)-1 for notend in notends if notend in str])
 	goodends = sorted((end_offs | re_offs) - bad_offs)
 	return str[:goodends[0]].strip()
+
+def bad_trim(str):
+	return "\t" in str
 	
 	
 maybe_extras = [", I",", that we",", we",'"',", and secondly","or that","and that",
@@ -96,7 +99,8 @@ maybe_extras = [", I",", that we",", we",'"',", and secondly","or that","and tha
 badstarts = ["keeps","told","tells","surrounds","were","limit","have","are",
 				"underlie","stem","cannot","often","are","might","may",
 				"get","was","has","started","is", "wasn","don","led",".",
-				"caused","won","shouldn","launched","http","supports"]
+				"caused","won","shouldn","launched","http","supports","support",
+				"indicates"]
 				
 badends = ["is"]				
 				

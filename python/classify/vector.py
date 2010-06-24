@@ -1,10 +1,12 @@
 
 from makedb.makedb import unescape
-from websearch.rareword_match import tokenize
 from settings import localfile
 import math
+import re
 
 doccount = 4124
+
+def tokenize(claim): return re.split("\W+",claim)
 
 def load_bnc_word_freqs():
 #	filename = "/home/rob/git/thinklink/reference/bnc_corpus_all.num.o5.txt"

@@ -177,3 +177,7 @@ h1 a {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
+
+.score {
+	font-size: 12px;
+}

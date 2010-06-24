@@ -71,8 +71,15 @@ function make_disputebox(dispute){
 		$("<a class='sourcedomain'/>").attr("href",dispute.sourceurl).text(dispute.sourcedomain).appendTo(sourcebox);
 	}
 	
-	if(!dispute.sourcecontext || dispute.bad || dispute.badvotes > dispute.goodvotes){
-		$("<div class='bad' style='color:red'>BAD</div>").appendTo(right);
+	//if(!dispute.sourcecontext || dispute.bad || dispute.badvotes > dispute.goodvotes){
+		//$("<div class='bad' style='color:red'>BAD</div>").appendTo(right);
+	//}
+	
+	if(dispute.score){
+		$("<div class='score' style='color:blue'/>").text("score = "+dispute.score).appendTo(right)
+		if(dispute.score < 0.5){
+			disputebox.css("opacity",0.5);
+		}
 	}
 	
 	return disputebox;	
@@ -83,8 +90,15 @@ function check_disputes(){
    		var url = $(item).attr("data-url")
    		$.getJSON(apiurl+"/urlcheck/?format=json&callback=?",{url:url},function(data){
 			$(item).empty()
+			var goodcount = 0
+			for(i in data){
+				if(data[i].score > 0.5){
+					goodcount++;
+				}
+			}
+			var maybecount = data.length - goodcount;
 			if(data.length > 0){
-				var disputebox = $("<div class='df-dispute-box'><a class='df-dispute-toggle' href='#'><span class='ui-icon ui-icon-triangle-1-e'/>contains "+data.length+" disputed claims </a></div>");
+				var disputebox = $("<div class='df-dispute-box'><a class='df-dispute-toggle' href='#'><span class='ui-icon ui-icon-triangle-1-e'/>contains "+goodcount+" likely disputes, "+maybecount+" possible disputes </a></div>");
 				disputebox.find("> a").click(function(){
 					$(this).toggleClass("dispute-open");
 					$(this).find(".ui-icon").toggleClass("ui-icon-triangle-1-e");

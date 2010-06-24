@@ -20,8 +20,11 @@ from nlptools import trim_to_words
 from wicow_stats import filter_claims
 from nlptools import get_domain
 from claimfilter import trimoptions as t
+from classify import features as f
 from datetime import datetime
+import settings
 import pdb
+
 
 from urlcheck.models import MatchPage,SimpleMatch,url_hash,ClaimContext,MatchVote
 
@@ -47,14 +50,24 @@ def get_dispute_context(claimtext):
 	except:
 		return {'url':'',"text":'','prefix':'','date':'','badvotes':0,'goodvotes':0}
 
+model,range,mapping = f.load_model(settings.localfilename("data/classifier"))
+
 def data_for_dispute(dispute,url):
 	sourcecontext = get_dispute_context(dispute.claimtext)
+	svmitem = {'claimtext':dispute.claimtext,
+			'matchurl':url,'srcurl':sourcecontext['url'],
+			'srccontext':sourcecontext['text'],
+			'matchcontext':dispute.matchcontext}
+	score = f.classify_item(svmitem,model,range,mapping) - sourcecontext['badvotes']/(1+sourcecontext['goodvotes'])
+	if dispute.vote == "good":
+		score = 1;
 	return {
 	    'badvotes':sourcecontext['badvotes'],
 	    'goodvotes':sourcecontext['goodvotes'],	    
 	 	'claimtext':dispute.claimtext,
 	 	'matchcontext':dispute.matchcontext,
 		'id':dispute.id,
+		'score':score,
 		#'bad':t.simple_trim(sourcecontext['text']) != dispute.claimtext or t.is_bad(dispute.claimtext),
 		'bad':t.is_bad(dispute.claimtext),
 		'vote':dispute.vote,
@@ -70,6 +83,7 @@ def urlcheck(request):
 	print "urlcheck:",request.GET['url']
 	disputes = urlcheck_get(request.GET["url"])
 	rawdata = [data_for_dispute(dispute,request.GET['url']) for dispute in disputes]
+	byscore = sorted(rawdata,key=lambda x:x['score'],reverse=True)
 	#rawdata = [{'claimtext':dispute.claimtext,
 				#'matchcontext':dispute.matchcontext,
 				#'id':dispute.id,
@@ -77,7 +91,7 @@ def urlcheck(request):
 				## 'sourcecontext':make_bold_text(dispute.claimtext,get_dispute_context(dispute.claimtext),
 				#'displaycontext':make_bold_text(dispute.claimtext,dispute.matchcontext)} 
 					#for dispute in disputes]
-	return apiresponse(rawdata,request)
+	return apiresponse(byscore,request)
 
 def get_ip(request):
 	if "HTTP_X_FORWARDED_FOR" in request.META:

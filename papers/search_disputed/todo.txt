@@ -3,6 +3,8 @@
 * Trim out the "BAD" stuff (should all auto-go-away)
 * Get some form of classifier working
 
+* Port firefox extension to new API?
+
 * Load more URLs from Yahoo, to get a much bigger corpus
 	- have this running slowly in the background while doing other stuff
 	
@@ -153,6 +155,7 @@ For "the myth that" we get 290k out of predicted 306k.
 
 -- features --
 
+How early the claim is (earlier claims tend to be more useful)
 Trimmed text contains full stop, question mark, etc.
 Obtain DIRT knowledge base and use that?
 Use verbOcean to match similar verbs and Wordnet for similar nouns.

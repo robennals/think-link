@@ -111,6 +111,7 @@ recog_refute = [refute,"the",claim]
 recog_nogood = ["no",good,"evidence"]
 recog_noev = ["no","evidence"]
 recog_noev_ex = ["no evidence supports the",claim]
+recog_notruth = ["no trust to the",claim]
 recog_not = ["it is",false,Opt(ofcourse)]
 recog_ing = [badly,claiming]
 recog_s = [badly,claims]
@@ -122,7 +123,7 @@ recog_into = ["into",believing]
 
 recog_all = [Choice([
 		recog_false,recog_mod,recog_refute,recog_nogood,recog_noev,recog_noev_ex,
-		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,
+		recog_not,recog_ing,recog_think,recog_ed,recog_crazies,recog_notruth,
 		recog_crazing,recog_into,recog_s]),"that"]
 
 regex_all = re.compile(regex(recog_all),re.IGNORECASE)
