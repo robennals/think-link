@@ -74,14 +74,14 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'facebook.djangofb.FacebookMiddleware',
+    #'facebook.djangofb.FacebookMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'facebookconnect.middleware.FacebookConnectMiddleware'
+    #'facebookconnect.middleware.FacebookConnectMiddleware'
 )
 
 AUTHENTICATION_BACKENDS = (
-	'facebookconnect.models.FacebookBackend',
+	#'facebookconnect.models.FacebookBackend',
 	'django.contrib.auth.backends.ModelBackend'
 )
 
@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'website.search',
     'website.urlcheck',
     'website.claimfilter',
-    'website.facebookconnect'
+    #'website.facebookconnect'
 )
 
 DEBUG_PROPAGATE_EXCEPTIONS = True

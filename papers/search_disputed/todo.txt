@@ -1,34 +1,20 @@
 
+* Add simple UI for browsing and searching the corpus of disputed claims
+	For a disputed claim, show similar phrases and *all* places where it appears.
+	Auto-show context for very-similar claims
+* Simple search interface for searching claims
+
 * Do bigger crawl and load many many more claims
-* Trim out the "BAD" stuff (should all auto-go-away)
-* Get some form of classifier working
-
 * Port firefox extension to new API?
-
 * Load more URLs from Yahoo, to get a much bigger corpus
 	- have this running slowly in the background while doing other stuff
-	
-
-
-* Get new classifier working on the web site, and verify it works
-* Add "no evidence that" claims. + Process their data.
 * Increase corpus size with larger crawl
 
 * Use Turk to gather much more training data in there separate stages.
 	- good/bad claim. Relevant/irrelevant claim. Agree/disagree.
 
-* Request more urls with Yahoo
-* Generate updated claims table (url, pattern, claim sentence, date)
-* Load the data into the database
-* Get the matching algorithm working well
-* Produce Search Engine front-end using API - so we can start marking up data
-* Add snippets to API and interface - so we can see the context and if it is right
-* Add voting feature that tells us if the voting is correct
-* Record stats for voting about snippets
-* Use these votes to evaluate whether results are correct
 * Build simple API that auto-searches for a set of searches on AOL search
 	- open in multiple tabs ready to do bulk voting
-* Tune matching algorithm until it seems to work well
 
 * Add interface replacement for existing Dispute Finder front end
 * Support all APIs called by the firefox extension
@@ -155,6 +141,8 @@ For "the myth that" we get 290k out of predicted 306k.
 
 -- features --
 
+Date difference between page and claim
+Cosine similarity of a much larger block of text (entire page etc)
 How early the claim is (earlier claims tend to be more useful)
 Trimmed text contains full stop, question mark, etc.
 Obtain DIRT knowledge base and use that?
@@ -260,6 +248,10 @@ Solution: add it in going forward, but train with what we have.
 
 
 
+-- preventing evil hacking --
+
+We never completely hide claims.
+In the scores we say "x likely disputes and n possible".
 
 
 

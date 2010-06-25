@@ -57,7 +57,7 @@ class MatchVote(models.Model):
 	pagedate = models.DateTimeField()
 	votedate = models.DateTimeField(db_index=True)
 	vote = models.CharField(max_length=10)
-	voteraddr = models.CharField(max_length=10)
+	voteraddr = models.CharField(max_length=100)
 	
 class SimpleMatch(models.Model):
 	page = models.ForeignKey(MatchPage)
