@@ -22,7 +22,7 @@ def to_unicode(bytes):
 	try:
 		return bytes.decode("utf-8")
 	except:
-		return bytes.decode("cp1255")
+		return bytes.decode("cp1252")
 
 def urlcheck_real(url):
 	"""Compute matches for a URL and store them in the database."""
@@ -45,7 +45,7 @@ def urlcheck_get(url,count=0):
 	"""Get matches for a URL, either from the database, or by computing now."""
 	try:
 		urlobj = MatchPage.objects.get(url=url,url_hash=url_hash(url))
-		if urlobj.loading and count < 10:
+		if urlobj.loading and count < 200:
 			sleep(0.25)
 			return urlcheck_get(url,count+1)
 		else:
