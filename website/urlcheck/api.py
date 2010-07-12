@@ -50,15 +50,16 @@ def get_dispute_context(claimtext):
 	except:
 		return {'url':'',"text":'','prefix':'','date':'','badvotes':0,'goodvotes':0}
 
-model,range,mapping = f.load_model(settings.localfilename("data/classifier"))
+#model,range,mapping = f.load_model(settings.localfilename("data/classifier"))
 
 def data_for_dispute(dispute,url):
 	sourcecontext = get_dispute_context(dispute.claimtext)
-	svmitem = {'claimtext':dispute.claimtext,
-			'matchurl':url,'srcurl':sourcecontext['url'],
-			'srccontext':sourcecontext['text'],
-			'matchcontext':dispute.matchcontext}
-	score = f.classify_item(svmitem,model,range,mapping) - sourcecontext['badvotes']/(1+sourcecontext['goodvotes'])
+	#svmitem = {'claimtext':dispute.claimtext,
+			#'matchurl':url,'srcurl':sourcecontext['url'],
+			#'srccontext':sourcecontext['text'],
+			#'matchcontext':dispute.matchcontext}
+	#score = f.classify_item(svmitem,model,range,mapping) - sourcecontext['badvotes']/(1+sourcecontext['goodvotes'])
+	score = dispute.score - sourcecontext['badvotes']/(1+sourcecontext['goodvotes'])
 	if dispute.vote == "good":
 		score = 1;
 	return {

@@ -64,6 +64,7 @@ class SimpleMatch(models.Model):
 	claimtext = models.CharField(max_length=500)
 	matchcontext = models.CharField(max_length=1000)
 	vote = models.CharField(max_length=10)
+	score = models.FloatField()
 	def __unicode__(self): return self.claimtext
 
 class SimpleContext(models.Model):

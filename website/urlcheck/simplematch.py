@@ -15,6 +15,13 @@ import re
 import threading
 from urlcheck.models import MatchPage,SimpleMatch,url_hash
 import claimfilter.trimoptions as t
+from classify import features
+import settings
+import threading
+
+import pdb
+
+svmlock = threading.Lock()
 
 def to_unicode(bytes):
 	"""decode bytes to unicode. Simple try utf-8 and then windows if that fails"""
@@ -22,10 +29,13 @@ def to_unicode(bytes):
 	try:
 		return bytes.decode("utf-8")
 	except:
-		return bytes.decode("cp1252")
+		return bytes.decode("cp1252","ignore")
+
+model,range,mapping = features.load_model(settings.localfilename("data/classifier"))
 
 def urlcheck_real(url):
 	"""Compute matches for a URL and store them in the database."""
+	from urlcheck.api import get_dispute_context
 	urlobj,created = MatchPage.objects.get_or_create(url=url,
 			defaults={'url_hash':url_hash(url),'loading':True})
 #	disputes = s.get_raw_disputes(url)
@@ -33,10 +43,27 @@ def urlcheck_real(url):
 	disputes = [d for d in basematcher.get_raw_disputes(url) if f.is_good(d)]
 	disputes = [d for d in disputes if not t.is_bad(to_unicode(d[1]))]
 	for dispute in remove_duplicates(disputes):
+		sourcecontext = get_dispute_context(dispute[1])
+		svmitem = {'claimtext':dispute[1],
+			'matchurl':url,'srcurl':sourcecontext['url'],
+			'srccontext':sourcecontext['text'],
+			'matchcontext':"".join(dispute[2])}
+		print "about to compute score with libsvm"
+		svmlock.acquire()
+		try:
+			score = features.classify_item(svmitem,model,range,mapping)
+		except:
+			print "exception in classifier"
+		svmlock.release()
+		print "got score"
 		disputeobj = SimpleMatch(page=urlobj,
 			claimtext=to_unicode(dispute[1]),
+			score = score,
 			matchcontext=to_unicode("".join(dispute[2])))
-		disputeobj.save()
+		try:
+			disputeobj.save()
+		except:
+			print "exception saving dispute"
 	urlobj.loading = False
 	urlobj.save()
 	return urlobj.simplematch_set.all()
